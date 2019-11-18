@@ -57,6 +57,36 @@ class CLSpectrum(Signal1D):
         super().decomposition(*args, **kwargs)
         self.__class__ = CLSpectrum
 
+    def crop_edges(self, crop_px, inplace = False):
+        """
+        Crop the amount of pixels from the four edges of the scanning region, from out the edges inwards.
+
+        Parameters
+        ---------------
+        crop_px : int
+            Amount of pixels to be cropped on each side individually.
+
+        Returns
+        ---------------
+        signal_cropped : CLSpectrum
+            A smaller cropped CL signal object. If inplace is True, the original object is modified and no CLSpectrum is returned.
+        """
+
+        width = self.axes_manager.shape[0]
+        height = self.axes_manager.shape[1]
+
+        if crop_px*2 > width or crop_px*2 > height:
+            raise ValueError("The pixels to be cropped cannot be larger than half the width or the length!")
+        else:
+            signal_cropped = self.inav[crop_px +1: width -crop_px +1, crop_px +1: height-crop_px +1]
+            signal_cropped.metadata.set_item("Signal.cropped_edges", crop_px)
+
+        if inplace == True:
+            self = signal_cropped
+            return self
+        else:
+            return signal_cropped
+
 
 class LazyCLSpectrum(LazySignal, CLSpectrum):
 
