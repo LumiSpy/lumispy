@@ -71,6 +71,8 @@ class CLSEMSpectrum(CLSpectrum):
         ------------
         self: CLSEMSpectrum
             Wavelength shift corrected across the scanning dimension
+
+        Authorship: Gunnar Kusch (gk419@cam.ac.uk)
         """
         # Avoid correcting for this shift twice (first time it fails, so except block runs. Second time, try succeeds, so except block is skipped):
         try:
@@ -81,7 +83,7 @@ class CLSEMSpectrum(CLSpectrum):
 
             nx = md.Acquisition_instrument.SEM.resolution_x
             ny = md.Acquisition_instrument.SEM.resolution_y
-            grating = md.Acquisition_instrument.SEM.Spectrometer.grating
+            grating = md.Acquisition_instrument.Spectrometer.grating
             FOV = md.Acquisition_instrument.SEM.FOV
             acquisition_system = md.Acquisition_instrument.acquisition_system
 

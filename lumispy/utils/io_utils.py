@@ -105,13 +105,13 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system = 'cambridge_att
         binning, nx, ny, FOV, grating, central_wavelength, channels = get_metadata(hypcard_folder, metadata_file_name)
 
         #Store metadata
-        cl_object.metadata.set_item("Acquisition_instrument.SEM.Spectrometer.grating", grating)
-        cl_object.metadata.set_item("Acquisition_instrument.SEM.Spectrometer.central_wavelength", central_wavelength)
+        cl_object.metadata.set_item("Acquisition_instrument.Spectrometer.grating", grating)
+        cl_object.metadata.set_item("Acquisition_instrument.Spectrometer.central_wavelength", central_wavelength)
         cl_object.metadata.set_item("Acquisition_instrument.SEM.resolution_x", nx)
         cl_object.metadata.set_item("Acquisition_instrument.SEM.resolution_y", ny)
         cl_object.metadata.set_item("Acquisition_instrument.SEM.FOV", FOV)
-        cl_object.metadata.set_item("Acquisition_instrument.SEM.CCD.binning", binning)
-        cl_object.metadata.set_item("Acquisition_instrument.SEM.CCD.channels", channels)
+        cl_object.metadata.set_item("Acquisition_instrument.CCD.binning", binning)
+        cl_object.metadata.set_item("Acquisition_instrument.CCD.channels", channels)
         cl_object.metadata.set_item("Acquisition_instrument.acquisition_system", acquisition_system)
 
         return cl_object
@@ -130,7 +130,7 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system = 'cambridge_att
             Array containing the spectrum energy axis start and end points in nm (from the MeanSpectrum file), such as [spec_start, spec_end]
         """
         #Get relevant parameters from metadata
-        central_wavelength = cl_object.metadata.Acquisition_instrument.SEM.Spectrometer.central_wavelength
+        central_wavelength = cl_object.metadata.Acquisition_instrument.Spectrometer.central_wavelength
 
         #Estimate start and end wavelengths
         spectra_offset_array = [central_wavelength-273, central_wavelength+273]
