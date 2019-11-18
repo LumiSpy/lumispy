@@ -113,7 +113,7 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
             The absolute folder path where the metadata_file_name exists.
         """
         #Get metadata
-        binning, nx, ny, FOV, grating, central_wavelength, channels =
+        binning, nx, ny, FOV, grating, central_wavelength, channels = \
                             get_metadata(hypcard_folder, metadata_file_name)
 
         #Store metadata
@@ -158,8 +158,8 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
         #Apply calibration
         dx = cl_object.axes_manager.signal_axes[0]
         dx.name = 'Wavelength'
-        dx.scale = (spectra_offset_array[1] - spectra_offset_array[0]) / 
-                   cl_object.axes_manager.signal_size
+        dx.scale = (spectra_offset_array[1] - spectra_offset_array[0]) \
+                                / cl_object.axes_manager.signal_size
         dx.offset = spectra_offset_array[0]
         dx.units = '$nm$'
 
@@ -172,9 +172,9 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
 
         # Get relevant parameters from metadata and acquisition_systems
         # parameters
-        acquisition_system
+        acquisition_system \
             = cl_object.metadata.Acquisition_instrument.acquisition_system
-        cal_factor_x_axis
+        cal_factor_x_axis \
             = acquisition_systems[acquisition_system]['cal_factor_x_axis']
         FOV = cl_object.metadata.Acquisition_instrument.SEM.FOV
         nx = cl_object.metadata.Acquisition_instrument.SEM.resolution_x
@@ -200,9 +200,9 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
     hypcard_folder = os.path.split(os.path.abspath(hypcard_file))[0]
 
     #Import metadata
-    metadata_file_name 
+    metadata_file_name \
                 = acquisition_systems[acquisition_system]['metadata_file_name']
-    binning, nx, ny, FOV, grating, central_wavelength, channels 
+    binning, nx, ny, FOV, grating, central_wavelength, channels \
                 = get_metadata(hypcard_folder, metadata_file_name)
 
 
