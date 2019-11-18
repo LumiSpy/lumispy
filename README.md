@@ -28,7 +28,7 @@ We recommend creating a new environment for the lumispy package (or installing i
 
 2. Run the following command:
 
-    $ conda create -n lumispy
+	$ conda create -n lumispy
 
 ##### Installing the package in the new environment
 
@@ -39,12 +39,15 @@ Now that you have created a new environment, install the package:
 2. Load the anaconda prompt
 
 3. Change current working directory to the folder where you downloaded the source code:
+
     $ cd PATH_TO_SOURCE_CODE
 
 4. Activate the lumispy environment
+
     $ conda activate lumispy
 
 5. Install the package running:
+
     $ pip install . -y
 
 Installation is completed! To start using it, check the next section.
