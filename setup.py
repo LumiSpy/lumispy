@@ -22,11 +22,11 @@ exec(open('lumispy/release_info.py').read())  # grab version info
 
 
 setup(
-    name=name,
-    version=version,
-    description='Luminescence spectroscopy data analysis with hyperspy.',
-    author=author,
-    author_email=email,
+    name='LuminescenceSpectroscopyHyperSpyExtension',
+    version=0.1.0,
+    description='Luminescence spectroscopy data analysis with HyperSpy.',
+    author='The LumiSpy Developers',
+    #author_email=email,
     license=license,
     url="https://github.com/lumispy/lumispy",
     long_description=open('README.rst').read(),
@@ -56,4 +56,8 @@ setup(
         "lumispy": ["*.py", "hyperspy_extension.yaml"],
     },
     entry_points={'hyperspy.extensions': ['lumispy = lumispy']},
+    project_urls={  # Optional
+        'Bug Reports': 'https://github.com/lumispy/lumispy/issues',
+        'Source': 'https://github.com/lumispy/lumispy/sampleproject/',
+    },
     )

@@ -17,14 +17,20 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 signals:
-  CL:
+  CLSpectrum:
     signal_type: "CL"
+    signal_type_aliases:
+        - CL
+        - cathodoluminescence
     signal_dimension: 1
     dtype: real
     lazy: False
     module: lumispy.signals.cl
-  LazyCL:
-    signal_type: "LazyCL"
+  LazyCLSpectrum:
+    signal_type: "CL"
+    signal_type_aliases:
+        - CL
+        - cathodoluminescence
     signal_dimension: 1
     dtype: real
     lazy: True
