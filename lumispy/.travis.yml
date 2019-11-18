@@ -39,7 +39,7 @@ install:
 
 script:
   - export MPLBACKEND=Agg
-  - pytest --pyargs hyperspy_cl --cov=hyperspy_cl
+  - pytest --pyargs lumispy --cov=lumispy
 
 after_success:
   - coveralls

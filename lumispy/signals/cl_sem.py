@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright 2019 The hyperspy_cl developers
+# Copyright 2019 The LumiSpy developers
 #
-# This file is part of hyperspy_cl.
+# This file is part of lumispy.
 #
-# hyperspy_cl is free software: you can redistribute it and/or modify
+# lumispy is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# hyperspy_cl is distributed in the hope that it will be useful,
+# lumispy is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with hyperspy_cl.  If not, see <http://www.gnu.org/licenses/>.
+# along with lumispy.  If not, see <http://www.gnu.org/licenses/>.
 
 """Signal class for cathodoluminescence spectral data.
 
@@ -23,10 +23,10 @@
 
 import numpy as np
 
-from hyperspy_cl.signals.cl import CLSpectrum
+from lumispy.signals.cl import CLSpectrum
 from hyperspy._signals.lazy import LazySignal
 
-from hyperspy_cl.utils.acquisition_systems import acquisition_systems
+from lumispy.utils.acquisition_systems import acquisition_systems
 
 
 class CLSEMSpectrum(CLSpectrum):
@@ -36,18 +36,17 @@ class CLSEMSpectrum(CLSpectrum):
         super().__init__(*args, **kwargs)
 
     def as_lazy(self, *args, **kwargs):
-        """Create a copy of the Diffraction1D object as a
-        :py:class:`~hyperspy_cl.signals.diffraction1d.LazyDiffraction1D`.
+        """Create a copy of the CLSpectrum object as a
+        :py:class:`~lumispy.signals.cl.LazyCLSEMSpectrum`.
 
         Parameters
         ----------
         copy_variance : bool
-            If True variance from the original Diffraction1D object is copied to
-            the new LazyDiffraction1D object.
+            If True variance from the original CLSEMSpectrum object is copied to the new CLSEMSpectrum object.
 
         Returns
         -------
-        res : :py:class:`~hyperspy_cl.signals.diffraction1d.LazyDiffraction1D`.
+        res : :py:class:`~lumispy.signals.cl.CLSEMSpectrum`.
             The lazy signal.
         """
         res = super().as_lazy(*args, **kwargs)
@@ -93,7 +92,7 @@ class CLSEMSpectrum(CLSpectrum):
             try:
                 corrfactor = acquisition_systems[acquisition_system]['grating_corrfactors'][grating]
             except:
-                raise Exception("Sorry, the grating is not calibrated yet. No grating shift corraction can be applied. Go to hyperspy_cl.utils.acquisition_systems and add the missing grating_corrfactors")
+                raise Exception("Sorry, the grating is not calibrated yet. No grating shift corraction can be applied. Go to lumispy.utils.acquisition_systems and add the missing grating_corrfactors")
 
             #Correction of the Wavelength Shift along the X-Axis
             calax = cal_factor_x_axis/(FOV*nx)
