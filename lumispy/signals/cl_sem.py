@@ -72,10 +72,9 @@ class CLSEMSpectrum(CLSpectrum):
         self: CLSEMSpectrum
             Wavelength shift corrected across the scanning dimension
         """
-        # Avoid correcting for this shift twice:
+        # Avoid correcting for this shift twice (first time it fails, so except block runs. Second time, try succeeds, so except block is skipped):
         try:
             self.metadata.Signal.grating_corrected == True
-            raise Exception("You already corrected for the grating shift.")
         except:
             # Get all relevant parameters
             md = self.metadata
@@ -103,6 +102,8 @@ class CLSEMSpectrum(CLSpectrum):
 
             #Store modication in metadata
             md.set_item("Signal.grating_corrected", True)
+        else:
+            raise Exception("You already corrected for the grating shift.")
 
 
 
