@@ -53,8 +53,8 @@ Installation is completed! To start using it, check the next section.
 
 To get started using lumispy, especially if you are unfamiliar with Python, we recommend using [Jupyter notebooks](https://jupyter.org/). Having installed lumispy as above, a Jupyter notebook can be opened using the following commands entered into an anaconda prompt (from scratch):
 
->    `conda activate lumispy`
->    `jupyter lab`
+    $conda activate lumispy
+    $jupyter lab
 
 [Tutorials and example workflows](https://github.com/LumiSpy/lumispy/tree/master/lumispy_demos) have been curated as a series of Jupyter notebooks that you can work through and modify to perform many common analyses. Simply:
 
