@@ -40,7 +40,9 @@ Now that you have created a new environment, install the package:
 5. Install the package running:
 
     $ cd PATH_TO_SOURCE_CODE
+
     $ conda activate lumispy
+    
     $ pip install . -y
 
 Installation is completed! To start using it, check the next section.
