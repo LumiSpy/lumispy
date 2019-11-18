@@ -1,6 +1,5 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright 2017-2019 The LumiSpy developers
+# Copyright 2019 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
