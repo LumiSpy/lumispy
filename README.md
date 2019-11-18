@@ -1,9 +1,3 @@
-.. image:: https://travis-ci.org/lumispy/lumispy.svg?branch=master
-    :target: https://travis-ci.org/lumispy/lumispy
-
-.. image:: https://coveralls.io/repos/github/lumispy/lumispy/badge.svg?branch=master
-    :target: https://coveralls.io/github/lumispy/lumispy?branch=master
-    
 # LumiSpy
 
 ### Introduction
