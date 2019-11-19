@@ -22,12 +22,13 @@
 
 import numpy as np
 
-from hyperspy.signals import Signal1D
+from hyperspy._signals.signal1d import Signal1D
 from hyperspy._signals.lazy import LazySignal
 
 
 class CLSpectrum(Signal1D):
-    _signal_type = "cl_spectrum"
+    _signal_type = "CL"
+    _signal_dimension = 1
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
