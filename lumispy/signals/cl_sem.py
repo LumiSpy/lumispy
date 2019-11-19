@@ -1,21 +1,20 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Copyright 2019 The LumiSpy developers
 #
-# This file is part of lumispy.
+# This file is part of LumiSpy.
 #
-# lumispy is free software: you can redistribute it and/or modify
+# LumiSpy is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# lumispy is distributed in the hope that it will be useful,
+# LumiSpy is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with lumispy.  If not, see <http://www.gnu.org/licenses/>.
+# along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 """Signal class for cathodoluminescence spectral data.
 
@@ -42,7 +41,8 @@ class CLSEMSpectrum(CLSpectrum):
         Parameters
         ----------
         copy_variance : bool
-            If True variance from the original CLSEMSpectrum object is copied to the new CLSEMSpectrum object.
+            If True variance from the original CLSEMSpectrum object is copied
+            to the new CLSEMSpectrum object.
 
         Returns
         -------
@@ -74,7 +74,8 @@ class CLSEMSpectrum(CLSpectrum):
 
         Authorship: Gunnar Kusch (gk419@cam.ac.uk)
         """
-        # Avoid correcting for this shift twice (first time it fails, so except block runs. Second time, try succeeds, so except block is skipped):
+        # Avoid correcting for this shift twice (first time it fails, so except
+        # block runs. Second time, try succeeds, so except block is skipped):
         try:
             self.metadata.Signal.grating_corrected == True
         except:
@@ -89,15 +90,21 @@ class CLSEMSpectrum(CLSpectrum):
 
             cal_factor_x_axis = acquisition_systems[acquisition_system]['cal_factor_x_axis']
 
-            #Get the correction factor for the relevant grating (extracted from the acquisition_systems dictionary)
+            # Get the correction factor for the relevant grating (extracted from
+            # the acquisition_systems dictionary)
             try:
                 corrfactor = acquisition_systems[acquisition_system]['grating_corrfactors'][grating]
             except:
-                raise Exception("Sorry, the grating is not calibrated yet. No grating shift corraction can be applied. Go to lumispy.utils.acquisition_systems and add the missing grating_corrfactors")
+                raise Exception("Sorry, the grating is not calibrated yet. " 
+                                "No grating shift corraction can be applied. "
+                                "Go to lumispy.utils.acquisition_systems and "
+                                "add the missing grating_corrfactors")
 
             #Correction of the Wavelength Shift along the X-Axis
             calax = cal_factor_x_axis/(FOV*nx)
-            garray = np.arange((-corrfactor/2) * calax * 1000 * (nx), (corrfactor/2) * calax * 1000 * (nx), corrfactor *calax * 1000) #(Total Variation, Channels, Step)
+            garray = np.arange((-corrfactor/2) * calax * 1000 * (nx),
+                     (corrfactor/2) * calax * 1000 * (nx), corrfactor *calax
+                     * 1000) #(Total Variation, Channels, Step)
             barray = np.full((nx,ny),garray)
 
             self.shift1D(barray)

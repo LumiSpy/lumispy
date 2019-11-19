@@ -1,21 +1,20 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Copyright 2019 The LumiSpy developers
 #
-# This file is part of lumispy.
+# This file is part of LumiSpy.
 #
-# lumispy is free software: you can redistribute it and/or modify
+# LumiSpy is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# lumispy is distributed in the hope that it will be useful,
+# LumiSpy is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with lumispy.  If not, see <http://www.gnu.org/licenses/>.
+# along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 from setuptools import setup, find_packages
 
@@ -23,11 +22,11 @@ exec(open('lumispy/release_info.py').read())  # grab version info
 
 
 setup(
-    name=name,
-    version=version,
-    description='Cathodoluminescence analysis with hyperspy.',
-    author=author,
-    author_email=email,
+    name='LuminescenceSpectroscopyHyperSpyExtension',
+    version=0.1.0,
+    description='Luminescence spectroscopy data analysis with HyperSpy.',
+    author='The LumiSpy Developers',
+    #author_email=email,
     license=license,
     url="https://github.com/lumispy/lumispy",
     long_description=open('README.rst').read(),
@@ -57,4 +56,8 @@ setup(
         "lumispy": ["*.py", "hyperspy_extension.yaml"],
     },
     entry_points={'hyperspy.extensions': ['lumispy = lumispy']},
+    project_urls={  # Optional
+        'Bug Reports': 'https://github.com/lumispy/lumispy/issues',
+        'Source': 'https://github.com/lumispy/lumispy/sampleproject/',
+    },
     )

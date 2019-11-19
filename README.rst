@@ -1,5 +1,5 @@
-lumispy is an open-source python library for multi-dimensional analysis of cathodoluminesence data.
+LumiSpy is an open-source python library for multi-dimensional analysis of luminescence spectroscopy data.
 
-lumispy is an extension of the hyperspy package.
+LumiSpy is an extension of the HyperSpy package.
 
-lumispy is released under the GPL v3 license.
+LumiSpy is released under the GPL v3 license.
