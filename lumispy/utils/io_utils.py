@@ -35,7 +35,7 @@ from .acquisition_systems import acquisition_systems
 
 
 
-def load_hypcard(hypcard_file, lazy = False, acquisition_system 
+def load_hypcard(hypcard_file, lazy = False, acquisition_system
                  = 'cambridge_attolight'):
     """Load data into pyxem objects.
     Parameters
@@ -48,7 +48,7 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
         the data from the disk until required. Allows datasets much larger than
         available memory to be loaded.
     metadata_file_name: str
-        By default, AttoLight software names it 'MicroscopeStatus.txt'. 
+        By default, AttoLight software names it 'MicroscopeStatus.txt'.
         Otherwise, specify.
     acquisition_system : str
         Specify which acquisition system the HYPCard was taken with, from the
@@ -83,11 +83,28 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
                 if 'Grating - Groove Density:' in line:
                     grating = float(line[line.find(':')+1:-7])
                 if 'Central wavelength:' in line:
-                    central_wavelength = float(line[line.find(':')+1:-5])
+                    central_wavelength_nm = float(line[line.find(':')+1:-5])
                 if 'Channels:' in line:
-                    total_channels = int(line[line.find(':'), -2])
+                    total_channels = int(line[line.find(':')+1:])
+                if 'Signal Amplification:' in line:
+                    amplification = int(line[line.find(':x')+1:])
+                if 'Readout Rate (horizontal pixel shift):' in line:
+                    readout_rate_hz = int(line[line.find(':')+1:-3])
 
-        # Correct channels to the actual value, accounting for binning. Get 
+                if 'Exposure Time:' in line:
+                    exposure_time_s = float(line[line.find(':')+1:-2])
+                if 'Beam Energy:' in line:
+                    beam_acc_voltage_kv = float(line[line.find(':')+1:-2])/1000
+                if 'Gun Lens:' in line:
+                    gun_lens_amps = float(line[line.find(':')+1:-2])
+                if 'Objective Lens:' in line:
+                    obj_lens_amps = float(line[line.find(':')+1:-2])
+                if 'Aperture:' in line:
+                    aperture_um = float(line[line.find(':')+1:-3])
+                if 'Aperture Chamber Pressure:' in line:
+                    chamber_pressure_torr = float(line[line.find(':'), -5])
+
+        # Correct channels to the actual value, accounting for binning. Get
         # channels on the detector used (if channels not defined, then assume
         # its 1024)
         try:
@@ -97,9 +114,9 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
         channels =  total_channels//binning
 
         #Return metadata
-        return binning, nx, ny, FOV, grating, central_wavelength, channels
+        return binning, nx, ny, FOV, grating, central_wavelength_nm, channels, amplification, readout_rate_hz, exposure_time_s, beam_acc_voltage_kv, gun_lens_amps, obj_lens_amps, aperture_um, chamber_pressure_torr
 
-    def store_metadata(cl_object, hypcard_folder, metadata_file_name, 
+    def store_metadata(cl_object, hypcard_folder, metadata_file_name,
                        acquisition_system):
         """
         TO BE ADDED
@@ -113,14 +130,13 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
             The absolute folder path where the metadata_file_name exists.
         """
         #Get metadata
-        binning, nx, ny, FOV, grating, central_wavelength, channels = \
-                            get_metadata(hypcard_folder, metadata_file_name)
+        binning, nx, ny, FOV, grating, central_wavelength_nm, channels, amplification, readout_rate_hz, exposure_time_s, beam_acc_voltage_kv, gun_lens_amps, obj_lens_amps, aperture_um, chamber_pressure_torr =get_metadata(hypcard_folder, metadata_file_name)
 
         #Store metadata
         cl_object.metadata.set_item("Acquisition_instrument.Spectrometer.grating",
                                     grating)
-        cl_object.metadata.set_item("Acquisition_instrument.Spectrometer.central_wavelength",
-                                    central_wavelength)
+        cl_object.metadata.set_item("Acquisition_instrument.Spectrometer.central_wavelength_nm",
+                                    central_wavelength_nm)
         cl_object.metadata.set_item("Acquisition_instrument.SEM.resolution_x",
                                     nx)
         cl_object.metadata.set_item("Acquisition_instrument.SEM.resolution_y",
@@ -132,6 +148,14 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
                                     channels)
         cl_object.metadata.set_item("Acquisition_instrument.acquisition_system",
                                     acquisition_system)
+        cl_object.metadata.set_item("Acquisition_instrument.CCD.amplification",amplification)
+        cl_object.metadata.set_item("Acquisition_instrument.CCD.readout_rate_hz", readout_rate_hz)
+        cl_object.metadata.set_item("Acquisition_instrument.CCD.exposure_time_s", exposure_time_s)
+        cl_object.metadata.set_item("Acquisition_instrument.SEM.beam_acc_voltage_kv", beam_acc_voltage_kv)
+        cl_object.metadata.set_item("Acquisition_instrument.SEM.gun_lens_amps", gun_lens_amps)
+        cl_object.metadata.set_item("Acquisition_instrument.SEM.obj_lens_amps", obj_lens_amps)
+        cl_object.metadata.set_item("Acquisition_instrument.SEM.aperture_um", aperture_um)
+        cl_object.metadata.set_item("Acquisition_instrument.SEM.chamber_pressure_torr", chamber_pressure_torr)
 
         return cl_object
 
@@ -146,7 +170,7 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
         Returns
         ----------
         spectra_offset_array: []
-            Array containing the spectrum energy axis start and end points in 
+            Array containing the spectrum energy axis start and end points in
             nm (from the MeanSpectrum file), such as [spec_start, spec_end]
         """
         #Get relevant parameters from metadata
