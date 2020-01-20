@@ -92,7 +92,9 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
                     readout_rate_hz = int(line[line.find(':')+1:-4])
 
                 if 'Exposure Time:' in line:
-                    exposure_time_s = float(line[line.find(':')+1:-3])
+                    exposure_time_ccd_s = float(line[line.find(':')+1:-3])
+                if 'HYP Dwelltime:' in line:
+                    dwell_time_scan_s = float(line[line.find(':')+1:-4])/1000
                 if 'Beam Energy:' in line:
                     beam_acc_voltage_kv = float(line[line.find(':')+1:-3])/1000
                 if 'Gun Lens:' in line:
@@ -114,7 +116,7 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
         channels =  total_channels//binning
 
         #Return metadata
-        return binning, nx, ny, FOV, grating, central_wavelength_nm, channels, amplification, readout_rate_hz, exposure_time_s, beam_acc_voltage_kv, gun_lens_amps, obj_lens_amps, aperture_um, chamber_pressure_torr
+        return binning, nx, ny, FOV, grating, central_wavelength_nm, channels, amplification, readout_rate_hz, exposure_time_ccd_s,  dwell_time_scan_s, beam_acc_voltage_kv, gun_lens_amps, obj_lens_amps, aperture_um, chamber_pressure_torr
 
     def store_metadata(cl_object, hypcard_folder, metadata_file_name,
                        acquisition_system):
@@ -130,7 +132,7 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
             The absolute folder path where the metadata_file_name exists.
         """
         #Get metadata
-        binning, nx, ny, FOV, grating, central_wavelength_nm, channels, amplification, readout_rate_hz, exposure_time_s, beam_acc_voltage_kv, gun_lens_amps, obj_lens_amps, aperture_um, chamber_pressure_torr = get_metadata(hypcard_folder, metadata_file_name)
+        binning, nx, ny, FOV, grating, central_wavelength_nm, channels, amplification, readout_rate_hz, exposure_time_ccd_s, dwell_time_scan_s, beam_acc_voltage_kv, gun_lens_amps, obj_lens_amps, aperture_um, chamber_pressure_torr = get_metadata(hypcard_folder, metadata_file_name)
 
         #Store metadata
         cl_object.metadata.set_item("Acquisition_instrument.Spectrometer.grating",
@@ -150,7 +152,8 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
                                     acquisition_system)
         cl_object.metadata.set_item("Acquisition_instrument.CCD.amplification",amplification)
         cl_object.metadata.set_item("Acquisition_instrument.CCD.readout_rate_hz", readout_rate_hz)
-        cl_object.metadata.set_item("Acquisition_instrument.CCD.exposure_time_s", exposure_time_s)
+        cl_object.metadata.set_item("Acquisition_instrument.CCD.exposure_time_s", exposure_time_ccd_s)
+        cl_object.metadata.set_item("Acquisition_instrument.SEM.dwell_time_scan_s", dwell_time_scan_s)
         cl_object.metadata.set_item("Acquisition_instrument.SEM.beam_acc_voltage_kv", beam_acc_voltage_kv)
         cl_object.metadata.set_item("Acquisition_instrument.SEM.gun_lens_amps", gun_lens_amps)
         cl_object.metadata.set_item("Acquisition_instrument.SEM.obj_lens_amps", obj_lens_amps)
@@ -227,7 +230,7 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
     metadata_file_name \
                 = acquisition_systems[acquisition_system]['metadata_file_name']
 
-    binning, nx, ny, FOV, grating, central_wavelength_nm, channels, amplification, readout_rate_hz, exposure_time_s, beam_acc_voltage_kv, gun_lens_amps, obj_lens_amps, aperture_um, chamber_pressure_torr = get_metadata(hypcard_folder, metadata_file_name)
+    binning, nx, ny, FOV, grating, central_wavelength_nm, channels, amplification, readout_rate_hz, exposure_time_ccd_s, dwell_time_scan_s, beam_acc_voltage_kv, gun_lens_amps, obj_lens_amps, aperture_um, chamber_pressure_torr = get_metadata(hypcard_folder, metadata_file_name)
 
 
     #Load file
