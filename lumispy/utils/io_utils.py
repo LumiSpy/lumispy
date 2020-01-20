@@ -70,39 +70,39 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
         path = os.path.join(hypcard_folder, metadata_file_name)
         with open(path, encoding='windows-1252' ) as status:
             for line in status:
-                if 'Horizontal Binning' in line:
-                    binning = int(line[-2])        #binning = binning status
+                if 'Horizontal Binning:' in line:
+                    binning = int(line[line.find(':')+1:-1])        #binning = binning status
                 if 'Resolution_X' in line:
-                    nx = int(line[line.find(':')+1:-8])
+                    nx = int(line[line.find(':')+1:-7])
                     #nx = pixel in x-direction
                 if 'Resolution_Y' in line:
-                    ny = int(line[line.find(':')+1:-8])
+                    ny = int(line[line.find(':')+1:-7])
                     #ny = pixel in y-direction
                 if 'Real Magnification' in line:
-                     FOV = float(line[line.find(':')+1:-2])
+                     FOV = float(line[line.find(':')+1:-1])
                 if 'Grating - Groove Density:' in line:
-                    grating = float(line[line.find(':')+1:-7])
+                    grating = float(line[line.find(':')+1:-6])
                 if 'Central wavelength:' in line:
-                    central_wavelength_nm = float(line[line.find(':')+1:-5])
+                    central_wavelength_nm = float(line[line.find(':')+1:-4])
                 if 'Channels:' in line:
-                    total_channels = int(line[line.find(':')+1:])
+                    total_channels = int(line[line.find(':')+1:-1])
                 if 'Signal Amplification:' in line:
-                    amplification = int(line[line.find(':x')+1:])
+                    amplification = int(line[line.find(':x')+2:-1])
                 if 'Readout Rate (horizontal pixel shift):' in line:
-                    readout_rate_hz = int(line[line.find(':')+1:-3])
+                    readout_rate_hz = int(line[line.find(':')+1:-4])
 
                 if 'Exposure Time:' in line:
-                    exposure_time_s = float(line[line.find(':')+1:-2])
+                    exposure_time_s = float(line[line.find(':')+1:-3])
                 if 'Beam Energy:' in line:
-                    beam_acc_voltage_kv = float(line[line.find(':')+1:-2])/1000
+                    beam_acc_voltage_kv = float(line[line.find(':')+1:-3])/1000
                 if 'Gun Lens:' in line:
-                    gun_lens_amps = float(line[line.find(':')+1:-2])
+                    gun_lens_amps = float(line[line.find(':')+1:-3])
                 if 'Objective Lens:' in line:
-                    obj_lens_amps = float(line[line.find(':')+1:-2])
+                    obj_lens_amps = float(line[line.find(':')+1:-3])
                 if 'Aperture:' in line:
-                    aperture_um = float(line[line.find(':')+1:-3])
+                    aperture_um = float(line[line.find(':')+1:-4])
                 if 'Aperture Chamber Pressure:' in line:
-                    chamber_pressure_torr = float(line[line.find(':'), -5])
+                    chamber_pressure_torr = float(line[line.find(':')+1:-6])
 
         # Correct channels to the actual value, accounting for binning. Get
         # channels on the detector used (if channels not defined, then assume
@@ -130,7 +130,7 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
             The absolute folder path where the metadata_file_name exists.
         """
         #Get metadata
-        binning, nx, ny, FOV, grating, central_wavelength_nm, channels, amplification, readout_rate_hz, exposure_time_s, beam_acc_voltage_kv, gun_lens_amps, obj_lens_amps, aperture_um, chamber_pressure_torr =get_metadata(hypcard_folder, metadata_file_name)
+        binning, nx, ny, FOV, grating, central_wavelength_nm, channels, amplification, readout_rate_hz, exposure_time_s, beam_acc_voltage_kv, gun_lens_amps, obj_lens_amps, aperture_um, chamber_pressure_torr = get_metadata(hypcard_folder, metadata_file_name)
 
         #Store metadata
         cl_object.metadata.set_item("Acquisition_instrument.Spectrometer.grating",
@@ -174,7 +174,7 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
             nm (from the MeanSpectrum file), such as [spec_start, spec_end]
         """
         #Get relevant parameters from metadata
-        central_wavelength = cl_object.metadata.Acquisition_instrument.Spectrometer.central_wavelength
+        central_wavelength = cl_object.metadata.Acquisition_instrument.Spectrometer.central_wavelength_nm
 
         #Estimate start and end wavelengths
         spectra_offset_array = [central_wavelength-273, central_wavelength+273]
@@ -226,8 +226,8 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
     #Import metadata
     metadata_file_name \
                 = acquisition_systems[acquisition_system]['metadata_file_name']
-    binning, nx, ny, FOV, grating, central_wavelength, channels \
-                = get_metadata(hypcard_folder, metadata_file_name)
+
+    binning, nx, ny, FOV, grating, central_wavelength_nm, channels, amplification, readout_rate_hz, exposure_time_s, beam_acc_voltage_kv, gun_lens_amps, obj_lens_amps, aperture_um, chamber_pressure_torr = get_metadata(hypcard_folder, metadata_file_name)
 
 
     #Load file
