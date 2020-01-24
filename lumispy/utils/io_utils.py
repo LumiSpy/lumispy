@@ -234,8 +234,13 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
         path = os.path.join(hypcard_folder, background_file_name)
         #Try to load the file, if it exists.
         try:
+            #Find the exact filename, using the * wildcard
+            path = glob.glob(path)
             #Load the file as a numpy array
             bkg = np.loadtxt(path)
+            #Extract only the  signal axis
+            #ERROR from AttoLight bug
+            bkg = bkg[1]
             #Retrieve the correct x axis from the cl_object
             #ERROR from AttoLight bug
             x_axis = cl_object.axes_manager.signal_axes[0].axis
