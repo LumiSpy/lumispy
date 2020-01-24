@@ -220,6 +220,36 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
 
         return cl_object
 
+    def save_background(cl_object, hypcard_folder, background_file_name='Background*.txt'):
+        """
+        Based on the Attolight background savefunction.
+        If background is found in the folder, it saves background as a cl_object.background attribute.
+
+        Returns
+        ----------
+        cl_object:
+            With the background saved as a background attribute.
+        """
+        #Get the absolute path
+        path = os.path.join(hypcard_folder, background_file_name)
+        #Try to load the file, if it exists.
+        try:
+            #Load the file as a numpy array
+            bkg = np.loadtxt(path)
+            #Retrieve the correct x axis from the cl_object
+            #ERROR from AttoLight bug
+            x_axis = cl_object.axes_manager.signal_axes[0].axis
+            #Join x axis with bkg signal
+            background = [x_axis, bkg]
+            #Store the value as background attribute
+            cl_object.background = background
+            return cl_object
+
+        #If file does not exist, return function
+        except:
+            return
+
+
     #################################
 
     #Loading function starts here
@@ -261,10 +291,14 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
             name = experiment_name
         s.metadata.General.title = name
 
+    #Save background file if exisent
+    save_background(s, hypcard_folder)
+
     #Calibrate navigation axis
     calibrate_navigation_axis(s)
 
     #Calibrate signal axis
     calibrate_signal_axis_wavelength(s)
+
 
     return(s)
