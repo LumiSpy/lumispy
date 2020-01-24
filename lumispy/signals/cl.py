@@ -27,11 +27,18 @@ from hyperspy._signals.lazy import LazySignal
 
 
 class CLSpectrum(Signal1D):
+    """General 1D CL signal class.
+    ----------
+    background : array
+        Array containing [wavelength, background].
+    """
     _signal_type = "CL"
     _signal_dimension = 1
 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.background = None
 
     def as_lazy(self, *args, **kwargs):
         """Create a copy of the Signal1D object as a
@@ -65,6 +72,9 @@ class CLSpectrum(Signal1D):
         ---------------
         crop_px : int
             Amount of pixels to be cropped on each side individually.
+
+        inplace : boolean
+            If False, it returns a new object with the transformation. If True, the original object is transformed, returning no object.
 
         Returns
         ---------------
