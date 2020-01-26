@@ -64,7 +64,7 @@ class CLSpectrum(Signal1D):
         super().decomposition(*args, **kwargs)
         self.__class__ = CLSpectrum
 
-    def crop_edges(self, crop_px, inplace = False):
+    def crop_edges(self, crop_px):
         """
         Crop the amount of pixels from the four edges of the scanning region, from out the edges inwards.
 
@@ -72,9 +72,6 @@ class CLSpectrum(Signal1D):
         ---------------
         crop_px : int
             Amount of pixels to be cropped on each side individually.
-
-        inplace : boolean
-            If False, it returns a new object with the transformation. If True, the original object is transformed, returning no object.
 
         Returns
         ---------------
@@ -91,11 +88,7 @@ class CLSpectrum(Signal1D):
             signal_cropped = self.inav[crop_px +1: width -crop_px +1, crop_px +1: height-crop_px +1]
             signal_cropped.metadata.set_item("Signal.cropped_edges", crop_px)
 
-        if inplace == True:
-            self = signal_cropped
-            return self
-        else:
-            return signal_cropped
+        return signal_cropped
 
     def background_substraction(self, background=None, inplace=False):
         """
