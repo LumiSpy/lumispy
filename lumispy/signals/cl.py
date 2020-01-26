@@ -107,7 +107,7 @@ class CLSpectrum(Signal1D):
 
         Parameters
         ---------------
-        background : array[wavelength, bkg]
+        background : numpy.array[wavelength, bkg]
             OPTIONAL: Bakground array with two columns: [wavelenght, bkg]. Length of array must match signal_axes size.
 
         inplace : boolean
@@ -124,21 +124,21 @@ class CLSpectrum(Signal1D):
             """
             return signal - bkg
 
-        if background != None:
+        if background is not None:
             if (background[0]).all == (self.axes_manager.signal_axes[0].axis).all:
                 bkg = background[1]
 
             else:
-                ValueError('The background x axis provided as external argument is does not match the signal wavelenght x axis values.')
+                raise ValueError('The background x axis provided as external argument is does not match the signal wavelenght x axis values.')
         else:
             if self.background != None:
                 if (self.background[0]).all == (self.axes_manager.signal_axes[0].axis).all:
                     bkg = self.background[1]
 
                 else:
-                    ValueError('The background x axis wavelenght values from the signal.bakground axis do not match the signal wavelenght x axis values.')
+                    raise ValueError('The background x axis wavelenght values from the signal.bakground axis do not match the signal wavelenght x axis values.')
             else:
-                ValueError('No background defined on the signal.background NOR as an input of this function.')
+                raise ValueError('No background defined on the signal.background NOR as an input of this function.')
 
         if inplace == False:
             self_substracted = self.map(substract_self, bkg=bkg, inplace=False)
