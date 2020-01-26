@@ -86,6 +86,13 @@ class CLSpectrum(Signal1D):
             raise ValueError("The pixels to be cropped cannot be larger than half the width or the length!")
         else:
             signal_cropped = self.inav[crop_px +1: width -crop_px +1, crop_px +1: height-crop_px +1]
+
+        #Store transformation in metadata (or update the value if already previously transformed)
+
+        try:
+            px_already_cropped = signal_cropped.metadata.Signal.cropped_edges
+            signal_cropped.metadata.Signal.cropped_edges = px_already_cropped + crop_px
+        except:
             signal_cropped.metadata.set_item("Signal.cropped_edges", crop_px)
 
         return signal_cropped
