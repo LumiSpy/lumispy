@@ -97,6 +97,56 @@ class CLSpectrum(Signal1D):
         else:
             return signal_cropped
 
+    def background_substraction(self, background=None, inplace=False):
+        """
+        Substract the background to the signal in each pixel.
+        If background is manually input of function as argument, it will be substracted if it matches the x axis wavelenght values.
+        Otherwise, if no background is passed, it will check on the metadata.
+        If background is in metadata, it substracts it without need to manually input background (background is automatically saved upon load_hyp() if the bakground file is found in the same folder as the data).
+        Otherwise it raises an Error.
+
+        Parameters
+        ---------------
+        background : array[wavelength, bkg]
+            OPTIONAL: Bakground array with two columns: [wavelenght, bkg]. Length of array must match signal_axes size.
+
+        inplace : boolean
+            If False, it returns a new object with the transformation. If True, the original object is transformed, returning no object.
+
+        Returns
+        ---------------
+        signal_cropped : CLSpectrum
+            A smaller cropped CL signal object. If inplace is True, the original object is modified and no CLSpectrum is returned.
+        """
+        def substract_self(signal, bkg):
+            """
+            Dummy function to be used in self.map below.
+            """
+            return signal - bkg
+
+        if background != None:
+            if (background[0]).all == (self.axes_manager.signal_axes[0].axis).all:
+                bkg = background[1]
+
+            else:
+                ValueError('The background x axis provided as external argument is does not match the signal wavelenght x axis values.')
+        else:
+            if self.background != None:
+                if (self.background[0]).all == (self.axes_manager.signal_axes[0].axis).all:
+                    bkg = self.background[1]
+
+                else:
+                    ValueError('The background x axis wavelenght values from the signal.bakground axis do not match the signal wavelenght x axis values.')
+            else:
+                ValueError('No background defined on the signal.background NOR as an input of this function.')
+
+        if inplace == False:
+            self_substracted = self.map(substract_self, bkg=bkg, inplace=False)
+            self_substracted.metadata.set_item("Signal.background_substracted", True)
+            return self_substracted
+        else:
+            self.metadata.set_item("Signal.background_substracted", True)
+            return self.map(substract_self, bkg=bkg, inplace=True)
 
 class LazyCLSpectrum(LazySignal, CLSpectrum):
 
