@@ -235,7 +235,7 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
         #Try to load the file, if it exists.
         try:
             #Find the exact filename, using the * wildcard
-            path = glob.glob(path)
+            path = glob.glob(path)[0]
             #Load the file as a numpy array
             bkg = np.loadtxt(path)
             #Extract only the  signal axis
@@ -296,14 +296,13 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
             name = experiment_name
         s.metadata.General.title = name
 
-    #Save background file if exisent
-    save_background(s, hypcard_folder)
-
     #Calibrate navigation axis
     calibrate_navigation_axis(s)
 
     #Calibrate signal axis
     calibrate_signal_axis_wavelength(s)
 
+    #Save background file if exisent (after calibrating signal axis)
+    save_background(s, hypcard_folder)
 
     return(s)
