@@ -126,14 +126,14 @@ class CLSpectrum(Signal1D):
 
 
         if background is not None:
-            if (background[0]).all == (self.axes_manager.signal_axes[0].axis).all:
+            if (background[0]).all() == (self.axes_manager.signal_axes[0].axis).all():
                 bkg = background[1]
 
             else:
                 raise ValueError('The background x axis provided as external argument is does not match the signal wavelenght x axis values.')
         else:
             if self.background != None:
-                if (self.background[0]).all == (self.axes_manager.signal_axes[0].axis).all:
+                if (self.background[0]).all() == (self.axes_manager.signal_axes[0].axis).all():
                     bkg = self.background[1]
 
                 else:
