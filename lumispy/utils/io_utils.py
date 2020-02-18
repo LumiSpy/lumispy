@@ -35,14 +35,14 @@ from .acquisition_systems import acquisition_systems
 
 
 
-def load_hypcard(hypcard_file, lazy = False, acquisition_system
+def load_hypcard(hypcard_file_path=None, lazy = False, acquisition_system
                  = 'cambridge_attolight'):
     """Load data into pyxem objects.
     Parameters
     ----------
-    hypcard_file : str
-        The HYPCard.bin file for the file to be loaded, created by AttoLight
-        software. Please, state the directory.
+    hypcard_file_path : str, None
+        The HYPCard.bin filepath for the file to be loaded, created by AttoLight software. Please, state the directory.
+        If None, a pop-up window will be loaded.
     lazy : bool
         If True the file will be opened lazily, i.e. without actually reading
         the data from the disk until required. Allows datasets much larger than
@@ -261,8 +261,21 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
     #################################
 
     #Loading function starts here
+
+    #Check if a path has been given
+    if hypcard_file_path is None:
+        from hyperspy.signal_tools import Load
+        from hyperspy.ui_registry import get_gui
+        load_ui = Load()
+        get_gui(load_ui, toolkey="hyperspy.load")
+        if load_ui.filename:
+            hypcard_file_path = load_ui.filename
+            lazy = load_ui.lazy
+        if hypcard_file_path is None:
+            raise ValueError("No file provided to reader")
+
     #Import folder name
-    hypcard_folder = os.path.split(os.path.abspath(hypcard_file))[0]
+    hypcard_folder = os.path.split(os.path.abspath(hypcard_file_path))[0]
 
     #Import metadata
     metadata_file_name \
@@ -272,7 +285,7 @@ def load_hypcard(hypcard_file, lazy = False, acquisition_system
 
 
     #Load file
-    with open(hypcard_file, 'rb') as f:
+    with open(hypcard_file_path, 'rb') as f:
         data = np.fromfile(f, dtype= [('bar', '<i4')], count= channels*nx*ny)
         array = np.reshape(data, [channels, nx, ny], order='F')
 
