@@ -64,10 +64,10 @@ entered into an anaconda prompt (from scratch):
     $ jupyter lab
 ```
 
-[Tutorials and example workflows](https://github.com/LumiSpy/lumispy/tree/master/lumispy_demos)
+[Tutorials and example workflows](https://github.com/lumispy/lumispy-demos)
 have been curated as a series of Jupyter notebooks that you can work through 
 and modify to perform many common analyses. Simply:
 
-1. Copy and paste the `lumispy_demos` folder in your desired folder
+1. Download the `lumispy_demos` repository in your desired folder
 2. Load lumispy (as shown above)
 3. In Jupyter lab, navigate to the folder and start using the notebook
