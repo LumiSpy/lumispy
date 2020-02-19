@@ -64,7 +64,7 @@ entered into an anaconda prompt (from scratch):
     $ jupyter lab
 ```
 
-[Tutorials and example workflows](https://github.com/jordiferrero/lumispy-demos)
+[Tutorials and example workflows](https://github.com/lumispy/lumispy-demos)
 have been curated as a series of Jupyter notebooks that you can work through 
 and modify to perform many common analyses. Simply:
 
