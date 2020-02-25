@@ -162,6 +162,7 @@ def load_hypcard(hypcard_file_path=None, lazy = False, acquisition_system
         cl_object.metadata.set_item("Acquisition_instrument.SEM.aperture_um", aperture_um)
         cl_object.metadata.set_item("Acquisition_instrument.SEM.chamber_pressure_torr", chamber_pressure_torr)
         cl_object.metadata.set_item("Acquisition_instrument.SEM.real_magnification", real_magnification)
+        cl_object.metadata.set_item("General.folder_path", hypcard_folder)
 
         return cl_object
 
