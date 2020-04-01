@@ -97,12 +97,12 @@ class CLSpectrum(Signal1D):
 
         return signal_cropped
 
-    def background_substraction(self, background=None, inplace=False):
+    def background_subtraction(self, background=None, inplace=False):
         """
-        Substract the background to the signal in each pixel.
-        If background is manually input of function as argument, it will be substracted if it matches the x axis wavelenght values.
+        Subtract the background to the signal in each pixel.
+        If background is manually input of function as argument, it will be subtracted if it matches the x axis wavelenght values.
         Otherwise, if no background is passed, it will check on the metadata.
-        If background is in metadata, it substracts it without need to manually input background (background is automatically saved upon load_hyp() if the bakground file is found in the same folder as the data).
+        If background is in metadata, it subtracts it without need to manually input background (background is automatically saved upon load_hyp() if the bakground file is found in the same folder as the data).
         Otherwise it raises an Error.
 
         Parameters
@@ -118,7 +118,7 @@ class CLSpectrum(Signal1D):
         signal_cropped : CLSpectrum
             A smaller cropped CL signal object. If inplace is True, the original object is modified and no CLSpectrum is returned.
         """
-        def substract_self(signal, bkg):
+        def subtract_self(signal, bkg):
             """
             Dummy function to be used in self.map below.
             """
@@ -142,14 +142,14 @@ class CLSpectrum(Signal1D):
                 raise ValueError('No background defined on the signal.background NOR as an input of this function.')
 
         if inplace == False:
-            self_substracted = self.map(substract_self, bkg=bkg, inplace=False)
-            self_substracted.metadata.set_item("Signal.background_substracted", True)
-            return self_substracted
+            self_subtracted = self.map(subtract_self, bkg=bkg, inplace=False)
+            self_subtracted.metadata.set_item("Signal.background_subtracted", True)
+            return self_subtracted
         else:
-            self.metadata.set_item("Signal.background_substracted", True)
-            return self.map(substract_self, bkg=bkg, inplace=True)
+            self.metadata.set_item("Signal.background_subtracted", True)
+            return self.map(subtract_self, bkg=bkg, inplace=True)
 
-    def cosmic_rays_substraction(self, extra_percent=50, inplace=False, **kwargs):
+    def cosmic_rays_subtraction(self, extra_percent=50, inplace=False, **kwargs):
         """
         Masks the cosmic rays away
 
@@ -186,10 +186,10 @@ class CLSpectrum(Signal1D):
 
         if inplace == False:
             signal_filtred = self.map(remove_cosmic_ray, threshold=threshold, mean_spectrum=mean_spectrum, show_progressbar=True, inplace=False)
-            signal_filtred.metadata.set_item("Signal.cosmic_rays_substracted_extra_percent", extra_percent)
+            signal_filtred.metadata.set_item("Signal.cosmic_rays_subtracted_extra_percent", extra_percent)
             return signal_filtred
         else:
-            self.metadata.set_item("Signal.cosmic_rays_substracted_extra_percent", extra_percent)
+            self.metadata.set_item("Signal.cosmic_rays_subtracted_extra_percent", extra_percent)
             return self.map(remove_cosmic_ray, threshold=threshold, mean_spectrum=mean_spectrum, show_progressbar=True, inplace=True)
 
 
