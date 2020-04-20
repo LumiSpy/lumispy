@@ -16,50 +16,52 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Signal class for cathodoluminescence spectral data acquired in STEM.
+"""Signal class for Electroluminescence spectral data.
 
 """
 
 import numpy as np
 
-from lumispy.signals.cl import CLSpectrum
 from hyperspy._signals.lazy import LazySignal
+from lumispy.signals.luminescence_spectrum import LumiSpectrum
 
 
-class CLSTEMSpectrum(CLSpectrum):
-    _signal_type = "cl_spectrum"
+class ELSpectrum(LumiSpectrum):
+    """General 1D Electroluminescence signal class.
+    ----------
+    """
+    _signal_type = "EL_Spectrum"
+    _signal_dimension = 1
 
     def __init__(self, *args, **kwargs):
-        self, args, kwargs = push_metadata_through(self, *args, **kwargs)
         super().__init__(*args, **kwargs)
 
     def as_lazy(self, *args, **kwargs):
-        """Create a copy of the CLSTEMSpectrum object as a
-        :py:class:`~lumispy.signals.cl.CLSTEMSpectrum`.
+        """Create a copy of the Signal1D object as a
+        :py:class:`~lumispy.signals.cl.ELSpectrum`.
 
         Parameters
         ----------
         copy_variance : bool
-            If True variance from the original CLSTEMSpectrum object is copied
-            to the new CLSTEMSpectrum object.
+            If True variance from the original ELSpectrum object is copied to
+            the new LazyELSpectrum object.
 
         Returns
         -------
-        res : :py:class:`~lumispy.signals.cl.LazyCLSTEMSpectrum`.
+        res : :py:class:`~lumispy.signals.cl.ELSpectrum`.
             The lazy signal.
         """
         res = super().as_lazy(*args, **kwargs)
-        res.__class__ = LazyCLSTEMSpectrum
+        res.__class__ = LazyELSpectrum
         res.__init__(**res._to_dictionary())
         return res
 
     def decomposition(self, *args, **kwargs):
         super().decomposition(*args, **kwargs)
-        self.__class__ = CLSTEMSpectrum
+        self.__class__ = ELSpectrum
 
 
-class LazyCLSTEMSpectrum(LazySignal, CLSTEMSpectrum):
-
+class LazyELSpectrum(LazySignal, ELSpectrum):
     _lazy = True
 
     def __init__(self, *args, **kwargs):
@@ -67,9 +69,9 @@ class LazyCLSTEMSpectrum(LazySignal, CLSTEMSpectrum):
 
     def compute(self, *args, **kwargs):
         super().compute(*args, **kwargs)
-        self.__class__ = CLSTEMSpectrum
+        self.__class__ = ELSpectrum
         self.__init__(**self._to_dictionary())
 
     def decomposition(self, *args, **kwargs):
         super().decomposition(*args, **kwargs)
-        self.__class__ = LazyCLSTEMSpectrum
+        self.__class__ = LazyELSpectrum
