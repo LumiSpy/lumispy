@@ -28,7 +28,7 @@ import numpy as np
 #from hyperspy.io import load_with_reader
 
 from hyperspy.signals import Signal2D
-from lumispy.signals.cl_sem import CLSEMSpectrum
+from lumispy.signals.cl_sem_spectrum import CLSEMSpectrum
 
 from .acquisition_systems import acquisition_systems
 

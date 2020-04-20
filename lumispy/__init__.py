@@ -30,13 +30,22 @@ import numpy as np
 
 from natsort import natsorted
 
-from .signals.cl import CLSpectrum
-from .signals.cl_sem import CLSEMSpectrum
-from .signals.cl_stem import CLSTEMSpectrum
+from .signals.common_luminescence import CommonLumi
+from .signals.luminescence_spectrum import LumiSpectrum
+from .signals.cl_spectrum import CLSpectrum
+from .signals.cl_sem_spectrum import CLSEMSpectrum
+from .signals.cl_stem_spectrum import CLSTEMSpectrum
+from .signals.pl_spectrum import PLSpectrum
+from .signals.el_spectrum import ELSpectrum
+from .signals.luminescence_transient import LumiTransient
 
-from .signals.cl import LazyCLSpectrum
-from .signals.cl_sem import LazyCLSEMSpectrum
-from .signals.cl_stem import LazyCLSTEMSpectrum
+from .signals.luminescence_spectrum import LazyLumiSpectrum
+from .signals.cl_spectrum import LazyCLSpectrum
+from .signals.cl_sem_spectrum import LazyCLSEMSpectrum
+from .signals.cl_stem_spectrum import LazyCLSTEMSpectrum
+from .signals.pl_spectrum import LazyPLSpectrum
+from .signals.el_spectrum import LazyELSpectrum
+from .signals.luminescence_transient import LazyLumiTransient
 
 from .utils.io_utils import load_hypcard
 

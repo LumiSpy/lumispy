@@ -17,5 +17,3 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 import pytest
-
-from lumispy.signals.cl import CL

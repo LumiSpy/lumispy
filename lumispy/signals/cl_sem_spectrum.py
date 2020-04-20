@@ -22,14 +22,14 @@
 
 import numpy as np
 
-from lumispy.signals.cl import CLSpectrum
+from lumispy.signals.cl_spectrum import CLSpectrum
 from hyperspy._signals.lazy import LazySignal
 
 from lumispy.utils.acquisition_systems import acquisition_systems
 
 
 class CLSEMSpectrum(CLSpectrum):
-    _signal_type = "cl_sem_spectrum"
+    _signal_type = "CL_SEM_Spectrum"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -65,7 +65,7 @@ class CLSEMSpectrum(CLSpectrum):
         Parameters
         ------------
         self : CLSEMSpectrum
-            Metadata should have grating, nx, ny, FOV and acquisition_system
+            Metadata should have grating, nx, ny, fov and acquisition_system
 
         Returns
         ------------
@@ -85,7 +85,7 @@ class CLSEMSpectrum(CLSpectrum):
             nx = md.Acquisition_instrument.SEM.resolution_x
             ny = md.Acquisition_instrument.SEM.resolution_y
             grating = md.Acquisition_instrument.Spectrometer.grating
-            FOV = md.Acquisition_instrument.SEM.FOV
+            fov = md.Acquisition_instrument.SEM.FOV
             acquisition_system = md.Acquisition_instrument.acquisition_system
 
             cal_factor_x_axis = acquisition_systems[acquisition_system]['cal_factor_x_axis']
@@ -95,29 +95,27 @@ class CLSEMSpectrum(CLSpectrum):
             try:
                 corrfactor = acquisition_systems[acquisition_system]['grating_corrfactors'][grating]
             except:
-                raise Exception("Sorry, the grating is not calibrated yet. " 
+                raise Exception("Sorry, the grating is not calibrated yet. "
                                 "No grating shift corraction can be applied. "
                                 "Go to lumispy.utils.acquisition_systems and "
                                 "add the missing grating_corrfactors")
 
-            #Correction of the Wavelength Shift along the X-Axis
-            calax = cal_factor_x_axis/(FOV*nx)
-            garray = np.arange((-corrfactor/2) * calax * 1000 * (nx),
-                     (corrfactor/2) * calax * 1000 * (nx), corrfactor *calax
-                     * 1000) #(Total Variation, Channels, Step)
-            barray = np.full((nx,ny),garray)
+            # Correction of the Wavelength Shift along the X-Axis
+            calax = cal_factor_x_axis / (fov * nx)
+            garray = np.arange((-corrfactor / 2) * calax * 1000 * (nx),
+                               (corrfactor / 2) * calax * 1000 * (nx), corrfactor * calax
+                               * 1000)  # (Total Variation, Channels, Step)
+            barray = np.full((nx, ny), garray)
 
             self.shift1D(barray)
 
-            #Store modication in metadata
+            # Store modification in metadata
             md.set_item("Signal.grating_corrected", True)
         else:
             raise Exception("You already corrected for the grating shift.")
 
 
-
 class LazyCLSEMSpectrum(LazySignal, CLSEMSpectrum):
-
     _lazy = True
 
     def __init__(self, *args, **kwargs):
