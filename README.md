@@ -47,7 +47,7 @@ source code.
 ```
     $ cd PATH_TO_SOURCE_CODE
     $ conda activate lumispy
-    $ pip install . -y
+    $ pip install .
 ```
 
 Installation is completed! To start using it, check the next section.
