@@ -137,11 +137,12 @@ signals:
         dtype: real
         lazy: True
         module: lumispy.signals.cl_stem_spectrum
+
     LumiTransient:
       signal_type: "Luminescence_2D"
       signal_type_aliases:
-        - TR Luminescence
         - TRLumi
+        - TR luminescence
       signal_dimension: 2
       dtype: real
       lazy: False
