@@ -16,14 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-acquisition_systems = {
-    'cambridge_attolight' : {
-        'channels' : 1024,
-        'cal_factor_x_axis' : 131072,
-        'metadata_file_name' :'MicroscopeStatus.txt',
-        'grating_corrfactors' : {
-            150 : 2.73E-04,
-            600 : 6.693659836087227e-05,
-        }
-    }
-}
+from lumispy.io_plugins import attolight
+
+io_plugins = [attolight]
+
+default_write_ext = set()
+for plugin in io_plugins:
+    if plugin.writes:
+        default_write_ext.add(
+            plugin.file_extensions[plugin.default_extension])

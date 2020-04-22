@@ -25,8 +25,6 @@ import numpy as np
 from lumispy.signals.cl_spectrum import CLSpectrum
 from hyperspy._signals.lazy import LazySignal
 
-from lumispy.utils.acquisition_systems import acquisition_systems
-
 
 class CLSEMSpectrum(CLSpectrum):
     _signal_type = "CL_SEM_Spectrum"
@@ -74,6 +72,8 @@ class CLSEMSpectrum(CLSpectrum):
 
         Authorship: Gunnar Kusch (gk419@cam.ac.uk)
         """
+        from lumispy.io_plugins.attolight import attolight_systems
+
         # Avoid correcting for this shift twice (first time it fails, so except
         # block runs. Second time, try succeeds, so except block is skipped):
         try:
@@ -88,17 +88,17 @@ class CLSEMSpectrum(CLSpectrum):
             fov = md.Acquisition_instrument.SEM.FOV
             acquisition_system = md.Acquisition_instrument.acquisition_system
 
-            cal_factor_x_axis = acquisition_systems[acquisition_system]['cal_factor_x_axis']
+            cal_factor_x_axis = attolight_systems[acquisition_system]['cal_factor_x_axis']
 
             # Get the correction factor for the relevant grating (extracted from
             # the acquisition_systems dictionary)
             try:
-                corrfactor = acquisition_systems[acquisition_system]['grating_corrfactors'][grating]
+                corrfactor = attolight_systems[acquisition_system]['grating_corrfactors'][grating]
             except:
                 raise Exception("Sorry, the grating is not calibrated yet. "
-                                "No grating shift corraction can be applied. "
-                                "Go to lumispy.utils.acquisition_systems and "
-                                "add the missing grating_corrfactors")
+                                "No grating shift correction can be applied. "
+                                "Go to lumispy.io.attolight and "
+                                "add the missing grating_corrfactors in the attolight_sysyems dict.")
 
             # Correction of the Wavelength Shift along the X-Axis
             calax = cal_factor_x_axis / (fov * nx)
