@@ -47,7 +47,7 @@ from .signals.pl_spectrum import LazyPLSpectrum
 from .signals.el_spectrum import LazyELSpectrum
 from .signals.luminescence_transient import LazyLumiTransient
 
-from .utils.io_utils import load_hypcard
+from .io import load
 
 from . import release_info
 
@@ -61,3 +61,4 @@ __email__ = release_info.email
 __status__ = release_info.status
 
 _logger = logging.getLogger(__name__)
+
