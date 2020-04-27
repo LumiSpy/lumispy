@@ -96,7 +96,7 @@ class CLSEMSpectrum(CLSpectrum):
                 corrfactor = acquisition_systems[acquisition_system]['grating_corrfactors'][grating]
             except:
                 raise Exception("Sorry, the grating is not calibrated yet. "
-                                "No grating shift corraction can be applied. "
+                                "No grating shift correction can be applied. "
                                 "Go to lumispy.utils.acquisition_systems and "
                                 "add the missing grating_corrfactors")
 

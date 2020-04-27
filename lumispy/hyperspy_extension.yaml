@@ -22,6 +22,7 @@ signals:
     signal_type_aliases:
       - Luminescence BaseSignal
       - luminescence
+    signal_dimension: -1
     dtype: real
     lazy: False
     module: lumispy.signals.common_luminescence
@@ -137,6 +138,7 @@ signals:
         dtype: real
         lazy: True
         module: lumispy.signals.cl_stem_spectrum
+
     LumiTransient:
       signal_type: "Luminescence_2D"
       signal_type_aliases:
