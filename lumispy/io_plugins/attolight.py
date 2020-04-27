@@ -223,7 +223,7 @@ def file_reader(filename, *args, **kwds):
 
         # Get relevant parameters from metadata and acquisition_systems
         # parameters
-        acquisition_system \
+        attolight_acquisition_system \
             = cl_object.metadata.Acquisition_instrument.acquisition_system
         cal_factor_x_axis \
             = attolight_systems[attolight_acquisition_system]['cal_factor_x_axis']
@@ -324,15 +324,16 @@ def file_reader(filename, *args, **kwds):
     _store_metadata(s, hypcard_folder, metadata_file_name, attolight_acquisition_system)
 
     # Add name as metadata
+    experiment_name = os.path.basename(hypcard_folder)
     if attolight_acquisition_system == 'cambridge_attolight':
-        # Import file name
-        experiment_name = os.path.basename(hypcard_folder)
         # CAUTION: Specifically delimeted by Attolight default naming system
-        try:
+        if len(experiment_name) > 37:
             name = experiment_name[:-37]
-        except:
+        else:
             name = experiment_name
-        s.metadata.General.title = name
+    else:
+        name = experiment_name
+    s.metadata.General.title = name
 
     # Calibrate navigation axis
     _calibrate_navigation_axis(s)
