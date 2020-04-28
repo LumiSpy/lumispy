@@ -30,7 +30,7 @@ class ELSpectrum(LumiSpectrum):
     """General 1D Electroluminescence signal class.
     ----------
     """
-    _signal_type = "EL_Spectrum"
+    _signal_type = "EL"
     _signal_dimension = 1
 
     def __init__(self, *args, **kwargs):

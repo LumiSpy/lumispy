@@ -30,7 +30,7 @@ class CLSpectrum(LumiSpectrum):
     """General 1D Cathodoluminescence signal class.
     ----------
     """
-    _signal_type = "CL_Spectrum"
+    _signal_type = "CL"
     _signal_dimension = 1
 
     def __init__(self, *args, **kwargs):

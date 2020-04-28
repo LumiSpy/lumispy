@@ -27,7 +27,7 @@ from hyperspy._signals.lazy import LazySignal
 
 
 class CLSEMSpectrum(CLSpectrum):
-    _signal_type = "CL_SEM_Spectrum"
+    _signal_type = "CL_SEM"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -32,7 +32,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
     background : array
         Array containing [wavelength, background].
     """
-    _signal_type = "Luminescence_Spectrum"
+    _signal_type = "Luminescence"
     _signal_dimension = 1
 
     def __init__(self, *args, **kwargs):

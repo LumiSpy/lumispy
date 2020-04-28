@@ -19,22 +19,13 @@
 """Signal class for Luminescence data (BaseSignal class).
 """
 
-import numpy as np
 
-from hyperspy.signal import BaseSignal
-
-
-class CommonLumi(BaseSignal):
+class CommonLumi:
     """General Luminescence signal class (dimensionless).
     ----------
     background : array
         Array containing [wavelength, background].
     """
-    _signal_type = "Luminescence"
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.background = None
 
     def crop_edges(self, crop_px):
         """

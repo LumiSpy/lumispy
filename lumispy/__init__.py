@@ -25,7 +25,6 @@ import numpy as np
 
 from natsort import natsorted
 
-from .signals.common_luminescence import CommonLumi
 from .signals.luminescence_spectrum import LumiSpectrum
 from .signals.cl_spectrum import CLSpectrum
 from .signals.cl_sem_spectrum import CLSEMSpectrum

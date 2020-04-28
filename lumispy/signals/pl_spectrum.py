@@ -30,7 +30,7 @@ class PLSpectrum(LumiSpectrum):
     """General 1D Photoluminescence signal class.
     ----------
     """
-    _signal_type = "PL_Spectrum"
+    _signal_type = "PL"
     _signal_dimension = 1
 
     def __init__(self, *args, **kwargs):
