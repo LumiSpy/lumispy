@@ -17,14 +17,9 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import glob
 import logging
-import os
-import warnings
 
 from hyperspy.io import load as hyperspyload
-#from hyperspy.api import roi
-from lumispy.signals import push_metadata_through
 
 import numpy as np
 
