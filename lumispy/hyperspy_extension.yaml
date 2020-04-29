@@ -62,15 +62,15 @@ signals:
     dtype: real
     lazy: False
     module: lumispy.signals.el_spectrum
-    LazyELSpectrum:
-      signal_type: EL
-      signal_type_aliases:
-        - EL
-        - electroluminescence
-      signal_dimension: 1
-      dtype: real
-      lazy: True
-      module: lumispy.signals.el_spectrum
+  LazyELSpectrum:
+    signal_type: EL
+    signal_type_aliases:
+      - EL
+      - electroluminescence
+    signal_dimension: 1
+    dtype: real
+    lazy: True
+    module: lumispy.signals.el_spectrum
 
   PLSpectrum:
     signal_type: PL
@@ -81,15 +81,15 @@ signals:
     dtype: real
     lazy: False
     module: lumispy.signals.pl_spectrum
-    LazyPLSpectrum:
-      signal_type: PL_Spectrum
-      signal_type_aliases:
-        - PL
-        - photoluminescence
-      signal_dimension: 1
-      dtype: real
-      lazy: True
-      module: lumispy.signals.pl_spectrum
+  LazyPLSpectrum:
+    signal_type: PL
+    signal_type_aliases:
+      - PL
+      - photoluminescence
+    signal_dimension: 1
+    dtype: real
+    lazy: True
+    module: lumispy.signals.pl_spectrum
 
   CLSEMSpectrum:
     signal_type: CL_SEM

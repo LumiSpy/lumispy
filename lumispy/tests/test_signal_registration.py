@@ -39,14 +39,25 @@ def test_signal_registration1d(signal_class):
     s = signal_class(0)
 
     s2 = hs.signals.Signal1D([0, 1, 2])
+    if s._lazy:
+        s2 = s2.as_lazy()
+
+    print("signal_type:", s._signal_type)
+
     s2.set_signal_type(s._signal_type)
     assert isinstance(s2, signal_class)
 
 
 @pytest.mark.parametrize("signal_class", signal2d_class_list)
 def test_signal_registration2d(signal_class):
-    s = signal_class(0)
+    data = np.arange(1000).reshape((10, 10, 10))
+    s = signal_class(data)
 
-    s2 = hs.signals.Signal2D(np.arange(100).reshape((10, 10)))
+    s2 = hs.signals.Signal2D(data)
+    if s._lazy:
+        s2 = s2.as_lazy()
+
+    print("signal_type:", s._signal_type)
+
     s2.set_signal_type(s._signal_type)
     assert isinstance(s2, signal_class)
