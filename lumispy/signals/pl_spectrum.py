@@ -20,8 +20,6 @@
 
 """
 
-import numpy as np
-
 from hyperspy._signals.lazy import LazySignal
 from lumispy.signals.luminescence_spectrum import LumiSpectrum
 
@@ -30,48 +28,14 @@ class PLSpectrum(LumiSpectrum):
     """General 1D Photoluminescence signal class.
     ----------
     """
-    _signal_type = "PL_Spectrum"
+    _signal_type = "PL"
     _signal_dimension = 1
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def as_lazy(self, *args, **kwargs):
-        """Create a copy of the Signal1D object as a
-        :py:class:`~lumispy.signals.cl.PLSpectrum`.
-
-        Parameters
-        ----------
-        copy_variance : bool
-            If True variance from the original PLSpectrum object is copied to
-            the new LazyPLSpectrum object.
-
-        Returns
-        -------
-        res : :py:class:`~lumispy.signals.cl.PLSpectrum`.
-            The lazy signal.
-        """
-        res = super().as_lazy(*args, **kwargs)
-        res.__class__ = LazyPLSpectrum
-        res.__init__(**res._to_dictionary())
-        return res
-
-    def decomposition(self, *args, **kwargs):
-        super().decomposition(*args, **kwargs)
-        self.__class__ = PLSpectrum
+    pass
 
 
 class LazyPLSpectrum(LazySignal, PLSpectrum):
+
     _lazy = True
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def compute(self, *args, **kwargs):
-        super().compute(*args, **kwargs)
-        self.__class__ = PLSpectrum
-        self.__init__(**self._to_dictionary())
-
-    def decomposition(self, *args, **kwargs):
-        super().decomposition(*args, **kwargs)
-        self.__class__ = LazyPLSpectrum
+    pass

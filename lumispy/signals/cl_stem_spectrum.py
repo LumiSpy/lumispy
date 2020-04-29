@@ -25,48 +25,14 @@ from hyperspy._signals.lazy import LazySignal
 
 
 class CLSTEMSpectrum(CLSpectrum):
-    _signal_type = "CL_STEM_Spectrum"
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    _signal_type = "CL_STEM"
 
-    def as_lazy(self, *args, **kwargs):
-        """Create a copy of the CLSTEMSpectrum object as a
-        :py:class:`~lumispy.signals.cl.CLSTEMSpectrum`.
-
-        Parameters
-        ----------
-        copy_variance : bool
-            If True variance from the original CLSTEMSpectrum object is copied
-            to the new CLSTEMSpectrum object.
-
-        Returns
-        -------
-        res : :py:class:`~lumispy.signals.cl.LazyCLSTEMSpectrum`.
-            The lazy signal.
-        """
-        res = super().as_lazy(*args, **kwargs)
-        res.__class__ = LazyCLSTEMSpectrum
-        res.__init__(**res._to_dictionary())
-        return res
-
-    def decomposition(self, *args, **kwargs):
-        super().decomposition(*args, **kwargs)
-        self.__class__ = CLSTEMSpectrum
+    pass
 
 
 class LazyCLSTEMSpectrum(LazySignal, CLSTEMSpectrum):
 
     _lazy = True
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def compute(self, *args, **kwargs):
-        super().compute(*args, **kwargs)
-        self.__class__ = CLSTEMSpectrum
-        self.__init__(**self._to_dictionary())
-
-    def decomposition(self, *args, **kwargs):
-        super().decomposition(*args, **kwargs)
-        self.__class__ = LazyCLSTEMSpectrum
+    pass

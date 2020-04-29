@@ -27,34 +27,7 @@ from hyperspy._signals.lazy import LazySignal
 
 
 class CLSEMSpectrum(CLSpectrum):
-    _signal_type = "CL_SEM_Spectrum"
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def as_lazy(self, *args, **kwargs):
-        """Create a copy of the CLSpectrum object as a
-        :py:class:`~lumispy.signals.cl.LazyCLSEMSpectrum`.
-
-        Parameters
-        ----------
-        copy_variance : bool
-            If True variance from the original CLSEMSpectrum object is copied
-            to the new CLSEMSpectrum object.
-
-        Returns
-        -------
-        res : :py:class:`~lumispy.signals.cl.CLSEMSpectrum`.
-            The lazy signal.
-        """
-        res = super().as_lazy(*args, **kwargs)
-        res.__class__ = LazyCLSEMSpectrum
-        res.__init__(**res._to_dictionary())
-        return res
-
-    def decomposition(self, *args, **kwargs):
-        super().decomposition(*args, **kwargs)
-        self.__class__ = CLSEMSpectrum
+    _signal_type = "CL_SEM"
 
     def correct_grating_shift(self):
         """"
@@ -118,14 +91,4 @@ class CLSEMSpectrum(CLSpectrum):
 class LazyCLSEMSpectrum(LazySignal, CLSEMSpectrum):
     _lazy = True
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def compute(self, *args, **kwargs):
-        super().compute(*args, **kwargs)
-        self.__class__ = CLSEMSpectrum
-        self.__init__(**self._to_dictionary())
-
-    def decomposition(self, *args, **kwargs):
-        super().decomposition(*args, **kwargs)
-        self.__class__ = LazyCLSEMSpectrum
+    pass

@@ -17,20 +17,14 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import glob
 import logging
-import os
-import warnings
 
 from hyperspy.io import load as hyperspyload
-#from hyperspy.api import roi
-from lumispy.signals import push_metadata_through
 
 import numpy as np
 
 from natsort import natsorted
 
-from .signals.common_luminescence import CommonLumi
 from .signals.luminescence_spectrum import LumiSpectrum
 from .signals.cl_spectrum import CLSpectrum
 from .signals.cl_sem_spectrum import CLSEMSpectrum

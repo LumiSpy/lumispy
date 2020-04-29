@@ -27,48 +27,13 @@ from lumispy.signals.common_luminescence import CommonLumi
 class LumiTransient(Signal2D, CommonLumi):
     """General 2D Luminescence signal class (transient/time resolved).
     """
-    _signal_type = "Luminescence_2D"
+    _signal_type = "Luminescence"
     _signal_dimension = 2
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def as_lazy(self, *args, **kwargs):
-        """Create a copy of the Signal2D object as a
-        :py:class:`~lumispy.signals.cl.LumiTransient`.
-
-        Parameters
-        ----------
-        copy_variance : bool
-            If True variance from the original LumiTransient object is copied to
-            the new LazyLumiTransient object.
-
-        Returns
-        -------
-        res : :py:class:`~lumispy.signals.cl.LumiTransient`.
-            The lazy signal.
-        """
-        res = super().as_lazy(*args, **kwargs)
-        res.__class__ = LazyLumiTransient
-        res.__init__(**res._to_dictionary())
-        return res
-
-    def decomposition(self, *args, **kwargs):
-        super().decomposition(*args, **kwargs)
-        self.__class__ = LumiTransient
+    pass
 
 
 class LazyLumiTransient(LazySignal, LumiTransient):
     _lazy = True
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def compute(self, *args, **kwargs):
-        super().compute(*args, **kwargs)
-        self.__class__ = LumiTransient
-        self.__init__(**self._to_dictionary())
-
-    def decomposition(self, *args, **kwargs):
-        super().decomposition(*args, **kwargs)
-        self.__class__ = LazyLumiTransient
+    pass
