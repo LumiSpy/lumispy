@@ -19,8 +19,6 @@
 """Signal class for Luminescence spectral data (1D).
 """
 
-import numpy as np
-
 from hyperspy._signals.signal1d import Signal1D
 from hyperspy._signals.lazy import LazySignal
 from lumispy.signals.common_luminescence import CommonLumi
@@ -39,42 +37,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
         super().__init__(*args, **kwargs)
         self.background = None
 
-    def as_lazy(self, *args, **kwargs):
-        """Create a copy of the Signal1D object as a
-        :py:class:`~lumispy.signals.cl.LumiSpectrum`.
-
-        Parameters
-        ----------
-        copy_variance : bool
-            If True variance from the original LumiSpectrum object is copied to
-            the new LazyLumiSpectrum object.
-
-        Returns
-        -------
-        res : :py:class:`~lumispy.signals.cl.LumiSpectrum`.
-            The lazy signal.
-        """
-        res = super().as_lazy(*args, **kwargs)
-        res.__class__ = LazyLumiSpectrum
-        res.__init__(**res._to_dictionary())
-        return res
-
-    def decomposition(self, *args, **kwargs):
-        super().decomposition(*args, **kwargs)
-        self.__class__ = LumiSpectrum
-
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
     _lazy = True
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def compute(self, *args, **kwargs):
-        super().compute(*args, **kwargs)
-        self.__class__ = LumiSpectrum
-        self.__init__(**self._to_dictionary())
-
-    def decomposition(self, *args, **kwargs):
-        super().decomposition(*args, **kwargs)
-        self.__class__ = LazyLumiSpectrum
+    pass

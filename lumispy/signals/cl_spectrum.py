@@ -33,33 +33,6 @@ class CLSpectrum(LumiSpectrum):
     _signal_type = "CL"
     _signal_dimension = 1
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def as_lazy(self, *args, **kwargs):
-        """Create a copy of the Signal1D object as a
-        :py:class:`~lumispy.signals.cl.CLSpectrum`.
-
-        Parameters
-        ----------
-        copy_variance : bool
-            If True variance from the original CLSpectrum object is copied to
-            the new LazyCLSpectrum object.
-
-        Returns
-        -------
-        res : :py:class:`~lumispy.signals.cl.CLSpectrum`.
-            The lazy signal.
-        """
-        res = super().as_lazy(*args, **kwargs)
-        res.__class__ = LazyCLSpectrum
-        res.__init__(**res._to_dictionary())
-        return res
-
-    def decomposition(self, *args, **kwargs):
-        super().decomposition(*args, **kwargs)
-        self.__class__ = CLSpectrum
-
     def cosmic_rays_subtraction(self, extra_percent=50, inplace=False, **kwargs):
         """
         Masks the cosmic rays away
@@ -108,14 +81,4 @@ class CLSpectrum(LumiSpectrum):
 class LazyCLSpectrum(LazySignal, CLSpectrum):
     _lazy = True
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def compute(self, *args, **kwargs):
-        super().compute(*args, **kwargs)
-        self.__class__ = CLSpectrum
-        self.__init__(**self._to_dictionary())
-
-    def decomposition(self, *args, **kwargs):
-        super().decomposition(*args, **kwargs)
-        self.__class__ = LazyCLSpectrum
+    pass
