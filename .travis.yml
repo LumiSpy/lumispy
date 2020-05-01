@@ -1,20 +1,11 @@
 language: python
 
 env:
-  # ENV can be "pip" or "conda" to select the environment
-  # PYTEST_ARGS sets the arguments for pytest
-  #
-  # pip only parameters
-  # -------------------
-  # PIP_SELECTOR sets the optional dependencies to install: "extra" parameters
-  #
-  # conda only parameters
-  # ---------------------
-  # PYTHON_VERSION sets the python version
-  #
   global:
-    - PIP_SELECTOR="all, tests"
-    - PYTEST_ARGS=""
+    - ENV=pip
+    - DEPS="hyperspy-base"
+    - TEST_DEPS="pytest>=5.0 pytest-cov>=2.8.1 coveralls>=1.10 coverage>=5.0"
+    - PYTEST_ARGS="--pyargs lumispy --cov=pyxem"
 
 matrix:
   include:
@@ -30,35 +21,6 @@ matrix:
   - name: "Linux, 3.6, pip"
     env: export ENV=pip; PIP_SELECTOR="all, tests"
     python: 3.6
-  # - name: "MacOSX, 3.7, pip"
-  #   env: export ENV=pip;
-  #   os: osx
-  #   osx_image: xcode11.2
-  #   language: shell
-  # - name: "MacOSX, 3.8, pip"
-  #   env: export ENV=conda; F=3.8
-  #   os: osx
-  #   osx_image: xcode11.2
-  # - name: "MacOSX, 3.7, pip"
-  #   env: export ENV=conda; PYTHON_VERSION=3.7
-  #   os: osx
-  #   osx_image: xcode11.2
-  #   language: shell
-  #   if: tag IS present
-  # - name: "MacOSX, 3.6, pip"
-  #   env: export ENV=conda; PYTHON_VERSION=3.6
-  #   os: osx
-  #   osx_image: xcode11.2
-  #   language: shell
-  #   if: tag IS present
-  # - name: "Windows, 3.8, pip"
-  #   env: export ENV=pip; PIP_SELECTOR="all, tests"
-  #   language: shell
-  #   os: windows
-  #   before_install:
-  #     - choco install python --version 3.8
-  #     - python -m pip install --upgrade pip
-  #   env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
 
 before_install:
   # Clone the ci-scritps repo to get the ci setup scripts and execute the script
@@ -68,11 +30,12 @@ before_install:
 install:
   # Install the package
   # - pip install --upgrade -e .["${PIP_SELECTOR}"]
-  - pip install --upgrade https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip#egg=hyperspy["${PIP_SELECTOR}"]
+  - pip install --upgrade $DEPS $TEST_DEPS;
+  - pip install .
 
 script:
   - which python
   - python -c 'import matplotlib.pyplot as plt; print("Matplotlib backend:", plt.get_backend())';
-  # - pytest $PYTEST_ARGS;
-  - python -c 'import hyperspy.api as hs'
+  - pytest $PYTEST_ARGS;
+  - coveralls
 
