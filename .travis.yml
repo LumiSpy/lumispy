@@ -15,8 +15,9 @@ install:
   # Install the package
   # - pip install --upgrade -e .["${PIP_SELECTOR}"]
   - pip install hyperspy
+  - pip install pytest-cov coveralls coverage
   - pip install .
 script:
-  - pytest
-#  - coveralls
+  - pytest --cov=lumispy
+  - coveralls
 
