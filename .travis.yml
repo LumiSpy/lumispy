@@ -3,7 +3,7 @@ language: python
 env:
   global:
     - ENV=pip
-    - DEPS="hyperspy-base"
+    - DEPS="hyperspy"
     - TEST_DEPS="pytest>=5.0 pytest-cov>=2.8.1 coveralls>=1.10 coverage>=5.0"
     - PYTEST_ARGS="--pyargs lumispy --cov=pyxem"
 
@@ -24,7 +24,7 @@ matrix:
 
 before_install:
   # Clone the ci-scritps repo to get the ci setup scripts and execute the script
-  - git clone --depth 1 git://github.com/ericpre/ci-scripts.git
+  - git clone --depth 1 git://github.com/hyperspy/ci-scripts.git
   - source ci-scripts/travis/setup_travis.sh
 
 install:
