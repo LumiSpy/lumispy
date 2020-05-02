@@ -1,5 +1,8 @@
 # LumiSpy
 
+[![Build Status](https://travis-ci.org/LumiSpy/lumispy.svg?branch=master)](https://travis-ci.org/LumiSpy/lumispy)
+[![Coverage Status](https://coveralls.io/repos/github/LumiSpy/lumispy/badge.svg?branch=master)](https://coveralls.io/github/LumiSpy/lumispy?branch=master)
+
 ### Introduction
 
 LumiSpy is an extension Python package for multi-dimensional data analysis 
