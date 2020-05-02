@@ -1,0 +1,23 @@
+language: python
+matrix:
+  include:
+  - name: "Linux, 3.8, pip"
+    env: export ENV=pip; PIP_SELECTOR="all, tests"
+    python: 3.8
+  - name: "Linux, 3.7, pip"
+    env: export ENV=pip; PIP_SELECTOR="all, tests"
+    python: 3.7
+before_install:
+  # Clone the ci-scritps repo to get the ci setup scripts and execute the script
+  - git clone --depth 1 git://github.com/hyperspy/ci-scripts.git
+  - source ci-scripts/travis/setup_travis.sh
+install:
+  # Install the package
+  # - pip install --upgrade -e .["${PIP_SELECTOR}"]
+  - pip install hyperspy
+  - pip install pytest-cov coveralls coverage
+  - pip install .
+script:
+  - pytest --cov=lumispy
+  - coveralls
+

@@ -61,3 +61,4 @@ def test_signal_registration2d(signal_class):
 
     s2.set_signal_type(s._signal_type)
     assert isinstance(s2, signal_class)
+
