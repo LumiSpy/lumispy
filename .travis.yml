@@ -1,38 +1,13 @@
 language: python
-
-env:
-  global:
-    - DEPS="hyperspy"
-    - TEST_DEPS="pytest>=5.0"
-    - PYTEST_ARGS="--pyargs lumispy"
-
-matrix:
-  include:
-  - name: "Linux, 3.8, pip"
-    env: export ENV=pip; PIP_SELECTOR="all, tests"
-    python: 3.8
-  - name: "Linux, 3.7, pip"
-    env: export ENV=pip; PIP_SELECTOR="all, tests"
-    python: 3.7
-  - name: "Linux, 3.7, pip, minimum environment"
-    env: export ENV=pip; PIP_SELECTOR="tests"
-    python: 3.7
-  - name: "Linux, 3.6, pip"
-    env: export ENV=pip; PIP_SELECTOR="all, tests"
-    python: 3.6
-
-before_install:
-  # Clone the ci-scritps repo to get the ci setup scripts and execute the script
-  - git clone --depth 1 git://github.com/hyperspy/ci-scripts.git
-  - source ci-scripts/travis/setup_travis.sh
-
+python:
+  - "3.8"
+  - "3.7"
+  - "3.6"
 install:
   # Install the package
   # - pip install --upgrade -e .["${PIP_SELECTOR}"]
-  - pip install --upgrade $DEPS $TEST_DEPS;
-  - pip install .
-
+  - pip install -r hyperspy;
 script:
-  - pytest $PYTEST_ARGS;
+  - pytest
 #  - coveralls
 
