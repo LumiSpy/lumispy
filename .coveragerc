@@ -1,0 +1,8 @@
+[run]
+source = lumispy
+include = */lumispy/*
+omit =
+     */lumispy/__init__.py
+     */lumispy/tests/*
+     */lumispy/utils/__init__.py
+     */setup.py
