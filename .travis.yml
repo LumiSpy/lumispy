@@ -6,7 +6,7 @@ python:
 install:
   # Install the package
   # - pip install --upgrade -e .["${PIP_SELECTOR}"]
-  - pip install -r hyperspy;
+  - pip install hyperspy
 script:
   - pytest
 #  - coveralls
