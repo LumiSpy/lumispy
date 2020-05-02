@@ -1,6 +1,7 @@
 variables:
   MPLBACKEND: agg # Necessary when running test which generate matplotlib figure
   ENV_NAME: test_env
+  RESULT_IMAGES_FOLDER: 'result_images'
 
 trigger:
   tags:
@@ -16,10 +17,10 @@ resources:
   repositories:
     - repository: templates
       type: github
-      name: ericpre/ci-scripts
+      name: hyperspy/ci-scripts
       # For more details on service connection endpoint, see
       # https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints
-      endpoint: ericpre # Azure DevOps service connection
+      endpoint: lumispy # Azure DevOps service connection
 
 strategy:
   matrix:
@@ -56,14 +57,13 @@ steps:
 - bash: |
     source activate $ENV_NAME
     # Install package using pip
-    pip install --no-deps https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
+    pip install --no-deps
     conda list
   displayName: Install package
 
 - bash: |
     source activate $ENV_NAME
-    # pytest --pyargs hyperspy
-    python -c 'import hyperspy.api as hs'
+    pytest --mpl --pyargs lumispy --mpl-results-path $RESULT_IMAGES_FOLDER
   displayName: Run test suite
 
 # - template: azure_pipelines/generate_distribution.yml@templates
