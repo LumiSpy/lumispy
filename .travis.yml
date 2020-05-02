@@ -5,7 +5,7 @@ env:
     - ENV=pip
     - DEPS="hyperspy"
     - TEST_DEPS="pytest>=5.0 pytest-cov>=2.8.1 coveralls>=1.10 coverage>=5.0"
-    - PYTEST_ARGS="--pyargs lumispy --cov=lumispy"
+    - PYTEST_ARGS="--pyargs lumispy"
 
 matrix:
   include:
@@ -37,5 +37,5 @@ script:
   - which python
   - python -c 'import matplotlib.pyplot as plt; print("Matplotlib backend:", plt.get_backend())';
   - pytest $PYTEST_ARGS;
-  - coveralls
+#  - coveralls
 
