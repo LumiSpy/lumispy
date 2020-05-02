@@ -4,6 +4,18 @@ matrix:
   - name: "Linux, 3.8, pip"
     env: export ENV=pip; PIP_SELECTOR="all, tests"
     python: 3.8
+  - name: "Linux, 3.7, pip"
+    env: export ENV=pip; PIP_SELECTOR="all, tests"
+    python: 3.7
+  - name: "MacOSX, 3.7, pip"
+    env: export ENV=pip;
+    os: osx
+    osx_image: xcode11.2
+    language: shell
+  - name: "MacOSX, 3.8, pip"
+    env: export ENV=conda; F=3.8
+    os: osx
+    osx_image: xcode11.2
 before_install:
   # Clone the ci-scritps repo to get the ci setup scripts and execute the script
   - git clone --depth 1 git://github.com/hyperspy/ci-scripts.git
