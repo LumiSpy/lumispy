@@ -2,7 +2,6 @@ language: python
 
 env:
   global:
-    - ENV=pip
     - DEPS="hyperspy"
     - TEST_DEPS="pytest>=5.0"
     - PYTEST_ARGS="--pyargs lumispy"
@@ -34,8 +33,6 @@ install:
   - pip install .
 
 script:
-  - which python
-  - python -c 'import matplotlib.pyplot as plt; print("Matplotlib backend:", plt.get_backend())';
   - pytest $PYTEST_ARGS;
 #  - coveralls
 
