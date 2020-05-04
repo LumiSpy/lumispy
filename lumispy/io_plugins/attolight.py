@@ -216,6 +216,29 @@ def file_reader(filename, *args, **kwds):
 
         return cl_object
 
+    def _calibrate_signal_axis_wavelength_meanspec(filename, cl_object):
+        ms_file = "HYPCard - Mean spectrum.txt"  # how attomap software names mean spectrum file
+        file = os.path.join(filename, ms_file)  # filename is str; the absolute folder path where the ms_file_name exists
+
+        binning = cl_object.Acquisition_instrument.CCD.binning
+        WL = []  # create empty wavelength array
+
+        # Read in wavelengths from Mean spectrum file, which are in the first column.
+        with open(file, 'r') as f:
+            next(f)
+            for line in f:
+                sep = line.split()
+                WL.append(float(sep[0]) * 1e6)  # wavelength given in mm in file. Convert to nm.
+
+        dx = cl_object.axes_manager.signal_axes[0]  # want to attribute modification of wavelength axis to cl_object
+
+        dx.name = 'wavelength'
+        dx.scale = (WL[len(WL) - 1] - WL[0]) / len(WL) * binning  # Wavelength increment
+        dx.offset = WL[0]  # Wavelength offset
+        dx.units = '$nm$'
+
+        return cl_object
+
     def _calibrate_navigation_axis(cl_object):
         # Edit the navigation axes
         x = cl_object.axes_manager.navigation_axes[0]
