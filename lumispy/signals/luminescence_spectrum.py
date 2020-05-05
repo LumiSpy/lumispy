@@ -26,16 +26,12 @@ from lumispy.signals.common_luminescence import CommonLumi
 
 class LumiSpectrum(Signal1D, CommonLumi):
     """General 1D Luminescence signal class.
-    ----------
-    background : array
-        Array containing [wavelength, background].
     """
     _signal_type = "Luminescence"
     _signal_dimension = 1
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.background = None
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):

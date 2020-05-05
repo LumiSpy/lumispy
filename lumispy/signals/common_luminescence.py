@@ -23,8 +23,6 @@
 class CommonLumi:
     """General Luminescence signal class (dimensionless).
     ----------
-    background : array
-        Array containing [wavelength, background].
     """
 
     def crop_edges(self, crop_px):
@@ -88,6 +86,7 @@ class CommonLumi:
             """
             return signal - bkg
 
+        background_metadata = self.metadata.Signal.background
         if background is not None:
             if (background[0]).all() == (self.axes_manager.signal_axes[0].axis).all():
                 bkg = background[1]
@@ -96,15 +95,15 @@ class CommonLumi:
                 raise ValueError('The background x axis provided as external argument is does not match the signal '
                                  'wavelength x axis values.')
         else:
-            if self.background is not None:
-                if (self.background[0]).all() == (self.axes_manager.signal_axes[0].axis).all():
-                    bkg = self.background[1]
+            if background_metadata is not None:
+                if (background_metadata[0]).all() == (self.axes_manager.signal_axes[0].axis).all():
+                    bkg = background_metadata[1]
 
                 else:
                     raise ValueError('The background x axis wavelength values from the signal.background axis do not '
                                      'match the signal wavelength x axis values.')
             else:
-                raise ValueError('No background defined on the signal.background NOR as an input of this function.')
+                raise ValueError('No background defined on the Signal.background metadata NOR as an input of this function.')
 
         if not inplace:
             self_subtracted = self.map(subtract_self, bkg=bkg, inplace=False)
