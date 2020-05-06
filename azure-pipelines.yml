@@ -14,12 +14,12 @@ trigger:
 
 resources:
   repositories:
-    - repository: templates
-      type: github
-      name: hyperspy/ci-scripts
-      # For more details on service connection endpoint, see
-      # https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints
-      endpoint: lumispy # Azure DevOps service connection
+  - repository: templates
+    type: github
+    name: hyperspy/ci-scripts
+    # For more details on service connection endpoint, see
+    # https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints
+    endpoint: lumispy # Azure DevOps service connection
 
 strategy:
   matrix:
