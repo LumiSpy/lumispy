@@ -62,7 +62,7 @@ steps:
 
 - bash: |
     source activate $ENV_NAME
-    pytest --pyargs lumispy
+    pytest --cov=lumispy
   displayName: Run test suite
 
 # - template: azure_pipelines/generate_distribution.yml@templates
