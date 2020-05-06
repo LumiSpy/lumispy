@@ -56,7 +56,7 @@ steps:
 - bash: |
     source activate $ENV_NAME
     # Install package using pip
-    pip install .
+    pip install .[tests]
     conda list
   displayName: Install package
 
