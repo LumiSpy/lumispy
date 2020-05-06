@@ -49,6 +49,7 @@ setup(
     install_requires=[
         'hyperspy >= 1.5.2',        # earlier versions incompatible with numpy >= 1.17.0
     ],
+    extras_require={"tests": ["pytest>=3.6", "pytest-mpl", "pytest-cov", "coveralls", "coverage"]},
     package_data={
         "": ["LICENSE", "README.rst"],
         "lumispy": ["*.py", "hyperspy_extension.yaml"],
