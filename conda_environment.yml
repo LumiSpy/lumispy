@@ -26,4 +26,5 @@ dependencies:
 - tifffile >=2019.07.26
 - traits
 - tqdm
+- hyperspy
 
