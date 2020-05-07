@@ -1,3 +1,4 @@
+# In Azure pipelines, we test only using anaconda (so conda and conda-forge packages only)
 variables:
   MPLBACKEND: agg # Necessary when running test which generate matplotlib figure
   ENV_NAME: test_env
@@ -56,13 +57,14 @@ steps:
 - bash: |
     source activate $ENV_NAME
     # Install package using pip
-    pip install .[tests]
+    pip install . --no-deps
     conda list
   displayName: Install package
 
 - bash: |
     source activate $ENV_NAME
     pytest --cov=lumispy
+    python -c 'import lumispy as lum'
   displayName: Run test suite
 
 # - template: azure_pipelines/generate_distribution.yml@templates

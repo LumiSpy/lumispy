@@ -1,3 +1,4 @@
+# In Travis, we test only using pip (so pypi packages only)
 language: python
 matrix:
   include:
@@ -18,4 +19,5 @@ install:
 script:
   - pytest --cov=lumispy
   - coveralls
+  - python -c 'import lumispy as lum'
 
