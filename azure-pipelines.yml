@@ -1,3 +1,4 @@
+# In Azure pipelines, we test only using anaconda (so conda and conda-forge packages only)
 variables:
   MPLBACKEND: agg # Necessary when running test which generate matplotlib figure
   ENV_NAME: test_env
@@ -19,7 +20,7 @@ resources:
     name: hyperspy/ci-scripts
     # For more details on service connection endpoint, see
     # https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints
-    endpoint: lumispy # Azure DevOps service connection
+    endpoint: jordiferrero # Azure DevOps service connection
 
 strategy:
   matrix:
@@ -56,13 +57,14 @@ steps:
 - bash: |
     source activate $ENV_NAME
     # Install package using pip
-    pip install .[tests]
+    pip install . --no-deps
     conda list
   displayName: Install package
 
 - bash: |
     source activate $ENV_NAME
     pytest --cov=lumispy
+    python -c 'import lumispy as lum'
   displayName: Run test suite
 
 # - template: azure_pipelines/generate_distribution.yml@templates

@@ -1,0 +1,12 @@
+name: test_env
+channels:
+- defaults
+- conda-forge
+dependencies:
+# Dependencies for testing
+- pytest
+- pytest-cov
+- pytest-faulthandler
+- pytest-mpl
+- pytest-xdist
+
