@@ -22,7 +22,7 @@ import scipy.constants as c
 from hyperspy.axes import DataAxis
 from hyperspy.signals import Signal1D
 
-from inspect import getfullargspec
+from inspect import getfullargspec # not needed in the future
 
 
 def _n_air(wl):
@@ -55,38 +55,13 @@ def eV2nm(x):
     wl = 1239.5/x # approximate WL to obtain permittivity
     return 1e9 * c.h * c.c / (c.e * _n_air(wl) * x)
 
-def to_eV(s):
-    """Creates new signal object with signal axis converted to eV (using 
-    wavelength dependent permittivity of air). Assumes WL in units of nm 
+
+def axis2eV(ax0):
+    """Converts given signal axis to eV using wavelength dependent permittivity 
+    of air. Assumes WL in units of nm 
     unless the axis units are specifically set to µm.
-    
-    The intensity is converted from counts/nm (counts/µm) to counts/meV by 
-    doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin. 142, 
-    202 (2013).
-
-    
-    Input parameters
-    ----------------
-    s : signal object
-    
-    Returns
-    -------
-    New signal object with energy axis as new signal axis, but same navigation 
-    axis and data.
-    
-    Note
-    ----
-    Setting non linear scale instead of offset and scale work only for 
-    the non_uniform_axis branch of hyperspy.
-
     """
 
-    # Check if non_uniform_axis is available in hyperspy version
-    if not 'axis' in getfullargspec(DataAxis)[0]:
-        raise NotImplementedError('Conversion to energy axis works only if '
-                            'the non_uniform_axis branch of hyperspy is used.')
-        
-    ax0 = s.axes_manager.signal_axes[0]
     if ax0.units == 'eV':
         raise AttributeError('Signal unit is already eV.')
     # transform axis, invert direction
@@ -97,20 +72,16 @@ def to_eV(s):
         evaxis=nm2eV(ax0.axis)[::-1]
         factor = 1e6
     axis = DataAxis(axis = evaxis, name = 'Energy', units = 'eV', 
-               navigate=False)
-    # invert direction for data and do Jacobian transformation so that 
-    # integrated signals are correct
-    s2data = s.isig[::-1].data * factor * c.h * c.c / (c.e * 
-             _n_air(ax0.axis[::-1]) * evaxis**2)
-    if s.data.ndim == 1:
-        s2 = Signal1D(s2data, axes=(axis.get_axis_dictionary(),))
-    elif s.data.ndim == 2:
-        s2 = Signal1D(s2data, axes=
-             (s.axes_manager.navigation_axes[0].get_axis_dictionary(),
-             axis.get_axis_dictionary(), ))
-    else:
-        s2 = Signal1D(s2data, axes=
-             (s.axes_manager.navigation_axes[1].get_axis_dictionary(),
-             s.axes_manager.navigation_axes[0].get_axis_dictionary(),
-             axis.get_axis_dictionary(), ))
-    return s2
+                    navigate=False)
+
+    return axis,factor
+
+
+def data2eV(data, factor, ax0, evaxis):
+    """The intensity is converted from counts/nm (counts/µm) to counts/meV by 
+    doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin. 142, 
+    202 (2013). Ensures that integrates signals are still correct.
+    """
+    return data * factor * c.h * c.c / (c.e * _n_air(ax0[::-1])
+           * evaxis**2)
+
