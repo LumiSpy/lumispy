@@ -20,10 +20,10 @@ import numpy as np
 import scipy.constants as c
 
 from hyperspy.axes import DataAxis
-from hyperspy.signals import Signal1D
 
-from inspect import getfullargspec # not needed in the future
-
+#
+# This file contains function needed for signal axis conversion
+#
 
 def _n_air(wl):
     """Refractive index of air as a function of WL in nm.

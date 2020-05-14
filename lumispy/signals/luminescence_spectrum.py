@@ -38,21 +38,28 @@ class LumiSpectrum(Signal1D, CommonLumi):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+
     def to_eV(self,inplace=True):
-        """Converts signal axis of 1Dsignal to non-linear energy axis (eV) 
+        """Converts signal axis of 1D signal to non-linear energy axis (eV) 
         using wavelength dependent permittivity of air. Assumes WL in units of 
         nm unless the axis units are specifically set to µm.
         
         The intensity is converted from counts/nm (counts/µm) to counts/meV by 
-        doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin. 142, 
-        202 (2013).
-    
+        doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin. 
+        142, 202 (2013).
         
         Input parameters
         ----------------
         inplace : boolean
             If `False`, a new signal object is created and returned. Otherwise 
             (default) the operation is performed on the existing signal object.
+        
+        Example
+        -------
+        > import numpy as np
+        > from lumispy import LumiSpectrum
+        > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+        > S1.to_eV()
         
         Note
         ----
@@ -68,11 +75,13 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         evaxis,factor = axis2eV(self.axes_manager.signal_axes[0])
         
+        # in place conversion
         if inplace:
             self.data = data2eV(self.isig[::-1].data, factor,
                             self.axes_manager.signal_axes[0].axis, evaxis.axis)
             self.axes_manager.remove(-1)
             self.axes_manager._axes.append(evaxis)
+        # create and return new signal
         else:
             s2data = data2eV(self.isig[::-1].data, factor,
                             self.axes_manager.signal_axes[0].axis, evaxis.axis)
@@ -90,8 +99,6 @@ class LumiSpectrum(Signal1D, CommonLumi):
             s2.set_signal_type(self.metadata.Signal.signal_type)
             s2.metadata = self.metadata
             return s2
-            # Use current signal object instead of Signal1D
-            # Copy metadata to new signal object
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
