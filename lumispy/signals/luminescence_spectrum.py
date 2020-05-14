@@ -87,6 +87,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                      (self.axes_manager.navigation_axes[1].get_axis_dictionary(),
                      self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                      evaxis.get_axis_dictionary(), ))
+            s2.set_signal_type(self.metadata.Signal.signal_type)
             s2.metadata = self.metadata
             return s2
             # Use current signal object instead of Signal1D
