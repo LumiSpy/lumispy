@@ -33,25 +33,22 @@ def _n_air(wl):
     According to `E.R. Peck and K. Reeder. Dispersion of air, 
     J. Opt. Soc. Am. 62, 958-962 (1972).`
     """
-
     wl = wl / 1000
     return 1 + 806051e-10 + 2480990e-8/(132274e-3 - 1/wl**2) + \
            174557e-9/(3932957e-5 - 1/wl**2)
 
 
 def nm2eV(x):
-    """Converts wavelength to energy using wavelength-dependent permittivity of 
-    air.
+    """Converts wavelength (nm) to energy (eV) using wavelength-dependent 
+    permittivity of air.
     """
-
     return 1e9 * c.h * c.c / (c.e * _n_air(x) * x)
 
 
 def eV2nm(x):
-    """Converts energy to wavelength using wavelength-dependent permittivity of 
-    air.
+    """Converts energy (eV) to wavelength (nm) using wavelength-dependent 
+    permittivity of air.
     """
-
     wl = 1239.5/x # approximate WL to obtain permittivity
     return 1e9 * c.h * c.c / (c.e * _n_air(wl) * x)
 
@@ -61,7 +58,6 @@ def axis2eV(ax0):
     of air. Assumes WL in units of nm 
     unless the axis units are specifically set to µm.
     """
-
     if ax0.units == 'eV':
         raise AttributeError('Signal unit is already eV.')
     # transform axis, invert direction
@@ -84,4 +80,3 @@ def data2eV(data, factor, ax0, evaxis):
     """
     return data * factor * c.h * c.c / (c.e * _n_air(ax0[::-1])
            * evaxis**2)
-
