@@ -69,7 +69,6 @@ def axis2eV(ax0):
         factor = 1e6
     axis = DataAxis(axis = evaxis, name = 'Energy', units = 'eV', 
                     navigate=False)
-
     return axis,factor
 
 
@@ -80,3 +79,41 @@ def data2eV(data, factor, ax0, evaxis):
     """
     return data * factor * c.h * c.c / (c.e * _n_air(ax0[::-1])
            * evaxis**2)
+
+
+def nm2invcm(x):
+    """Converts wavelength (nm)to wavenumber (cm^-1).
+    """
+    return 1e7/x
+
+
+def invcm2nm(x):
+    """Converts wavenumber (cm^-1) to wavelength (nm).
+    """
+    return 1e7/x
+    
+
+def axis2invcm(ax0):
+    """Converts given signal axis to cm^-1. Assumes WL in units of nm unless 
+    the axis units are specifically set to µm.
+    """
+    if ax0.units == 'eV':
+        raise AttributeError('Signal unit is already eV.')
+    # transform axis, invert direction
+    if ax0.units == 'µm':
+        invcmaxis=nm2invcm(1000*ax0.axis)[::-1]
+        factor = 1e4 # correction factor for intensity
+    else:
+        invcmaxis=nm2invcm(ax0.axis)[::-1]
+        factor = 1e7
+    axis = DataAxis(axis = invcmaxis, name = 'Wavenumber', units = r'cm$^{-1}$', 
+                    navigate=False)
+    return axis,factor
+
+
+def data2invcm(data, factor, ax0, invcmaxis):
+    """The intensity is converted from counts/nm (counts/µm) to counts/meV by 
+    doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin. 142, 
+    202 (2013). Ensures that integrates signals are still correct.
+    """
+    return data * factor / (invcmaxis**2)
