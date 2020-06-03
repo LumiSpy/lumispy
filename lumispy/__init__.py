@@ -43,6 +43,8 @@ from .signals.luminescence_transient import LazyLumiTransient
 
 from .io import load
 
+from .utils.axes import *
+
 from . import release_info
 
 __version__ = release_info.version
