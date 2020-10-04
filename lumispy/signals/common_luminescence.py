@@ -66,6 +66,7 @@ class CommonLumi:
         If background is in metadata, it subtracts it without need to manually input background (background is automatically saved upon load_hyp() if the bakground file is found in the same folder as the data).
         Otherwise it raises an Error.
 
+        USE HYPERSPY FUNCTION HERE AND ADAPT IT TO LUMISPY.
         Parameters
         ---------------
         background : numpy.array[wavelength, bkg]

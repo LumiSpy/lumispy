@@ -35,7 +35,8 @@ class CLSpectrum(LumiSpectrum):
 
     def cosmic_rays_subtraction(self, extra_percent=50, inplace=False, **kwargs):
         """
-        Masks the cosmic rays away
+        Masks the cosmic rays away.
+        USE HYPERSPY FUNCTION HERE AND ADAPT IT TO LUMISPY.
 
         Parameters
         -----------
