@@ -19,12 +19,6 @@
 
 import logging
 
-from hyperspy.io import load as hyperspyload
-
-import numpy as np
-
-from natsort import natsorted
-
 from .signals.luminescence_spectrum import LumiSpectrum
 from .signals.cl_spectrum import CLSpectrum
 from .signals.cl_sem_spectrum import CLSEMSpectrum
@@ -40,8 +34,6 @@ from .signals.cl_stem_spectrum import LazyCLSTEMSpectrum
 from .signals.pl_spectrum import LazyPLSpectrum
 from .signals.el_spectrum import LazyELSpectrum
 from .signals.luminescence_transient import LazyLumiTransient
-
-from .io import load
 
 from .utils.axes import *
 
