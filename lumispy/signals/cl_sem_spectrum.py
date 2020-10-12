@@ -29,41 +29,40 @@ from hyperspy._signals.lazy import LazySignal
 class CLSEMSpectrum(CLSpectrum):
     _signal_type = "CL_SEM"
 
-    def correct_grating_shift(self, cal_factor_x_axis, corr_factor_grating):
+    def correct_grating_shift(self, cal_factor_x_axis, corr_factor_grating, resolution_x, resolution_y, field_of_view):
         """"
         Applies shift caused by the grating offset wrt the scanning centre.
         Authorship: Gunnar Kusch (gk419@cam.ac.uk)
 
         :param cal_factor_x_axis: The navigation correction factor.
         :param corr_factor_grating: The grating correction factor.
+        :param resolution_x: The SEM image x-axis resolution.
+        :param resolution_y: The SEM image y-axis resolution.
+        :param field_of_view: The SEM field of view (FOV).
         """
-
 
         # Avoid correcting for this shift twice (first time it fails, so except
         # block runs. Second time, try succeeds, so except block is skipped):
         try:
             self.metadata.Signal.grating_corrected == True
-        except Exception:
+        except AttributeError:
             # Get all relevant parameters
-            md = self.metadata
-
-            nx = md.Acquisition_instrument.SEM.resolution_x
-            ny = md.Acquisition_instrument.SEM.resolution_y
-            grating = md.Acquisition_instrument.Spectrometer.grating
-            fov = md.Acquisition_instrument.SEM.FOV
-            acquisition_system = md.Acquisition_instrument.acquisition_system
+            nx = resolution_x
+            ny = resolution_y
+            fov = field_of_view
 
             # Correction of the Wavelength Shift along the X-Axis
             calax = cal_factor_x_axis / (fov * nx)
-            garray = np.arange((-corr_factor_grating / 2) * calax * 1000 * (nx),
-                               (corr_factor_grating / 2) * calax * 1000 * (nx), corr_factor_grating * calax
-                               * 1000)  # (Total Variation, Channels, Step)
+            # (Total Variation, Channels, Step)
+            garray = np.arange((-corr_factor_grating / 2) * calax * 1000 * nx,
+                               (corr_factor_grating / 2) * calax * 1000 * nx,
+                                corr_factor_grating * calax * 1000)
             barray = np.full((nx, ny), garray)
 
             self.shift1D(barray)
 
             # Store modification in metadata
-            md.set_item("Signal.grating_corrected", True)
+            self.memtadata.set_item("Signal.grating_corrected", True)
         else:
             raise Exception("You already corrected for the grating shift.")
 
