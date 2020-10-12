@@ -51,9 +51,8 @@ class CommonLumi:
         # Store transformation in metadata (or update the value if already previously transformed)
 
         try:
-            px_already_cropped = signal_cropped.metadata.Signal.cropped_edges
-            signal_cropped.metadata.Signal.cropped_edges = px_already_cropped + crop_px
-        except:
+            signal_cropped.metadata.Signal.cropped_edges += crop_px
+        except AttributeError:
             signal_cropped.metadata.set_item("Signal.cropped_edges", crop_px)
 
         return signal_cropped
