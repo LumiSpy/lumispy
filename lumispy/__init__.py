@@ -19,6 +19,10 @@
 
 import logging
 
+# Import loading and roi functions from Hyperspy
+from hyperspy.io import load
+from hyperspy.api import roi
+
 from .signals.luminescence_spectrum import LumiSpectrum
 from .signals.cl_spectrum import CLSpectrum
 from .signals.cl_sem_spectrum import CLSEMSpectrum
