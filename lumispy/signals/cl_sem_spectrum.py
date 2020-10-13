@@ -55,7 +55,7 @@ class CLSEMSpectrum(CLSpectrum):
             garray = np.arange((-corr_factor_grating / 2) * calax * 1000 * nx,
                                (corr_factor_grating / 2) * calax * 1000 * nx,
                                 corr_factor_grating * calax * 1000)
-            barray = np.full((nx, ny), garray)
+            barray = np.full((ny, nx), garray)
 
             self.shift1D(barray)
 
