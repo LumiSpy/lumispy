@@ -62,7 +62,7 @@ class CLSEMSpectrum(CLSpectrum):
             self.shift1D(barray)
 
             # Store modification in metadata
-            self.memtadata.set_item("Signal.grating_corrected", True)
+            self.metadata.set_item("Signal.grating_corrected", True)
         else:
             raise Exception("You already corrected for the grating shift.")
 
