@@ -29,15 +29,13 @@ from hyperspy._signals.lazy import LazySignal
 class CLSEMSpectrum(CLSpectrum):
     _signal_type = "CL_SEM"
 
-    def correct_grating_shift(self, cal_factor_x_axis, corr_factor_grating, resolution_x, resolution_y, field_of_view):
+    def correct_grating_shift(self, cal_factor_x_axis, corr_factor_grating, field_of_view):
         """"
         Applies shift caused by the grating offset wrt the scanning centre.
         Authorship: Gunnar Kusch (gk419@cam.ac.uk)
 
         :param cal_factor_x_axis: The navigation correction factor.
         :param corr_factor_grating: The grating correction factor.
-        :param resolution_x: The SEM image x-axis resolution.
-        :param resolution_y: The SEM image y-axis resolution.
         :param field_of_view: The SEM field of view (FOV).
         """
 
@@ -47,8 +45,8 @@ class CLSEMSpectrum(CLSpectrum):
             self.metadata.Signal.grating_corrected == True
         except AttributeError:
             # Get all relevant parameters
-            nx = resolution_x
-            ny = resolution_y
+            nx = self.axes_manager.navigation_shape[0]
+            ny = self.axes_manager.navigation_shape[1]
             fov = field_of_view
 
             # Correction of the Wavelength Shift along the X-Axis
