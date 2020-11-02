@@ -82,23 +82,23 @@ def data2eV(data, factor, ax0, evaxis):
 
 
 def nm2invcm(x):
-    """Converts wavelength (nm) to wavenumber (cm^-1).
+    r"""Converts wavelength (nm) to wavenumber (cm$^{-1}$).
     """
     return 1e7/x
 
 
 def invcm2nm(x):
-    """Converts wavenumber (cm^-1) to wavelength (nm).
+    r"""Converts wavenumber (cm$^{-1}$) to wavelength (nm).
     """
     return 1e7/x
     
 
 def axis2invcm(ax0):
-    """Converts given signal axis to wavenumber scale (cm^-1). Assumes
+    r"""Converts given signal axis to wavenumber scale (cm$^{-1}$). Assumes
     wavelength in units of nm unless the axis units are specifically set to µm.
     """
-    if ax0.units == 'eV':
-        raise AttributeError('Signal unit is already eV.')
+    if ax0.units == r'cm$^{-1}$':
+        raise AttributeError(r'Signal unit is already cm$^{-1}$.')
     # transform axis, invert direction
     if ax0.units == 'µm':
         invcmaxis=nm2invcm(1000*ax0.axis)[::-1]
@@ -112,8 +112,9 @@ def axis2invcm(ax0):
 
 
 def data2invcm(data, factor, ax0, invcmaxis):
-    """The intensity is converted from counts/nm (counts/µm) to counts/meV by 
-    doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin. 142, 
-    202 (2013). Ensures that integrated signals are still correct.
+    r"""The intensity is converted from counts/nm (counts/µm) to
+    counts/cm$^{-1}$ by doing a Jacobian transformation, see e.g. Wang and
+    Townsend, J. Lumin. 142, 202 (2013). Ensures that integrated signals are
+    still correct.
     """
     return data * factor / (invcmaxis**2)

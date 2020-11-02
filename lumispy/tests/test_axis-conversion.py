@@ -81,3 +81,57 @@ def test_to_eV():
     assert S3.axes_manager[0].size == 20
     assert S1.axes_manager[0].axis[0] == S3.axes_manager[0].axis[0]
     assert_allclose(S1.data,S3.data,5e-4)
+    
+def test_nm2invcm():
+    wl = arange(300,410,100)
+    invcm = nm2invcm(wl)
+    assert_allclose(invcm[0],33333.3333)
+    assert_allclose(invcm[-1],25000)
+    
+def test_invcm2nm():
+    invcm = arange(10000,20000,6000)
+    wl = invcm2nm(invcm)
+    assert_allclose(wl[0],1000)
+    assert_allclose(wl[-1],625)
+    
+def test_axes2invcm():
+    axis = DataAxis(axis = arange(200,410,10))
+    axis2 = DataAxis(axis = arange(0.2,0.410,0.01),units='µm')
+    axis3 = DataAxis(axis = arange(1,2,0.1),units=r'cm$^{-1}$')
+    invcmaxis,factor = axis2invcm(axis)
+    invcmaxis2,factor2 = axis2invcm(axis2)
+    raises(AttributeError,axis2invcm,axis3)
+    assert factor == 1e7
+    assert factor2 == 1e4
+    assert invcmaxis.name == 'Wavenumber'
+    assert invcmaxis.units == r'cm$^{-1}$'
+    assert not invcmaxis.navigate
+    assert invcmaxis2.units == r'cm$^{-1}$'
+    assert invcmaxis2.size == 21
+    assert_allclose(invcmaxis.axis[0],invcmaxis2.axis[0])
+    assert_allclose(invcmaxis.axis[-1],invcmaxis2.axis[-1])
+    assert_allclose(invcmaxis.axis[0],25000)
+
+def test_data2invcm():
+    data = 100*ones(20)
+    factor = 1e7
+    ax0 = arange(200,400,10)
+    invcmaxis = nm2invcm(ax0)
+    invcmdata = data2invcm(data,factor,ax0,invcmaxis)
+    assert_allclose(invcmdata[-1],1.521)
+
+def test_to_invcm():
+    axis = DataAxis(axis = arange(200,400,10))
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
+    S1.to_invcm()
+    axis.units = 'µm'
+    axis.axis = axis.axis / 1000
+    data *= 1000
+    S2 = CLSEMSpectrum(data, axes=(axis.get_axis_dictionary(), ))
+    S3 = S2.to_invcm(inplace=False)
+    assert S1.axes_manager[0].units == r'cm$^{-1}$'
+    assert S3.axes_manager[0].name == 'Wavenumber'
+    assert S3.axes_manager[0].size == 20
+    assert S1.axes_manager[0].axis[0] == S3.axes_manager[0].axis[0]
+    assert_allclose(S1.data,S3.data,5e-4)
