@@ -29,61 +29,38 @@ from hyperspy._signals.lazy import LazySignal
 class CLSEMSpectrum(CLSpectrum):
     _signal_type = "CL_SEM"
 
-    def correct_grating_shift(self):
+    def correct_grating_shift(self, cal_factor_x_axis, corr_factor_grating, field_of_view):
         """"
         Applies shift caused by the grating offset wrt the scanning centre.
-
-        Parameters
-        ------------
-        self : CLSEMSpectrum
-            Metadata should have grating, nx, ny, fov and acquisition_system
-
-        Returns
-        ------------
-        self: CLSEMSpectrum
-            Wavelength shift corrected across the scanning dimension
-
         Authorship: Gunnar Kusch (gk419@cam.ac.uk)
+
+        :param cal_factor_x_axis: The navigation correction factor.
+        :param corr_factor_grating: The grating correction factor.
+        :param field_of_view: The SEM field of view (FOV).
         """
-        from lumispy.io_plugins.attolight import attolight_systems
 
         # Avoid correcting for this shift twice (first time it fails, so except
         # block runs. Second time, try succeeds, so except block is skipped):
         try:
             self.metadata.Signal.grating_corrected == True
-        except:
+        except AttributeError:
             # Get all relevant parameters
-            md = self.metadata
-
-            nx = md.Acquisition_instrument.SEM.resolution_x
-            ny = md.Acquisition_instrument.SEM.resolution_y
-            grating = md.Acquisition_instrument.Spectrometer.grating
-            fov = md.Acquisition_instrument.SEM.FOV
-            acquisition_system = md.Acquisition_instrument.acquisition_system
-
-            cal_factor_x_axis = attolight_systems[acquisition_system]['cal_factor_x_axis']
-
-            # Get the correction factor for the relevant grating (extracted from
-            # the acquisition_systems dictionary)
-            try:
-                corrfactor = attolight_systems[acquisition_system]['grating_corrfactors'][grating]
-            except:
-                raise Exception("Sorry, the grating is not calibrated yet. "
-                                "No grating shift correction can be applied. "
-                                "Go to lumispy.io.attolight and "
-                                "add the missing grating_corrfactors in the attolight_sysyems dict.")
+            nx = self.axes_manager.navigation_shape[0]
+            ny = self.axes_manager.navigation_shape[1]
+            fov = field_of_view
 
             # Correction of the Wavelength Shift along the X-Axis
             calax = cal_factor_x_axis / (fov * nx)
-            garray = np.arange((-corrfactor / 2) * calax * 1000 * (nx),
-                               (corrfactor / 2) * calax * 1000 * (nx), corrfactor * calax
-                               * 1000)  # (Total Variation, Channels, Step)
-            barray = np.full((nx, ny), garray)
+            # (Total Variation, Channels, Step)
+            garray = np.arange((-corr_factor_grating / 2) * calax * 1000 * nx,
+                               (corr_factor_grating / 2) * calax * 1000 * nx,
+                                corr_factor_grating * calax * 1000)
+            barray = np.full((ny, nx), garray)
 
             self.shift1D(barray)
 
             # Store modification in metadata
-            md.set_item("Signal.grating_corrected", True)
+            self.metadata.set_item("Signal.grating_corrected", True)
         else:
             raise Exception("You already corrected for the grating shift.")
 
