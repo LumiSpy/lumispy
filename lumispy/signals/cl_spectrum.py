@@ -24,6 +24,7 @@ import numpy as np
 
 from hyperspy._signals.lazy import LazySignal
 from lumispy.signals.luminescence_spectrum import LumiSpectrum
+from hyperspy.signal_tools import SpikesRemoval
 
 
 class CLSpectrum(LumiSpectrum):
@@ -36,7 +37,7 @@ class CLSpectrum(LumiSpectrum):
     def cosmic_rays_subtraction(self, extra_percent=50, inplace=False, **kwargs):
         """
         Masks the cosmic rays away
-
+        USE HYPERSPY FUNCTION HERE AND ADAPT IT TO LUMISPY.
         Parameters
         -----------
         extra_percent : float

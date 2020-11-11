@@ -24,7 +24,6 @@ import numpy as np
 
 from lumispy.signals.cl_spectrum import CLSpectrum
 from hyperspy._signals.lazy import LazySignal
-from hyperspy.signal_tools import SpikesRemoval
 
 
 class CLSEMSpectrum(CLSpectrum):
