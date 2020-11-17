@@ -21,8 +21,12 @@ import scipy.constants as c
 
 from hyperspy.axes import DataAxis
 
+from inspect import getfullargspec
+from scipy import interpolate
+
+
 #
-# This file contains function needed for signal axis conversion
+# Functions needed for signal axis conversion
 #
 
 def _n_air(wl):
@@ -80,3 +84,107 @@ def data2eV(data, factor, ax0, evaxis):
     """
     return data * factor * c.h * c.c / (c.e * _n_air(ax0[::-1])
            * evaxis**2)
+
+#
+# spectrum manipulation
+#
+
+
+def join_spectra(S,r=50,average=False,kind='slinear'):
+    """ Takes list of Signal1D objects and returns a single object with all
+    spectra joined. Joins spectra at the center of the overlapping range.
+    Scales spectra by a factor determined as average over the range
+    `center -/+ r` pixels. Axes
+    
+    Parameters
+    ----------
+    S : list of Signal1D objects (with overlapping signal axes)
+    r : int, optional
+        Number of pixels left/right of center (default `50`) defining the range
+        over which to determine the scaling factor, has to be less than half
+        of the overlapping pixels.
+    average : boolean, optional
+        If `True`, use average of data values within the range defined by `r`
+        instead of joining at the center of the range (default).
+    kind : str, optional
+        Interpolation method (default 'slinear') to use when joining signals
+        with a uniform signal axes. See `scipy.interpolate.interp1d` for
+        options.
+    
+    Returns
+    -------
+    A new Signal1D object containing the joined spectra (properties are copied
+    from first spectrum).
+    """
+    
+    import numpy as np
+    import os
+    
+    # Test that spectra overlap
+    for i in range(1,len(S)):
+        if S[i-1].axes_manager.signal_axes[0].axis.max() \
+           < S[i].axes_manager.signal_axes[0].axis.min():
+            raise ValueError("Signal axes not overlapping")
+    
+    # take first spectrum as basis
+    S1 = S[0].deepcopy()
+    axis = S1.axes_manager.signal_axes[0]
+    for i in range(1,len(S)): # join following spectra
+        S2 = S[i].deepcopy()
+        axis2 = S2.axes_manager.signal_axes[0]
+        omax = axis.axis.max() # define overlap range
+        omin = axis2.axis.min()
+        ocenter = (omax+omin)/2 # center of overlap range
+        # closest index to center of overlap first spectrum
+        ind1 = axis.value2index(ocenter)
+        # closest index to center of overlap second spectrum
+        ind2 = axis2.value2index(ocenter)
+        # Make sure the corresponsing values are in correct order
+        if axis.axis[ind1] > axis2.axis[ind2]:
+            ind2 += 1
+        # Test that r is not too large
+        if (axis.value2index(omax) - ind1) <= r:
+            raise ValueError("`r` is too large")
+        # calculate mean deviation over defined range ignoring nan or zero values
+        init = np.empty(S2.isig[ind2-r:ind2+r].data.shape)
+        init[:] = np.nan
+        factor = np.nanmean(np.divide(S1.isig[ind1-r:ind1+r].data,
+                 S2.isig[ind2-r:ind2+r].data, out = init,
+                 where = S2.isig[ind2-r:ind2+r].data != 0), axis = -1)
+        S2.data = (S2.data.T * factor).T # scale 2nd spectrum by factor
+        
+        # for UniformDataAxis
+        if not 'axis' in getfullargspec(DataAxis)[0] or axis.is_uniform:
+            # join axis vectors  
+            axis.size = axis.axis[:ind1].size + np.floor((axis2.axis[-1] - axis.axis[ind1])/axis.scale)
+            # join data vectors interpolating to a common uniform axis
+            if average: # average over range
+                ind2r = axis2.value2index(axis.axis[ind1-r])
+                f = interpolate.interp1d(axis2.axis[ind2r:],
+                          S2.isig[ind2r:].data,kind='slinear')
+                S1.data = np.hstack((S1.isig[:ind1-r+1].data,
+                          np.mean([S1.isig[ind1-r+1:ind1+r].data,
+                          f(axis.axis[ind1-r+1:ind1+r])],axis=0),
+                          f(axis.axis[ind1+r:])))
+            else: # just join at center of overlap
+                f = interpolate.interp1d(axis2.axis[ind2:], 
+                          S2.isig[ind2:].data,kind='slinear')
+                S1.data = np.hstack((S1.isig[:ind1+1].data,
+                          f(axis.axis[ind1+1:])))
+        else: # for DataAxis/FunctionalDataAxis (non uniform)
+            # convert FunctionalDataAxes to DataAxes
+            if hasattr(axis,'expression'):
+                axis.convert_to_non_uniform_axis()
+            if hasattr(axis2,'expression'):
+                axis2.convert_to_non_uniform_axis()
+            # join axis vectors  
+            axis.axis = np.hstack((axis.axis[:ind1],axis2.axis[ind2:]))
+            if average: # average over range
+                S1.data = np.hstack((S1.isig[:ind1-r].data,
+                          np.mean([S1.isig[ind1-r:ind1+r].data,
+                          S2.isig[ind2-r:ind2+r]],axis=0),
+                          S2.isig[ind2+r:]))
+            else: # just join at center of overlap
+                S1.data = np.hstack((S1.isig[:ind1].data,
+                          S2.isig[ind2:]))
+    return S1
