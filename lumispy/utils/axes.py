@@ -156,7 +156,7 @@ def join_spectra(S,r=50,average=False,kind='slinear'):
         # for UniformDataAxis
         if not 'axis' in getfullargspec(DataAxis)[0] or axis.is_uniform:
             # join axis vectors  
-            axis.size = axis.axis[:ind1].size + np.floor((axis2.axis[-1] - axis.axis[ind1])/axis.scale)
+            axis.size = axis.axis[:ind1+1].size + np.floor((axis2.axis[-1] - axis.axis[ind1])/axis.scale)
             # join data vectors interpolating to a common uniform axis
             if average: # average over range
                 ind2r = axis2.value2index(axis.axis[ind1-r])
@@ -179,10 +179,11 @@ def join_spectra(S,r=50,average=False,kind='slinear'):
                 axis2.convert_to_non_uniform_axis()
             # join axis vectors  
             axis.axis = np.hstack((axis.axis[:ind1],axis2.axis[ind2:]))
+            axis.size = axis.axis.size
             if average: # average over range
                 S1.data = np.hstack((S1.isig[:ind1-r].data,
                           np.mean([S1.isig[ind1-r:ind1+r].data,
-                          S2.isig[ind2-r:ind2+r]],axis=0),
+                          S2.isig[ind2-r:ind2+r].data],axis=0),
                           S2.isig[ind2+r:]))
             else: # just join at center of overlap
                 S1.data = np.hstack((S1.isig[:ind1].data,
