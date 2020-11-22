@@ -130,36 +130,42 @@ class LumiSpectrum(Signal1D, CommonLumi):
         signal : LumiSpectrum
             A background subtracted signal.
         """
-        signal_x = self.axes_manager.signal_axes[0].axis
-        background_xy = np.array(background_xy)
+        if hasattr(self.metadata.Signal, 'background_subtracted'):
+            if self.metadata.Signal.background_subtracted is True:
+                raise RecursionError('You have already removed background once. If you need to remove it again, '
+                                     'set the s.metadata.Signal.background_subtracted to False')
 
-        if len(background_xy.shape) == 1:
-            bkg_x = signal_x
-            bkg_y = background_xy
-        elif len(background_xy.shape) == 2:
-            try:
-                bkg_x = background_xy[0]
-                bkg_y = background_xy[1]
-                if len(bkg_x) is not len(bkg_y):
-                    raise AttributeError("The length of the x and y axis must match.")
-            except IndexError:
-                raise AttributeError("Please provide a background file containing both the x and y axis.")
         else:
-            raise AttributeError("Please, provide a background of shape (2, n) or (n)")
+            signal_x = self.axes_manager.signal_axes[0].axis
+            background_xy = np.array(background_xy)
 
-        if not np.all(bkg_x == signal_x):
-            # Interpolation needed
-            bkg_y = np.interp(signal_x, bkg_x, bkg_y)
+            if len(background_xy.shape) == 1:
+                bkg_x = signal_x
+                bkg_y = background_xy
+            elif len(background_xy.shape) == 2:
+                try:
+                    bkg_x = background_xy[0]
+                    bkg_y = background_xy[1]
+                    if len(bkg_x) is not len(bkg_y):
+                        raise AttributeError("The length of the x and y axis must match.")
+                except IndexError:
+                    raise AttributeError("Please provide a background file containing both the x and y axis.")
+            else:
+                raise AttributeError("Please, provide a background of shape (2, n) or (n)")
 
-        if not inplace:
-            self_subtracted = self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=False)
-            self_subtracted.metadata.set_item("Signal.background_subtracted", True)
-            self_subtracted.metadata.set_item("Signal.background", bkg_y)
-            return self_subtracted
-        else:
-            self.metadata.set_item("Signal.background_subtracted", True)
-            self.metadata.set_item("Signal.background", bkg_y)
-            return self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True)
+            if not np.all(bkg_x == signal_x):
+                # Interpolation needed
+                bkg_y = np.interp(signal_x, bkg_x, bkg_y)
+
+            if not inplace:
+                self_subtracted = self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=False)
+                self_subtracted.metadata.set_item("Signal.background_subtracted", True)
+                self_subtracted.metadata.set_item("Signal.background", bkg_y)
+                return self_subtracted
+            else:
+                self.metadata.set_item("Signal.background_subtracted", True)
+                self.metadata.set_item("Signal.background", bkg_y)
+                return self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True)
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
