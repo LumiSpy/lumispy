@@ -25,7 +25,7 @@ from hyperspy.axes import DataAxis
 from lumispy.signals.common_luminescence import CommonLumi
 from lumispy.utils.axes import axis2eV
 from lumispy.utils.axes import data2eV
-
+import numpy as np
 
 from inspect import getfullargspec
 
@@ -111,15 +111,16 @@ class LumiSpectrum(Signal1D, CommonLumi):
             s2.metadata = self.metadata
             return s2
 
-    def background_subtraction(self, background, inplace=False):
+    def background_subtraction_from_file(self, background_xy, inplace=False,):
         """
         Subtract the background to the signal in all navigation axes.
-        TO DO: Make it compatible with non-matching wavelengths
+        NOTE: This function does not work with non-linear axes.
 
-        Parameters
-        ---------------
-        background : array
-           An array with the background intensity values. Length of array must match signal_axes size.
+        Parameters ---------------
+        background_xy : array shape (2, n)
+            An array containing the background x-axis and the intensity values [[xs],[ys]].
+            If the x-axis values do not match the signal_axes, then interpolation is done before subtraction.
+            If only the intensity values are provided, [ys], the functions assumes no interpolation needed.
 
         inplace : boolean
             If False, it returns a new object with the transformation. If True, the original object is transformed, returning no object.
@@ -129,16 +130,36 @@ class LumiSpectrum(Signal1D, CommonLumi):
         signal : LumiSpectrum
             A background subtracted signal.
         """
+        signal_x = self.axes_manager.signal_axes[0].axis
+        background_xy = np.array(background_xy)
+
+        if len(background_xy.shape) == 1:
+            bkg_x = signal_x
+            bkg_y = background_xy
+        elif len(background_xy.shape) == 2:
+            try:
+                bkg_x = background_xy[0]
+                bkg_y = background_xy[1]
+                if len(bkg_x) is not len(bkg_y):
+                    raise AttributeError("The length of the x and y axis must match.")
+            except IndexError:
+                raise AttributeError("Please provide a background file containing both the x and y axis.")
+        else:
+            raise AttributeError("Please, provide a background of shape (2, n) or (n)")
+
+        if not np.all(bkg_x == signal_x):
+            # Interpolation needed
+            bkg_y = np.interp(signal_x, bkg_x, bkg_y)
 
         if not inplace:
-            self_subtracted = self.map(lambda s, bkg: s - bkg, bkg=background, inplace=False)
+            self_subtracted = self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=False)
             self_subtracted.metadata.set_item("Signal.background_subtracted", True)
-            self_subtracted.metadata.set_item("Signal.background", background)
+            self_subtracted.metadata.set_item("Signal.background", bkg_y)
             return self_subtracted
         else:
             self.metadata.set_item("Signal.background_subtracted", True)
-            self.metadata.set_item("Signal.background", background)
-            return self.map(lambda s, bkg: s - bkg, bkg=background, inplace=True)
+            self.metadata.set_item("Signal.background", bkg_y)
+            return self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True)
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
