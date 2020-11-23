@@ -94,7 +94,8 @@ def join_spectra(S,r=50,average=False,kind='slinear'):
     """ Takes list of Signal1D objects and returns a single object with all
     spectra joined. Joins spectra at the center of the overlapping range.
     Scales spectra by a factor determined as average over the range
-    `center -/+ r` pixels. Axes
+    `center -/+ r` pixels. Works both for uniform and non-uniform axes 
+    (FunctionalDataAxis is converted into a non-uniform DataAxis).
     
     Parameters
     ----------
@@ -115,6 +116,15 @@ def join_spectra(S,r=50,average=False,kind='slinear'):
     -------
     A new Signal1D object containing the joined spectra (properties are copied
     from first spectrum).
+    
+    Examples
+    --------
+    
+    >>> s1 = hs.signals.Signal1D(np.ones(32))
+    >>> s2 = hs.signals.Signal1D(np.ones(32)*2)
+    >>> s2.axes_manager.signal_axes[0].offset = 25
+    >>> lum.join_spectra([s1,s2],r=2)
+    <Signal1D, title: , dimensions: (|57)>
     """
     
     import numpy as np
@@ -145,7 +155,7 @@ def join_spectra(S,r=50,average=False,kind='slinear'):
         # Test that r is not too large
         if (axis.value2index(omax) - ind1) <= r:
             raise ValueError("`r` is too large")
-        # calculate mean deviation over defined range ignoring nan or zero values
+        # calculate mean deviation over defined range ignoring nan/zero values
         init = np.empty(S2.isig[ind2-r:ind2+r].data.shape)
         init[:] = np.nan
         factor = np.nanmean(np.divide(S1.isig[ind1-r:ind1+r].data,
@@ -154,9 +164,11 @@ def join_spectra(S,r=50,average=False,kind='slinear'):
         S2.data = (S2.data.T * factor).T # scale 2nd spectrum by factor
         
         # for UniformDataAxis
-        if not 'axis' in getfullargspec(DataAxis)[0] or axis.is_uniform:
+        if (not 'axis' in getfullargspec(DataAxis)[0]) or (axis.is_uniform \
+           and axis2.is_uniform):
             # join axis vectors  
-            axis.size = axis.axis[:ind1+1].size + np.floor((axis2.axis[-1] - axis.axis[ind1])/axis.scale)
+            axis.size = axis.axis[:ind1+1].size + np.floor((axis2.axis[-1]
+                        - axis.axis[ind1])/axis.scale)
             # join data vectors interpolating to a common uniform axis
             if average: # average over range
                 ind2r = axis2.value2index(axis.axis[ind1-r])
@@ -172,8 +184,8 @@ def join_spectra(S,r=50,average=False,kind='slinear'):
                 S1.data = np.hstack((S1.isig[:ind1+1].data,
                           f(axis.axis[ind1+1:])))
         else: # for DataAxis/FunctionalDataAxis (non uniform)
-            # convert FunctionalDataAxes to DataAxes
-            if hasattr(axis,'expression'):
+            # convert FunctionalDataAxes or UniformDataAxis to DataAxes
+            if hasattr(axis,'expression') or axis.is_uniform:
                 axis.convert_to_non_uniform_axis()
             if hasattr(axis2,'expression'):
                 axis2.convert_to_non_uniform_axis()
