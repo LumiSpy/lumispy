@@ -26,8 +26,8 @@ from lumispy.signals.common_luminescence import CommonLumi
 from lumispy.utils.axes import axis2eV
 from lumispy.utils.axes import data2eV
 
-
 from inspect import getfullargspec
+
 
 class LumiSpectrum(Signal1D, CommonLumi):
     """General 1D Luminescence signal class.
