@@ -215,6 +215,35 @@ class LumiSpectrum(Signal1D, CommonLumi):
             self.metadata.set_item("Signal.background", background)
             return self.map(lambda s, bkg: s - bkg, bkg=background, inplace=True)
 
+    def background_subtraction(self, background, inplace=False):
+        """
+        Subtract the background to the signal in all navigation axes.
+        TO DO: Make it compatible with non-matching wavelengths
+
+        Parameters
+        ---------------
+        background : array
+           An array with the background intensity values. Length of array must match signal_axes size.
+
+        inplace : boolean
+            If False, it returns a new object with the transformation. If True, the original object is transformed, returning no object.
+
+        Returns
+        ---------------
+        signal : LumiSpectrum
+            A background subtracted signal.
+        """
+
+        if not inplace:
+            self_subtracted = self.map(lambda s, bkg: s - bkg, bkg=background, inplace=False)
+            self_subtracted.metadata.set_item("Signal.background_subtracted", True)
+            self_subtracted.metadata.set_item("Signal.background", background)
+            return self_subtracted
+        else:
+            self.metadata.set_item("Signal.background_subtracted", True)
+            self.metadata.set_item("Signal.background", background)
+            return self.map(lambda s, bkg: s - bkg, bkg=background, inplace=True)
+
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
     _lazy = True
