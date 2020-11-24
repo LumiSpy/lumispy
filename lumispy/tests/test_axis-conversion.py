@@ -27,7 +27,6 @@ from lumispy import CLSEMSpectrum
 from lumispy.utils.axes import *
 
 
-
 def test_nm2eV():
     wl = arange(300,400,90)
     en = nm2eV(wl)
@@ -94,7 +93,7 @@ def test_invcm2nm():
     assert_allclose(wl[0],1000)
     assert_allclose(wl[-1],625)
     
-def test_axes2invcm():
+def test_axis2invcm():
     axis = DataAxis(axis = arange(200,410,10))
     axis2 = DataAxis(axis = arange(0.2,0.410,0.01),units='µm')
     axis3 = DataAxis(axis = arange(1,2,0.1),units=r'cm$^{-1}$')
