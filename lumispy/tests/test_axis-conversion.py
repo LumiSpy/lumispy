@@ -39,7 +39,7 @@ def test_eV2nm():
     assert_allclose(wl[0],1239.50284)
     assert_allclose(wl[-1],688.611116)
     
-def test_axes2eV():
+def test_axis2eV():
     axis = DataAxis(axis = arange(200,400,10))
     axis2 = DataAxis(axis = arange(0.2,0.400,0.01),units='µm')
     axis3 = DataAxis(axis = arange(1,2,0.1),units='eV')

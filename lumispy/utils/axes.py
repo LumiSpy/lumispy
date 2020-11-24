@@ -83,7 +83,7 @@ def data2eV(data, factor, ax0, evaxis):
     """
     return data * factor * c.h * c.c / (c.e * _n_air(ax0[::-1])
            * evaxis**2)
-s
+
 
 def nm2invcm(x):
     r"""Converts wavelength (nm) to wavenumber (cm$^{-1}$).
