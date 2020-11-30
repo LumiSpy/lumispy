@@ -21,7 +21,6 @@ from numpy.random import random
 from pytest import raises
 #from numpy.testing import assert_allclose
 
-from inspect import getfullargspec
 from hyperspy.signals import Signal1D
 from hyperspy.axes import DataAxis
 from lumispy import join_spectra
@@ -37,17 +36,16 @@ def test_joinspectra():
     assert s.data[-1] == 1
     assert s.axes_manager.signal_axes[0].scale == 1
     # Also check for (non-uniform) DataAxis
-    if 'axis' in getfullargspec(DataAxis)[0]:
-        s1.axes_manager.signal_axes[0].convert_to_non_uniform_axis()
-        s = join_spectra([s1,s2],r=2)
-        assert s.axes_manager.signal_axes[0].is_uniform == False
-        assert s.axes_manager.signal_axes[0].size == 57
-        assert s.axes_manager.signal_axes[0].axis[-1] == 56
-        assert s.data.size == 57
-        assert s.data[-1] == 1
-        s = join_spectra([s1,s2],r=2,average=True)
-        assert s.data.size == 57
-        assert s.axes_manager.signal_axes[0].size == 57
+    s1.axes_manager.signal_axes[0].convert_to_non_uniform_axis()
+    s = join_spectra([s1,s2],r=2)
+    assert s.axes_manager.signal_axes[0].is_uniform == False
+    assert s.axes_manager.signal_axes[0].size == 57
+    assert s.axes_manager.signal_axes[0].axis[-1] == 56
+    assert s.data.size == 57
+    assert s.data[-1] == 1
+    s = join_spectra([s1,s2],r=2,average=True)
+    assert s.data.size == 57
+    assert s.axes_manager.signal_axes[0].size == 57
     
 def test_joinspectra_Errors():
     s1 = Signal1D(ones(32))
@@ -57,24 +55,26 @@ def test_joinspectra_Errors():
     raises(ValueError,join_spectra,[s1,s2])
     s2.axes_manager.signal_axes[0].offset = 35
     # Test that overlap catch works
-    raises(ValueError,join_spectra,[s1,s2])
+    raises(ValueError,join_spectra,[s1,s2],r=2)
+    s1.data*=-1
+    s2.axes_manager.signal_axes[0].offset = 25
+    raises(ValueError,join_spectra,[s1,s2],r=2)
     
 def test_joinspectra_FunctionalDA():
-    if 'axis' in getfullargspec(DataAxis)[0]:
-        s1 = Signal1D(ones(32))
-        s2 = Signal1D(ones(32)*2)
-        s2.axes_manager.signal_axes[0].offset = 25
-        s1.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression='x**2')
-        s2.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression='x**2')
-        s = join_spectra([s1,s2],r=2)
-        assert s.axes_manager.signal_axes[0].is_uniform == False
-        assert s.axes_manager.signal_axes[0].size == 57
-        assert s.axes_manager.signal_axes[0].axis[-1] == 3136
-        assert s.data.size == 57
-        assert s.data[-1] == 1
-        s = join_spectra([s1,s2],r=2,average=True)
-        assert s.data.size == 57
-        assert s.axes_manager.signal_axes[0].size == 57
+    s1 = Signal1D(ones(32))
+    s2 = Signal1D(ones(32)*2)
+    s2.axes_manager.signal_axes[0].offset = 25
+    s1.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression='x**2')
+    s2.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression='x**2')
+    s = join_spectra([s1,s2],r=2)
+    assert s.axes_manager.signal_axes[0].is_uniform == False
+    assert s.axes_manager.signal_axes[0].size == 57
+    assert s.axes_manager.signal_axes[0].axis[-1] == 3136
+    assert s.data.size == 57
+    assert s.data[-1] == 1
+    s = join_spectra([s1,s2],r=2,average=True)
+    assert s.data.size == 57
+    assert s.axes_manager.signal_axes[0].size == 57
 
 def test_joinspectra_Linescan():
     s1 = Signal1D(random((4,64)))

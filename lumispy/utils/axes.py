@@ -58,9 +58,9 @@ def eV2nm(x):
 
 
 def axis2eV(ax0):
-    """Converts given signal axis to eV using wavelength dependent permittivity 
-    of air. Assumes WL in units of nm 
-    unless the axis units are specifically set to µm.
+    """Converts given signal axis to energy scale (eV) using wavelength
+    dependent permittivity of air. Assumes wavelength in units of nm unless the
+    axis units are specifically set to µm.
     """
     if ax0.units == 'eV':
         raise AttributeError('Signal unit is already eV.')
@@ -73,22 +73,59 @@ def axis2eV(ax0):
         factor = 1e6
     axis = DataAxis(axis = evaxis, name = 'Energy', units = 'eV', 
                     navigate=False)
-
     return axis,factor
 
 
 def data2eV(data, factor, ax0, evaxis):
     """The intensity is converted from counts/nm (counts/µm) to counts/meV by 
     doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin. 142, 
-    202 (2013). Ensures that integrates signals are still correct.
+    202 (2013). Ensures that integrated signals are still correct.
     """
     return data * factor * c.h * c.c / (c.e * _n_air(ax0[::-1])
            * evaxis**2)
 
+
+def nm2invcm(x):
+    r"""Converts wavelength (nm) to wavenumber (cm$^{-1}$).
+    """
+    return 1e7/x
+
+
+def invcm2nm(x):
+    r"""Converts wavenumber (cm$^{-1}$) to wavelength (nm).
+    """
+    return 1e7/x
+    
+
+def axis2invcm(ax0):
+    r"""Converts given signal axis to wavenumber scale (cm$^{-1}$). Assumes
+    wavelength in units of nm unless the axis units are specifically set to µm.
+    """
+    if ax0.units == r'cm$^{-1}$':
+        raise AttributeError(r'Signal unit is already cm$^{-1}$.')
+    # transform axis, invert direction
+    if ax0.units == 'µm':
+        invcmaxis=nm2invcm(1000*ax0.axis)[::-1]
+        factor = 1e4 # correction factor for intensity
+    else:
+        invcmaxis=nm2invcm(ax0.axis)[::-1]
+        factor = 1e7
+    axis = DataAxis(axis = invcmaxis, name = 'Wavenumber', units = r'cm$^{-1}$', 
+                    navigate=False)
+    return axis,factor
+
+
+def data2invcm(data, factor, ax0, invcmaxis):
+    r"""The intensity is converted from counts/nm (counts/µm) to
+    counts/cm$^{-1}$ by doing a Jacobian transformation, see e.g. Wang and
+    Townsend, J. Lumin. 142, 202 (2013). Ensures that integrated signals are
+    still correct.
+    """
+    return data * factor / (invcmaxis**2)
+
 #
 # spectrum manipulation
 #
-
 
 def join_spectra(S,r=50,average=False,kind='slinear'):
     """ Takes list of Signal1D objects and returns a single object with all
@@ -161,6 +198,9 @@ def join_spectra(S,r=50,average=False,kind='slinear'):
         factor = np.nanmean(np.divide(S1.isig[ind1-r:ind1+r].data,
                  S2.isig[ind2-r:ind2+r].data, out = init,
                  where = S2.isig[ind2-r:ind2+r].data != 0), axis = -1)
+        if (factor < 0).any():
+            raise ValueError("One of the signals has a negative mean value in"\
+                             " the overlapping range")
         S2.data = (S2.data.T * factor).T # scale 2nd spectrum by factor
         
         # for UniformDataAxis
