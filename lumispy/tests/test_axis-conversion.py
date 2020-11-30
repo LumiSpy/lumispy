@@ -134,3 +134,19 @@ def test_to_invcm():
     assert S3.axes_manager[0].size == 20
     assert S1.axes_manager[0].axis[0] == S3.axes_manager[0].axis[0]
     assert_allclose(S1.data,S3.data,5e-4)
+
+def test_to_invcm_relative():
+    axis = DataAxis(axis = arange(200,400,10))
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
+    S1.to_invcm_relative(laser=244)
+    axis.units = 'µm'
+    axis.axis = axis.axis / 1000
+    data *= 1000
+    S2 = CLSEMSpectrum(data, axes=(axis.get_axis_dictionary(), ))
+    S3 = S2.to_invcm_relative(laser=0.244,inplace=False)
+    assert S1.axes_manager[0].units == r'cm$^{-1}$'
+    assert S3.axes_manager[0].name == 'Wavenumber'
+    assert S3.axes_manager[0].size == 20
+    assert S1.axes_manager[0].axis[0] == S3.axes_manager[0].axis[0]
+    assert_allclose(S1.data,S3.data,5e-4)
