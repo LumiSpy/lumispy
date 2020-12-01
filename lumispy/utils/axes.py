@@ -22,7 +22,7 @@ import scipy.constants as c
 from hyperspy.axes import DataAxis
 
 from inspect import getfullargspec
-from scipy import interpolate
+from scipy.interpolate import interp1d
 
 
 #
@@ -186,23 +186,29 @@ def join_spectra(S,r=50,average=False,kind='slinear'):
         ind1 = axis.value2index(ocenter)
         # closest index to center of overlap second spectrum
         ind2 = axis2.value2index(ocenter)
-        # Make sure the corresponsing values are in correct order
-        if axis.axis[ind1] > axis2.axis[ind2]:
-            ind2 += 1
         # Test that r is not too large
-        if (axis.value2index(omax) - ind1) <= r:
+        if (axis.size - ind1 - 1) <= r:
             raise ValueError("`r` is too large")
         # calculate mean deviation over defined range ignoring nan/zero values
         init = np.empty(S2.isig[ind2-r:ind2+r].data.shape)
         init[:] = np.nan
-        factor = np.nanmean(np.divide(S1.isig[ind1-r:ind1+r].data,
-                 S2.isig[ind2-r:ind2+r].data, out = init,
-                 where = S2.isig[ind2-r:ind2+r].data != 0), axis = -1)
+        if (axis.axis[ind1-r:ind1+r] == axis2.axis[ind2-r:ind2+r]).all():
+            factor = np.nanmean(np.divide(S1.isig[ind1-r:ind1+r].data,
+                     S2.isig[ind2-r:ind2+r].data, out = init,
+                     where = S2.isig[ind2-r:ind2+r].data != 0), axis = -1)
+        else: # interpolate to get factor at same positions
+            f = interp1d(axis2.axis[ind2-r-1:ind2+r+1],
+                     S2.isig[ind2-r-1:ind2+r+1].data,kind=kind)
+            factor = np.nanmean(np.divide(S1.isig[ind1-r:ind1+r].data,
+                     f(axis.axis[ind1-r:ind1+r]), out = init,
+                     where = S2.isig[ind2-r:ind2+r].data != 0), axis = -1)
         if (factor < 0).any():
             raise ValueError("One of the signals has a negative mean value in"\
                              " the overlapping range")
         S2.data = (S2.data.T * factor).T # scale 2nd spectrum by factor
-        
+        # Make sure the corresponding values are in correct order
+        if axis.axis[ind1] >= axis2.axis[ind2]:
+            ind2 += 1        
         # for UniformDataAxis
         if (not 'axis' in getfullargspec(DataAxis)[0]) or (axis.is_uniform \
            and axis2.is_uniform):
@@ -212,15 +218,15 @@ def join_spectra(S,r=50,average=False,kind='slinear'):
             # join data vectors interpolating to a common uniform axis
             if average: # average over range
                 ind2r = axis2.value2index(axis.axis[ind1-r])
-                f = interpolate.interp1d(axis2.axis[ind2r:],
-                          S2.isig[ind2r:].data,kind='slinear')
-                S1.data = np.hstack((S1.isig[:ind1-r+1].data,
-                          np.mean([S1.isig[ind1-r+1:ind1+r].data,
-                          f(axis.axis[ind1-r+1:ind1+r])],axis=0),
+                f = interp1d(axis2.axis[ind2r-1:],
+                          S2.isig[ind2r-1:].data,kind=kind)
+                S1.data = np.hstack((S1.isig[:ind1-r].data,
+                          np.mean([S1.isig[ind1-r:ind1+r].data,
+                          f(axis.axis[ind1-r:ind1+r])],axis=0),
                           f(axis.axis[ind1+r:])))
             else: # just join at center of overlap
-                f = interpolate.interp1d(axis2.axis[ind2:], 
-                          S2.isig[ind2:].data,kind='slinear')
+                f = interp1d(axis2.axis[ind2:], 
+                          S2.isig[ind2:].data,kind=kind)
                 S1.data = np.hstack((S1.isig[:ind1+1].data,
                           f(axis.axis[ind1+1:])))
         else: # for DataAxis/FunctionalDataAxis (non uniform)
@@ -229,15 +235,21 @@ def join_spectra(S,r=50,average=False,kind='slinear'):
                 axis.convert_to_non_uniform_axis()
             if hasattr(axis2,'expression'):
                 axis2.convert_to_non_uniform_axis()
-            # join axis vectors  
-            axis.axis = np.hstack((axis.axis[:ind1],axis2.axis[ind2:]))
+            # join axis vectors
+            axis.axis = np.hstack((axis.axis[:ind1+1],axis2.axis[ind2:]))
             axis.size = axis.axis.size
             if average: # average over range
+                f1 = interp1d(S[i-1].axes_manager.signal_axes[0].axis[ind1-1:ind1+r+1],
+                          S1.isig[ind1-1:ind1+r+1].data,kind=kind)
+                f2 = interp1d(axis2.axis[ind2-r-1:ind2+1],
+                          S2.isig[ind2-r-1:ind2+1].data,kind=kind)
                 S1.data = np.hstack((S1.isig[:ind1-r].data,
-                          np.mean([S1.isig[ind1-r:ind1+r].data,
-                          S2.isig[ind2-r:ind2+r].data],axis=0),
-                          S2.isig[ind2+r:]))
+                          np.mean([S1.isig[ind1-r:ind1+1].data,
+                          f2(axis.axis[ind1-r:ind1+1])],axis=0),
+                          np.mean([f1(axis2.axis[ind2:ind2+r]),
+                          S2.isig[ind2:ind2+r].data],axis=0),
+                          S2.isig[ind2+r:].data))
             else: # just join at center of overlap
-                S1.data = np.hstack((S1.isig[:ind1].data,
-                          S2.isig[ind2:]))
+                S1.data = np.hstack((S1.isig[:ind1+1].data,
+                          S2.isig[ind2:].data))
     return S1
