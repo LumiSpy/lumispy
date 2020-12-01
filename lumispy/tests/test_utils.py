@@ -26,62 +26,28 @@ from hyperspy.signals import Signal1D
 from hyperspy.axes import DataAxis,UniformDataAxis
 from lumispy import join_spectra
 
-def test_joinspectra_nonuniform():
-    s1 = Signal1D(arange(32))
-    s2 = Signal1D(arange(32)+25)
-    s2.axes_manager.signal_axes[0].offset = 25
-    s1.axes_manager.signal_axes[0].convert_to_non_uniform_axis()
-    s = join_spectra([s1,s2], r=2)
-    assert s.axes_manager.signal_axes[0].is_uniform == False
-    assert s.axes_manager.signal_axes[0].size == 57
-    assert s.axes_manager.signal_axes[0].axis[-1] == 56
-    assert s.data.size == 57
-    assert s.data[-1] == 56
-    s = join_spectra([s1,s2], r=2, average=True)
-    assert s.data.size == 57
-    assert s.axes_manager.signal_axes[0].size == 57
-    assert s.data[-1] == 56
-    s1 = Signal1D(arange(12))
-    s2 = Signal1D(arange(12)+3.8, axes=[DataAxis(axis = arange(12)+3.8)])
-    s = join_spectra([s1,s2], r=2)
-    assert s.axes_manager[0].axis.size == 16
-    assert s.data.size == 16
-    s = join_spectra([s1,s2], r=2, average=True)
-    assert s.data.size == 16
-    assert s.data[-1] == 14.8
-    
-def test_joinspectra_FunctionalDA():
-    s1 = Signal1D(ones(32))
-    s2 = Signal1D(ones(32)*2)
-    s2.axes_manager.signal_axes[0].offset = 25
-    s1.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression='x**2')
-    s2.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression='x**2')
-    s = join_spectra([s1,s2],r=2)
-    assert s.axes_manager.signal_axes[0].is_uniform == False
-    assert s.axes_manager.signal_axes[0].size == 57
-    assert s.axes_manager.signal_axes[0].axis[-1] == 3136
-    assert s.data.size == 57
-    assert s.data[-1] == 1
-    s = join_spectra([s1,s2], r=2, average=True)
-    assert s.data.size == 57
-    assert s.axes_manager.signal_axes[0].size == 57
-
 @mark.parametrize(("legacy_axis"), (DataAxis, UniformDataAxis))
-def test_joinspectra(legacy_axis):
+@mark.parametrize(("average"), (True,False))
+@mark.parametrize(("scale"), (True,False))
+@mark.parametrize(("kind"), ('slinear','linear'))
+def test_joinspectra(average,scale,kind,legacy_axis):
     DataAxis = legacy_axis
     s1 = Signal1D(arange(32))
     s2 = Signal1D(arange(32)+25)
     s3 = Signal1D(arange(32)+50)
     s2.axes_manager.signal_axes[0].offset = 25
     s3.axes_manager.signal_axes[0].offset = 50
-    s = join_spectra([s1,s2,s3], r=2)
+    s = join_spectra([s1,s2,s3], r=2, average=average, scale=scale, kind=kind)
     assert s.data[-1] == 81
     assert s.axes_manager.signal_axes[0].scale == 1
-    s = join_spectra([s1,s2], r=2, average=True)
+    assert s.axes_manager.signal_axes[0].size == 82
+    # potentially move this elsewhere as it does not rely on parametrization
+    s2.isig[3] = 0
+    s = join_spectra([s1,s2], r=2, average=True, scale=True)
     assert s.data[-1] == 56
-    assert s.axes_manager.signal_axes[0].scale == 1
-    # Test errors
-#def test_joinspectra_errors():
+    assert s.data[28] == 28/3
+
+def test_joinspectra_errors():
     s1 = Signal1D(ones(32))
     s2 = Signal1D(ones(32)*2)
     s2.axes_manager.signal_axes[0].offset = 25
@@ -93,11 +59,54 @@ def test_joinspectra(legacy_axis):
     s1.data*=-1
     s2.axes_manager.signal_axes[0].offset = 25
     raises(ValueError, join_spectra, [s1,s2], r=2)
-    # Test linescans
-#def test_joinspectra_Linescan():
+
+@mark.parametrize(("legacy_axis"), (DataAxis, UniformDataAxis))
+@mark.parametrize(("average"), (True,False))
+@mark.parametrize(("scale"), (True,False))
+@mark.parametrize(("kind"), ('slinear','linear'))
+def test_joinspectra_linescan(average,scale,kind,legacy_axis):
+    DataAxis = legacy_axis
     s1 = Signal1D(random((4,64)))
     s2 = Signal1D(random((4,64)))
     s2.axes_manager.signal_axes[0].offset = 47
-    s = join_spectra([s1,s2], r=7, average=True)
+    s = join_spectra([s1,s2], r=7, average=average, scale=scale, kind=kind)
     assert s.axes_manager.signal_axes[0].size == 111
+    assert s.axes_manager.signal_axes[0].scale == 1
+    
+@mark.parametrize(("average"), (True,False))
+@mark.parametrize(("scale"), (True,False))
+@mark.parametrize(("kind"), ('slinear','linear'))
+def test_joinspectra_nonuniform(average,scale,kind):
+    s1 = Signal1D(arange(32))
+    s2 = Signal1D(arange(32)+25)
+    s2.axes_manager.signal_axes[0].offset = 25
+    s1.axes_manager.signal_axes[0].convert_to_non_uniform_axis()
+    s = join_spectra([s1,s2], r=2, average=average, scale=scale, kind=kind)
+    assert s.axes_manager.signal_axes[0].is_uniform == False
+    assert s.axes_manager.signal_axes[0].size == 57
+    assert s.axes_manager.signal_axes[0].axis[-1] == 56
+    assert s.data.size == 57
+    assert s.data[-1] == 56
+    s1 = Signal1D(arange(12))
+    s2 = Signal1D(arange(12)+3.8, axes=[DataAxis(axis = arange(12)+3.8)])
+    s = join_spectra([s1,s2], r=2, average=average, scale=scale, kind=kind)
+    assert s.axes_manager[0].axis.size == 16
+    assert s.data.size == 16
+    assert s.data[-1] == 14.8
 
+@mark.parametrize(("average"), (True,False))
+@mark.parametrize(("scale"), (True,False))
+@mark.parametrize(("kind"), ('slinear','linear'))
+def test_joinspectra_FunctionalDA(average,scale,kind):
+    s1 = Signal1D(ones(32))
+    s2 = Signal1D(ones(32)*2)
+    s2.axes_manager.signal_axes[0].offset = 25
+    s1.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression='x**2')
+    s2.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression='x**2')
+    s = join_spectra([s1,s2], r=2, average=average, scale=scale, kind=kind)
+    assert s.axes_manager.signal_axes[0].is_uniform == False
+    assert s.axes_manager.signal_axes[0].size == 57
+    assert s.axes_manager.signal_axes[0].axis[-1] == 3136
+    assert s.data.size == 57
+    if scale: assert s.data[-1] == 1
+    else: assert s.data[-1] == 2
