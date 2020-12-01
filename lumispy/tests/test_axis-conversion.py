@@ -18,7 +18,7 @@
 
 from numpy import arange
 from numpy import ones
-from pytest import raises
+from pytest import raises, mark
 from numpy.testing import assert_allclose
 
 from hyperspy.axes import DataAxis, UniformDataAxis
@@ -65,16 +65,17 @@ def test_data2eV():
     evdata = data2eV(data,factor,ax0,evaxis)
     assert_allclose(evdata[-1],12.27066795)
 
-def test_to_eV():
+@mark.parametrize(("jacobian"), (True,False))
+def test_to_eV(jacobian):
     axis = DataAxis(axis = arange(200,400,10))
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
-    S1.to_eV()
+    S1.to_eV(jacobian=jacobian)
     axis.units = 'µm'
     axis.axis = axis.axis / 1000
     data *= 1000
     S2 = CLSEMSpectrum(data, axes=(axis.get_axis_dictionary(), ))
-    S3 = S2.to_eV(inplace=False)
+    S3 = S2.to_eV(inplace=False,jacobian=jacobian)
     assert S1.axes_manager[0].units == 'eV'
     assert S3.axes_manager[0].name == 'Energy'
     assert S3.axes_manager[0].size == 20
@@ -119,32 +120,34 @@ def test_data2invcm():
     invcmdata = data2invcm(data,factor,ax0,invcmaxis)
     assert_allclose(invcmdata[-1],1.521)
 
-def test_to_invcm():
+@mark.parametrize(("jacobian"), (True,False))
+def test_to_invcm(jacobian):
     axis = DataAxis(axis = arange(200,400,10))
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
-    S1.to_invcm()
+    S1.to_invcm(jacobian=jacobian)
     axis.units = 'µm'
     axis.axis = axis.axis / 1000
     data *= 1000
     S2 = CLSEMSpectrum(data, axes=(axis.get_axis_dictionary(), ))
-    S3 = S2.to_invcm(inplace=False)
+    S3 = S2.to_invcm(inplace=False,jacobian=jacobian)
     assert S1.axes_manager[0].units == r'cm$^{-1}$'
     assert S3.axes_manager[0].name == 'Wavenumber'
     assert S3.axes_manager[0].size == 20
     assert S1.axes_manager[0].axis[0] == S3.axes_manager[0].axis[0]
     assert_allclose(S1.data,S3.data,5e-4)
 
-def test_to_invcm_relative():
+@mark.parametrize(("jacobian"), (True,False))
+def test_to_invcm_relative(jacobian):
     axis = DataAxis(axis = arange(200,400,10))
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
-    S1.to_invcm_relative(laser=244)
+    S1.to_invcm_relative(laser=244,jacobian=jacobian)
     axis.units = 'µm'
     axis.axis = axis.axis / 1000
     data *= 1000
     S2 = CLSEMSpectrum(data, axes=(axis.get_axis_dictionary(), ))
-    S3 = S2.to_invcm_relative(laser=0.244,inplace=False)
+    S3 = S2.to_invcm_relative(laser=0.244,inplace=False,jacobian=jacobian)
     assert S1.axes_manager[0].units == r'cm$^{-1}$'
     assert S3.axes_manager[0].name == 'Wavenumber'
     assert S3.axes_manager[0].size == 20
