@@ -21,7 +21,7 @@ from numpy import ones
 from pytest import raises
 from numpy.testing import assert_allclose
 
-from hyperspy.axes import DataAxis
+from hyperspy.axes import DataAxis, UniformDataAxis
 from lumispy import LumiSpectrum
 from lumispy import CLSEMSpectrum
 from lumispy.utils.axes import *
@@ -32,13 +32,13 @@ def test_nm2eV():
     en = nm2eV(wl)
     assert_allclose(en[0],4.13160202)
     assert_allclose(en[-1],3.17818160)
-    
+
 def test_eV2nm():
     en = arange(1,2,0.8)
     wl = eV2nm(en)
     assert_allclose(wl[0],1239.50284)
     assert_allclose(wl[-1],688.611116)
-    
+
 def test_axis2eV():
     axis = DataAxis(axis = arange(200,400,10))
     axis2 = DataAxis(axis = arange(0.2,0.400,0.01),units='µm')
@@ -80,19 +80,19 @@ def test_to_eV():
     assert S3.axes_manager[0].size == 20
     assert S1.axes_manager[0].axis[0] == S3.axes_manager[0].axis[0]
     assert_allclose(S1.data,S3.data,5e-4)
-    
+
 def test_nm2invcm():
     wl = arange(300,410,100)
     invcm = nm2invcm(wl)
     assert_allclose(invcm[0],33333.3333)
     assert_allclose(invcm[-1],25000)
-    
+
 def test_invcm2nm():
     invcm = arange(10000,20000,6000)
     wl = invcm2nm(invcm)
     assert_allclose(wl[0],1000)
     assert_allclose(wl[-1],625)
-    
+
 def test_axis2invcm():
     axis = DataAxis(axis = arange(200,410,10))
     axis2 = DataAxis(axis = arange(0.2,0.410,0.01),units='µm')
@@ -150,3 +150,4 @@ def test_to_invcm_relative():
     assert S3.axes_manager[0].size == 20
     assert S1.axes_manager[0].axis[0] == S3.axes_manager[0].axis[0]
     assert_allclose(S1.data,S3.data,5e-4)
+
