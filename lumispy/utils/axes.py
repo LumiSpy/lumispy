@@ -197,8 +197,10 @@ def join_spectra(S,r=50,average=False,kind='slinear'):
                      S2.isig[ind2-r:ind2+r].data, out = init,
                      where = S2.isig[ind2-r:ind2+r].data != 0), axis = -1)
         else: # interpolate to get factor at same positions
-            f = interp1d(axis2.axis[ind2-r-1:ind2+r+1],
-                     S2.isig[ind2-r-1:ind2+r+1].data,kind=kind)
+            ind2r1 = axis2.value2index(axis.axis[ind1-r])
+            ind2r2 = axis2.value2index(axis.axis[ind1+r])
+            f = interp1d(axis2.axis[ind2r1-1:ind2r2+1],
+                     S2.isig[ind2r1-1:ind2r2+1].data,kind=kind)
             factor = np.nanmean(np.divide(S1.isig[ind1-r:ind1+r].data,
                      f(axis.axis[ind1-r:ind1+r]), out = init,
                      where = S2.isig[ind2-r:ind2+r].data != 0), axis = -1)

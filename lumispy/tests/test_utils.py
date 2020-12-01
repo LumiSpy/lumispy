@@ -41,14 +41,14 @@ def test_joinspectra_nonuniform():
     assert s.data.size == 57
     assert s.axes_manager.signal_axes[0].size == 57
     assert s.data[-1] == 56
-    s1 = Signal1D(arange(10))
-    s2 = Signal1D(arange(10)+3.8, axes=[DataAxis(axis = arange(10)+3.8)])
+    s1 = Signal1D(arange(12))
+    s2 = Signal1D(arange(12)+3.8, axes=[DataAxis(axis = arange(12)+3.8)])
     s = join_spectra([s1,s2], r=2)
-    assert s.axes_manager[0].axis.size == 14
-    assert s.data.size == 14
+    assert s.axes_manager[0].axis.size == 16
+    assert s.data.size == 16
     s = join_spectra([s1,s2], r=2, average=True)
-    assert s.data.size == 14
-    assert s.data[-1] == 12.8
+    assert s.data.size == 16
+    assert s.data[-1] == 14.8
     
 def test_joinspectra_FunctionalDA():
     s1 = Signal1D(ones(32))
@@ -71,9 +71,11 @@ def test_joinspectra(legacy_axis):
     DataAxis = legacy_axis
     s1 = Signal1D(arange(32))
     s2 = Signal1D(arange(32)+25)
+    s3 = Signal1D(arange(32)+50)
     s2.axes_manager.signal_axes[0].offset = 25
-    s = join_spectra([s1,s2], r=2)
-    assert s.data[-1] == 56
+    s3.axes_manager.signal_axes[0].offset = 50
+    s = join_spectra([s1,s2,s3], r=2)
+    assert s.data[-1] == 81
     assert s.axes_manager.signal_axes[0].scale == 1
     s = join_spectra([s1,s2], r=2, average=True)
     assert s.data[-1] == 56
