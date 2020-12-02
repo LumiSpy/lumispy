@@ -1,0 +1,50 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  run_test_suite:
+    name: py${{ matrix.PYTHON_VERSION }}${{ matrix.LABEL }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      MPLBACKEND: agg
+      PIP_ARGS: --upgrade --use-feature=2020-resolver -e
+      PYTEST_ARGS: --pyargs lumispy
+      PYTEST_ARGS_COVERAGE: 
+    strategy:
+      fail-fast: false
+      matrix:
+        PYTHON_VERSION: [3.6, 3.7]
+        PIP_SELECTOR: ['[tests]']
+        include:
+          - PYTHON_VERSION: 3.8
+            PIP_SELECTOR: '[tests, coverage]'
+            PYTEST_ARGS_COVERAGE: --cov=lumispy
+            LABEL: /coverage
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        name: Install Python
+        with:
+          python-version: ${{ matrix.PYTHON_VERSION }}
+
+      - name: Display version
+        run: |
+          python --version
+          pip --version
+
+      - name: Install
+        shell: bash
+        run: |
+          pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
+          pip install https://github.com/hyperspy/hyperspy/archive/non_uniform_axes.zip
+
+      - name: Run test suite
+        run: |
+          pytest ${{ env.PYTEST_ARGS }} ${{ matrix.PYTEST_ARGS_COVERAGE }}
+
+      - name: Coveralls
+        if: ${{ always() }} && ${{ matrix.PYTEST_ARGS_COVERAGE }} 
+        uses: AndreMiras/coveralls-python-action@develop

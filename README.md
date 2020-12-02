@@ -2,6 +2,7 @@
 
 [![Build Status](https://dev.azure.com/Lumispy/lumispy/_apis/build/status/LumiSpy.lumispy?branchName=master)](https://dev.azure.com/Lumispy/lumispy/_build/latest?definitionId=3&branchName=master)
 [![Build Status](https://travis-ci.org/LumiSpy/lumispy.svg?branch=master)](https://travis-ci.org/LumiSpy/lumispy)
+![Tests](https://github.com/lumispy/lumispy/workflows/Tests/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/LumiSpy/lumispy/badge.svg?branch=master)](https://coveralls.io/github/LumiSpy/lumispy?branch=master)
 
 ### Introduction
