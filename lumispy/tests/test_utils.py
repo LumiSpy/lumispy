@@ -118,15 +118,3 @@ def test_joinspectra_FunctionalDA(average, scale, kind):
     assert s.data.size == 57
     if scale: assert s.data[-1] == 1
     else: assert s.data[-1] == 2
-    s1 = LumiSpectrum(ones(10))
-    s2 = LumiSpectrum(ones(10))
-    s2.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression='x+3')
-    s = join_spectra([s1,s2], r=1, average=average, scale=scale, kind=kind)
-    assert s.axes_manager.signal_axes[0].is_uniform == False
-    assert s.axes_manager.signal_axes[0].size == 13
-    assert s.axes_manager.signal_axes[0].axis[-1] == 12
-    s = join_spectra([s1,s2], r=2, average=average, scale=scale, kind=kind)
-    assert s.axes_manager.signal_axes[0].is_uniform == False
-    assert s.axes_manager.signal_axes[0].size == 13
-    assert s.axes_manager.signal_axes[0].axis[-1] == 12
-
