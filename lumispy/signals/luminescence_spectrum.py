@@ -151,8 +151,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
         
         # Check if non_uniform_axis is available in hyperspy version
         if not 'axis' in getfullargspec(DataAxis)[0]:
-            raise NotImplementedError('Conversion to energy axis works only '
-                         'if the non_uniform_axis branch of hyperspy is used.')
+            raise NotImplementedError('Conversion to wavenumber axis works only'
+                         ' if the non_uniform_axis branch of hyperspy is used.')
 
         invcmaxis,factor = axis2invcm(self.axes_manager.signal_axes[0])
         
@@ -227,8 +227,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
         
         # Check if non_uniform_axis is available in hyperspy version
         if not 'axis' in getfullargspec(DataAxis)[0]:
-            raise NotImplementedError('Conversion to energy axis works only '
-                         'if the non_uniform_axis branch of hyperspy is used.')
+            raise NotImplementedError('Conversion to wavenumber axis works only'
+                         ' if the non_uniform_axis branch of hyperspy is used.')
 
         invcmaxis,factor = axis2invcm(self.axes_manager.signal_axes[0])
         
