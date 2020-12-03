@@ -39,6 +39,11 @@ def test_eV2nm():
     assert_allclose(wl[-1], 688.611116)
 
 def test_axis2eV():
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        pytest.skip("HyperSpy version doesn't support non-uniform axis")
+
     axis = DataAxis(axis = arange(200,400,10))
     axis2 = DataAxis(axis = arange(0.2,0.400,0.01), units='µm')
     axis3 = DataAxis(axis = arange(1,2,0.1), units='eV')
@@ -66,6 +71,11 @@ def test_data2eV():
 
 @mark.parametrize(("jacobian"), (True,False))
 def test_to_eV(jacobian):
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        pytest.skip("HyperSpy version doesn't support non-uniform axis")
+
     axis = DataAxis(axis = arange(200,400,10))
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
@@ -116,6 +126,11 @@ def test_invcm2nm():
     assert_allclose(wl[-1], 625)
 
 def test_axis2invcm():
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        pytest.skip("HyperSpy version doesn't support non-uniform axis")
+
     axis = DataAxis(axis = arange(200,410,10))
     axis2 = DataAxis(axis = arange(0.2,0.410,0.01), units='µm')
     axis3 = DataAxis(axis = arange(1,2,0.1), units=r'cm$^{-1}$')
@@ -143,6 +158,11 @@ def test_data2invcm():
 
 @mark.parametrize(("jacobian"), (True,False))
 def test_to_invcm(jacobian):
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        pytest.skip("HyperSpy version doesn't support non-uniform axis")
+
     axis = DataAxis(axis = arange(200,400,10))
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
@@ -182,6 +202,11 @@ def test_to_invcm(jacobian):
 
 @mark.parametrize(("jacobian"), (True,False))
 def test_to_invcm_relative(jacobian):
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        pytest.skip("HyperSpy version doesn't support non-uniform axis")
+
     axis = DataAxis(axis = arange(200,400,10))
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
