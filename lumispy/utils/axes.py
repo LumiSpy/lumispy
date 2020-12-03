@@ -259,10 +259,12 @@ def join_spectra(S,r=50,scale=True,average=False,kind='slinear'):
                 f2 = interp1d(axis2.axis[ind2-r-1:ind2+1],
                           S2.isig[ind2-r-1:ind2+1].data,kind=kind)
                 length1 = axis.axis[ind1-r:ind1+1].size
-                grad1 = 0.5/(length1-1)
+                if length1 == 1: grad1 = 0
+                else: grad1 = 0.5/(length1-1)
                 vect1 = np.arange(length1)
                 length2 = axis2.axis[ind2:ind2+r].size
-                grad2 = 0.5+0.5/(length2-1)
+                if length2 == 1: grad2 = 0.5
+                else: grad2 = 0.5+0.5/(length2-1)
                 vect2 = np.arange(length2)
                 S1.data = np.hstack((S1.isig[:ind1-r].data,
                           (1-grad1*vect1)*S1.isig[ind1-r:ind1+1].data +

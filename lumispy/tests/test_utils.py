@@ -22,7 +22,7 @@ from numpy.random import random
 from pytest import raises, mark, skip
 #from numpy.testing import assert_allclose
 
-from hyperspy.signals import Signal1D
+from lumispy import LumiSpectrum
 from hyperspy.axes import DataAxis
 from lumispy import join_spectra
 
@@ -32,9 +32,9 @@ from lumispy import join_spectra
 @mark.parametrize(("scale"), (True,False))
 @mark.parametrize(("kind"), ('slinear','linear'))
 def test_joinspectra(average, scale, kind):
-    s1 = Signal1D(arange(32))
-    s2 = Signal1D(arange(32)+25)
-    s3 = Signal1D(arange(32)+50)
+    s1 = LumiSpectrum(arange(32))
+    s2 = LumiSpectrum(arange(32)+25)
+    s3 = LumiSpectrum(arange(32)+50)
     s2.axes_manager.signal_axes[0].offset = 25
     s3.axes_manager.signal_axes[0].offset = 50
     s = join_spectra([s1,s2,s3], r=2, average=average, scale=scale, kind=kind)
@@ -48,8 +48,8 @@ def test_joinspectra(average, scale, kind):
     assert s.data[28] == 28/3
 
 def test_joinspectra_errors():
-    s1 = Signal1D(ones(32))
-    s2 = Signal1D(ones(32)*2)
+    s1 = LumiSpectrum(ones(32))
+    s2 = LumiSpectrum(ones(32)*2)
     s2.axes_manager.signal_axes[0].offset = 25
     # Test that catch for r works
     raises(ValueError, join_spectra, [s1,s2])
@@ -64,8 +64,8 @@ def test_joinspectra_errors():
 @mark.parametrize(("scale"), (True,False))
 @mark.parametrize(("kind"), ('slinear','linear'))
 def test_joinspectra_linescan(average, scale, kind):
-    s1 = Signal1D(random((4,64)))
-    s2 = Signal1D(random((4,64)))
+    s1 = LumiSpectrum(random((4,64)))
+    s2 = LumiSpectrum(random((4,64)))
     s2.axes_manager.signal_axes[0].offset = 47
     s = join_spectra([s1,s2], r=7, average=average, scale=scale, kind=kind)
     assert s.axes_manager.signal_axes[0].size == 111
@@ -79,8 +79,8 @@ def test_joinspectra_nonuniform(average, scale, kind):
         from hyperspy.axes import UniformDataAxis
     except ImportError:
         skip("HyperSpy version doesn't support non-uniform axis")
-    s1 = Signal1D(arange(32))
-    s2 = Signal1D(arange(32)+25)
+    s1 = LumiSpectrum(arange(32))
+    s2 = LumiSpectrum(arange(32)+25)
     s2.axes_manager.signal_axes[0].offset = 25
     s1.axes_manager.signal_axes[0].convert_to_non_uniform_axis()
     s = join_spectra([s1,s2], r=2, average=average, scale=scale, kind=kind)
@@ -89,8 +89,8 @@ def test_joinspectra_nonuniform(average, scale, kind):
     assert s.axes_manager.signal_axes[0].axis[-1] == 56
     assert s.data.size == 57
     assert s.data[-1] == 56
-    s1 = Signal1D(arange(12))
-    s2 = Signal1D(arange(12)+3.8, axes=[DataAxis(axis = arange(12)+3.8)])
+    s1 = LumiSpectrum(arange(12))
+    s2 = LumiSpectrum(arange(12)+3.8, axes=[DataAxis(axis = arange(12)+3.8)])
     s = join_spectra([s1,s2], r=2, average=average, scale=scale, kind=kind)
     assert s.axes_manager[0].axis.size == 16
     assert s.data.size == 16
@@ -104,8 +104,8 @@ def test_joinspectra_FunctionalDA(average, scale, kind):
         from hyperspy.axes import FunctionalDataAxis
     except ImportError:
         skip("HyperSpy version doesn't support non-uniform axis")
-    s1 = Signal1D(ones(32))
-    s2 = Signal1D(ones(32)*2)
+    s1 = LumiSpectrum(ones(32))
+    s2 = LumiSpectrum(ones(32)*2)
     s2.axes_manager.signal_axes[0].offset = 25
     s1.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression='x**2')
     s2.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression='x**2')
@@ -116,3 +116,15 @@ def test_joinspectra_FunctionalDA(average, scale, kind):
     assert s.data.size == 57
     if scale: assert s.data[-1] == 1
     else: assert s.data[-1] == 2
+    s1 = LumiSpectrum(ones(10))
+    s2 = LumiSpectrum(ones(10))
+    s2.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression='x+3')
+    s = join_spectra([s1,s2], r=1, average=average, scale=scale, kind=kind)
+    assert s.axes_manager.signal_axes[0].is_uniform == False
+    assert s.axes_manager.signal_axes[0].size == 13
+    assert s.axes_manager.signal_axes[0].axis[-1] == 12
+    s = join_spectra([s1,s2], r=2, average=average, scale=scale, kind=kind)
+    assert s.axes_manager.signal_axes[0].is_uniform == False
+    assert s.axes_manager.signal_axes[0].size == 13
+    assert s.axes_manager.signal_axes[0].axis[-1] == 12
+
