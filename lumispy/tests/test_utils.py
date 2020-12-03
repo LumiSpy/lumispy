@@ -19,19 +19,19 @@
 from numpy import ones
 from numpy import arange
 from numpy.random import random
-from pytest import raises, mark
+from pytest import raises, mark, skip
 #from numpy.testing import assert_allclose
 
 from hyperspy.signals import Signal1D
-from hyperspy.axes import DataAxis,UniformDataAxis
+from hyperspy.axes import DataAxis
 from lumispy import join_spectra
 
-@mark.parametrize(("legacy_axis"), (DataAxis, UniformDataAxis))
+
+
 @mark.parametrize(("average"), (True,False))
 @mark.parametrize(("scale"), (True,False))
 @mark.parametrize(("kind"), ('slinear','linear'))
-def test_joinspectra(average,scale,kind,legacy_axis):
-    DataAxis = legacy_axis
+def test_joinspectra(average, scale, kind):
     s1 = Signal1D(arange(32))
     s2 = Signal1D(arange(32)+25)
     s3 = Signal1D(arange(32)+50)
@@ -60,12 +60,10 @@ def test_joinspectra_errors():
     s2.axes_manager.signal_axes[0].offset = 25
     raises(ValueError, join_spectra, [s1,s2], r=2)
 
-@mark.parametrize(("legacy_axis"), (DataAxis, UniformDataAxis))
 @mark.parametrize(("average"), (True,False))
 @mark.parametrize(("scale"), (True,False))
 @mark.parametrize(("kind"), ('slinear','linear'))
-def test_joinspectra_linescan(average,scale,kind,legacy_axis):
-    DataAxis = legacy_axis
+def test_joinspectra_linescan(average, scale, kind):
     s1 = Signal1D(random((4,64)))
     s2 = Signal1D(random((4,64)))
     s2.axes_manager.signal_axes[0].offset = 47
@@ -76,7 +74,11 @@ def test_joinspectra_linescan(average,scale,kind,legacy_axis):
 @mark.parametrize(("average"), (True,False))
 @mark.parametrize(("scale"), (True,False))
 @mark.parametrize(("kind"), ('slinear','linear'))
-def test_joinspectra_nonuniform(average,scale,kind):
+def test_joinspectra_nonuniform(average, scale, kind):
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        skip("HyperSpy version doesn't support non-uniform axis")
     s1 = Signal1D(arange(32))
     s2 = Signal1D(arange(32)+25)
     s2.axes_manager.signal_axes[0].offset = 25
@@ -97,7 +99,11 @@ def test_joinspectra_nonuniform(average,scale,kind):
 @mark.parametrize(("average"), (True,False))
 @mark.parametrize(("scale"), (True,False))
 @mark.parametrize(("kind"), ('slinear','linear'))
-def test_joinspectra_FunctionalDA(average,scale,kind):
+def test_joinspectra_FunctionalDA(average, scale, kind):
+    try:
+        from hyperspy.axes import FunctionalDataAxis
+    except ImportError:
+        skip("HyperSpy version doesn't support non-uniform axis")
     s1 = Signal1D(ones(32))
     s2 = Signal1D(ones(32)*2)
     s2.axes_manager.signal_axes[0].offset = 25
