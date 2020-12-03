@@ -7,6 +7,5 @@ dependencies:
 - pytest
 - pytest-cov
 - pytest-faulthandler
-- pytest-mpl
 - pytest-xdist
 
