@@ -246,9 +246,9 @@ def join_spectra(S,r=50,scale=True,average=False,kind='slinear'):
                           f(axis.axis[ind1+1:])))
         else: # for DataAxis/FunctionalDataAxis (non uniform)
             # convert FunctionalDataAxes or UniformDataAxis to DataAxes
-            if hasattr(axis,'expression') or axis.is_uniform:
+            if hasattr(axis,'_expression') or axis.is_uniform:
                 axis.convert_to_non_uniform_axis()
-            if hasattr(axis2,'expression'):
+            if hasattr(axis2,'_expression'):
                 axis2.convert_to_non_uniform_axis()
             # join axis vectors
             axis.axis = np.hstack((axis.axis[:ind1+1],axis2.axis[ind2:]))
