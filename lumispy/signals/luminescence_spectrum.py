@@ -152,7 +152,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         # Check if non_uniform_axis is available in hyperspy version
         if not 'axis' in getfullargspec(DataAxis)[0]:
             raise ImportError('Conversion to wavenumber axis works only'
-                         ' if the non_uniform_axis branch of HyperSpy is used.')
+                        ' if the non_uniform_axis branch of HyperSpy is used.')
 
         invcmaxis,factor = axis2invcm(self.axes_manager.signal_axes[0])
         
@@ -228,7 +228,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         # Check if non_uniform_axis is available in hyperspy version
         if not 'axis' in getfullargspec(DataAxis)[0]:
             raise ImportError('Conversion to wavenumber axis works only'
-                         ' if the non_uniform_axis branch of HyperSpy is used.')
+                        ' if the non_uniform_axis branch of HyperSpy is used.')
 
         invcmaxis,factor = axis2invcm(self.axes_manager.signal_axes[0])
         
@@ -280,10 +280,12 @@ class LumiSpectrum(Signal1D, CommonLumi):
         Parameters
         ---------------
         background : array
-           An array with the background intensity values. Length of array must match signal_axes size.
+           An array with the background intensity values. Length of array must
+           match signal_axes size.
 
         inplace : boolean
-            If False, it returns a new object with the transformation. If True, the original object is transformed, returning no object.
+            If False, it returns a new object with the transformation. If True,
+            the original object is transformed, returning no object.
 
         Returns
         ---------------
