@@ -17,10 +17,11 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 from numpy import arange, ones
-from pytest import raises, mark
+from pytest import raises, mark, skip
 from numpy.testing import assert_allclose
+from inspect import getfullargspec
 
-from hyperspy.axes import DataAxis, UniformDataAxis
+from hyperspy.axes import DataAxis
 from lumispy import LumiSpectrum
 from lumispy import CLSEMSpectrum
 from lumispy.utils.axes import *
@@ -39,12 +40,16 @@ def test_eV2nm():
     assert_allclose(wl[-1], 688.611116)
 
 def test_axis2eV():
+    axis = DataAxis(size = 20, offset = 200, scale = 10)
+
+    if not 'axis' in getfullargspec(DataAxis)[0]:
+        raises(ImportError,axis2eV,axis)
     try:
         from hyperspy.axes import UniformDataAxis
     except ImportError:
-        pytest.skip("HyperSpy version doesn't support non-uniform axis")
+        skip("HyperSpy version doesn't support non-uniform axis")
 
-    axis = DataAxis(axis = arange(200,400,10))
+    axis = UniformDataAxis(size = 20, offset = 200, scale = 10)
     axis2 = DataAxis(axis = arange(0.2,0.400,0.01), units='µm')
     axis3 = DataAxis(axis = arange(1,2,0.1), units='eV')
     evaxis,factor = axis2eV(axis)
@@ -71,12 +76,18 @@ def test_data2eV():
 
 @mark.parametrize(("jacobian"), (True,False))
 def test_to_eV(jacobian):
+    axis = DataAxis(size = 20, offset = 200, scale = 10)
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
+
+    if not 'axis' in getfullargspec(DataAxis)[0]:
+        raises(ImportError,S1.to_eV)
     try:
         from hyperspy.axes import UniformDataAxis
     except ImportError:
-        pytest.skip("HyperSpy version doesn't support non-uniform axis")
+        skip("HyperSpy version doesn't support non-uniform axis")
 
-    axis = DataAxis(axis = arange(200,400,10))
+    axis = UniformDataAxis(size = 20, offset = 200, scale = 10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
     S2 = S1.to_eV(inplace=False,jacobian=jacobian)
@@ -126,12 +137,16 @@ def test_invcm2nm():
     assert_allclose(wl[-1], 625)
 
 def test_axis2invcm():
+    axis = DataAxis(size = 20, offset = 200, scale = 10)
+
+    if not 'axis' in getfullargspec(DataAxis)[0]:
+        raises(ImportError,axis2invcm,axis)
     try:
         from hyperspy.axes import UniformDataAxis
     except ImportError:
-        pytest.skip("HyperSpy version doesn't support non-uniform axis")
+        skip("HyperSpy version doesn't support non-uniform axis")
 
-    axis = DataAxis(axis = arange(200,410,10))
+    axis = UniformDataAxis(size = 21, offset = 200, scale = 10)
     axis2 = DataAxis(axis = arange(0.2,0.410,0.01), units='µm')
     axis3 = DataAxis(axis = arange(1,2,0.1), units=r'cm$^{-1}$')
     invcmaxis,factor = axis2invcm(axis)
@@ -158,12 +173,18 @@ def test_data2invcm():
 
 @mark.parametrize(("jacobian"), (True,False))
 def test_to_invcm(jacobian):
+    axis = DataAxis(size = 20, offset = 200, scale = 10)
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
+
+    if not 'axis' in getfullargspec(DataAxis)[0]:
+        raises(ImportError,S1.to_invcm)
     try:
         from hyperspy.axes import UniformDataAxis
     except ImportError:
-        pytest.skip("HyperSpy version doesn't support non-uniform axis")
+        skip("HyperSpy version doesn't support non-uniform axis")
 
-    axis = DataAxis(axis = arange(200,400,10))
+    axis = UniformDataAxis(size = 20, offset = 200, scale = 10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
     S2 = S1.to_invcm(inplace=False, jacobian=jacobian)
@@ -202,12 +223,18 @@ def test_to_invcm(jacobian):
 
 @mark.parametrize(("jacobian"), (True,False))
 def test_to_invcm_relative(jacobian):
+    axis = DataAxis(size = 20, offset = 200, scale = 10)
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
+
+    if not 'axis' in getfullargspec(DataAxis)[0]:
+        raises(ImportError,S1.to_invcm_relative,244)
     try:
         from hyperspy.axes import UniformDataAxis
     except ImportError:
-        pytest.skip("HyperSpy version doesn't support non-uniform axis")
+        skip("HyperSpy version doesn't support non-uniform axis")
 
-    axis = DataAxis(axis = arange(200,400,10))
+    axis = UniformDataAxis(size = 20, offset = 200, scale = 10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
     S2 = S1.to_invcm_relative(laser=244, inplace=False, jacobian=jacobian)
