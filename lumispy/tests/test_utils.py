@@ -20,12 +20,10 @@ from numpy import ones
 from numpy import arange
 from numpy.random import random
 from pytest import raises, mark, skip
-#from numpy.testing import assert_allclose
 
 from lumispy import LumiSpectrum
 from hyperspy.axes import DataAxis
 from lumispy import join_spectra
-
 
 
 @mark.parametrize(("average"), (True,False))
@@ -41,7 +39,11 @@ def test_joinspectra(average, scale, kind):
     assert s.data[-1] == 81
     assert s.axes_manager.signal_axes[0].scale == 1
     assert s.axes_manager.signal_axes[0].size == 82
-    # potentially move this elsewhere as it does not rely on parametrization
+    
+def test_joinspectra2():
+    s1 = LumiSpectrum(arange(32))
+    s2 = LumiSpectrum(arange(32)+25)
+    s2.axes_manager.signal_axes[0].offset = 25
     s2.isig[3] = 0
     s = join_spectra([s1,s2], r=2, average=True, scale=True)
     assert s.data[-1] == 56

@@ -27,7 +27,6 @@ from lumispy import CLSEMSpectrum
 from lumispy.utils.axes import *
 
 
-
 def test_nm2eV():
     wl = arange(300,400,90)
     en = nm2eV(wl)
