@@ -16,8 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-from numpy import arange
-from numpy import ones
+from numpy import arange, ones
 from pytest import raises, mark
 from numpy.testing import assert_allclose
 
@@ -30,19 +29,19 @@ from lumispy.utils.axes import *
 def test_nm2eV():
     wl = arange(300,400,90)
     en = nm2eV(wl)
-    assert_allclose(en[0],4.13160202)
-    assert_allclose(en[-1],3.17818160)
+    assert_allclose(en[0], 4.13160202)
+    assert_allclose(en[-1], 3.17818160)
 
 def test_eV2nm():
     en = arange(1,2,0.8)
     wl = eV2nm(en)
-    assert_allclose(wl[0],1239.50284)
-    assert_allclose(wl[-1],688.611116)
+    assert_allclose(wl[0], 1239.50284)
+    assert_allclose(wl[-1], 688.611116)
 
 def test_axis2eV():
     axis = DataAxis(axis = arange(200,400,10))
-    axis2 = DataAxis(axis = arange(0.2,0.400,0.01),units='µm')
-    axis3 = DataAxis(axis = arange(1,2,0.1),units='eV')
+    axis2 = DataAxis(axis = arange(0.2,0.400,0.01), units='µm')
+    axis3 = DataAxis(axis = arange(1,2,0.1), units='eV')
     evaxis,factor = axis2eV(axis)
     evaxis2,factor2 = axis2eV(axis2)
     raises(AttributeError,axis2eV,axis3)
@@ -53,51 +52,73 @@ def test_axis2eV():
     assert not evaxis.navigate
     assert evaxis2.units == 'eV'
     assert evaxis2.size == 20
-    assert_allclose(evaxis.axis[0],evaxis2.axis[0])
-    assert_allclose(evaxis.axis[-1],evaxis2.axis[-1])
-    assert_allclose(evaxis.axis[0],3.1781816)
+    assert_allclose(evaxis.axis[0], evaxis2.axis[0])
+    assert_allclose(evaxis.axis[-1], evaxis2.axis[-1])
+    assert_allclose(evaxis.axis[0], 3.1781816)
 
 def test_data2eV():
     data = 100*ones(20)
     factor = 1e6
     ax0 = arange(200,400,10)
     evaxis = nm2eV(ax0)
-    evdata = data2eV(data,factor,ax0,evaxis)
-    assert_allclose(evdata[-1],12.27066795)
+    evdata = data2eV(data, factor, ax0,evaxis)
+    assert_allclose(evdata[-1], 12.27066795)
 
 @mark.parametrize(("jacobian"), (True,False))
 def test_to_eV(jacobian):
     axis = DataAxis(axis = arange(200,400,10))
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
+    S2 = S1.to_eV(inplace=False,jacobian=jacobian)
+    S1.axes_manager[0].units = 'µm'
+    S1.axes_manager[0].axis = axis.axis / 1000
+    S1.data *= 1000
     S1.to_eV(jacobian=jacobian)
-    axis.units = 'µm'
-    axis.axis = axis.axis / 1000
-    data *= 1000
-    S2 = CLSEMSpectrum(data, axes=(axis.get_axis_dictionary(), ))
-    S3 = S2.to_eV(inplace=False,jacobian=jacobian)
     assert S1.axes_manager[0].units == 'eV'
-    assert S3.axes_manager[0].name == 'Energy'
-    assert S3.axes_manager[0].size == 20
-    assert S1.axes_manager[0].axis[0] == S3.axes_manager[0].axis[0]
-    assert_allclose(S1.data,S3.data,5e-4)
+    assert S2.axes_manager[0].name == 'Energy'
+    assert S2.axes_manager[0].size == 20
+    assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
+    assert_allclose(S1.data, S2.data, 5e-4)
+    nav = UniformDataAxis(size = 4)
+    # navigation dimension 1
+    L1 = LumiSpectrum(ones((4,20)), axes=[nav.get_axis_dictionary(), \
+         axis.get_axis_dictionary()])
+    L2 = L1.to_eV(inplace=False, jacobian=jacobian)
+    L1.to_eV(jacobian=jacobian)
+    assert L1.axes_manager.signal_axes[0].units == 'eV'
+    assert L2.axes_manager.signal_axes[0].name == 'Energy'
+    assert L2.axes_manager.signal_axes[0].size == 20
+    assert L1.axes_manager.signal_axes[0].axis[0] == \
+           L2.axes_manager.signal_axes[0].axis[0]
+    assert_allclose(L1.data, L2.data, 5e-4)
+    # navigation dimension 2
+    M1 = LumiSpectrum(ones((4,4,20)), axes=[nav.get_axis_dictionary(), \
+         nav.get_axis_dictionary(), axis.get_axis_dictionary()])
+    M2 = M1.to_eV(inplace=False, jacobian=jacobian)
+    M1.to_eV(jacobian=jacobian)
+    assert M1.axes_manager.signal_axes[0].units == 'eV'
+    assert M2.axes_manager.signal_axes[0].name == 'Energy'
+    assert M2.axes_manager.signal_axes[0].size == 20
+    assert M1.axes_manager.signal_axes[0].axis[0] == \
+           M2.axes_manager.signal_axes[0].axis[0]
+    assert_allclose(M1.data, M2.data, 5e-4)
 
 def test_nm2invcm():
     wl = arange(300,410,100)
     invcm = nm2invcm(wl)
-    assert_allclose(invcm[0],33333.3333)
-    assert_allclose(invcm[-1],25000)
+    assert_allclose(invcm[0], 33333.3333)
+    assert_allclose(invcm[-1], 25000)
 
 def test_invcm2nm():
     invcm = arange(10000,20000,6000)
     wl = invcm2nm(invcm)
-    assert_allclose(wl[0],1000)
-    assert_allclose(wl[-1],625)
+    assert_allclose(wl[0], 1000)
+    assert_allclose(wl[-1], 625)
 
 def test_axis2invcm():
     axis = DataAxis(axis = arange(200,410,10))
-    axis2 = DataAxis(axis = arange(0.2,0.410,0.01),units='µm')
-    axis3 = DataAxis(axis = arange(1,2,0.1),units=r'cm$^{-1}$')
+    axis2 = DataAxis(axis = arange(0.2,0.410,0.01), units='µm')
+    axis3 = DataAxis(axis = arange(1,2,0.1), units=r'cm$^{-1}$')
     invcmaxis,factor = axis2invcm(axis)
     invcmaxis2,factor2 = axis2invcm(axis2)
     raises(AttributeError,axis2invcm,axis3)
@@ -108,49 +129,93 @@ def test_axis2invcm():
     assert not invcmaxis.navigate
     assert invcmaxis2.units == r'cm$^{-1}$'
     assert invcmaxis2.size == 21
-    assert_allclose(invcmaxis.axis[0],invcmaxis2.axis[0])
-    assert_allclose(invcmaxis.axis[-1],invcmaxis2.axis[-1])
-    assert_allclose(invcmaxis.axis[0],25000)
+    assert_allclose(invcmaxis.axis[0], invcmaxis2.axis[0])
+    assert_allclose(invcmaxis.axis[-1], invcmaxis2.axis[-1])
+    assert_allclose(invcmaxis.axis[0], 25000)
 
 def test_data2invcm():
     data = 100*ones(20)
     factor = 1e7
     ax0 = arange(200,400,10)
     invcmaxis = nm2invcm(ax0)
-    invcmdata = data2invcm(data,factor,ax0,invcmaxis)
-    assert_allclose(invcmdata[-1],1.521)
+    invcmdata = data2invcm(data, factor, ax0,invcmaxis)
+    assert_allclose(invcmdata[-1], 1.521)
 
 @mark.parametrize(("jacobian"), (True,False))
 def test_to_invcm(jacobian):
     axis = DataAxis(axis = arange(200,400,10))
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
+    S2 = S1.to_invcm(inplace=False, jacobian=jacobian)
+    S1.axes_manager[0].units = 'µm'
+    S1.axes_manager[0].axis = axis.axis / 1000
+    S1.data *= 1000
     S1.to_invcm(jacobian=jacobian)
-    axis.units = 'µm'
-    axis.axis = axis.axis / 1000
-    data *= 1000
-    S2 = CLSEMSpectrum(data, axes=(axis.get_axis_dictionary(), ))
-    S3 = S2.to_invcm(inplace=False,jacobian=jacobian)
     assert S1.axes_manager[0].units == r'cm$^{-1}$'
-    assert S3.axes_manager[0].name == 'Wavenumber'
-    assert S3.axes_manager[0].size == 20
-    assert S1.axes_manager[0].axis[0] == S3.axes_manager[0].axis[0]
-    assert_allclose(S1.data,S3.data,5e-4)
+    assert S2.axes_manager[0].name == 'Wavenumber'
+    assert S2.axes_manager[0].size == 20
+    assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
+    assert_allclose(S1.data, S2.data, 5e-4)
+    nav = UniformDataAxis(size = 4)
+    # navigation dimension 1
+    L1 = LumiSpectrum(ones((4,20)), axes=[nav.get_axis_dictionary(), \
+         axis.get_axis_dictionary()])
+    L2 = L1.to_invcm(inplace=False, jacobian=jacobian)
+    L1.to_invcm(jacobian=jacobian)
+    assert L1.axes_manager.signal_axes[0].units == r'cm$^{-1}$'
+    assert L2.axes_manager.signal_axes[0].name == 'Wavenumber'
+    assert L2.axes_manager.signal_axes[0].size == 20
+    assert L1.axes_manager.signal_axes[0].axis[0] == \
+           L2.axes_manager.signal_axes[0].axis[0]
+    assert_allclose(L1.data, L2.data, 5e-4)
+    # navigation dimension 2
+    M1 = LumiSpectrum(ones((4,4,20)), axes=[nav.get_axis_dictionary(), \
+         nav.get_axis_dictionary(), axis.get_axis_dictionary()])
+    M2 = M1.to_invcm(inplace=False, jacobian=jacobian)
+    M1.to_invcm(jacobian=jacobian)
+    assert M1.axes_manager.signal_axes[0].units == r'cm$^{-1}$'
+    assert M2.axes_manager.signal_axes[0].name == 'Wavenumber'
+    assert M2.axes_manager.signal_axes[0].size == 20
+    assert M1.axes_manager.signal_axes[0].axis[0] == \
+           M2.axes_manager.signal_axes[0].axis[0]
+    assert_allclose(M1.data, M2.data, 5e-4)
 
 @mark.parametrize(("jacobian"), (True,False))
 def test_to_invcm_relative(jacobian):
     axis = DataAxis(axis = arange(200,400,10))
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(), ))
-    S1.to_invcm_relative(laser=244,jacobian=jacobian)
-    axis.units = 'µm'
-    axis.axis = axis.axis / 1000
-    data *= 1000
-    S2 = CLSEMSpectrum(data, axes=(axis.get_axis_dictionary(), ))
-    S3 = S2.to_invcm_relative(laser=0.244,inplace=False,jacobian=jacobian)
+    S2 = S1.to_invcm_relative(laser=244, inplace=False, jacobian=jacobian)
+    S1.axes_manager[0].units = 'µm'
+    S1.axes_manager[0].axis = axis.axis / 1000
+    S1.data *= 1000
+    S1.to_invcm_relative(laser=0.244, jacobian=jacobian)
     assert S1.axes_manager[0].units == r'cm$^{-1}$'
-    assert S3.axes_manager[0].name == 'Wavenumber'
-    assert S3.axes_manager[0].size == 20
-    assert S1.axes_manager[0].axis[0] == S3.axes_manager[0].axis[0]
-    assert_allclose(S1.data,S3.data,5e-4)
+    assert S2.axes_manager[0].name == 'Wavenumber'
+    assert S2.axes_manager[0].size == 20
+    assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
+    assert_allclose(S1.data, S2.data, 5e-4)
+    nav = UniformDataAxis(size = 4)
+    # navigation dimension 1
+    L1 = LumiSpectrum(ones((4,20)), axes=[nav.get_axis_dictionary(), \
+         axis.get_axis_dictionary()])
+    L2 = L1.to_invcm_relative(laser=244, inplace=False, jacobian=jacobian)
+    L1.to_invcm_relative(laser=244, jacobian=jacobian)
+    assert L1.axes_manager.signal_axes[0].units == r'cm$^{-1}$'
+    assert L2.axes_manager.signal_axes[0].name == 'Wavenumber'
+    assert L2.axes_manager.signal_axes[0].size == 20
+    assert L1.axes_manager.signal_axes[0].axis[0] == \
+           L2.axes_manager.signal_axes[0].axis[0]
+    assert_allclose(L1.data, L2.data, 5e-4)
+    # navigation dimension 2
+    M1 = LumiSpectrum(ones((4,4,20)), axes=[nav.get_axis_dictionary(), \
+         nav.get_axis_dictionary(), axis.get_axis_dictionary()])
+    M2 = M1.to_invcm_relative(laser=244, inplace=False, jacobian=jacobian)
+    M1.to_invcm_relative(laser=244, jacobian=jacobian)
+    assert M1.axes_manager.signal_axes[0].units == r'cm$^{-1}$'
+    assert M2.axes_manager.signal_axes[0].name == 'Wavenumber'
+    assert M2.axes_manager.signal_axes[0].size == 20
+    assert M1.axes_manager.signal_axes[0].axis[0] == \
+           M2.axes_manager.signal_axes[0].axis[0]
+    assert_allclose(M1.data, M2.data, 5e-4)
 
