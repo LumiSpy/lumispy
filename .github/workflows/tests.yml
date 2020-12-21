@@ -39,6 +39,12 @@ jobs:
         shell: bash
         run: |
           pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
+
+      - name: Install (HyperSpy dev)
+        # Test against the hyperspy `non_uniform_axes` branch
+        if: ${{ matrix.PYTEST_ARGS_COVERAGE }} 
+        shell: bash
+        run: |
           pip install https://github.com/hyperspy/hyperspy/archive/non_uniform_axes.zip
 
       - name: Run test suite
