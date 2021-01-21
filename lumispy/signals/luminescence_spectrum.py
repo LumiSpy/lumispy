@@ -18,6 +18,7 @@
 
 """Signal class for Luminescence spectral data (1D).
 """
+import inspect
 
 import numpy as np
 from hyperspy._signals.signal1d import Signal1D
@@ -31,6 +32,7 @@ from lumispy.utils.axes import data2invcm
 from lumispy.utils.axes import nm2invcm
 
 from inspect import getfullargspec
+import lumispy
 
 
 class LumiSpectrum(Signal1D, CommonLumi):
@@ -272,15 +274,15 @@ class LumiSpectrum(Signal1D, CommonLumi):
             s2.metadata = self.metadata
             return s2
 
-
-    def background_subtraction_from_file(self, background_xy, inplace=False,):
+    def remove_background(self, background=None, inplace=False, **kwargs):
         """
         Subtract the background to the signal in all navigation axes.
+        If no background file is passed as argument, the `remove_background()` from Hyperspy is called with the GUI.
         NOTE: This function does not work with non-linear axes.
 
         Parameters ---------------
-        background_xy : array shape (2, n)
-            An array containing the background x-axis and the intensity values [[xs],[ys]].
+        background : array shape (2, n) or Signal1D
+            An array containing the background x-axis and the intensity values [[xs],[ys]] or a Signal1D object.
             If the x-axis values do not match the signal_axes, then interpolation is done before subtraction.
             If only the intensity values are provided, [ys], the functions assumes no interpolation needed.
 
@@ -297,10 +299,17 @@ class LumiSpectrum(Signal1D, CommonLumi):
             if self.metadata.Signal.background_subtracted is True:
                 raise RecursionError('You have already removed background once. If you need to remove it again, '
                                      'set the s.metadata.Signal.background_subtracted to False')
-
+        elif background is None:
+            self.remove_background(**kwargs)
         else:
             signal_x = self.axes_manager.signal_axes[0].axis
-            background_xy = np.array(background_xy)
+
+            if hasattr(background, 'axes_manager'): # Check if Hyperspy-like object
+                x = background.axes_manager.signal_axes[0].axis
+                y = background.data
+                background = [x,y]
+
+            background_xy = np.array(background)
 
             if len(background_xy.shape) == 1:
                 bkg_x = signal_x
