@@ -18,8 +18,6 @@
 
 """Signal class for Luminescence spectral data (1D).
 """
-import inspect
-
 import numpy as np
 from hyperspy._signals.signal1d import Signal1D
 from hyperspy._signals.lazy import LazySignal
@@ -32,7 +30,7 @@ from lumispy.utils.axes import data2invcm
 from lumispy.utils.axes import nm2invcm
 
 from inspect import getfullargspec
-import lumispy
+import warnings
 
 
 class LumiSpectrum(Signal1D, CommonLumi):
@@ -274,7 +272,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
             s2.metadata = self.metadata
             return s2
 
-    def remove_background(self, background=None, inplace=False, **kwargs):
+    def remove_background_from_file(self, background=None, inplace=False, **kwargs):
         """
         Subtract the background to the signal in all navigation axes.
         If no background file is passed as argument, the `remove_background()` from Hyperspy is called with the GUI.
@@ -300,6 +298,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 raise RecursionError('You have already removed background once. If you need to remove it again, '
                                      'set the s.metadata.Signal.background_subtracted to False')
         elif background is None:
+            warnings.warn("Using the Hyperspy specfic `remove_background` function. Use `s.remove_background()` "
+                          "instead.", category=SyntaxWarning)
             self.remove_background(**kwargs)
         else:
             signal_x = self.axes_manager.signal_axes[0].axis
@@ -311,10 +311,10 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
             background_xy = np.array(background)
 
-            if len(background_xy.shape) == 1:
+            if background_xy.shape[0] == 1 and background_xy.dtype is not 'O':
                 bkg_x = signal_x
                 bkg_y = background_xy
-            elif len(background_xy.shape) == 2:
+            elif background_xy.shape[0] == 2 and background_xy.dtype is not 'O':
                 try:
                     bkg_x = background_xy[0]
                     bkg_y = background_xy[1]
