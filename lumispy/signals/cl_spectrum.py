@@ -115,50 +115,6 @@ class CLSpectrum(LumiSpectrum):
         else:
             return signal
 
-    def cosmic_rays_subtraction(self, extra_percent=50, inplace=False, **kwargs):
-        """
-        Masks the cosmic rays away
-        USE HYPERSPY FUNCTION HERE AND ADAPT IT TO LUMISPY.
-        Parameters
-        -----------
-        extra_percent : float
-            Extra percent of intensity added to the maximum value of the mean spectrum, which is used to threshold. Default is an extra 500% (x5) to the maximum intensity value of the mean spectrum.
-
-        inplace : bool
-            If False, a new signal object is created and returned. If True, the original signal object is modified.
-        """
-
-        def get_threshold(self, extra_percent):
-            # Get the max threshold from the mean spectrum maximum
-            max_threshold = max(self.mean().data)
-            # Add an extra % of threshold
-            max_threshold = max_threshold * extra_percent
-            return max_threshold
-
-        def remove_cosmic_ray(spectrum, threshold, mean_spectrum):
-            # Remove cosmic ray leaving the spectrum pixel as normal noise
-            # TO DO: Modify noise creation to be relative to actual real noise.
-            if max(spectrum.data) > threshold:
-                import statistics
-                mean = statistics.mean(mean_spectrum.data)
-                stdev = statistics.stdev(mean_spectrum.data)
-                noise = np.random.normal(mean, stdev, spectrum.shape[0])
-                spectrum.data = noise
-            return spectrum
-
-        threshold = get_threshold(self, extra_percent)
-        mean_spectrum = self.mean()
-
-        if not inplace:
-            signal_filtered = self.map(remove_cosmic_ray, threshold=threshold, mean_spectrum=mean_spectrum,
-                                       show_progressbar=True, inplace=False)
-            signal_filtered.metadata.set_item("Signal.cosmic_rays_subtracted_extra_percent", extra_percent)
-            return signal_filtered
-        else:
-            self.metadata.set_item("Signal.cosmic_rays_subtracted_extra_percent", extra_percent)
-            return self.map(remove_cosmic_ray, threshold=threshold, mean_spectrum=mean_spectrum, show_progressbar=True,
-                            inplace=True)
-
 
 class LazyCLSpectrum(LazySignal, CLSpectrum):
     _lazy = True
