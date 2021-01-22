@@ -34,13 +34,28 @@ class CLSpectrum(LumiSpectrum):
     _signal_type = "CL"
     _signal_dimension = 1
 
+    def _make_signal_mask(self, luminescence_roi):
+
+        ax = self.axes_manager.signal_axes[0].axis
+        signal_mask = np.ones(np.shape(ax))
+
+        for p in luminescence_roi:
+            x, w = p
+            x_min = x - w / 2
+            x_max = x + w / 2
+            index_min = np.abs(ax - x_min).argmin()
+            index_max = np.abs(ax - x_max).argmin()
+            signal_mask[index_min:index_max + 1] *= 0
+
+        return np.invert(signal_mask.astype('bool'))
 
     def remove_spikes(self, threshold='auto', add_noise=True, noise_type='poisson',
                       show_diagnosis_histogram=False, inplace=False, luminescence_roi=None,
                       default_spike_width=5, navigation_mask=None, signal_mask=None, **kwargs):
         """
 
-        :param luminescence_roi:
+        :param luminescence_roi: array
+            In the form of an array of pairwise elements [[peak1_x, peak1_width], [peak2_x, peak2_width],...] in the units of the signal axis.
         :param inplace:
         :param show_diagnosis_histogram:
         :param noise_type:
@@ -52,6 +67,8 @@ class CLSpectrum(LumiSpectrum):
         :param max_num_bins:
         :return:
         """
+        if luminescence_roi is not None and signal_mask is None:
+            signal_mask = self._make_signal_mask(luminescence_roi)
 
         if show_diagnosis_histogram:
             self.spikes_diagnosis(navigation_mask=navigation_mask, signal_mask=signal_mask,
