@@ -34,6 +34,46 @@ class CLSpectrum(LumiSpectrum):
     _signal_type = "CL"
     _signal_dimension = 1
 
+
+    def remove_spikes(self, threshold='auto', add_noise=True, noise_type='poisson',
+                      show_diagnosis_histogram=False, inplace=False, luminescence_roi=None,
+                      default_spike_width=5, navigation_mask=None, signal_mask=None, **kwargs):
+        """
+
+        :param luminescence_roi:
+        :param inplace:
+        :param show_diagnosis_histogram:
+        :param noise_type:
+        :param threshold:
+        :param add_noise:
+        :param default_spike_width:
+        :param navigation_mask:
+        :param signal_mask:
+        :param max_num_bins:
+        :return:
+        """
+
+        if show_diagnosis_histogram:
+            self.spikes_diagnosis(navigation_mask=navigation_mask, signal_mask=signal_mask,
+                                  **kwargs)
+        if inplace:
+            signal = self
+        else:
+            signal = self.deepcopy()
+
+        spikes_removal = SpikesRemoval(signal, navigation_mask, signal_mask, threshold,
+                                       default_spike_width, add_noise, )
+
+        spikes_removal.noise_type == noise_type #"white", "heteroscedastic", "poisson"
+
+        if threshold == 'auto':
+            print('Threshold value found: {}'.format(spikes_removal.threshold))
+        spikes_removal.remove_all_spikes()
+        if inplace:
+            return
+        else:
+            return signal
+
     def cosmic_rays_subtraction(self, extra_percent=50, inplace=False, **kwargs):
         """
         Masks the cosmic rays away
