@@ -50,22 +50,46 @@ class CLSpectrum(LumiSpectrum):
         return np.invert(signal_mask.astype('bool'))
 
     def remove_spikes(self, threshold='auto', add_noise=True, noise_type='poisson',
-                      show_diagnosis_histogram=False, inplace=False, luminescence_roi=None,
-                      default_spike_width=5, navigation_mask=None, signal_mask=None, **kwargs):
+                      show_diagnosis_histogram=False, inplace=False, luminescence_roi=None, signal_mask=None,
+                      navigation_mask=None, default_spike_width=5, **kwargs):
         """
+        Hyperspy-based spike removal function.
+        If a GUI interactive spike removal tool is desired, use `s.spikes_removal_tool()` instead.
 
+        :param threshold: 'auto' or int
+            The derivative magnitude threshold above which to find spikes.
+            If `int` set the threshold value use for the detecting the spikes.
+            If `auto`, determine the threshold value as being the first zero
+            value in the histogram obtained from the
+            :py:meth:`~hyperspy.signals._signal1d.Signal1D.spikes_diagnosis`
+            method.
+        :param add_noise: bool
+            Whether to add noise to the interpolated part of the spectrum.
+            The noise properties defined in the Signal metadata are used if present,
+             otherwise 'poisson' shot noise is used as a default.
+        :param noise_type: str
+            By default 'poission' shoot noise is used if `add_noise` is True.
+            Noise types: "white", "heteroscedastic" or "poisson".
+        :param show_diagnosis_histogram: bool
+            Plot or not the derivative histogram to show the magnitude of the spikes present.
+        :param inplace: bool
+            If False, a new signal object is created and returned. If True, the original signal object is modified.
         :param luminescence_roi: array
-            In the form of an array of pairwise elements [[peak1_x, peak1_width], [peak2_x, peak2_width],...] in the units of the signal axis.
-        :param inplace:
-        :param show_diagnosis_histogram:
-        :param noise_type:
-        :param threshold:
-        :param add_noise:
-        :param default_spike_width:
-        :param navigation_mask:
-        :param signal_mask:
-        :param max_num_bins:
-        :return:
+            The peak position and peak widths of the peaks in the luminescence spectrum.
+            In the form of an array of pairwise elements [[peak1_x, peak1_width], [peak2_x, peak2_width],...]
+            in the units of the signal axis. It creates a signal_mask protecting the peak regions.
+            To be used instead of `signal_mask`.
+        :param signal_mask: boolean array
+            Restricts the operation to the signal locations not marked as True (masked).
+        :param navigation_mask: boolean array
+            Restricts the operation to the navigation locations not marked as True (masked).
+        :param default_spike_width: int
+            Width over which to do the interpolation when removing all spike.
+        :param kwargs: dict
+            Keyword arguments pass to `hyperspy.signal.signal.BaseSignal.get_histogram`.
+
+        :return: None or CLSpectrum
+            Depends on inplace, returns or overwrites the CLSpectrum after spike removal.
         """
         if luminescence_roi is not None and signal_mask is None:
             signal_mask = self._make_signal_mask(luminescence_roi)
@@ -81,7 +105,7 @@ class CLSpectrum(LumiSpectrum):
         spikes_removal = SpikesRemoval(signal, navigation_mask, signal_mask, threshold,
                                        default_spike_width, add_noise, )
 
-        spikes_removal.noise_type == noise_type #"white", "heteroscedastic", "poisson"
+        spikes_removal.noise_type == noise_type
 
         if threshold == 'auto':
             print('Threshold value found: {}'.format(spikes_removal.threshold))
