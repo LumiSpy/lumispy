@@ -39,6 +39,9 @@ class CLSpectrum(LumiSpectrum):
         ax = self.axes_manager.signal_axes[0].axis
         signal_mask = np.ones(np.shape(ax))
 
+        if len(np.shape(luminescence_roi)) == 1:
+            luminescence_roi = np.array([luminescence_roi])
+
         for p in luminescence_roi:
             x, w = p
             x_min = x - w / 2
