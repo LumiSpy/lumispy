@@ -20,16 +20,16 @@ class TestCLSpectrum(TestCase):
             assert np.allclose(mask, mask_test)
 
     def test_remove_spikes(self):
-        # s = CLSpectrum(np.ones((2, 3, 30)))
-        # np.random.seed(1)
-        # s.add_gaussian_noise(1e-5)
-        # # Add three spikes
-        # s.data[1, 0, 1] += 2
-        # s.data[0, 2, 29] += 1
-        # s.data[1, 2, 14] += 1
-        #
-        # with self.assertWarns(UserWarning, msg="Threshold value found: 1.00"):
-        #     s1 = s.remove_spikes()
+        s = CLSpectrum(np.ones((2, 3, 30)))
+        np.random.seed(1)
+        s.add_gaussian_noise(1e-5)
+        # Add three spikes
+        s.data[1, 0, 1] += 2
+        s.data[0, 2, 29] += 1
+        s.data[1, 2, 14] += 1
+
+        with self.assertWarns(UserWarning, msg="Threshold value found: 1.00"):
+            s1 = s.remove_spikes()
         # np.testing.assert_almost_equal(s1.data[1, 0, 1], 3, )
         # np.testing.assert_almost_equal(s1.data[0, 2, 29], 1, decimal=5)
         # np.testing.assert_almost_equal(s1.data[1, 2, 14], 2, decimal=5)
