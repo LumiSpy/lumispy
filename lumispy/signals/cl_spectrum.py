@@ -106,8 +106,9 @@ class CLSpectrum(LumiSpectrum):
         else:
             signal = self.deepcopy()
 
-        spikes_removal = SpikesRemoval(signal, navigation_mask, signal_mask, threshold,
-                                       default_spike_width, add_noise,)
+        spikes_removal = SpikesRemoval(signal=signal, navigation_mask=navigation_mask, signal_mask=signal_mask,
+                                       threshold=threshold, default_spike_width=default_spike_width,
+                                       add_noise=add_noise,)
 
         spikes_removal.noise_type = noise_type
 
