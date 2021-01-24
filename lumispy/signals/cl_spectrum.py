@@ -110,7 +110,7 @@ class CLSpectrum(LumiSpectrum):
                                        threshold=threshold, default_spike_width=default_spike_width,
                                        add_noise=add_noise,)
 
-        spikes_removal.noise_type = noise_type
+        setattr(spikes_removal, 'noise_type', noise_type)
 
         if threshold == 'auto':
             warnings.warn('Threshold value found: {:.2f}'.format(spikes_removal.threshold), UserWarning)
