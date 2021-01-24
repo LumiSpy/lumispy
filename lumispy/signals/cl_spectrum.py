@@ -25,6 +25,7 @@ import numpy as np
 from hyperspy._signals.lazy import LazySignal
 from lumispy.signals.luminescence_spectrum import LumiSpectrum
 from hyperspy.signal_tools import SpikesRemoval
+import warnings
 
 
 class CLSpectrum(LumiSpectrum):
@@ -108,10 +109,11 @@ class CLSpectrum(LumiSpectrum):
         spikes_removal = SpikesRemoval(signal, navigation_mask, signal_mask, threshold,
                                        default_spike_width, add_noise, )
 
-        spikes_removal.noise_type == noise_type
+        spikes_removal.noise_type = noise_type
 
         if threshold == 'auto':
-            print('Threshold value found: {}'.format(spikes_removal.threshold))
+            warnings.warn('Threshold value found: {:.2f}'.format(spikes_removal.threshold), UserWarning)
+
         spikes_removal.remove_all_spikes()
         if inplace:
             return
