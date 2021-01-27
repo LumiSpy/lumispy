@@ -16,13 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-from numpy import ones
-from numpy import arange
-from numpy.random import random
 from pytest import raises, mark, skip
+from numpy import ones, arange
+from numpy.random import random
 
-from lumispy import LumiSpectrum
 from hyperspy.axes import DataAxis
+from lumispy.signals import LumiSpectrum
 from lumispy import join_spectra
 
 

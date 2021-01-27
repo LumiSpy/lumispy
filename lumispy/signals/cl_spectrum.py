@@ -23,7 +23,7 @@
 import numpy as np
 
 from hyperspy._signals.lazy import LazySignal
-from lumispy.signals.luminescence_spectrum import LumiSpectrum
+from lumispy.signals import LumiSpectrum
 
 
 class CLSpectrum(LumiSpectrum):

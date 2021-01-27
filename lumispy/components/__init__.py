@@ -15,26 +15,3 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
-
-"""Signal class for Electroluminescence spectral data.
-
-"""
-
-from hyperspy._signals.lazy import LazySignal
-from lumispy.signals import LumiSpectrum
-
-
-class ELSpectrum(LumiSpectrum):
-    """General 1D Electroluminescence signal class.
-    ----------
-    """
-    _signal_type = "EL"
-    _signal_dimension = 1
-
-    pass
-
-
-class LazyELSpectrum(LazySignal, ELSpectrum):
-    _lazy = True
-
-    pass

@@ -19,15 +19,12 @@
 """Signal class for Luminescence spectral data (1D).
 """
 
-from hyperspy._signals.signal1d import Signal1D
+from hyperspy.signals import Signal1D
 from hyperspy._signals.lazy import LazySignal
 from hyperspy.axes import DataAxis
-from lumispy.signals.common_luminescence import CommonLumi
-from lumispy.utils.axes import axis2eV
-from lumispy.utils.axes import data2eV
-from lumispy.utils.axes import axis2invcm
-from lumispy.utils.axes import data2invcm
-from lumispy.utils.axes import nm2invcm
+from lumispy.signals import CommonLumi
+from lumispy.utils import axis2eV, data2eV, axis2invcm, data2invcm
+from lumispy import nm2invcm
 
 from inspect import getfullargspec
 

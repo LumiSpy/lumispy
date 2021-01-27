@@ -20,8 +20,8 @@
 """
 
 from hyperspy._signals.lazy import LazySignal
-from hyperspy._signals.signal2d import Signal2D
-from lumispy.signals.common_luminescence import CommonLumi
+from hyperspy.signals import Signal2D
+from lumispy.signals import CommonLumi
 
 
 class LumiTransient(Signal2D, CommonLumi):

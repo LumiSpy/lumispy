@@ -17,15 +17,13 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 import pytest
-import hyperspy.api as hs
-import numpy as np
+from numpy import arange
 
-
-from lumispy import (LumiSpectrum, CLSpectrum, CLSEMSpectrum, CLSTEMSpectrum,
+from hyperspy.signals import Signal1D, Signal2D
+from lumispy.signals import (LumiSpectrum, CLSpectrum, CLSEMSpectrum, CLSTEMSpectrum,
                      PLSpectrum, ELSpectrum, LumiTransient, LazyLumiSpectrum,
                      LazyCLSpectrum, LazyCLSEMSpectrum, LazyCLSTEMSpectrum,
                      LazyPLSpectrum, LazyELSpectrum, LazyLumiTransient)
-
 
 signal1d_class_list = [LumiSpectrum, CLSpectrum, CLSEMSpectrum, CLSTEMSpectrum,
                        PLSpectrum, ELSpectrum, LazyLumiSpectrum,
@@ -38,7 +36,7 @@ signal2d_class_list = [LumiTransient, LazyLumiTransient]
 def test_signal_registration1d(signal_class):
     s = signal_class(0)
 
-    s2 = hs.signals.Signal1D([0, 1, 2])
+    s2 = Signal1D([0, 1, 2])
     if s._lazy:
         s2 = s2.as_lazy()
 
@@ -50,10 +48,10 @@ def test_signal_registration1d(signal_class):
 
 @pytest.mark.parametrize("signal_class", signal2d_class_list)
 def test_signal_registration2d(signal_class):
-    data = np.arange(1000).reshape((10, 10, 10))
+    data = arange(1000).reshape((10, 10, 10))
     s = signal_class(data)
 
-    s2 = hs.signals.Signal2D(data)
+    s2 = Signal2D(data)
     if s._lazy:
         s2 = s2.as_lazy()
 
@@ -61,4 +59,3 @@ def test_signal_registration2d(signal_class):
 
     s2.set_signal_type(s._signal_type)
     assert isinstance(s2, signal_class)
-

@@ -19,29 +19,22 @@
 
 import logging
 
-# Import loading and roi functions from Hyperspy
-from hyperspy.io import load
-from hyperspy.api import roi
+_logger = logging.getLogger(__name__)
 
-from .signals.luminescence_spectrum import LumiSpectrum
-from .signals.cl_spectrum import CLSpectrum
-from .signals.cl_sem_spectrum import CLSEMSpectrum
-from .signals.cl_stem_spectrum import CLSTEMSpectrum
-from .signals.pl_spectrum import PLSpectrum
-from .signals.el_spectrum import ELSpectrum
-from .signals.luminescence_transient import LumiTransient
+from lumispy.utils.axes import nm2eV, eV2nm, nm2invcm, invcm2nm, join_spectra
 
-from .signals.luminescence_spectrum import LazyLumiSpectrum
-from .signals.cl_spectrum import LazyCLSpectrum
-from .signals.cl_sem_spectrum import LazyCLSEMSpectrum
-from .signals.cl_stem_spectrum import LazyCLSTEMSpectrum
-from .signals.pl_spectrum import LazyPLSpectrum
-from .signals.el_spectrum import LazyELSpectrum
-from .signals.luminescence_transient import LazyLumiTransient
-
-from .utils.axes import *
+from lumispy import signals
+from lumispy import components
+from lumispy import utils
 
 from . import release_info
+
+
+__all__ = [
+    "components",
+    "signals",
+    "utils",
+    ]
 
 __version__ = release_info.version
 __author__ = release_info.author
@@ -51,6 +44,3 @@ __license__ = release_info.license
 __maintainer__ = release_info.maintainer
 __email__ = release_info.email
 __status__ = release_info.status
-
-_logger = logging.getLogger(__name__)
-

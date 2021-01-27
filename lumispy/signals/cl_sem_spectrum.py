@@ -22,8 +22,8 @@
 
 import numpy as np
 
-from lumispy.signals.cl_spectrum import CLSpectrum
 from hyperspy._signals.lazy import LazySignal
+from lumispy.signals import CLSpectrum
 
 
 class CLSEMSpectrum(CLSpectrum):

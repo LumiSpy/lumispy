@@ -16,14 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-from numpy import arange, ones
 from pytest import raises, mark, skip
+from numpy import arange, ones
 from numpy.testing import assert_allclose
 from inspect import getfullargspec
 
 from hyperspy.axes import DataAxis
-from lumispy import LumiSpectrum
-from lumispy import CLSEMSpectrum
+from lumispy.signals import LumiSpectrum, CLSEMSpectrum
 from lumispy.utils.axes import *
 
 
