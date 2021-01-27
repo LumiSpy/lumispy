@@ -22,6 +22,7 @@ from numpy.testing import assert_allclose
 from inspect import getfullargspec
 
 from hyperspy.axes import DataAxis
+
 from lumispy.signals import LumiSpectrum, CLSEMSpectrum
 from lumispy.utils.axes import *
 

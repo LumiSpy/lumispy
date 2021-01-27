@@ -21,6 +21,7 @@
 
 from hyperspy._signals.lazy import LazySignal
 from hyperspy.signals import Signal2D
+
 from lumispy.signals import CommonLumi
 
 

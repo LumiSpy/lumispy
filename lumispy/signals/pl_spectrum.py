@@ -17,10 +17,10 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 """Signal class for Photoluminescence spectral data.
-
 """
 
 from hyperspy._signals.lazy import LazySignal
+
 from lumispy.signals import LumiSpectrum
 
 

@@ -17,12 +17,12 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 """Signal class for cathodoluminescence spectral data.
-
 """
 
 import numpy as np
 
 from hyperspy._signals.lazy import LazySignal
+
 from lumispy.signals import CLSpectrum
 
 

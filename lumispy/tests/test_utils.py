@@ -21,6 +21,7 @@ from numpy import ones, arange
 from numpy.random import random
 
 from hyperspy.axes import DataAxis
+
 from lumispy.signals import LumiSpectrum
 from lumispy import join_spectra
 
@@ -117,4 +118,3 @@ def test_joinspectra_FunctionalDA(average, scale, kind):
     assert s.data.size == 57
     if scale: assert s.data[-1] == 1
     else: assert s.data[-1] == 2
-

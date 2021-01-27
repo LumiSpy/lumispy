@@ -17,7 +17,6 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 """Signal class for cathodoluminescence spectral data acquired in STEM.
-
 """
 
 from hyperspy._signals.lazy import LazySignal

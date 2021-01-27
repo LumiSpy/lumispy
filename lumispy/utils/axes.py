@@ -18,11 +18,10 @@
 
 import numpy as np
 import scipy.constants as c
+from scipy.interpolate import interp1d
+from inspect import getfullargspec
 
 from hyperspy.axes import DataAxis
-
-from inspect import getfullargspec
-from scipy.interpolate import interp1d
 
 
 #
@@ -132,6 +131,7 @@ def data2invcm(data, factor, ax0, invcmaxis):
     """
     return data * factor / (invcmaxis**2)
 
+
 #
 # spectrum manipulation
 #
@@ -179,16 +179,13 @@ def join_spectra(S,r=50,scale=True,average=False,kind='slinear'):
     >>> lum.join_spectra([s1,s2],r=2)
     <Signal1D, title: , dimensions: (|57)>
     """
-    
-    import numpy as np
-    import os
-    
+
     # Test that spectra overlap
     for i in range(1,len(S)):
         if S[i-1].axes_manager.signal_axes[0].axis.max() \
            < S[i].axes_manager.signal_axes[0].axis.min():
             raise ValueError("Signal axes not overlapping")
-    
+
     # take first spectrum as basis
     S1 = S[0].deepcopy()
     axis = S1.axes_manager.signal_axes[0]

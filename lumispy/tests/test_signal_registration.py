@@ -20,6 +20,7 @@ import pytest
 from numpy import arange
 
 from hyperspy.signals import Signal1D, Signal2D
+
 from lumispy.signals import (LumiSpectrum, CLSpectrum, CLSEMSpectrum, CLSTEMSpectrum,
                      PLSpectrum, ELSpectrum, LumiTransient, LazyLumiSpectrum,
                      LazyCLSpectrum, LazyCLSEMSpectrum, LazyCLSTEMSpectrum,
