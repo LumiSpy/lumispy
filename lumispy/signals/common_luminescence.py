@@ -19,6 +19,10 @@
 """Signal class for Luminescence data (BaseSignal class).
 """
 
+from numpy import isnan
+from warnings import warn
+
+
 class CommonLumi:
     """General Luminescence signal class (dimensionless).
     ----------
@@ -29,14 +33,15 @@ class CommonLumi:
         Crop the amount of pixels from the four edges of the scanning region, from out the edges inwards.
 
         Parameters
-        ---------------
+        ----------
         crop_px : int
             Amount of pixels to be cropped on each side individually.
 
         Returns
-        ---------------
+        -------
         signal_cropped : CommonLuminescence
-            A smaller cropped CL signal object. If inplace is True, the original object is modified and no LumiSpectrum is returned.
+            A smaller cropped CL signal object. If inplace is True, the original
+            object is modified and no LumiSpectrum is returned.
         """
 
         width = self.axes_manager.shape[0]
@@ -57,3 +62,117 @@ class CommonLumi:
         return signal_cropped
 
 
+    def remove_negative(self, basevalue=1, inplace=True):
+        """Sets all negative values to 'basevalue', e.g. for logarithmic scale
+        plots.
+        
+        Parameters:
+        -----------
+        basevalue : float 
+            Value by which negative values are replaced (default = 1).
+        inplace : boolean
+            If `False`, a new signal object is created and returned. Otherwise 
+            (default) the operation is performed on the existing signal object.
+        """
+        if inplace:
+            self.data[self.data <0 ] = basevalue
+        else:
+            s = self.deepcopy()
+            s.data[self.data <0 ] = basevalue
+            return s
+
+
+    def scale_by_exposure(self, exposure=float('nan'), inplace=False):
+        """Scale data in spectrum by exposure (e.g. convert counts to counts/s).
+    
+        Parameters:
+        -----------
+        exposure : float
+            Exposure time in s. If not given, the function tries to find
+            'exposure' or 'dwell_time' in the metadata (for the moment only at
+            Gatan specific nodes).
+        inplace : boolean
+            If `False` (default), a new signal object is created and returned.
+            If `True`, the operation is performed on the existing signal object.
+    
+        Notes:
+        ------
+        Sets `metadata.Signal.scaled` to `True`. If intensity units is 'counts',
+        replaces them by 'counts/s'.
+        """
+        # Check metadata tags that would prevent scaling
+        if self.metadata.Signal.get_item('normalized'):
+            raise AttributeError("Data was normalized and cannot be scaled.")  
+        elif self.metadata.Signal.get_item('scaled') or \
+             self.metadata.Signal.get_item('quantity') == \
+             ('Intensity (counts/s)' or 'Intensity (Counts/s)'):
+            raise AttributeError("Data was already scaled.")  
+        
+        # Make sure exposure is given or contained in metadata
+        if isnan(exposure):
+            # use nested_get from hyperspy when it is available
+            if self.metadata.Acquisition_instrument.CL.has_item('exposure'):
+                exposure = float(self.metadata.Acquisition_instrument.CL.get_item('exposure'))
+            elif self.metadata.Acquisition_instrument.CL.has_item('dwell_time'):
+                exposure = float(self.metadata.Acquisition_instrument.CL.get_item('dwell_time'))
+            else:
+                raise AttributeError('Exposure not given and can not be '
+                    'extracted automatically from metadata.')
+        if inplace:
+            s = self
+        else:
+            s = self.deepcopy()
+        s.data = s.data/exposure
+        s.metadata.Signal.scaled = True
+        if s.metadata.Signal.get_item('quantity') == 'Intensity (Counts)':
+            s.metadata.Signal.quantity = 'Intensity (Counts/s)'
+        if s.metadata.Signal.get_item('quantity') == 'Intensity (counts)':
+            s.metadata.Signal.quantity = 'Intensity (counts/s)'
+        if not inplace: return s
+
+
+    def normalize(self, pos=float('nan'), element_wise=False, inplace=False):
+        """Normalizes data to value at `pos` along signal axis, defaults to
+        maximum value.
+        
+        Can be helpful for e.g. plotting, but does not make sense to use
+        on signals that will be used as input for further calculations!
+        
+        Parameters:
+        -----------
+        pos : float, int
+            If 'nan' (default), spectra are normalized to the maximum.
+            If `float`, position along signal axis in calibrated units at which
+                to normalize the spectra.
+            If `int`, index along signal axis at which to normalize the spectra.
+        element_wise: boolean
+            If `False` (default), a spectrum image is normalized by a common factor. 
+            If `True`, each spectrum is normalized individually.
+        inplace : boolean
+            If `False` (default), a new signal object is created and returned.
+            If `True`, the operation is performed on the existing signal object.
+        """
+        if self.metadata.Signal.get_item('normalized'):
+            warn("Data was already normalized previously. Depending on the "
+                 "previous parameters this function might not yield the "
+                 "expected result.")  
+        if inplace:
+            s = self
+        else:
+            s = self.deepcopy()
+        # normalize on maximum
+        if isnan(pos):
+            if element_wise:
+                s = s/s.max(axis=-1)
+            else:
+                s.data = s.data/s.max(axis=-1).max().data
+        # normalize on given position along signal axis
+        else: 
+            if element_wise:
+                s = s/s.isig[pos]
+            else:
+                s.data = s.data/s.isig[pos].max().data
+        s.metadata.Signal.normalized = True
+        if s.axes_manager.signal_axes[-1].units == 'counts':
+            s.axes_manager.signal_axes[-1].units = 'normalized'
+        if not inplace: return s
