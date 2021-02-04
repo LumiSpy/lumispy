@@ -71,11 +71,3 @@ entered into an anaconda prompt (from scratch):
     $ conda activate lumispy
     $ jupyter lab
 ```
-
-[Tutorials and example workflows](https://github.com/lumispy/lumispy-demos)
-have been curated as a series of Jupyter notebooks that you can work through 
-and modify to perform many common analyses. Simply:
-
-1. Download the `lumispy_demos` repository in your desired folder
-2. Load lumispy (as shown above)
-3. In Jupyter lab, navigate to the folder and start using the notebook

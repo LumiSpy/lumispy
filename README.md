@@ -17,6 +17,13 @@ recognising the code development by citing the
 
 Instructions on how to install LumiSpy and get started: [installation guide](www.github.com/lumispy/lumispy/blob/master/INSTALLATION.md).
 
+[Tutorials and example workflows](https://github.com/lumispy/lumispy-demos)
+have been curated as a series of Jupyter notebooks that you can work through 
+and modify to perform many common analyses. Simply:
+
+1. Download the `lumispy_demos` repository in your desired folder
+2. Load lumispy (as shown above)
+3. In Jupyter lab, navigate to the folder and start using the notebook
+
 Everyone is welcome to contribute. Please read our
 [contributing guidelines](https://github.com/lumispy/lumispy/blob/master/.github/CONTRIBUTING.md) and get started!
-
