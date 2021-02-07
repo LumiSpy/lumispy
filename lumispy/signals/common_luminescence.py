@@ -111,10 +111,10 @@ class CommonLumi:
         # Make sure exposure is given or contained in metadata
         if isnan(exposure):
             # use nested_get from hyperspy when it is available
-            if self.metadata.Acquisition_instrument.CL.has_item('exposure'):
-                exposure = float(self.metadata.Acquisition_instrument.CL.get_item('exposure'))
-            elif self.metadata.Acquisition_instrument.CL.has_item('dwell_time'):
-                exposure = float(self.metadata.Acquisition_instrument.CL.get_item('dwell_time'))
+            if self.metadata.has_item('Acquisition_instrument.CL.exposure'):
+                exposure = float(self.metadata.get_item('Acquisition_instrument.CL.exposure'))
+            elif self.metadata.has_item('Acquisition_instrument.CL.dwell_time'):
+                exposure = float(self.metadata.get_item('Acquisition_instrument.CL.dwell_time'))
             else:
                 raise AttributeError('Exposure not given and can not be '
                     'extracted automatically from metadata.')

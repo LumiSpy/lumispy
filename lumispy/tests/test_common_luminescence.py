@@ -72,17 +72,17 @@ class TestCommonLumi(TestCase):
         s4.normalize(inplace=True)
         with pytest.raises(AttributeError) as excinfo:
             s4.scale_by_exposure(inplace=True,exposure=0.5)
-            assert str(excinfo.value) == 'Data was normalized and cannot be ' \
-                                         'scaled.'
+        assert str(excinfo.value) == 'Data was normalized and cannot be ' \
+                                     'scaled.'
         s5 = LumiSpectrum(np.ones((10)))
         with pytest.raises(AttributeError) as excinfo:
             s5.scale_by_exposure(inplace=True)
-            assert str(excinfo.value) == 'Exposure not given and can not be ' \
-                    'extracted automatically from metadata.'
+        assert str(excinfo.value) == 'Exposure not given and can not be ' \
+                                     'extracted automatically from metadata.'
         s5.scale_by_exposure(inplace=True,exposure=0.5)
         with pytest.raises(AttributeError) as excinfo:
             s5.scale_by_exposure(inplace=True,exposure=0.5)
-            assert str(excinfo.value) == "Data was already scaled."
+        assert str(excinfo.value) == "Data was already scaled."
 
     def test_normalize(self):
         # pos=float('nan'), element_wise=False, inplace=False
