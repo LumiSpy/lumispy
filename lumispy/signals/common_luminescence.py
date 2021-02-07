@@ -102,11 +102,11 @@ class CommonLumi:
         """
         # Check metadata tags that would prevent scaling
         if self.metadata.Signal.get_item('normalized'):
-            raise AttributeError("Data was normalized and cannot be scaled.")  
+            raise AttributeError("Data was normalized and cannot be scaled.")
         elif self.metadata.Signal.get_item('scaled') or \
              self.metadata.Signal.get_item('quantity') == \
              ('Intensity (counts/s)' or 'Intensity (Counts/s)'):
-            raise AttributeError("Data was already scaled.")  
+            raise AttributeError("Data was already scaled.")
         
         # Make sure exposure is given or contained in metadata
         if isnan(exposure):
@@ -124,9 +124,10 @@ class CommonLumi:
             s = self.deepcopy()
         s.data = s.data/exposure
         s.metadata.Signal.scaled = True
-        if s.metadata.Signal.get_item('quantity') == 'Intensity (Counts)':
+        if s.metadata.get_item('Signal.quantity') == 'Intensity (Counts)':
             s.metadata.Signal.quantity = 'Intensity (Counts/s)'
-        if s.metadata.Signal.get_item('quantity') == 'Intensity (counts)':
+            print(s.metadata.Signal.quantity)
+        if s.metadata.get_item('Signal.quantity') == 'Intensity (counts)':
             s.metadata.Signal.quantity = 'Intensity (counts/s)'
         if not inplace: return s
 
@@ -155,7 +156,7 @@ class CommonLumi:
         if self.metadata.Signal.get_item('normalized'):
             warn("Data was already normalized previously. Depending on the "
                  "previous parameters this function might not yield the "
-                 "expected result.")  
+                 "expected result.", UserWarning)  
         if inplace:
             s = self
         else:
@@ -173,6 +174,7 @@ class CommonLumi:
             else:
                 s.data = s.data/s.isig[pos].max().data
         s.metadata.Signal.normalized = True
-        if s.axes_manager.signal_axes[-1].units == 'counts':
-            s.axes_manager.signal_axes[-1].units = 'normalized'
+        if s.metadata.get_item('Signal.quantity') is not None:
+            if s.metadata.Signal.quantity.find('Intensity') != -1:
+                s.metadata.Signal.quantity = 'Normalized intensity'
         if not inplace: return s
