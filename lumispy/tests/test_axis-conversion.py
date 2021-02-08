@@ -67,6 +67,13 @@ def test_axis2eV():
     assert_allclose(evaxis.axis[0], 3.1781816)
 
 def test_data2eV():
+    if not 'axis' in getfullargspec(DataAxis)[0]:
+        raises(ImportError,axis2eV,axis)
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        skip("HyperSpy version doesn't support non-uniform axis")
+
     data = 100*ones(20)
     ax0 = DataAxis(axis = arange(200,400,10), units ='nm')
     evaxis, factor = axis2eV(ax0)
