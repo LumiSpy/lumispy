@@ -273,13 +273,13 @@ def join_spectra(S,r=50,scale=True,average=False,kind='slinear'):
                           f(axis.axis[ind1+1:])))
         else: # for DataAxis/FunctionalDataAxis (non uniform)
             # convert FunctionalDataAxes or UniformDataAxis to DataAxes
-            if hasattr(axis,'expression') or axis.is_uniform:
+            if hasattr(axis,'_expression') or axis.is_uniform:
                 axis.convert_to_non_uniform_axis()
-            if hasattr(axis2,'expression'):
-                axis2.convert_to_non_uniform_axis()
-                print('yes we can')
+            # 2nd axis does not need to be converted, because it contains axis vector
+            #if hasattr(axis2,'_expression'):
+            #    axis2.convert_to_non_uniform_axis()
             # join axis vectors
-            axis.axis = np.hstack((axis.axis[:ind1+1],axis2.axis[ind2:]))
+            axis.axis = np.hstack((axis.axis[:ind1+1], axis2.axis[ind2:]))
             axis.size = axis.axis.size
             if average: # average over range
                 f1 = interp1d(S[i-1].axes_manager.signal_axes[0].axis[ind1-1:ind1+r+1],
@@ -301,6 +301,6 @@ def join_spectra(S,r=50,scale=True,average=False,kind='slinear'):
                           grad2*vect2*S2.isig[ind2:ind2+r].data,
                           S2.isig[ind2+r:].data))
             else: # just join at center of overlap
-                S1.data = np.hstack((S1.isig[:ind1+1].data,
+                S1.data = np.hstack((S1.isig[:ind1+1].data, 
                           S2.isig[ind2:].data))
     return S1
