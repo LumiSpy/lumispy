@@ -1,7 +1,7 @@
 from unittest import TestCase
 #from numpy import ones, random, all
 import numpy as np
-import pytest
+from pytest import raises, warns
 
 from lumispy.signals.luminescence_spectrum import LumiSpectrum
 from lumispy.signals.luminescence_transient import LumiTransient
@@ -72,17 +72,17 @@ class TestCommonLumi(TestCase):
         # Test for errors
         s4 = LumiSpectrum(np.ones((10)))
         s4.normalize(inplace=True)
-        with pytest.raises(AttributeError) as excinfo:
+        with raises(AttributeError) as excinfo:
             s4.scale_by_exposure(inplace=True,exposure=0.5)
         assert str(excinfo.value) == 'Data was normalized and cannot be ' \
                                      'scaled.'
         s5 = LumiSpectrum(np.ones((10)))
-        with pytest.raises(AttributeError) as excinfo:
+        with raises(AttributeError) as excinfo:
             s5.scale_by_exposure(inplace=True)
         assert str(excinfo.value) == 'Exposure not given and can not be ' \
                                      'extracted automatically from metadata.'
         s5.scale_by_exposure(inplace=True,exposure=0.5)
-        with pytest.raises(AttributeError) as excinfo:
+        with raises(AttributeError) as excinfo:
             s5.scale_by_exposure(inplace=True,exposure=0.5)
         assert str(excinfo.value) == "Data was already scaled."
 
@@ -128,7 +128,7 @@ class TestCommonLumi(TestCase):
         assert s3a == s3
         assert s4a == s4
         assert s4.metadata.Signal.quantity == 'Normalized intensity'
-        with pytest.warns(UserWarning) as warninfo:
+        with warns(UserWarning) as warninfo:
             s1.normalize(inplace=True)
         assert len(warninfo) == 1
         assert warninfo[0].message.args[0][:8] == "Data was"

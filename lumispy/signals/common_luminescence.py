@@ -167,7 +167,7 @@ class CommonLumi:
         if self.metadata.Signal.get_item('normalized'):
             warn("Data was already normalized previously. Depending on the "
                  "previous parameters this function might not yield the "
-                 "expected result.", UserWarning)  
+                 "expected result.", UserWarning)
         if inplace:
             s = self
         else:

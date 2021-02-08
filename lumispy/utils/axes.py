@@ -18,6 +18,8 @@
 
 import numpy as np
 import scipy.constants as c
+from copy import deepcopy
+from warnings import warn
 
 from hyperspy.axes import DataAxis
 
@@ -29,7 +31,7 @@ from scipy.interpolate import interp1d
 # Functions needed for signal axis conversion
 #
 
-def _n_air(wl):
+def _n_air(x):
     """Refractive index of air as a function of WL in nm.
 
     This analytical function is correct for the range 185-1700 nm.
@@ -37,6 +39,18 @@ def _n_air(wl):
     According to `E.R. Peck and K. Reeder. Dispersion of air, 
     J. Opt. Soc. Am. 62, 958-962 (1972).`
     """
+    wl = deepcopy(x)
+    # Check for supported range
+    if (np.min(wl) < 185) or (np.max(wl) > 1700):
+        if np.size(wl) == 1:
+            if wl<185: wl = 185
+            if wl>1700: wl = 1700
+        else:
+            wl[wl<185] = 185
+            wl[wl>1700] = 1700
+        warn("The wavelength range exceeds the interval of 185 to 1700 nm for "
+             "which the exact refractive index of air is used. Beyond this "
+             "range, the refractive index is kept constant.", UserWarning)
     wl = wl / 1000
     return 1 + 806051e-10 + 2480990e-8/(132274e-3 - 1/wl**2) + \
            174557e-9/(3932957e-5 - 1/wl**2)
