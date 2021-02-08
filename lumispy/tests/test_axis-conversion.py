@@ -67,8 +67,6 @@ def test_axis2eV():
     assert_allclose(evaxis.axis[0], 3.1781816)
 
 def test_data2eV():
-    if not 'axis' in getfullargspec(DataAxis)[0]:
-        raises(ImportError,axis2eV,axis)
     try:
         from hyperspy.axes import UniformDataAxis
     except ImportError:
