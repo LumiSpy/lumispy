@@ -91,7 +91,7 @@ def axis2eV(ax0):
         factor = 1e6
     axis = DataAxis(axis = evaxis, name = 'Energy', units = 'eV', 
                     navigate=False)
-    return axis,factor
+    return axis, factor
 
 
 def data2eV(data, factor, ax0, evaxis):
@@ -99,8 +99,12 @@ def data2eV(data, factor, ax0, evaxis):
     doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin. 142, 
     202 (2013). Ensures that integrated signals are still correct.
     """
-    return data * factor * c.h * c.c / (c.e * _n_air(ax0[::-1])
-           * evaxis**2)
+    if ax0.units == 'µm':
+        return data * factor * c.h * c.c / (c.e * _n_air(1000*ax0.axis)[::-1]
+               * evaxis**2)
+    else:
+        return data * factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1])
+               * evaxis**2)
 
 
 def nm2invcm(x):
@@ -273,6 +277,7 @@ def join_spectra(S,r=50,scale=True,average=False,kind='slinear'):
                 axis.convert_to_non_uniform_axis()
             if hasattr(axis2,'expression'):
                 axis2.convert_to_non_uniform_axis()
+                print('yes we can')
             # join axis vectors
             axis.axis = np.hstack((axis.axis[:ind1+1],axis2.axis[ind2:]))
             axis.size = axis.axis.size

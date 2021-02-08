@@ -17,7 +17,7 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 from numpy import arange, ones
-from pytest import raises, mark, skip
+from pytest import raises, mark, skip, warns
 from numpy.testing import assert_allclose
 from inspect import getfullargspec
 
@@ -68,11 +68,14 @@ def test_axis2eV():
 
 def test_data2eV():
     data = 100*ones(20)
-    factor = 1e6
-    ax0 = arange(200,400,10)
-    evaxis = nm2eV(ax0)
-    evdata = data2eV(data, factor, ax0,evaxis)
-    assert_allclose(evdata[-1], 12.27066795)
+    ax0 = DataAxis(axis = arange(200,400,10), units ='nm')
+    evaxis, factor = axis2eV(ax0)
+    evdata = data2eV(data, factor, ax0, evaxis.axis)
+    assert_allclose(evdata[0], 12.271168)
+    ax0 = DataAxis(axis = arange(0.2,0.4,0.01), units ='µm')
+    evaxis, factor = axis2eV(ax0)
+    evdata = data2eV(data, factor, ax0, evaxis.axis)
+    assert_allclose(evdata[0], 12.271168e-3)
 
 @mark.parametrize(("jacobian"), (True,False))
 def test_to_eV(jacobian):

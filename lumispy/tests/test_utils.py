@@ -35,6 +35,10 @@ def test__n_air():
     assert warninfo[0].message.args[0][:14] == "The wavelength"
     assert n[0] == _n_air(185)
     assert n[-1] == _n_air(1700)
+    with warns(UserWarning):
+        assert _n_air(180) == _n_air(185)
+    with warns(UserWarning):
+        assert _n_air(1705) == _n_air(1700)
     assert_allclose(_n_air(200), 1.00032406)
     assert_allclose(_n_air(500), 1.00027896)
 
