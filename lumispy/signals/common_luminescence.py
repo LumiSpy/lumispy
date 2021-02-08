@@ -73,13 +73,18 @@ class CommonLumi:
         inplace : boolean
             If `False`, a new signal object is created and returned. Otherwise 
             (default) the operation is performed on the existing signal object.
+
+        Notes:
+        ------
+        Sets `metadata.Signal.negative_removed` to `True`.
         """
         if inplace:
-            self.data[self.data <0 ] = basevalue
+            s = self
         else:
             s = self.deepcopy()
-            s.data[self.data <0 ] = basevalue
-            return s
+        s.data[self.data <0 ] = basevalue
+        s.metadata.Signal.negative_removed = True
+        if not inplace: return s
 
 
     def scale_by_exposure(self, exposure=float('nan'), inplace=False):
@@ -152,6 +157,12 @@ class CommonLumi:
         inplace : boolean
             If `False` (default), a new signal object is created and returned.
             If `True`, the operation is performed on the existing signal object.
+
+        Notes:
+        ------
+        Sets `metadata.Signal.normalized` to `True`. If
+        `metadata.Signal.quantity` contains the word 'Intensity', replaces this
+        field with 'Normalized intensity'.
         """
         if self.metadata.Signal.get_item('normalized'):
             warn("Data was already normalized previously. Depending on the "

@@ -28,6 +28,7 @@ class TestCommonLumi(TestCase):
         s1a = s1.remove_negative(inplace=False)
         s2a = s2.remove_negative(inplace=False)
         s3a = s3.remove_negative(inplace=False,basevalue=0.1)
+        assert s3a.metadata.Signal.negative_removed == True
         assert np.all(s1a.data[s1 <= 0] == 1)
         assert np.all(s2a.data[s2 <= 0] == 1)
         assert np.all(s3a.data[s3 <= 0] == 0.1)
@@ -57,6 +58,7 @@ class TestCommonLumi(TestCase):
         assert np.all(s4a.data == 10)
         assert s3a.metadata.Signal.quantity ==  'Intensity (Counts/s)'
         assert s4a.metadata.Signal.quantity ==  'Intensity (counts/s)'
+        assert s4a.metadata.Signal.scaled == True
         s1.scale_by_exposure(exposure=4, inplace=True)
         s2.scale_by_exposure(inplace=True)
         s3.scale_by_exposure(inplace=True)
@@ -100,6 +102,7 @@ class TestCommonLumi(TestCase):
         assert s3a.max(axis = [0,1]).data[0] == 1
         assert s4a.max(axis = [0]).data[0] == 1
         assert s4a.metadata.Signal.quantity == 'Normalized intensity'
+        assert s4a.metadata.Signal.normalized == True
         s1a = s1.normalize(element_wise=True)
         s2a = s2.normalize(element_wise=True)
         s3a = s3.normalize(element_wise=True)
