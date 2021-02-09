@@ -87,7 +87,6 @@ class TestCommonLumi(TestCase):
         assert str(excinfo.value) == "Data was already scaled."
 
     def test_normalize(self):
-        # pos=float('nan'), element_wise=False, inplace=False
         s1 = LumiSpectrum(np.random.random((10, 10, 10)))*2
         s2 = LumiTransient(np.random.random((10, 10, 10, 10)))*2
         s3 = LumiSpectrum(np.random.random((10, 10)))*2
@@ -118,7 +117,7 @@ class TestCommonLumi(TestCase):
         assert s1a.isig[3].max().data[0] == 1
         assert np.all(s2a.isig[3] == 1)
         assert np.all(s3a.isig[3] == 1)
-        assert s4a.isig[3].max().data[0] == 1
+        assert s4a.isig[3].data == 1
         s1.normalize(pos=3, inplace=True)
         s2.normalize(pos=3, element_wise=True, inplace=True)
         s3.normalize(pos=3, element_wise=True, inplace=True)
