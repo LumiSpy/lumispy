@@ -31,10 +31,10 @@ class TestCLSpectrum(TestCase):
         s.data[1, 2, 14] += 1
 
         if not 'threshold' in getfullargspec(s.spikes_removal_tool)[0]:
-            raises(TypeError, s.remove_spikes())
+            raises(ImportError, s.remove_spikes())
         try:
             s.remove_spikes()
-        except TypeError:
+        except ImportError:
             skip("HyperSpy version doesn't support spike removal.")
 
         with self.assertWarns(UserWarning, msg="Threshold value found: 1.00"):
