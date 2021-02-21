@@ -29,14 +29,20 @@ from lumispy.signals import CLSpectrum
 class CLSEMSpectrum(CLSpectrum):
     _signal_type = "CL_SEM"
 
-    def correct_grating_shift(self, cal_factor_x_axis, corr_factor_grating, field_of_view):
+    def correct_grating_shift(self, cal_factor_x_axis, corr_factor_grating, sem_magnification, **kwargs):
         """"
         Applies shift caused by the grating offset wrt the scanning centre.
         Authorship: Gunnar Kusch (gk419@cam.ac.uk)
 
         :param cal_factor_x_axis: The navigation correction factor.
         :param corr_factor_grating: The grating correction factor.
-        :param field_of_view: The SEM field of view (FOV).
+        :param sem_magnification: The SEM (real) magnification value.
+            For the Attolight original metadata, take the `SEM.Real_Magnification` value
+        :param kwargs: The parameters passed to `hyperspy.align1D()` function like:
+            interpolation_method ('linear', 'nearest', 'zero', 'slinear', 'quadratic, 'cubic')
+            parallel: Bool
+            crop, expand, fill_value ...
+
         """
 
         # Avoid correcting for this shift twice (first time it fails, so except
@@ -47,7 +53,7 @@ class CLSEMSpectrum(CLSpectrum):
             # Get all relevant parameters
             nx = self.axes_manager.navigation_shape[0]
             ny = self.axes_manager.navigation_shape[1]
-            fov = field_of_view
+            fov = sem_magnification
 
             # Correction of the Wavelength Shift along the X-Axis
             calax = cal_factor_x_axis / (fov * nx)
@@ -57,7 +63,7 @@ class CLSEMSpectrum(CLSpectrum):
                                 corr_factor_grating * calax * 1000)
             barray = np.full((ny, nx), garray)
 
-            self.shift1D(barray)
+            self.shift1D(barray, **kwargs)
 
             # Store modification in metadata
             self.metadata.set_item("Signal.grating_corrected", True)
