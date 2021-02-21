@@ -28,7 +28,6 @@ class TestCLSpectrum(TestCase):
         # Add three spikes
         s.data[1, 0, 1] += 2
         s.data[0, 2, 29] += 1
-        s.data[1, 2, 14] += 1
 
         if not 'threshold' in getfullargspec(s.spikes_removal_tool)[0]:
             try:
@@ -40,18 +39,15 @@ class TestCLSpectrum(TestCase):
 
         with self.assertWarns(UserWarning, msg="Threshold value found: 1.00"):
             s1 = s.remove_spikes()
-        np.testing.assert_almost_equal(s1.data[1, 0, 1], 1, decimal=5)
-        np.testing.assert_almost_equal(s1.data[0, 2, 29], 1, decimal=5)
-        np.testing.assert_almost_equal(s1.data[1, 2, 14], 1, decimal=5)
+            np.testing.assert_almost_equal(s1.data[1, 0, 1], 1, decimal=5)
+            np.testing.assert_almost_equal(s1.data[0, 2, 29], 1, decimal=5)
 
         lum_roi = [1, 1]
         s4 = s.remove_spikes(luminescence_roi=lum_roi,)
         np.testing.assert_almost_equal(s4.data[1, 0, 1], 3, decimal=5)
         np.testing.assert_almost_equal(s4.data[0, 2, 29], 1, decimal=5)
-        np.testing.assert_almost_equal(s1.data[1, 2, 14], 1, decimal=5)
 
         s.remove_spikes(inplace=True)
         np.testing.assert_almost_equal(s.data[1, 0, 1], 1, decimal=5)
         np.testing.assert_almost_equal(s.data[0, 2, 29], 1, decimal=5)
-        np.testing.assert_almost_equal(s1.data[1, 2, 14], 1, decimal=5)
         # TODO: test if histogram is shown as a plot if show_diagnosis_histogram=True.
