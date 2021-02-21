@@ -19,6 +19,7 @@
 """Signal class for Luminescence data (BaseSignal class).
 """
 
+
 class CommonLumi:
     """General Luminescence signal class (dimensionless).
     ----------
@@ -55,5 +56,3 @@ class CommonLumi:
             signal_cropped.metadata.set_item("Signal.cropped_edges", crop_px)
 
         return signal_cropped
-
-

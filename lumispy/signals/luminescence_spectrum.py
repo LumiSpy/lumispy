@@ -18,7 +18,7 @@
 
 """Signal class for Luminescence spectral data (1D).
 """
-
+import numpy as np
 from hyperspy._signals.signal1d import Signal1D
 from hyperspy._signals.lazy import LazySignal
 from hyperspy.axes import DataAxis
@@ -30,6 +30,7 @@ from lumispy.utils.axes import data2invcm
 from lumispy.utils.axes import nm2invcm
 
 from inspect import getfullargspec
+import warnings
 
 
 class LumiSpectrum(Signal1D, CommonLumi):
@@ -43,46 +44,46 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
 
     def to_eV(self,inplace=True,jacobian=True):
-        """Converts signal axis of 1D signal to non-linear energy axis (eV) 
+        """Converts signal axis of 1D signal to non-linear energy axis (eV)
         using wavelength dependent permittivity of air. Assumes wavelength in
         units of nm unless the axis units are specifically set to µm.
-        
-        The intensity is converted from counts/nm (counts/µm) to counts/meV by 
-        doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin. 
+
+        The intensity is converted from counts/nm (counts/µm) to counts/meV by
+        doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin.
         142, 202 (2013), which ensures that integrated signals are correct also
         in the energy domain.
-        
+
         Input parameters
         ----------------
         inplace : boolean
-            If `False`, a new signal object is created and returned. Otherwise 
+            If `False`, a new signal object is created and returned. Otherwise
             (default) the operation is performed on the existing signal object.
         jacobian : boolean
-            The default is to do the Jacobian transformation (recommended at 
+            The default is to do the Jacobian transformation (recommended at
             least for luminescence signals), but the transformation can be
             suppressed by setting this option to `False`.
-        
+
         Example
         -------
         > import numpy as np
         > from lumispy import LumiSpectrum
         > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
         > S1.to_eV()
-        
+
         Note
         ----
         Using a non-linear axis works only for the non_uniform_axis development
         branch of HyperSpy.
-    
+
         """
-        
+
         # Check if non_uniform_axis is available in hyperspy version
         if not 'axis' in getfullargspec(DataAxis)[0]:
             raise ImportError('Conversion to energy axis works only '
                          'if the non_uniform_axis branch of HyperSpy is used.')
 
         evaxis,factor = axis2eV(self.axes_manager.signal_axes[0])
-        
+
         # in place conversion
         if inplace:
             if jacobian:
@@ -113,49 +114,49 @@ class LumiSpectrum(Signal1D, CommonLumi):
             s2.set_signal_type(self.metadata.Signal.signal_type)
             s2.metadata = self.metadata
             return s2
-            
-            
+
+
     def to_invcm(self,inplace=True,jacobian=True):
-        """Converts signal axis of 1D signal to non-linear wavenumber axis 
-        (cm^-1). Assumes wavelength in units of nm unless the axis units are 
+        """Converts signal axis of 1D signal to non-linear wavenumber axis
+        (cm^-1). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
-        
-        The intensity is converted from counts/nm (counts/µm) to counts/cm^-1 
-        by doing a Jacobian transformation, see e.g. Wang and Townsend, 
-        J. Lumin. 142, 202 (2013), which ensures that integrated signals are 
+
+        The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
+        by doing a Jacobian transformation, see e.g. Wang and Townsend,
+        J. Lumin. 142, 202 (2013), which ensures that integrated signals are
         correct also in the energy domain.
-        
+
         Input parameters
         ----------------
         inplace : boolean
-            If `False`, a new signal object is created and returned. Otherwise 
+            If `False`, a new signal object is created and returned. Otherwise
             (default) the operation is performed on the existing signal object.
         jacobian : boolean
-            The default is to do the Jacobian transformation (recommended at 
+            The default is to do the Jacobian transformation (recommended at
             least for luminescence signals), but the transformation can be
             suppressed by setting this option to `False`.
-        
+
         Example
         -------
         > import numpy as np
         > from lumispy import LumiSpectrum
         > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
         > S1.to_invcm()
-        
+
         Note
         ----
         Using a non-linear axis works only for the non_uniform_axis development
         branch of HyperSpy.
-    
+
         """
-        
+
         # Check if non_uniform_axis is available in hyperspy version
         if not 'axis' in getfullargspec(DataAxis)[0]:
             raise ImportError('Conversion to wavenumber axis works only'
                         ' if the non_uniform_axis branch of HyperSpy is used.')
 
         invcmaxis,factor = axis2invcm(self.axes_manager.signal_axes[0])
-        
+
         # in place conversion
         if inplace:
             if jacobian:
@@ -189,49 +190,49 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
 
     def to_invcm_relative(self,laser,inplace=True,jacobian=True):
-        """Converts signal axis of 1D signal to non-linear wavenumber axis 
-        (cm^-1) relative to the exciting laser wavelength (Stokes/Anti-Stokes 
-        shift). Assumes wavelength in units of nm unless the axis units are 
+        """Converts signal axis of 1D signal to non-linear wavenumber axis
+        (cm^-1) relative to the exciting laser wavelength (Stokes/Anti-Stokes
+        shift). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
-        
-        The intensity is converted from counts/nm (counts/µm) to counts/cm^-1 
-        by doing a Jacobian transformation, see e.g. Wang and Townsend, 
-        J. Lumin. 142, 202 (2013), which ensures that integrated signals are 
+
+        The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
+        by doing a Jacobian transformation, see e.g. Wang and Townsend,
+        J. Lumin. 142, 202 (2013), which ensures that integrated signals are
         correct also in the energy domain.
-        
+
         Input parameters
         ----------------
         laser : float
             Laser wavelength in same units as signal axes (nm or µm).
         inplace : boolean
-            If `False`, a new signal object is created and returned. Otherwise 
+            If `False`, a new signal object is created and returned. Otherwise
             (default) the operation is performed on the existing signal object.
         jacobian : boolean
-            The default is to do the Jacobian transformation (recommended at 
+            The default is to do the Jacobian transformation (recommended at
             least for luminescence signals), but the transformation can be
             suppressed by setting this option to `False`.
-        
+
         Example
         -------
         > import numpy as np
         > from lumispy import LumiSpectrum
         > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
         > S1.to_invcm()
-        
+
         Note
         ----
         Using a non-linear axis works only for the non_uniform_axis development
         branch of HyperSpy.
-    
+
         """
-        
+
         # Check if non_uniform_axis is available in hyperspy version
         if not 'axis' in getfullargspec(DataAxis)[0]:
             raise ImportError('Conversion to wavenumber axis works only'
                         ' if the non_uniform_axis branch of HyperSpy is used.')
 
         invcmaxis,factor = axis2invcm(self.axes_manager.signal_axes[0])
-        
+
         # convert to relative wavenumber scale
         if self.axes_manager.signal_axes[0].units == 'µm':
             invcmlaser=nm2invcm(1000*laser)
@@ -239,7 +240,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
             invcmlaser=nm2invcm(laser)
         absaxis = invcmaxis.axis[::-1]
         invcmaxis.axis = invcmlaser - absaxis
-        
+
         # in place conversion
         if inplace:
             if jacobian:
@@ -271,17 +272,17 @@ class LumiSpectrum(Signal1D, CommonLumi):
             s2.metadata = self.metadata
             return s2
 
-
-    def background_subtraction(self, background, inplace=False):
+    def remove_background_from_file(self, background=None, inplace=False, **kwargs):
         """
         Subtract the background to the signal in all navigation axes.
-        TO DO: Make it compatible with non-matching wavelengths
+        If no background file is passed as argument, the `remove_background()` from Hyperspy is called with the GUI.
+        NOTE: This function does not work with non-linear axes.
 
-        Parameters
-        ---------------
-        background : array
-           An array with the background intensity values. Length of array must
-           match signal_axes size.
+        Parameters ---------------
+        background : array shape (2, n) or Signal1D
+            An array containing the background x-axis and the intensity values [[xs],[ys]] or a Signal1D object.
+            If the x-axis values do not match the signal_axes, then interpolation is done before subtraction.
+            If only the intensity values are provided, [ys], the functions assumes no interpolation needed.
 
         inplace : boolean
             If False, it returns a new object with the transformation. If True,
@@ -292,16 +293,51 @@ class LumiSpectrum(Signal1D, CommonLumi):
         signal : LumiSpectrum
             A background subtracted signal.
         """
-
-        if not inplace:
-            self_subtracted = self.map(lambda s, bkg: s - bkg, bkg=background, inplace=False)
-            self_subtracted.metadata.set_item("Signal.background_subtracted", True)
-            self_subtracted.metadata.set_item("Signal.background", background)
-            return self_subtracted
+        if hasattr(self.metadata.Signal, 'background_subtracted'):
+            if self.metadata.Signal.background_subtracted is True:
+                raise RecursionError('You have already removed background once. If you need to remove it again, '
+                                     'set the s.metadata.Signal.background_subtracted to False')
+        elif background is None:
+            warnings.warn("Using the Hyperspy specfic `remove_background` function. Use `s.remove_background()` "
+                          "instead.", category=SyntaxWarning)
+            self.remove_background(**kwargs)
         else:
-            self.metadata.set_item("Signal.background_subtracted", True)
-            self.metadata.set_item("Signal.background", background)
-            return self.map(lambda s, bkg: s - bkg, bkg=background, inplace=True)
+            signal_x = self.axes_manager.signal_axes[0].axis
+
+            if hasattr(background, 'axes_manager'): # Check if Hyperspy-like object
+                x = background.axes_manager.signal_axes[0].axis
+                y = background.data
+                background = [x,y]
+
+            background_xy = np.array(background)
+
+            if background_xy.shape[0] == 1 and background_xy.dtype is not 'O':
+                bkg_x = signal_x
+                bkg_y = background_xy
+            elif background_xy.shape[0] == 2 and background_xy.dtype is not 'O':
+                try:
+                    bkg_x = background_xy[0]
+                    bkg_y = background_xy[1]
+                    if len(bkg_x) is not len(bkg_y):
+                        raise AttributeError("The length of the x and y axis must match.")
+                except IndexError:
+                    raise AttributeError("Please provide a background file containing both the x and y axis.")
+            else:
+                raise AttributeError("Please, provide a background of shape (2, n) or (n)")
+
+            if not np.all(bkg_x == signal_x):
+                # Interpolation needed
+                bkg_y = np.interp(signal_x, bkg_x, bkg_y)
+
+            if not inplace:
+                self_subtracted = self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=False)
+                self_subtracted.metadata.set_item("Signal.background_subtracted", True)
+                self_subtracted.metadata.set_item("Signal.background", bkg_y)
+                return self_subtracted
+            else:
+                self.metadata.set_item("Signal.background_subtracted", True)
+                self.metadata.set_item("Signal.background", bkg_y)
+                return self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True)
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
