@@ -31,17 +31,18 @@ class TestCLSpectrum(TestCase):
         s.data[1, 2, 14] += 1
 
         if not 'threshold' in getfullargspec(s.spikes_removal_tool)[0]:
-            raises(ImportError, s.remove_spikes())
-        try:
-            s.remove_spikes()
-        except ImportError:
-            skip("HyperSpy version doesn't support spike removal.")
+            try:
+                s.remove_spikes()
+            except ImportError:
+                skip("HyperSpy version doesn't support spike removal.")
+
+        self.assertRaises(AttributeError, s.remove_spikes(luminescence_roi=[1], signal_mask=[1]))
 
         with self.assertWarns(UserWarning, msg="Threshold value found: 1.00"):
             s1 = s.remove_spikes()
-            np.testing.assert_almost_equal(s1.data[1, 0, 1], 1, decimal=5)
-            np.testing.assert_almost_equal(s1.data[0, 2, 29], 1, decimal=5)
-            np.testing.assert_almost_equal(s1.data[1, 2, 14], 1, decimal=5)
+        np.testing.assert_almost_equal(s1.data[1, 0, 1], 1, decimal=5)
+        np.testing.assert_almost_equal(s1.data[0, 2, 29], 1, decimal=5)
+        np.testing.assert_almost_equal(s1.data[1, 2, 14], 1, decimal=5)
 
         lum_roi = [1, 1]
         s4 = s.remove_spikes(luminescence_roi=lum_roi,)

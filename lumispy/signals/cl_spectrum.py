@@ -66,7 +66,7 @@ class CLSpectrum(LumiSpectrum):
                       navigation_mask=None, interactive=False, **kwargs):
 
         if not 'threshold' in getfullargspec(self.spikes_removal_tool)[0]:
-            raise ImportError('Spike removal works only'
+            raise ImportError('Spike removal works only '
                               'if the non_uniform_axis branch of HyperSpy is used.')
 
         if luminescence_roi is not None and signal_mask is not None:
