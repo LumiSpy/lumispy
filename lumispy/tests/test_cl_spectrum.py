@@ -30,34 +30,18 @@ class TestCLSpectrum(TestCase):
 
         with self.assertWarns(UserWarning, msg="Threshold value found: 1.00"):
             s1 = s.remove_spikes()
-        np.testing.assert_almost_equal(s1.data[1, 0, 1], 3, )
-        np.testing.assert_almost_equal(s1.data[0, 2, 29], 1, decimal=5)
-        np.testing.assert_almost_equal(s1.data[1, 2, 14], 2, decimal=5)
-
-        s2 = s.remove_spikes(threshold=0.5)
-        np.testing.assert_almost_equal(s2.data[1, 0, 1], 1, decimal=5)
-        np.testing.assert_almost_equal(s2.data[0, 2, 29], 1, decimal=5)
-        np.testing.assert_almost_equal(s2.data[1, 2, 14], 1, decimal=5)
-
-        signal_mask = np.zeros(30, dtype='bool')
-        signal_mask[:10] = True
-        s3 = s.remove_spikes(signal_mask=signal_mask)
-        np.testing.assert_almost_equal(s3.data[1, 0, 1], 3, decimal=5)
-        np.testing.assert_almost_equal(s3.data[0, 2, 29], 1, decimal=5)
+            np.testing.assert_almost_equal(s1.data[1, 0, 1], 1, decimal=5)
+            np.testing.assert_almost_equal(s1.data[0, 2, 29], 1, decimal=5)
+            np.testing.assert_almost_equal(s1.data[1, 2, 14], 1, decimal=5)
 
         lum_roi = [1, 1]
-        s4 = s.remove_spikes(luminescence_roi=lum_roi)
+        s4 = s.remove_spikes(luminescence_roi=lum_roi,)
         np.testing.assert_almost_equal(s4.data[1, 0, 1], 3, decimal=5)
         np.testing.assert_almost_equal(s4.data[0, 2, 29], 1, decimal=5)
-
-        nav_mask = np.zeros((2, 3,))
-        nav_mask[0, :] = True
-        s5 = s.remove_spikes(signal_mask=signal_mask)
-        np.testing.assert_almost_equal(s5.data[1, 0, 1], 3, decimal=5)
-        np.testing.assert_almost_equal(s5.data[0, 2, 29], 1, decimal=5)
+        np.testing.assert_almost_equal(s1.data[1, 2, 14], 1, decimal=5)
 
         s.remove_spikes(inplace=True)
         np.testing.assert_almost_equal(s.data[1, 0, 1], 1, decimal=5)
         np.testing.assert_almost_equal(s.data[0, 2, 29], 1, decimal=5)
-        pass
+        np.testing.assert_almost_equal(s1.data[1, 2, 14], 1, decimal=5)
         # To add: test if histogram is shown as a plot if show_diagnosis_histogram=True.
