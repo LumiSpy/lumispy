@@ -19,8 +19,8 @@
 from .common_luminescence import CommonLumi
 from .luminescence_spectrum import LumiSpectrum, LazyLumiSpectrum
 from .cl_spectrum import CLSpectrum, LazyCLSpectrum
-from .cl_sem_spectrum import CLSEMSpectrum, LazyCLSEMSpectrum
-from .cl_stem_spectrum import CLSTEMSpectrum, LazyCLSTEMSpectrum
+from .cl_spectrum import CLSEMSpectrum, LazyCLSEMSpectrum
+from .cl_spectrum import CLSTEMSpectrum, LazyCLSTEMSpectrum
 from .pl_spectrum import PLSpectrum, LazyPLSpectrum
 from .el_spectrum import ELSpectrum, LazyELSpectrum
 from .luminescence_transient import LumiTransient, LazyLumiTransient
