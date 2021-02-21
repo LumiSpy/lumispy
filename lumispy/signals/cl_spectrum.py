@@ -84,7 +84,7 @@ class CLSpectrum(LumiSpectrum):
             signal = self.deepcopy()
 
         spikes_removal = signal.spikes_removal_tool(signal_mask=signal_mask, navigation_mask=navigation_mask,
-                                                    threshold=threshold, interactive=interactive, add_noise=False,
+                                                    threshold=threshold, interactive=interactive, add_noise=add_noise,
                                                     **kwargs)
 
         if threshold == 'auto':

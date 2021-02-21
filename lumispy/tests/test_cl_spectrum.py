@@ -36,7 +36,7 @@ class TestCLSpectrum(TestCase):
             except ImportError:
                 skip("HyperSpy version doesn't support spike removal.")
 
-        self.assertRaises(AttributeError, s.remove_spikes(luminescence_roi=[1], signal_mask=[1]))
+        self.assertRaises(AttributeError, s.remove_spikes, luminescence_roi=[1], signal_mask=[1])
 
         with self.assertWarns(UserWarning, msg="Threshold value found: 1.00"):
             s1 = s.remove_spikes()
@@ -54,4 +54,4 @@ class TestCLSpectrum(TestCase):
         np.testing.assert_almost_equal(s.data[1, 0, 1], 1, decimal=5)
         np.testing.assert_almost_equal(s.data[0, 2, 29], 1, decimal=5)
         np.testing.assert_almost_equal(s1.data[1, 2, 14], 1, decimal=5)
-        # To add: test if histogram is shown as a plot if show_diagnosis_histogram=True.
+        # TODO: test if histogram is shown as a plot if show_diagnosis_histogram=True.
