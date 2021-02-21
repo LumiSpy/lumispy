@@ -1,6 +1,8 @@
+from inspect import getfullargspec
 from unittest import TestCase
 from lumispy.signals.cl_spectrum import CLSpectrum
 import numpy as np
+from pytest import raises, skip
 
 param_list_signal_mask = [
     ([900, 500], [False, False, False, True, True, True, True, True, True, False]),
@@ -27,6 +29,13 @@ class TestCLSpectrum(TestCase):
         s.data[1, 0, 1] += 2
         s.data[0, 2, 29] += 1
         s.data[1, 2, 14] += 1
+
+        if not 'threshold' in getfullargspec(s.spikes_removal_tool)[0]:
+            raises(TypeError, s.remove_spikes())
+        try:
+            s.remove_spikes()
+        except TypeError:
+            skip("HyperSpy version doesn't support spike removal.")
 
         with self.assertWarns(UserWarning, msg="Threshold value found: 1.00"):
             s1 = s.remove_spikes()

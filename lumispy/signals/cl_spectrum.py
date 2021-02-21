@@ -19,6 +19,7 @@
 """Signal class for Cathodoluminescence spectral data.
 
 """
+from inspect import getfullargspec
 
 import numpy as np
 
@@ -63,6 +64,10 @@ class CLSpectrum(LumiSpectrum):
     def remove_spikes(self, threshold='auto', show_diagnosis_histogram=False, inplace=False,
                       luminescence_roi=None, signal_mask=None, add_noise=False,
                       navigation_mask=None, interactive=False, **kwargs):
+
+        if not 'threshold' in getfullargspec(self.spikes_removal_tool)[0]:
+            raise ImportError('Spike removal works only'
+                              'if the non_uniform_axis branch of HyperSpy is used.')
 
         if luminescence_roi is not None and signal_mask is not None:
             raise AttributeError("Only either `luminescence_roi` or the `signal_mask` can be an input.")
