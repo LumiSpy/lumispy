@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 The LumiSpy developers
+# Copyright 2019-2021 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -17,11 +17,11 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 """Signal class for Electroluminescence spectral data.
-
 """
 
 from hyperspy._signals.lazy import LazySignal
-from lumispy.signals.luminescence_spectrum import LumiSpectrum
+
+from lumispy.signals import LumiSpectrum
 
 
 class ELSpectrum(LumiSpectrum):

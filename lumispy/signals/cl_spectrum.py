@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 The LumiSpy developers
+# Copyright 2019-2021 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -17,13 +17,16 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 """Signal class for Cathodoluminescence spectral data.
-
 """
 
+from inspect import getfullargspec
 import numpy as np
+from warnings import warn
 
 from hyperspy._signals.lazy import LazySignal
-from lumispy.signals.luminescence_spectrum import LumiSpectrum
+from hyperspy.signal_tools import SpikesRemoval
+
+from lumispy.signals import LumiSpectrum
 
 
 class CLSpectrum(LumiSpectrum):
@@ -33,52 +36,160 @@ class CLSpectrum(LumiSpectrum):
     _signal_type = "CL"
     _signal_dimension = 1
 
-    def cosmic_rays_subtraction(self, extra_percent=50, inplace=False, **kwargs):
+    def _make_signal_mask(self, luminescence_roi):
         """
-        Masks the cosmic rays away
-
-        Parameters
-        -----------
-        extra_percent : float
-            Extra percent of intensity added to the maximum value of the mean spectrum, which is used to threshold. Default is an extra 500% (x5) to the maximum intensity value of the mean spectrum.
-
-        inplace : bool
-            If False, a new signal object is created and returned. If True, the original signal object is modified.
+        Creates a mask from the peak position and peak widths of the luminescence spectrum.
+        :param luminescence_roi: array
+            In the form of an array of pairwise elements [[peak1_x, peak1_width], [peak2_x, peak2_width],...].
+        :return: array
+            A `signal_mask`.
         """
 
-        def get_threshold(self, extra_percent):
-            # Get the max threshold from the mean spectrum maximum
-            max_threshold = max(self.mean().data)
-            # Add an extra % of threshold
-            max_threshold = max_threshold * extra_percent
-            return max_threshold
+        ax = self.axes_manager.signal_axes[0].axis
+        signal_mask = np.ones(np.shape(ax))
 
-        def remove_cosmic_ray(spectrum, threshold, mean_spectrum):
-            # Remove cosmic ray leaving the spectrum pixel as normal noise
-            # TO DO: Modify noise creation to be relative to actual real noise.
-            if max(spectrum.data) > threshold:
-                import statistics
-                mean = statistics.mean(mean_spectrum.data)
-                stdev = statistics.stdev(mean_spectrum.data)
-                noise = np.random.normal(mean, stdev, spectrum.shape[0])
-                spectrum.data = noise
-            return spectrum
+        if len(np.shape(luminescence_roi)) == 1:
+            luminescence_roi = np.array([luminescence_roi])
 
-        threshold = get_threshold(self, extra_percent)
-        mean_spectrum = self.mean()
+        for p in luminescence_roi:
+            x, w = p
+            x_min = x - w / 2
+            x_max = x + w / 2
+            index_min = np.abs(ax - x_min).argmin()
+            index_max = np.abs(ax - x_max).argmin()
+            signal_mask[index_min:index_max + 1] *= 0
 
-        if not inplace:
-            signal_filtered = self.map(remove_cosmic_ray, threshold=threshold, mean_spectrum=mean_spectrum,
-                                       show_progressbar=True, inplace=False)
-            signal_filtered.metadata.set_item("Signal.cosmic_rays_subtracted_extra_percent", extra_percent)
-            return signal_filtered
+        return np.invert(signal_mask.astype('bool'))
+
+    def remove_spikes(self, threshold='auto', show_diagnosis_histogram=False, inplace=False,
+                      luminescence_roi=None, signal_mask=None, add_noise=False,
+                      navigation_mask=None, interactive=False, **kwargs):
+
+        if not 'threshold' in getfullargspec(self.spikes_removal_tool)[0]:
+            raise ImportError('Spike removal works only '
+                              'if the non_uniform_axis branch of HyperSpy is used.')
+
+        if luminescence_roi is not None and signal_mask is not None:
+            raise AttributeError("Only either `luminescence_roi` or the `signal_mask` can be an input.")
+
+        if luminescence_roi is not None and signal_mask is None:
+            signal_mask = self._make_signal_mask(luminescence_roi)
+
+        if show_diagnosis_histogram:
+            self.spikes_diagnosis(navigation_mask=navigation_mask, signal_mask=signal_mask,
+                                  **kwargs)
+        if inplace:
+            signal = self
         else:
-            self.metadata.set_item("Signal.cosmic_rays_subtracted_extra_percent", extra_percent)
-            return self.map(remove_cosmic_ray, threshold=threshold, mean_spectrum=mean_spectrum, show_progressbar=True,
-                            inplace=True)
+            signal = self.deepcopy()
+
+        spikes_removal = signal.spikes_removal_tool(signal_mask=signal_mask, navigation_mask=navigation_mask,
+                                                    threshold=threshold, interactive=interactive, add_noise=add_noise,
+                                                    **kwargs)
+
+        if threshold == 'auto':
+            warn('Threshold value: {:.2f}'.format(spikes_removal.threshold), UserWarning)
+
+        if inplace:
+            return
+        else:
+            return signal
+
+    REMOVE_SPIKES_DOCSTRINGS = \
+        """
+                Hyperspy-based spike removal tool adapted to Lumispy to run non-interactively and
+                without noise addition by default.
+                %s
+                show_diagnosis_histogram: bool
+                    Plot or not the derivative histogram to show the magnitude of the spikes present.
+                inplace: bool
+                    If False, a new signal object is created and returned. If True, the original signal object is modified.
+                luminescence_roi: array
+                    The peak position and peak widths of the peaks in the luminescence spectrum.
+                    In the form of an array of pairwise elements [[peak1_x, peak1_width], [peak2_x, peak2_width],...]
+                    in the units of the signal axis. It creates a signal_mask protecting the peak regions.
+                    To be used instead of `signal_mask`.
+                
+                Returns
+                ----------
+                :return: None or CLSpectrum
+                    Depends on inplace, returns or overwrites the CLSpectrum after spike removal.
+                """
+    remove_spikes.__doc__ = REMOVE_SPIKES_DOCSTRINGS % (LumiSpectrum.spikes_removal_tool.__doc__)
 
 
 class LazyCLSpectrum(LazySignal, CLSpectrum):
+    _lazy = True
+
+    pass
+
+
+"""SEM specific signal class for Cathodoluminescence spectral data.
+"""
+
+class CLSEMSpectrum(CLSpectrum):
+    _signal_type = "CL_SEM"
+
+    def correct_grating_shift(self, cal_factor_x_axis, corr_factor_grating, sem_magnification, **kwargs):
+        """"
+        Applies shift caused by the grating offset wrt the scanning centre.
+        Authorship: Gunnar Kusch (gk419@cam.ac.uk)
+
+        :param cal_factor_x_axis: The navigation correction factor.
+        :param corr_factor_grating: The grating correction factor.
+        :param sem_magnification: The SEM (real) magnification value.
+            For the Attolight original metadata, take the `SEM.Real_Magnification` value
+        :param kwargs: The parameters passed to `hyperspy.align1D()` function like:
+            interpolation_method ('linear', 'nearest', 'zero', 'slinear', 'quadratic, 'cubic')
+            parallel: Bool
+            crop, expand, fill_value ...
+
+        """
+
+        # Avoid correcting for this shift twice (first time it fails, so except
+        # block runs. Second time, try succeeds, so except block is skipped):
+        try:
+            self.metadata.Signal.grating_corrected == True
+        except AttributeError:
+            # Get all relevant parameters
+            nx = self.axes_manager.navigation_shape[0]
+            ny = self.axes_manager.navigation_shape[1]
+            fov = sem_magnification
+
+            # Correction of the Wavelength Shift along the X-Axis
+            calax = cal_factor_x_axis / (fov * nx)
+            # (Total Variation, Channels, Step)
+            garray = np.arange((-corr_factor_grating / 2) * calax * 1000 * nx,
+                               (corr_factor_grating / 2) * calax * 1000 * nx,
+                                corr_factor_grating * calax * 1000)
+            barray = np.full((ny, nx), garray)
+
+            self.shift1D(barray, **kwargs)
+
+            # Store modification in metadata
+            self.metadata.set_item("Signal.grating_corrected", True)
+        else:
+            raise Exception("You already corrected for the grating shift.")
+
+
+class LazyCLSEMSpectrum(LazySignal, CLSEMSpectrum):
+    _lazy = True
+
+    pass
+
+
+"""STEM specific signal class for Cathodoluminescence spectral data.
+"""
+
+class CLSTEMSpectrum(CLSpectrum):
+
+    _signal_type = "CL_STEM"
+
+    pass
+
+
+class LazyCLSTEMSpectrum(LazySignal, CLSTEMSpectrum):
+
     _lazy = True
 
     pass

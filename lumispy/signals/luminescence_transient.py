@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 The LumiSpy developers
+# Copyright 2019-2021 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -19,8 +19,9 @@
 """Signal class for Luminescence transient data (2D).
 """
 
+from hyperspy.signals import Signal2D
 from hyperspy._signals.lazy import LazySignal
-from hyperspy._signals.signal2d import Signal2D
+
 from lumispy.signals.common_luminescence import CommonLumi
 
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 The LumiSpy developers
+# Copyright 2019-2021 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -21,10 +21,10 @@ from numpy.random import random
 from numpy.testing import assert_allclose
 from pytest import raises, mark, skip, warns
 
-from lumispy import LumiSpectrum
 from hyperspy.axes import DataAxis
 from lumispy import join_spectra, nm2eV, eV2nm, nm2invcm, invcm2nm
 from lumispy.utils.axes import _n_air
+from lumispy.signals import LumiSpectrum
 
 
 def test__n_air():
@@ -150,4 +150,3 @@ def test_joinspectra_FunctionalDA(average, scale, kind):
     assert s.data.size == 57
     if scale: assert s.data[-1] == 1
     else: assert s.data[-1] == 2
-

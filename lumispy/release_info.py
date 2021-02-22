@@ -1,7 +1,7 @@
 name = "lumispy"
 version = "0.1.0"
 author = "Duncan Johnstone, Jordi Ferrer Orri, Jonas Lähnemann"
-copyright = "Copyright 2019-2020, LumiSpy developers"
+copyright = "Copyright 2019-2021, LumiSpy developers"
 credits = ["Duncan Johnstone"]
 license = "GPLv3"
 maintainer = "Duncan Johnstone, Jordi Ferrer Orri"

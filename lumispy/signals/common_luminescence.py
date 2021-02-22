@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 The LumiSpy developers
+# Copyright 2019-2021 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -60,6 +60,7 @@ class CommonLumi:
             signal_cropped.metadata.set_item("Signal.cropped_edges", crop_px)
 
         return signal_cropped
+<<<<<<< HEAD
 
 
     def remove_negative(self, basevalue=1, inplace=True):
@@ -189,3 +190,5 @@ class CommonLumi:
             if s.metadata.Signal.quantity.find('Intensity') != -1:
                 s.metadata.Signal.quantity = 'Normalized intensity'
         if not inplace: return s
+=======
+>>>>>>> master
