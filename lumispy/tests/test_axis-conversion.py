@@ -270,4 +270,3 @@ def test_to_invcm_relative(jacobian):
     assert M1.axes_manager.signal_axes[0].axis[0] == \
            M2.axes_manager.signal_axes[0].axis[0]
     assert_allclose(M1.data, M2.data, 5e-4)
-

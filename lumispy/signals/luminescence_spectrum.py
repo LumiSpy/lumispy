@@ -311,10 +311,10 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
             background_xy = np.array(background)
 
-            if background_xy.shape[0] == 1 and background_xy.dtype is not 'O':
+            if background_xy.shape[0] == 1 and background_xy.dtype != 'O':
                 bkg_x = signal_x
                 bkg_y = background_xy
-            elif background_xy.shape[0] == 2 and background_xy.dtype is not 'O':
+            elif background_xy.shape[0] == 2 and background_xy.dtype != 'O':
                 try:
                     bkg_x = background_xy[0]
                     bkg_y = background_xy[1]
@@ -325,7 +325,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
             else:
                 raise AttributeError("Please, provide a background of shape (2, n) or (n)")
 
-            if not np.all(bkg_x == signal_x):
+            if not np.array_equal(bkg_x, signal_x):
                 # Interpolation needed
                 bkg_y = np.interp(signal_x, bkg_x, bkg_y)
 

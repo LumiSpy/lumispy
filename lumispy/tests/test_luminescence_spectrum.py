@@ -19,7 +19,8 @@
 from unittest import TestCase
 import numpy as np
 from lumispy.signals.luminescence_spectrum import LumiSpectrum
-import warnings
+from pytest import warns
+
 
 backgrounds = [
     ([np.ones(50)], [np.zeros(50, dtype='float64')]),
@@ -31,6 +32,7 @@ backgrounds = [
 error_backgrounds = [
     ([np.linspace(0, 49, num=10, dtype='float64'), np.ones(50)], AttributeError),
     ([[1, 1], [1, 1], [1, 1]], AttributeError),
+    ([np.linspace(0, 48, num=10, dtype='float64'), np.ones(50)], AttributeError),
 ]
 
 
@@ -55,4 +57,10 @@ class TestLumiSpectrum(TestCase):
         # Test double background removal
         s.remove_background_from_file(backgrounds[0][0], inplace=True)
         self.assertRaises(RecursionError, s.remove_background_from_file, backgrounds[0][0])
+
+    def test_warnings(self):
+        s = LumiSpectrum(np.ones(50))
+        with warns(SyntaxWarning) as warninfo:
+            s.remove_background_from_file(background=None, inplace=True)
+        assert warninfo[0].message.args[0][:18] == "Using the Hyperspy"
 
