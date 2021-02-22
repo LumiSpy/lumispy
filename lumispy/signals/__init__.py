@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-from .common_luminescence import CommonLumi
 from .luminescence_spectrum import LumiSpectrum, LazyLumiSpectrum
 from .cl_spectrum import CLSpectrum, LazyCLSpectrum
 from .cl_spectrum import CLSEMSpectrum, LazyCLSEMSpectrum
