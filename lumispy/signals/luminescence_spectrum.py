@@ -101,13 +101,13 @@ class LumiSpectrum(Signal1D, CommonLumi):
             else:
                 s2data = self.isig[::-1].data
             if self.data.ndim == 1:
-                s2 = Signal1D(s2data, axes=(evaxis.get_axis_dictionary(),))
+                s2 = LumiSpectrum(s2data, axes=(evaxis.get_axis_dictionary(),))
             elif self.data.ndim == 2:
-                s2 = Signal1D(s2data, axes=
+                s2 = LumiSpectrum(s2data, axes=
                      (self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                      evaxis.get_axis_dictionary(), ))
             else:
-                s2 = Signal1D(s2data, axes=
+                s2 = LumiSpectrum(s2data, axes=
                      (self.axes_manager.navigation_axes[1].get_axis_dictionary(),
                      self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                      evaxis.get_axis_dictionary(), ))
@@ -174,13 +174,13 @@ class LumiSpectrum(Signal1D, CommonLumi):
             else:
                 s2data = self.isig[::-1].data
             if self.data.ndim == 1:
-                s2 = Signal1D(s2data, axes=(invcmaxis.get_axis_dictionary(),))
+                s2 = LumiSpectrum(s2data, axes=(invcmaxis.get_axis_dictionary(),))
             elif self.data.ndim == 2:
-                s2 = Signal1D(s2data, axes=
+                s2 = LumiSpectrum(s2data, axes=
                     (self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                     invcmaxis.get_axis_dictionary(), ))
             else:
-                s2 = Signal1D(s2data, axes=
+                s2 = LumiSpectrum(s2data, axes=
                     (self.axes_manager.navigation_axes[1].get_axis_dictionary(),
                     self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                     invcmaxis.get_axis_dictionary(), ))
@@ -258,13 +258,13 @@ class LumiSpectrum(Signal1D, CommonLumi):
             else:
                 s2data = self.data
             if self.data.ndim == 1:
-                s2 = Signal1D(s2data, axes=(invcmaxis.get_axis_dictionary(),))
+                s2 = LumiSpectrum(s2data, axes=(invcmaxis.get_axis_dictionary(),))
             elif self.data.ndim == 2:
-                s2 = Signal1D(s2data, axes=
+                s2 = LumiSpectrum(s2data, axes=
                     (self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                     invcmaxis.get_axis_dictionary(), ))
             else:
-                s2 = Signal1D(s2data, axes=
+                s2 = LumiSpectrum(s2data, axes=
                     (self.axes_manager.navigation_axes[1].get_axis_dictionary(),
                     self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                     invcmaxis.get_axis_dictionary(), ))
