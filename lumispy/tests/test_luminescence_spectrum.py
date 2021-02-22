@@ -61,6 +61,6 @@ class TestLumiSpectrum(TestCase):
     def test_warnings(self):
         s = LumiSpectrum(np.ones(50))
         with warns(SyntaxWarning) as warninfo:
-            s.remove_background_from_file(background=None, inplace=True)
+            s.remove_background_from_file(background=None, display=False)
         assert warninfo[0].message.args[0][:18] == "Using the Hyperspy"
 
