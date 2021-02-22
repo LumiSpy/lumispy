@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 The LumiSpy developers
+# Copyright 2019-2021 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -16,13 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-from numpy import ones
-from numpy import arange
-from numpy.random import random
 from pytest import raises, mark, skip
+from numpy import ones, arange
+from numpy.random import random
 
-from lumispy import LumiSpectrum
 from hyperspy.axes import DataAxis
+
+from lumispy.signals import LumiSpectrum
 from lumispy import join_spectra
 
 
@@ -118,4 +118,3 @@ def test_joinspectra_FunctionalDA(average, scale, kind):
     assert s.data.size == 57
     if scale: assert s.data[-1] == 1
     else: assert s.data[-1] == 2
-

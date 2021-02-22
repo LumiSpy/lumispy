@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 The LumiSpy developers
+# Copyright 2019-2021 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -15,24 +15,3 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
-
-"""Signal class for cathodoluminescence spectral data acquired in STEM.
-
-"""
-
-from lumispy.signals.cl_spectrum import CLSpectrum
-from hyperspy._signals.lazy import LazySignal
-
-
-class CLSTEMSpectrum(CLSpectrum):
-
-    _signal_type = "CL_STEM"
-
-    pass
-
-
-class LazyCLSTEMSpectrum(LazySignal, CLSTEMSpectrum):
-
-    _lazy = True
-
-    pass

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 The LumiSpy developers
+# Copyright 2019-2021 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -16,14 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-from numpy import arange, ones
 from pytest import raises, mark, skip
+from numpy import arange, ones
 from numpy.testing import assert_allclose
 from inspect import getfullargspec
 
 from hyperspy.axes import DataAxis
-from lumispy import LumiSpectrum
-from lumispy import CLSEMSpectrum
+
+from lumispy.signals import LumiSpectrum, CLSEMSpectrum
 from lumispy.utils.axes import *
 
 
@@ -270,4 +270,3 @@ def test_to_invcm_relative(jacobian):
     assert M1.axes_manager.signal_axes[0].axis[0] == \
            M2.axes_manager.signal_axes[0].axis[0]
     assert_allclose(M1.data, M2.data, 5e-4)
-

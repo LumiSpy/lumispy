@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 The LumiSpy developers
+# Copyright 2019-2021 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -18,19 +18,19 @@
 
 """Signal class for Luminescence spectral data (1D).
 """
-import numpy as np
-from hyperspy._signals.signal1d import Signal1D
-from hyperspy._signals.lazy import LazySignal
-from hyperspy.axes import DataAxis
-from lumispy.signals.common_luminescence import CommonLumi
-from lumispy.utils.axes import axis2eV
-from lumispy.utils.axes import data2eV
-from lumispy.utils.axes import axis2invcm
-from lumispy.utils.axes import data2invcm
-from lumispy.utils.axes import nm2invcm
 
 from inspect import getfullargspec
-import warnings
+from warnings import warn
+import numpy as np
+
+
+from hyperspy.signals import Signal1D
+from hyperspy._signals.lazy import LazySignal
+from hyperspy.axes import DataAxis
+
+from lumispy.signals.common_luminescence import CommonLumi
+from lumispy.utils import axis2eV, data2eV, axis2invcm, data2invcm
+from lumispy import nm2invcm
 
 
 class LumiSpectrum(Signal1D, CommonLumi):
@@ -101,13 +101,13 @@ class LumiSpectrum(Signal1D, CommonLumi):
             else:
                 s2data = self.isig[::-1].data
             if self.data.ndim == 1:
-                s2 = Signal1D(s2data, axes=(evaxis.get_axis_dictionary(),))
+                s2 = LumiSpectrum(s2data, axes=(evaxis.get_axis_dictionary(),))
             elif self.data.ndim == 2:
-                s2 = Signal1D(s2data, axes=
+                s2 = LumiSpectrum(s2data, axes=
                      (self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                      evaxis.get_axis_dictionary(), ))
             else:
-                s2 = Signal1D(s2data, axes=
+                s2 = LumiSpectrum(s2data, axes=
                      (self.axes_manager.navigation_axes[1].get_axis_dictionary(),
                      self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                      evaxis.get_axis_dictionary(), ))
@@ -174,13 +174,13 @@ class LumiSpectrum(Signal1D, CommonLumi):
             else:
                 s2data = self.isig[::-1].data
             if self.data.ndim == 1:
-                s2 = Signal1D(s2data, axes=(invcmaxis.get_axis_dictionary(),))
+                s2 = LumiSpectrum(s2data, axes=(invcmaxis.get_axis_dictionary(),))
             elif self.data.ndim == 2:
-                s2 = Signal1D(s2data, axes=
+                s2 = LumiSpectrum(s2data, axes=
                     (self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                     invcmaxis.get_axis_dictionary(), ))
             else:
-                s2 = Signal1D(s2data, axes=
+                s2 = LumiSpectrum(s2data, axes=
                     (self.axes_manager.navigation_axes[1].get_axis_dictionary(),
                     self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                     invcmaxis.get_axis_dictionary(), ))
@@ -258,13 +258,13 @@ class LumiSpectrum(Signal1D, CommonLumi):
             else:
                 s2data = self.data
             if self.data.ndim == 1:
-                s2 = Signal1D(s2data, axes=(invcmaxis.get_axis_dictionary(),))
+                s2 = LumiSpectrum(s2data, axes=(invcmaxis.get_axis_dictionary(),))
             elif self.data.ndim == 2:
-                s2 = Signal1D(s2data, axes=
+                s2 = LumiSpectrum(s2data, axes=
                     (self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                     invcmaxis.get_axis_dictionary(), ))
             else:
-                s2 = Signal1D(s2data, axes=
+                s2 = LumiSpectrum(s2data, axes=
                     (self.axes_manager.navigation_axes[1].get_axis_dictionary(),
                     self.axes_manager.navigation_axes[0].get_axis_dictionary(),
                     invcmaxis.get_axis_dictionary(), ))
@@ -298,7 +298,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 raise RecursionError('You have already removed background once. If you need to remove it again, '
                                      'set the s.metadata.Signal.background_subtracted to False')
         elif background is None:
-            warnings.warn("Using the Hyperspy specfic `remove_background` function. Use `s.remove_background()` "
+            warn("Using the Hyperspy specfic `remove_background` function. Use `s.remove_background()` "
                           "instead.", category=SyntaxWarning)
             self.remove_background(**kwargs)
         else:
@@ -311,10 +311,10 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
             background_xy = np.array(background)
 
-            if background_xy.shape[0] == 1 and background_xy.dtype is not 'O':
+            if background_xy.shape[0] == 1 and background_xy.dtype != 'O':
                 bkg_x = signal_x
                 bkg_y = background_xy
-            elif background_xy.shape[0] == 2 and background_xy.dtype is not 'O':
+            elif background_xy.shape[0] == 2 and background_xy.dtype != 'O':
                 try:
                     bkg_x = background_xy[0]
                     bkg_y = background_xy[1]
@@ -325,7 +325,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
             else:
                 raise AttributeError("Please, provide a background of shape (2, n) or (n)")
 
-            if not np.all(bkg_x == signal_x):
+            if not np.array_equal(bkg_x, signal_x):
                 # Interpolation needed
                 bkg_y = np.interp(signal_x, bkg_x, bkg_y)
 
