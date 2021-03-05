@@ -121,11 +121,22 @@ def plot_linescan(s, logscale=True, colorbar=True, invert=False, cmap='jet', \
     if invert:
         z = z[::-1,:]
     # set axes labels
-    plt.xlabel(s.axes_manager[1].name + ' (' + s.axes_manager[1].units + ')')
-    if s.axes_manager[0].name == 'y':
-        plt.ylabel('Position (µm)')
+    if isinstance(s.axes_manager[1].name, str) and isinstance(s.axes_manager[1].units, str):
+        plt.xlabel(s.axes_manager[1].name + ' (' + s.axes_manager[1].units + ')')
+    elif isinstance(s.axes_manager[1].name, str):
+        plt.xlabel(s.axes_manager[1].name + ' (arb. units)')
+    elif isinstance(s.axes_manager[1].units, str):
+        plt.xlabel('Signal (' + s.axes_manager[1].units + ')')
     else:
+        plt.xlabel('Signal (arb. units)')
+    if isinstance(s.axes_manager[0].name, str) and isinstance(s.axes_manager[0].units, str):
         plt.ylabel(s.axes_manager[0].name + ' (' + s.axes_manager[0].units + ')')
+    elif isinstance(s.axes_manager[0].name, str):
+        plt.ylabel(s.axes_manager[0].name + ' (arb. units)')
+    elif isinstance(s.axes_manager[0].units, str):
+        plt.ylabel('Position (' + s.axes_manager[0].units + ')')
+    else:
+        plt.ylabel('Position (arb. units)')
     # plot
     if logscale:
         im = plt.pcolormesh(x,y,z, cmap=cmap, norm=plt.matplotlib.colors.LogNorm(vmin=vmin,vmax=ma),
