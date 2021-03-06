@@ -16,15 +16,47 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-from pytest import raises, mark, skip
 from numpy import ones, arange
 from numpy.random import random
+from numpy.testing import assert_allclose
+from pytest import raises, mark, skip, warns
 
 from hyperspy.axes import DataAxis
-
+from lumispy import join_spectra, nm2eV, eV2nm, nm2invcm, invcm2nm
+from lumispy.utils.axes import _n_air
 from lumispy.signals import LumiSpectrum
-from lumispy import join_spectra
 
+
+def test__n_air():
+    wl = arange(800)*2+150
+    with warns(UserWarning) as warninfo:
+        n = _n_air(wl)
+    assert len(warninfo) == 1
+    assert warninfo[0].message.args[0][:14] == "The wavelength"
+    assert n[0] == _n_air(185)
+    assert n[-1] == _n_air(1700)
+    with warns(UserWarning):
+        assert _n_air(180) == _n_air(185)
+    with warns(UserWarning):
+        assert _n_air(1705) == _n_air(1700)
+    assert_allclose(_n_air(200), 1.00032406)
+    assert_allclose(_n_air(500), 1.00027896)
+
+def test_nm2eV():
+    assert_allclose(nm2eV(200), 6.19720164)
+    assert_allclose(nm2eV(300), 4.13160202)
+
+def test_eV2nm():
+    assert_allclose(eV2nm(2), 619.74951462)
+    assert_allclose(eV2nm(3), 413.16411768)
+
+def test_nm2invcm():
+    assert nm2invcm(250) == 4e4
+    assert nm2invcm(400) == 25e3
+
+def test_invcm2nm():
+    assert invcm2nm(4e4) == 250
+    assert invcm2nm(25e3) == 400
 
 @mark.parametrize(("average"), (True,False))
 @mark.parametrize(("scale"), (True,False))

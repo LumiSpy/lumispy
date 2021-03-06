@@ -82,13 +82,13 @@ class LumiSpectrum(Signal1D, CommonLumi):
             raise ImportError('Conversion to energy axis works only '
                          'if the non_uniform_axis branch of HyperSpy is used.')
 
-        evaxis,factor = axis2eV(self.axes_manager.signal_axes[0])
+        evaxis, factor = axis2eV(self.axes_manager.signal_axes[0])
 
         # in place conversion
         if inplace:
             if jacobian:
                 self.data = data2eV(self.isig[::-1].data, factor,
-                            self.axes_manager.signal_axes[0].axis, evaxis.axis)
+                            self.axes_manager.signal_axes[0], evaxis.axis)
             else:
                 self.data = self.isig[::-1].data
             self.axes_manager.remove(-1)
@@ -97,7 +97,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         else:
             if jacobian:
                 s2data = data2eV(self.isig[::-1].data, factor,
-                            self.axes_manager.signal_axes[0].axis, evaxis.axis)
+                            self.axes_manager.signal_axes[0], evaxis.axis)
             else:
                 s2data = self.isig[::-1].data
             if self.data.ndim == 1:
