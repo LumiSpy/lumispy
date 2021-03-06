@@ -23,6 +23,8 @@ from inspect import getfullargspec
 from copy import deepcopy
 from warnings import warn
 
+from traits import traits
+
 from hyperspy.axes import DataAxis
 
 
@@ -303,21 +305,46 @@ def join_spectra(S,r=50,scale=True,average=False,kind='slinear'):
     return S1
 
 
-def solve_grating_equation():
+def solve_grating_equation(axis, gamma_deg, deviation_angle_deg, focal_length_mm, ccd_width_mm, grating_central_wavelength_nm, grating_density_gr_mm):
     """
     Solves the grating equation.
 
         Parameters
         ----------
-        ax : axis
-            Placeholder
-        r : int, optional
-            Placeholder.
-
+        :param hyperspy.axis:
+            Axis in pixel units (no units) to convert to wavelength.
+        :param gamma_deg:
+            Inclination angle between the focal plane and the centre of the grating
+            (found experimentally from calibration). In degree.
+        :param deviation_angle_deg:
+            Also known as included angle. It is defined as the difference between
+            angle of diffraction ($\beta$) and angle of incidence (&\alpha$).
+            Given by manufacturer specsheet. In degree.
+        :param focal_length_mm:
+            Given by manufacturer specsheet. In mm.
+        :param ccd_width_mm:
+            The width of the CDD. Given by manufacturer specsheet. In mm.
+        :param grating_central_wavelength_nm:
+            Wavelength at the centre of the grating, where exit slit is placed. In nm.
+        :param grating_density_gr_mm:
+            Grating density in gratings per mm.
         Returns
         -------
-        Placeholder
-
+        axis: hyperspy.axis:
         """
 
-    pass
+    # From axis --> x-array
+    non_defined = axis.units is not traits.trait_base._Undefined
+    pixel_units = axis.units in 'pixel'
+
+    if 'undefined' not in str(axis.units).lower() or 'pixel' not in str(axis.units).lower():
+        raise SyntaxWarning('The signal axies in your signal are already in {} units (not in pixel units).'.format(str(axis.units)))
+
+    # Set up variables
+    n = len(axis.axis)
+
+    scale = ((l_max - l_min) / n)
+    offset = l_min
+    axis_nm = DataAxis(scale=scale, offset=l_min, name='Wavelength', units='nm',
+                    navigate=False)
+    return axis_nm
