@@ -340,6 +340,25 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 return self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True)
 
 
+    def px_to_nm_grating_solver(self, params):
+        """
+        Converts signal axis of 1D signal (in pixels) to wavelength solving the grating
+        equation.
+        Input parameters
+        ----------------
+        parmas : float
+            Placeholder.
+
+        Example
+        -------
+        > import numpy as np
+        > from lumispy import LumiSpectrum
+        > S1 = LumiSpectrum(np.ones(20),))
+        > S1.px_to_nm_grating_solver()
+
+        """
+
+
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
     _lazy = True
 

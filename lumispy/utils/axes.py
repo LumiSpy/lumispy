@@ -301,3 +301,23 @@ def join_spectra(S,r=50,scale=True,average=False,kind='slinear'):
                 S1.data = np.hstack((S1.isig[:ind1+1].data, 
                           S2.isig[ind2:].data))
     return S1
+
+
+def solve_grating_equation():
+    """
+    Solves the grating equation.
+
+        Parameters
+        ----------
+        ax : axis
+            Placeholder
+        r : int, optional
+            Placeholder.
+
+        Returns
+        -------
+        Placeholder
+
+        """
+
+    pass
