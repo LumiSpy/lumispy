@@ -30,7 +30,7 @@ from hyperspy.axes import DataAxis
 
 from lumispy.signals.common_luminescence import CommonLumi
 from lumispy.utils import axis2eV, data2eV, axis2invcm, data2invcm
-from lumispy import nm2invcm
+from lumispy import nm2invcm, savetxt
 
 
 class LumiSpectrum(Signal1D, CommonLumi):
@@ -338,6 +338,29 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 self.metadata.set_item("Signal.background_subtracted", True)
                 self.metadata.set_item("Signal.background", bkg_y)
                 return self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True)
+
+
+    def savetxt(self, filename, fmt='%.5f', delimiter='\t', **kwargs):
+        """Write data to text file. 
+        
+        Writes single spectra to a two-column data file with signal axis as
+            X and data as Y.
+        Writes linescan data to file with signal axis as first column and
+            navigation axis as first row.
+        Writes ...
+        
+        Parameters
+        ----------
+        filename : string
+        fmt : str or sequence of strs, optional
+            A single or sequence of format strings. Default is '%.5f'.
+        delimiter : str, optional
+            String or character separating columns. Default is ','
+        **kwargs 
+            Takes any additional arguments of numpy.loadtxt, e.g. `newline`
+            `header`, `footer`, `comments`, or `encoding`.
+        """
+        savetxt(self, filename, fmt, delimiter, **kwargs)
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
