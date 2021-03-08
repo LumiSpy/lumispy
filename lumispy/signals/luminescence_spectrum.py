@@ -18,7 +18,7 @@
 
 """Signal class for Luminescence spectral data (1D).
 """
-
+import warnings
 from inspect import getfullargspec
 from warnings import warn
 import numpy as np
@@ -29,7 +29,7 @@ from hyperspy._signals.lazy import LazySignal
 from hyperspy.axes import DataAxis
 
 from lumispy.signals.common_luminescence import CommonLumi
-from lumispy.utils import axis2eV, data2eV, axis2invcm, data2invcm
+from lumispy.utils import axis2eV, data2eV, axis2invcm, data2invcm, solve_grating_equation
 from lumispy import nm2invcm
 
 
@@ -340,7 +340,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 return self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True)
 
 
-    def px_to_nm_grating_solver(self, params):
+    def px_to_nm_grating_solver(self, params, inplace=False,):
         """
         Converts signal axis of 1D signal (in pixels) to wavelength solving the grating
         equation.
@@ -357,6 +357,21 @@ class LumiSpectrum(Signal1D, CommonLumi):
         > S1.px_to_nm_grating_solver()
 
         """
+
+        nm_axis = solve_grating_equation(self.axes_manager.signal_axes[0])
+
+        # in place conversion
+        if inplace:
+            self.axes_manager.remove(-1)
+            self.axes_manager._axes.append(nm_axis)
+            return
+
+        # create and return new signal
+        else:
+            s = self.deepcopy()
+            s.axes_manager.remove(-1)
+            s.axes_manager._axes.append(nm_axis)
+            return s
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
