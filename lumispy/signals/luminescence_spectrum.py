@@ -340,25 +340,43 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 return self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True)
 
 
-    def px_to_nm_grating_solver(self, params, inplace=False,):
+    def px_to_nm_grating_solver(self, gamma_deg, deviation_angle_deg, focal_length_mm, ccd_width_mm,
+                           grating_central_wavelength_nm, grating_density_gr_mm, inplace=False,):
         """
-        Converts signal axis of 1D signal (in pixels) to wavelength solving the grating
-        equation.
+        Converts signal axis of 1D signal (in pixels) to wavelength, solving the grating
+        equation. See
         Input parameters
         ----------------
-        parmas : float
-            Placeholder.
-
+        :param gamma_deg:
+            Inclination angle between the focal plane and the centre of the grating
+            (found experimentally from calibration). In degree.
+        :param deviation_angle_deg:
+            Also known as included angle. It is defined as the difference between
+            angle of diffraction ($\beta$) and angle of incidence (&\alpha$).
+            Given by manufacturer specsheet. In degree.
+        :param focal_length_mm:
+            Given by manufacturer specsheet. In mm.
+        :param ccd_width_mm:
+            The width of the CDD. Given by manufacturer specsheet. In mm.
+        :param grating_central_wavelength_nm:
+            Wavelength at the centre of the grating, where exit slit is placed. In nm.
+        :param grating_density_gr_mm:
+            Grating density in gratings per mm.
+        :param inplace : bool
+            If False, it returns a new object with the transformation. If True,
+            the original object is transformed, returning no object.
         Example
         -------
         > import numpy as np
         > from lumispy import LumiSpectrum
-        > S1 = LumiSpectrum(np.ones(20),))
-        > S1.px_to_nm_grating_solver()
+        > s1 = LumiSpectrum(np.ones(20),))
+        > s2 = s1.px_to_nm_grating_solver()
 
         """
 
-        nm_axis = solve_grating_equation(self.axes_manager.signal_axes[0])
+        nm_axis = solve_grating_equation(self.axes_manager.signal_axes[0],
+                                         gamma_deg, deviation_angle_deg, focal_length_mm, ccd_width_mm,
+                                         grating_central_wavelength_nm, grating_density_gr_mm)
 
         # in place conversion
         if inplace:
