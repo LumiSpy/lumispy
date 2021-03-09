@@ -26,7 +26,7 @@ from warnings import warn
 
 from traits import traits
 
-from hyperspy.axes import DataAxis
+from hyperspy.axes import DataAxis, UniformDataAxis
 
 
 #
@@ -343,10 +343,11 @@ def solve_grating_equation(axis, gamma_deg, deviation_angle_deg, focal_length_mm
         """
 
     # From axis --> x-array
-    non_defined = axis.units is not traits.trait_base._Undefined
-    pixel_units = axis.units in 'pixel'
+    s = str(axis.units).lower()
+    non_defined = s in '<undefined>'
+    pixel_units = s in ['pixel', 'px']
 
-    if 'undefined' not in str(axis.units).lower() or 'pixel' not in str(axis.units).lower():
+    if not non_defined and not pixel_units:
         warnings.warn('The signal axes are already in {} units (not in pixel units).'
                       'The conversion will run anyways.'.format(str(axis.units)), SyntaxWarning)
 
@@ -375,9 +376,11 @@ def solve_grating_equation(axis, gamma_deg, deviation_angle_deg, focal_length_mm
     # Find lambda max/min given beta (Eq. 5.2)
     l_min = 1e6 * (np.sin(alpha) + np.sin(beta_min)) / grating_density_gr_mm
     l_max = 1e6 * (np.sin(alpha) + np.sin(beta_max)) / grating_density_gr_mm
+    l_min = abs(l_min)
+    l_max = abs(l_max)
 
     # Create axis object to return
     scale = ((l_max - l_min) / ch)
-    axis_nm = DataAxis(scale=scale, offset=l_min, name='Wavelength', units='nm',
-                       navigate=False)
+    axis_nm = UniformDataAxis(scale=scale, offset=l_min, name='Wavelength', units='nm',
+                              navigate=False, size=ch)
     return axis_nm
