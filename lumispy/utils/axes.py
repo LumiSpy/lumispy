@@ -381,6 +381,12 @@ def solve_grating_equation(axis, gamma_deg, deviation_angle_deg, focal_length_mm
 
     # Create axis object to return
     scale = ((l_max - l_min) / ch)
-    axis_nm = UniformDataAxis(scale=scale, offset=l_min, name='Wavelength', units='nm',
-                              navigate=False, size=ch)
+
+    if 'scale' in getfullargspec(DataAxis)[0]:
+        axis_class = DataAxis
+    else:
+        axis_class = UniformDataAxis
+
+    axis_nm = axis_class(scale=scale, offset=l_min, name='Wavelength', units='nm',
+                         navigate=False, size=ch)
     return axis_nm

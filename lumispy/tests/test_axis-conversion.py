@@ -282,18 +282,24 @@ def test_to_invcm_relative(jacobian):
 
 
 def test_solve_grating_equation():
+    # Check which version of hyperspy is installed
+    if 'scale' in getfullargspec(DataAxis)[0]:
+        axis_class = DataAxis
+    else:
+        axis_class = UniformDataAxis
+
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         # Trigger a warning.
-        axis = DataAxis(size=20, offset=200, scale=10, units='nm')
+        axis = axis_class(size=20, offset=200, scale=10, units='nm')
         solve_grating_equation(axis, 1, 1, 1, 1, 1, 1)
         # Verify some things
         assert len(w) == 1
         assert issubclass(w[-1].category, SyntaxWarning)
         assert "(not in pixel units)" in str(w[-1].message)
 
-    axis1 = UniformDataAxis(size=10, offset=200, scale=10,)
-    axis2 = UniformDataAxis(size=10, offset=200, scale=10, units='px')
+    axis1 = axis_class(size=10, offset=200, scale=10,)
+    axis2 = axis_class(size=10, offset=200, scale=10, units='px')
 
     nm_axis1 = solve_grating_equation(axis1, 3, -20, 300, 25, 600, 150)
     nm_axis2 = solve_grating_equation(axis2, 1, 1, 1, 1, 1, 1)
