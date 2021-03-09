@@ -26,7 +26,7 @@ from warnings import warn
 
 from traits import traits
 
-from hyperspy.axes import DataAxis, UniformDataAxis
+from hyperspy.axes import *
 
 
 #
@@ -327,7 +327,7 @@ def solve_grating_equation(axis, gamma_deg, deviation_angle_deg, focal_length_mm
             (found experimentally from calibration). In degree.
         :param deviation_angle_deg:
             Also known as included angle. It is defined as the difference between
-            angle of diffraction ($\beta$) and angle of incidence (&\alpha$).
+            angle of diffraction ($\beta$) and angle of incidence ($\alpha$).
             Given by manufacturer specsheet. In degree.
         :param focal_length_mm:
             Given by manufacturer specsheet. In mm.

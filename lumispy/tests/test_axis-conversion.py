@@ -22,7 +22,7 @@ from numpy.testing import assert_allclose
 from pytest import raises, mark, skip, warns
 from inspect import getfullargspec
 
-from hyperspy.axes import DataAxis, UniformDataAxis
+from hyperspy.axes import *
 
 from lumispy.signals import LumiSpectrum, CLSEMSpectrum
 from lumispy.utils.axes import *

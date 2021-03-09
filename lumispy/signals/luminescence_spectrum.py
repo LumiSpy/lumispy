@@ -344,7 +344,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                            grating_central_wavelength_nm, grating_density_gr_mm, inplace=False,):
         """
         Converts signal axis of 1D signal (in pixels) to wavelength, solving the grating
-        equation. See
+        equation. See ``lumispy.axes.solve_grating_equation` for more details.
         Input parameters
         ----------------
         :param gamma_deg:
@@ -352,7 +352,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
             (found experimentally from calibration). In degree.
         :param deviation_angle_deg:
             Also known as included angle. It is defined as the difference between
-            angle of diffraction ($\beta$) and angle of incidence (&\alpha$).
+            angle of diffraction ($\beta$) and angle of incidence ($\alpha$).
             Given by manufacturer specsheet. In degree.
         :param focal_length_mm:
             Given by manufacturer specsheet. In mm.
@@ -378,18 +378,19 @@ class LumiSpectrum(Signal1D, CommonLumi):
                                          gamma_deg, deviation_angle_deg, focal_length_mm, ccd_width_mm,
                                          grating_central_wavelength_nm, grating_density_gr_mm)
 
-        # in place conversion
         if inplace:
-            self.axes_manager.remove(-1)
-            self.axes_manager._axes.append(nm_axis)
-            return
-
-        # create and return new signal
+            s = self
         else:
             s = self.deepcopy()
-            s.axes_manager.remove(-1)
-            s.axes_manager._axes.append(nm_axis)
+
+        s.axes_manager.remove(-1)
+        s.axes_manager._axes.append(nm_axis)
+
+        if inplace:
+            return
+        else:
             return s
+
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
