@@ -112,9 +112,11 @@ def plot_linescan(s, logscale=True, colorbar=True, invert=False, cmap='jet', \
         x, y = x2, y2
     # Set intensity range
     if vmax is None and vmin is None:
-        mi, ma = np.floor(np.nanmin(z)), np.ceil(np.nanmax(z))    
+        mi, ma = np.floor(np.nanmin(z)), np.ceil(np.nanmax(z))
     elif vmin is None:
         mi, ma = np.floor(np.nanmin(z)), vmax
+    elif vmax is None:
+        mi, ma = vmin, np.ceil(np.nanmax(z))
     else:
         mi, ma = vmin, vmax
     # invert navigation axis
