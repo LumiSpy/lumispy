@@ -292,7 +292,7 @@ def test_solve_grating_equation():
         warnings.simplefilter("always")
         # Trigger a warning.
         axis = axis_class(size=20, offset=200, scale=10, units='nm')
-        solve_grating_equation(axis, 1, 1, 1, 1, 1, 1)
+        solve_grating_equation(axis, 3, -20, 300, 25, 600, 150)
         # Verify some things
         assert len(w) == 1
         assert issubclass(w[-1].category, SyntaxWarning)
@@ -309,7 +309,7 @@ def test_solve_grating_equation():
     assert nm_axis2.name == 'Wavelength'
     assert nm_axis2.units == 'nm'
 
-    assert_allclose(nm_axis1.axis[0], 368.719, atol=0.1)
-    assert_allclose(nm_axis1.axis[-1], 768.460, atol=0.1)
-    assert_allclose(nm_axis2.axis[0], 411672.252, atol=0.1)
-    assert_allclose(nm_axis2.axis[-1], 321873.859, atol=0.1)
+    assert_allclose(nm_axis1.axis[0], 368.614, atol=0.1)
+    assert_allclose(nm_axis1.axis[-1], 768.249, atol=0.1)
+    assert_allclose(nm_axis2.axis[0], 411559.839, atol=0.1)
+    assert_allclose(nm_axis2.axis[-1], 321785.967, atol=0.1)

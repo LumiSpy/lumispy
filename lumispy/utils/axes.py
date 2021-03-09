@@ -355,6 +355,7 @@ def solve_grating_equation(axis, gamma_deg, deviation_angle_deg, focal_length_mm
     # ch: channels,
     ch = len(axis.axis)
 
+
     # Calculate geometry
     # l_h: Perpendicular distance from the spectral plane to grating (Eq. 5.3)
     l_h = focal_length_mm * np.cos(np.deg2rad(gamma_deg))
@@ -378,6 +379,10 @@ def solve_grating_equation(axis, gamma_deg, deviation_angle_deg, focal_length_mm
     l_max = 1e6 * (np.sin(alpha) + np.sin(beta_max)) / grating_density_gr_mm
     l_min = abs(l_min)
     l_max = abs(l_max)
+
+    # Correct for diffraction index of air (lambda not in vacuum)
+    l_min *= 1 / _n_air(l_min)
+    l_max *= 1 / _n_air(l_max)
 
     # Create axis object to return
     scale = ((l_max - l_min) / ch)
