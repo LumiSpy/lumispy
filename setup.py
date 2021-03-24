@@ -30,6 +30,7 @@ setup(
     license=license,
     url="https://github.com/lumispy/lumispy",
     long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
