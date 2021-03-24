@@ -312,34 +312,40 @@ def join_spectra(S, r=50, scale=True, average=False, kind='slinear'):
     return S1
 
 
+GRATING_EQUATION_DOCSTRING_PARAMETERS = \
+    """
+        gamma_deg: float
+            Inclination angle between the focal plane and the centre of the grating
+            (found experimentally from calibration). In degree.
+        deviation_angle_deg: float
+            Also known as included angle. It is defined as the difference between
+            angle of diffraction ($\\beta$) and angle of incidence ($\\alpha$).
+            Given by manufacturer specsheet. In degree.
+        focal_length_mm: float
+            Given by manufacturer specsheet. In mm.
+        ccd_width_mm: float
+            The width of the CDD. Given by manufacturer specsheet. In mm.
+        grating_central_wavelength_nm: float
+            Wavelength at the centre of the grating, where exit slit is placed. In nm.
+        grating_density_gr_mm: int
+            Grating density in gratings per mm.
+    """
+
+
 def solve_grating_equation(axis, gamma_deg, deviation_angle_deg, focal_length_mm, ccd_width_mm,
                            grating_central_wavelength_nm, grating_density_gr_mm):
     """
-    Solves the grating equation.
-    See `horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position` for equations.
+        Solves the grating equation.
+        See `horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position` for equations.
+            Parameters
+            ----------
+            axis: hyperspy.axis
+                Axis in pixel units (no units) to convert to wavelength.
+            %s
 
-        Parameters
-        ----------
-        :param hyperspy.axis:
-            Axis in pixel units (no units) to convert to wavelength.
-        :param gamma_deg:
-            Inclination angle between the focal plane and the centre of the grating
-            (found experimentally from calibration). In degree.
-        :param deviation_angle_deg:
-            Also known as included angle. It is defined as the difference between
-            angle of diffraction ($\beta$) and angle of incidence ($\alpha$).
-            Given by manufacturer specsheet. In degree.
-        :param focal_length_mm:
-            Given by manufacturer specsheet. In mm.
-        :param ccd_width_mm:
-            The width of the CDD. Given by manufacturer specsheet. In mm.
-        :param grating_central_wavelength_nm:
-            Wavelength at the centre of the grating, where exit slit is placed. In nm.
-        :param grating_density_gr_mm:
-            Grating density in gratings per mm.
-        Returns
-        -------
-        axis: hyperspy.axis:
+            Returns
+            -------
+            axis: hyperspy.axis:
         """
 
     # From axis --> x-array
@@ -395,3 +401,7 @@ def solve_grating_equation(axis, gamma_deg, deviation_angle_deg, focal_length_mm
     axis_nm = axis_class(scale=scale, offset=l_min, name='Wavelength', units='nm',
                          navigate=False, size=ch)
     return axis_nm
+
+
+solve_grating_equation.__doc__ %= GRATING_EQUATION_DOCSTRING_PARAMETERS
+

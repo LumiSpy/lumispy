@@ -29,7 +29,8 @@ from hyperspy._signals.lazy import LazySignal
 from hyperspy.axes import DataAxis
 
 from lumispy.signals.common_luminescence import CommonLumi
-from lumispy.utils import axis2eV, data2eV, axis2invcm, data2invcm, solve_grating_equation
+from lumispy.utils import axis2eV, data2eV, axis2invcm, data2invcm, solve_grating_equation, \
+    GRATING_EQUATION_DOCSTRING_PARAMETERS
 from lumispy import nm2invcm
 
 
@@ -344,34 +345,26 @@ class LumiSpectrum(Signal1D, CommonLumi):
                            grating_central_wavelength_nm, grating_density_gr_mm, inplace=False,):
         """
         Converts signal axis of 1D signal (in pixels) to wavelength, solving the grating
-        equation. See ``lumispy.axes.solve_grating_equation` for more details.
-        Input parameters
+        equation.
+        See ``lumispy.axes.solve_grating_equation` for more details.
+
+        Parameters
         ----------------
-        :param gamma_deg:
-            Inclination angle between the focal plane and the centre of the grating
-            (found experimentally from calibration). In degree.
-        :param deviation_angle_deg:
-            Also known as included angle. It is defined as the difference between
-            angle of diffraction ($\beta$) and angle of incidence ($\alpha$).
-            Given by manufacturer specsheet. In degree.
-        :param focal_length_mm:
-            Given by manufacturer specsheet. In mm.
-        :param ccd_width_mm:
-            The width of the CDD. Given by manufacturer specsheet. In mm.
-        :param grating_central_wavelength_nm:
-            Wavelength at the centre of the grating, where exit slit is placed. In nm.
-        :param grating_density_gr_mm:
-            Grating density in gratings per mm.
-        :param inplace : bool
+        %s
+        inplace : bool
             If False, it returns a new object with the transformation. If True,
             the original object is transformed, returning no object.
+
+        Returns
+        ---------------
+        signal : LumiSpectrum
+            A signal with calibrated wavelength units.
+
         Example
         -------
-        > import numpy as np
-        > from lumispy import LumiSpectrum
-        > s1 = LumiSpectrum(np.ones(20),))
-        > s2 = s1.px_to_nm_grating_solver()
-
+        > s = LumiSpectrum(np.ones(20),))
+        > s.px_to_nm_grating_solver(*params, inplace=True)
+        > s.axes_manager.signal_axes[0].units == 'nm'
         """
 
         nm_axis = solve_grating_equation(self.axes_manager.signal_axes[0],
@@ -386,11 +379,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
         s.axes_manager.remove(-1)
         s.axes_manager._axes.append(nm_axis)
 
-        if inplace:
-            return
-        else:
-            return s
+        return s
 
+    px_to_nm_grating_solver.__doc__ %= GRATING_EQUATION_DOCSTRING_PARAMETERS
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
