@@ -29,7 +29,7 @@ setup(
     #author_email=email,
     license=license,
     url="https://github.com/lumispy/lumispy",
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
@@ -54,7 +54,6 @@ setup(
     extras_require={"tests": ["pytest>=5.0"],
                     "coverage": ["pytest-cov>=2.8.1", "coveralls>=1.10", "coverage>=5.0"]},
     package_data={
-        "": ["LICENSE", "README.rst"],
         "lumispy": ["*.py", "hyperspy_extension.yaml"],
     },
     entry_points={'hyperspy.extensions': ['lumispy = lumispy']},
