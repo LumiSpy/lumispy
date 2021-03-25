@@ -38,6 +38,20 @@ def test_savetxt_spectrum(axes, tmp_path):
     else:
         assert_array_equal(s.data,s2)
 
+
+@mark.parametrize('axes', (True, False))
+def test_savetxt_navigate1D(axes, tmp_path):
+    s = LumiSpectrum(arange(5))
+    s.axes_manager[0].navigate=True
+    fname = tmp_path / 'test.txt'
+    s.savetxt('fname', axes=axes)
+    s2 = loadtxt('fname')
+    if axes:
+        assert_array_equal(s.axes_manager[0].axis,s2[:,0])
+    else:
+        assert_array_equal(s.data,s2)
+
+
 @mark.parametrize('axes', (True, False))
 @mark.parametrize('transpose', (True, False))
 def test_savetxt_linescan(axes, transpose, tmp_path):
@@ -59,6 +73,7 @@ def test_savetxt_linescan(axes, transpose, tmp_path):
             assert_array_equal(s.data.T,s2)
         else:
             assert_array_equal(s.data,s2)
+
 
 @mark.parametrize('axes', (True, False))
 @mark.parametrize('transpose', (True, False))
