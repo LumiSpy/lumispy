@@ -44,7 +44,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         super().__init__(*args, **kwargs)
 
 
-    def to_eV(self,inplace=True,jacobian=True):
+    def to_eV(self, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear energy axis (eV)
         using wavelength dependent permittivity of air. Assumes wavelength in
         units of nm unless the axis units are specifically set to µm.
@@ -83,13 +83,13 @@ class LumiSpectrum(Signal1D, CommonLumi):
             raise ImportError('Conversion to energy axis works only '
                          'if the non_uniform_axis branch of HyperSpy is used.')
 
-        evaxis,factor = axis2eV(self.axes_manager.signal_axes[0])
+        evaxis, factor = axis2eV(self.axes_manager.signal_axes[0])
 
         # in place conversion
         if inplace:
             if jacobian:
                 self.data = data2eV(self.isig[::-1].data, factor,
-                            self.axes_manager.signal_axes[0].axis, evaxis.axis)
+                            self.axes_manager.signal_axes[0], evaxis.axis)
             else:
                 self.data = self.isig[::-1].data
             self.axes_manager.remove(-1)
@@ -98,7 +98,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         else:
             if jacobian:
                 s2data = data2eV(self.isig[::-1].data, factor,
-                            self.axes_manager.signal_axes[0].axis, evaxis.axis)
+                            self.axes_manager.signal_axes[0], evaxis.axis)
             else:
                 s2data = self.isig[::-1].data
             if self.data.ndim == 1:
@@ -117,7 +117,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
             return s2
 
 
-    def to_invcm(self,inplace=True,jacobian=True):
+    def to_invcm(self, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear wavenumber axis
         (cm^-1). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
@@ -190,7 +190,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
             return s2
 
 
-    def to_invcm_relative(self,laser,inplace=True,jacobian=True):
+    def to_invcm_relative(self, laser, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear wavenumber axis
         (cm^-1) relative to the exciting laser wavelength (Stokes/Anti-Stokes
         shift). Assumes wavelength in units of nm unless the axis units are
@@ -275,11 +275,12 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
     def remove_background_from_file(self, background=None, inplace=False, **kwargs):
         """
-        Subtract the background to the signal in all navigation axes.
-        If no background file is passed as argument, the `remove_background()` from Hyperspy is called with the GUI.
-        NOTE: This function does not work with non-linear axes.
+        Subtract the background to the signal in all navigation axes.If no
+        background file is passed as argument, the `remove_background()` from
+        HyperSpy is called with the GUI.
 
-        Parameters ---------------
+        Parameters
+        ----------
         background : array shape (2, n) or Signal1D
             An array containing the background x-axis and the intensity values [[xs],[ys]] or a Signal1D object.
             If the x-axis values do not match the signal_axes, then interpolation is done before subtraction.
@@ -290,9 +291,12 @@ class LumiSpectrum(Signal1D, CommonLumi):
             the original object is transformed, returning no object.
 
         Returns
-        ---------------
+        -------
         signal : LumiSpectrum
             A background subtracted signal.
+        Note
+        ----
+        This function does not work with non-linear axes.
         """
         if hasattr(self.metadata.Signal, 'background_subtracted'):
             if self.metadata.Signal.background_subtracted is True:

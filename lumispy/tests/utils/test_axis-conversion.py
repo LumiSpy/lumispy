@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-from pytest import raises, mark, skip
 from numpy import arange, ones
 from numpy.testing import assert_allclose
+from pytest import raises, mark, skip, warns
 from inspect import getfullargspec
 
 from hyperspy.axes import DataAxis
@@ -67,12 +67,20 @@ def test_axis2eV():
     assert_allclose(evaxis.axis[0], 3.1781816)
 
 def test_data2eV():
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        skip("HyperSpy version doesn't support non-uniform axis")
+
     data = 100*ones(20)
-    factor = 1e6
-    ax0 = arange(200,400,10)
-    evaxis = nm2eV(ax0)
-    evdata = data2eV(data, factor, ax0,evaxis)
-    assert_allclose(evdata[-1], 12.27066795)
+    ax0 = DataAxis(axis = arange(200,400,10), units ='nm')
+    evaxis, factor = axis2eV(ax0)
+    evdata = data2eV(data, factor, ax0, evaxis.axis)
+    assert_allclose(evdata[0], 12.271168)
+    ax0 = DataAxis(axis = arange(0.2,0.4,0.01), units ='µm')
+    evaxis, factor = axis2eV(ax0)
+    evdata = data2eV(data, factor, ax0, evaxis.axis)
+    assert_allclose(evdata[0], 12.271168e-3)
 
 @mark.parametrize(("jacobian"), (True,False))
 def test_to_eV(jacobian):
