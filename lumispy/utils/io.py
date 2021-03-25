@@ -19,14 +19,14 @@
 import numpy as np
 
 SAVETXT_DOCSTRING = \
-    """Write data to text file. 
-        
+    """
     Writes single spectra to a two-column data file with signal axis as
         X and data as Y.
-    Writes linescan data to file with signal axis as first column and
-        navigation axis as first row.
-    Writes ...
-    
+    Writes linescan data to file with signal axis as first row and
+        navigation axis as first column (flipped if `transpose=True`)."""
+
+SAVETXT_PARAMETERS = \
+    """
     Parameters
     ----------
     filename : string
@@ -34,18 +34,23 @@ SAVETXT_DOCSTRING = \
         A single or sequence of format strings. Default is '%.5f'.
     delimiter : str, optional
         String or character separating columns. Default is ','
+    axes : bool, optional
+        If True (default), include axes in saved false. If False, save the data
+        array only.
+    transpose : bool, optional
+        If True, transpose data array and exchange axes. Default is false.
+        Ignored for single spectra.
     **kwargs 
         Takes any additional arguments of numpy.loadtxt, e.g. `newline`
         `header`, `footer`, `comments`, or `encoding`.
 
     See also
     --------
-    numpy.savetxt
-    
-    """
+    numpy.savetxt"""
 
-SAVETXT_DOCSTRING_EXAMPLE = \
-    """Examples
+SAVETXT_EXAMPLE = \
+    """
+    Examples
     --------
     >>> import lumispy as lum
     >>> import numpy as np
@@ -71,8 +76,15 @@ SAVETXT_DOCSTRING_EXAMPLE = \
     """
 
 
-def savetxt(S, filename, fmt='%.5f', delimiter='\t', **kwargs):
-    """%s
+def savetxt(S, filename, fmt='%.5f', delimiter='\t', axes=True,
+            transpose=False, **kwargs):
+    """Writes signal object to simple text file.
+    %s
+    Writes image to file with the navigation axes as first column and first
+        row.
+    Writes 2D data (e.g. map of a fit parameter value) to file with the signal
+        axes as first column and first row.
+    %s
     %s
     """
     nav_axes = S.axes_manager.navigation_axes
@@ -80,32 +92,40 @@ def savetxt(S, filename, fmt='%.5f', delimiter='\t', **kwargs):
     dim = len(nav_axes) + len(sig_axes)
     # Write single spectrum or data with only navigation axis
     if dim == 1:
-        if len(sig_axes) == 1:
-            X = sig_axes[0].axis
+        if axes:
+            if len(sig_axes) == 1:
+                X = sig_axes[0].axis
+            else:
+                X = nav_axes[0].axis
+            output = np.array([X,S.data]).T
         else:
-            X = nav_axes[0].axis
-        Y = S.data
-        np.savetxt(filename, np.array([X,Y]).T, fmt=fmt,
-                   delimiter=delimiter, **kwargs)
+            output = S.data
+        np.savetxt(filename, output, fmt=fmt, delimiter=delimiter, **kwargs)
     # Write linescan or matrix
     elif dim == 2:
-        if len(sig_axes) == 1:
-            X = np.concatenate(([0],sig_axes[0].axis))
-            X.shape = (X.size,1)
-            Y = nav_axes[0].axis
-        elif len(nav_axes) == 0: # TODO: check if axis order is correct
-            X = np.concatenate(([0],sig_axes[0].axis))
-            X.shape = (X.size,1)
-            Y = sig_axes[1].axis
-        else: # TODO: check if axis order is correct
-            X = np.concatenate(([0],nav_axes[0].axis))
-            X.shape = (X.size,1)
-            Y = nav_axes[1].axis
-        Z = np.hstack((X, np.vstack((Y, np.transpose(S.data)))))
-        np.savetxt(filename, Z, fmt=fmt, delimiter=delimiter, **kwargs)
-    # TODO make axes optional
+        if axes:
+            if len(sig_axes) == 1:
+                X = np.concatenate(([0],sig_axes[0].axis))
+                Y = nav_axes[0].axis
+            elif len(nav_axes) == 0:
+                X = np.concatenate(([0],sig_axes[0].axis))
+                Y = sig_axes[1].axis
+            else:
+                X = np.concatenate(([0],nav_axes[0].axis))
+                Y = nav_axes[1].axis
+            if transpose:
+                output = np.hstack((X.reshape(X.size,1), 
+                                    np.vstack((Y, np.transpose(S.data)))))
+            else:
+                output = np.vstack((X, np.hstack((Y.reshape(Y.size,1), S.data))))
+        else:
+            if transpose:
+                output = np.transpose(S.data)
+            else: 
+                output = S.data
+        np.savetxt(filename, output, fmt=fmt, delimiter=delimiter, **kwargs)
     else:
         raise NotImplementedError("The savetxt function currently handles a "
                                    "maximum of two axes.")
 
-savetxt.__doc__ %= (SAVETXT_DOCSTRING, SAVETXT_DOCSTRING_EXAMPLE)
+savetxt.__doc__ %= (SAVETXT_DOCSTRING, SAVETXT_PARAMETERS, SAVETXT_EXAMPLE)

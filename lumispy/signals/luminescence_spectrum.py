@@ -31,7 +31,7 @@ from hyperspy.axes import DataAxis
 from lumispy.signals.common_luminescence import CommonLumi
 from lumispy.utils import axis2eV, data2eV, axis2invcm, data2invcm
 from lumispy import nm2invcm, savetxt
-from lumispy.utils.io import SAVETXT_DOCSTRING
+from lumispy.utils.io import SAVETXT_DOCSTRING, SAVETXT_PARAMETERS
 
 
 class LumiSpectrum(Signal1D, CommonLumi):
@@ -341,40 +341,43 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 return self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True)
 
 
-    SAVETXT_DOCSTRING_EXAMPLE = \
-        """Examples
-        --------
-        >>> import lumispy as lum
-        >>> import numpy as np
-        
-        # Spectrum:
-        >>> s = lum.signals.LumiSpectrum(np.arange(5))
-        >>> s.savetxt('spectrum.txt')
-        # 0.00000	0.00000
-        # 1.00000	1.00000
-        # 2.00000	2.00000
-        # 3.00000	3.00000
-        # 4.00000	4.00000
-        
-        # Linescan:
-        >>> l = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
-        >>> l.savetxt('linescan.txt')
-        # 0.00000	0.00000	1.00000	2.00000	3.00000	4.00000
-        # 0.00000	0.00000	5.00000	10.00000	15.00000	20.00000
-        # 1.00000	1.00000	6.00000	11.00000	16.00000	21.00000
-        # 2.00000	2.00000	7.00000	12.00000	17.00000	22.00000
-        # 3.00000	3.00000	8.00000	13.00000	18.00000	23.00000
-        # 4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
-        
-        """
+    SAVETXT_EXAMPLE = \
+    """
+    Examples
+    --------
+    >>> import lumispy as lum
+    >>> import numpy as np
+    
+    # Spectrum:
+    >>> s = lum.signals.LumiSpectrum(np.arange(5))
+    >>> s.savetxt('spectrum.txt')
+    # 0.00000	0.00000
+    # 1.00000	1.00000
+    # 2.00000	2.00000
+    # 3.00000	3.00000
+    # 4.00000	4.00000
+    
+    # Linescan:
+    >>> l = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
+    >>> l.savetxt('linescan.txt')
+    # 0.00000	0.00000	1.00000	2.00000	3.00000	4.00000
+    # 0.00000	0.00000	5.00000	10.00000	15.00000	20.00000
+    # 1.00000	1.00000	6.00000	11.00000	16.00000	21.00000
+    # 2.00000	2.00000	7.00000	12.00000	17.00000	22.00000
+    # 3.00000	3.00000	8.00000	13.00000	18.00000	23.00000
+    # 4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
+    """
 
-    def savetxt(self, filename, fmt='%.5f', delimiter='\t', **kwargs):
-        """%s
+    def savetxt(self, filename, fmt='%.5f', delimiter='\t', axes=True,
+                transpose=False, **kwargs):
+        """Writes luminescence spectrum object to simple text file.
+        %s
+        %s
         %s
         """
-        savetxt(self, filename, fmt, delimiter, **kwargs)
+        savetxt(self, filename, fmt, delimiter, axes, transpose, **kwargs)
         
-    savetxt.__doc__ %= (SAVETXT_DOCSTRING, SAVETXT_DOCSTRING_EXAMPLE)
+    savetxt.__doc__ %= (SAVETXT_DOCSTRING, SAVETXT_PARAMETERS, SAVETXT_EXAMPLE)
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
