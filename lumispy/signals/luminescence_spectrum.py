@@ -18,7 +18,7 @@
 
 """Signal class for Luminescence spectral data (1D).
 """
-
+import warnings
 from inspect import getfullargspec
 from warnings import warn
 import numpy as np
@@ -29,8 +29,9 @@ from hyperspy._signals.lazy import LazySignal
 from hyperspy.axes import DataAxis
 
 from lumispy.signals.common_luminescence import CommonLumi
-from lumispy.utils import axis2eV, data2eV, axis2invcm, data2invcm
 from lumispy import nm2invcm, savetxt
+from lumispy.utils import axis2eV, data2eV, axis2invcm, data2invcm, 
+                solve_grating_equation, GRATING_EQUATION_DOCSTRING_PARAMETERS
 from lumispy.utils.io import SAVETXT_DOCSTRING, SAVETXT_PARAMETERS
 
 
@@ -382,6 +383,49 @@ class LumiSpectrum(Signal1D, CommonLumi):
         savetxt(self, filename, fmt, delimiter, axes, transpose, **kwargs)
         
     savetxt.__doc__ %= (SAVETXT_DOCSTRING, SAVETXT_PARAMETERS, SAVETXT_EXAMPLE)
+
+
+    def px_to_nm_grating_solver(self, gamma_deg, deviation_angle_deg, focal_length_mm, ccd_width_mm,
+                           grating_central_wavelength_nm, grating_density_gr_mm, inplace=False,):
+        """
+        Converts signal axis of 1D signal (in pixels) to wavelength, solving the grating
+        equation.
+        See ``lumispy.axes.solve_grating_equation` for more details.
+
+        Parameters
+        ----------------
+        %s
+        inplace : bool
+            If False, it returns a new object with the transformation. If True,
+            the original object is transformed, returning no object.
+
+        Returns
+        ---------------
+        signal : LumiSpectrum
+            A signal with calibrated wavelength units.
+
+        Example
+        -------
+        > s = LumiSpectrum(np.ones(20),))
+        > s.px_to_nm_grating_solver(*params, inplace=True)
+        > s.axes_manager.signal_axes[0].units == 'nm'
+        """
+
+        nm_axis = solve_grating_equation(self.axes_manager.signal_axes[0],
+                                         gamma_deg, deviation_angle_deg, focal_length_mm, ccd_width_mm,
+                                         grating_central_wavelength_nm, grating_density_gr_mm)
+
+        if inplace:
+            s = self
+        else:
+            s = self.deepcopy()
+
+        s.axes_manager.remove(-1)
+        s.axes_manager._axes.append(nm_axis)
+
+        return s
+
+    px_to_nm_grating_solver.__doc__ %= GRATING_EQUATION_DOCSTRING_PARAMETERS
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):

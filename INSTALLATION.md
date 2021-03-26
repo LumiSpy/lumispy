@@ -18,21 +18,10 @@ environment:
 
 ### 2) Installing the package in the new environment
 
-Now that you have created a new environment, install the package:
-
-1. Download the [source code](https://github.com/lumispy/lumispy) and put it 
-in a directory on your computer (by default, GitHub saves it in 
-`Username\Documents\GitHub\lumispy`).
-2. Load the anaconda prompt.
-3. Change current working directory to the folder where you downloaded the 
-source code.
-4. Activate the lumispy environment.
-5. Install the package running:
-
+Now activate the lumispy environment and install the package using pip:
 ```
-    $ cd PATH_TO_SOURCE_CODE
     $ conda activate lumispy
-    $ pip install .
+    $ pip install lumispy
 ```
 
 Installation is completed! To start using it, check the next section.
@@ -43,19 +32,15 @@ In order to convert your signal luminescence axes (normally in wavelength in nan
 
 To do that, follow these steps:
 
-1. Download the [development hyperspy source code](https://github.com/hyperspy/hyperspy/tree/non_uniform_axes) and put it 
-in a directory on your computer (by default, GitHub saves it in 
-`Username\Documents\GitHub\hyperspy`).
-2. Load the anaconda prompt.
-3. Change current working directory to the folder where you downloaded the 
-source code (using `cd path`).
-4. Activate the lumispy environment using `conda activate lumispy`).
-5. Reinstall the hyperspy package running:
+1. Load the anaconda prompt.
+2. Activate the lumispy environment using `conda activate lumispy`).
+5. Install `git` and reinstall the hyperspy package running:
 
 ```
-    $ cd PATH_TO_HYPERSPY_DEV_SOURCE_CODE
     $ conda activate lumispy
-    $ pip install -e ./
+    $ conda install git -y
+    $ pip uninstall hyperspy -y
+    $ pip install git+git://github.com/hyperspy/hyperspy@non_uniform_axes
 ```
 
 Now you are ready to use all the functionalites of lumispy.

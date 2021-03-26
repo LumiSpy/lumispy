@@ -15,13 +15,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
+from unittest import TestCase
 
 from numpy import arange, ones
 from numpy.testing import assert_allclose
 from pytest import raises, mark, skip, warns
 from inspect import getfullargspec
 
-from hyperspy.axes import DataAxis
+from hyperspy.axes import *
 
 from lumispy.signals import LumiSpectrum, CLSEMSpectrum
 from lumispy.utils.axes import *
@@ -278,3 +279,37 @@ def test_to_invcm_relative(jacobian):
     assert M1.axes_manager.signal_axes[0].axis[0] == \
            M2.axes_manager.signal_axes[0].axis[0]
     assert_allclose(M1.data, M2.data, 5e-4)
+
+
+def test_solve_grating_equation():
+    # Check which version of hyperspy is installed
+    if 'scale' in getfullargspec(DataAxis)[0]:
+        axis_class = DataAxis
+    else:
+        axis_class = UniformDataAxis
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        # Trigger a warning.
+        axis = axis_class(size=20, offset=200, scale=10, units='nm')
+        solve_grating_equation(axis, 3, -20, 300, 25, 600, 150)
+        # Verify some things
+        assert len(w) == 1
+        assert issubclass(w[-1].category, SyntaxWarning)
+        assert "(not in pixel units)" in str(w[-1].message)
+
+    axis1 = axis_class(size=10, offset=200, scale=10,)
+    axis2 = axis_class(size=10, offset=200, scale=10, units='px')
+
+    nm_axis1 = solve_grating_equation(axis1, 3, -20, 300, 25, 600, 150)
+    nm_axis2 = solve_grating_equation(axis2, 1, 1, 1, 1, 1, 1)
+
+    assert nm_axis1.name == 'Wavelength'
+    assert nm_axis1.units == 'nm'
+    assert nm_axis2.name == 'Wavelength'
+    assert nm_axis2.units == 'nm'
+
+    assert_allclose(nm_axis1.axis[0], 368.614, atol=0.1)
+    assert_allclose(nm_axis1.axis[-1], 768.249, atol=0.1)
+    assert_allclose(nm_axis2.axis[0], 411559.839, atol=0.1)
+    assert_allclose(nm_axis2.axis[-1], 321785.967, atol=0.1)
