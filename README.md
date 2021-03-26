@@ -3,6 +3,7 @@
 [![Build Status](https://dev.azure.com/Lumispy/lumispy/_apis/build/status/LumiSpy.lumispy?branchName=master)](https://dev.azure.com/Lumispy/lumispy/_build/latest?definitionId=3&branchName=master)
 ![Tests](https://github.com/lumispy/lumispy/workflows/Tests/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/LumiSpy/lumispy/badge.svg?branch=master)](https://coveralls.io/github/LumiSpy/lumispy?branch=master)
+[![DOI](https://zenodo.org/badge/222482347.svg)](https://zenodo.org/badge/latestdoi/222482347)
 
 LumiSpy is an extension Python package for multi-dimensional data analysis 
 provided by the [HyperSpy](http://hyperspy.org) library. It is aimed at helping 
