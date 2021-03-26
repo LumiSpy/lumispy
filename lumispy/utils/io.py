@@ -94,10 +94,10 @@ def savetxt(S, filename, fmt='%.5f', delimiter='\t', axes=True,
     if dim == 1:
         if axes:
             if len(sig_axes) == 1:
-                X = sig_axes[0].axis
+                x = sig_axes[0].axis
             else:
-                X = nav_axes[0].axis
-            output = np.array([X,S.data]).T
+                x = nav_axes[0].axis
+            output = np.array([x,S.data]).T
         else:
             output = S.data
         np.savetxt(filename, output, fmt=fmt, delimiter=delimiter, **kwargs)
@@ -105,19 +105,19 @@ def savetxt(S, filename, fmt='%.5f', delimiter='\t', axes=True,
     elif dim == 2:
         if axes:
             if len(sig_axes) == 1:
-                X = np.concatenate(([0],sig_axes[0].axis))
-                Y = nav_axes[0].axis
+                x = np.concatenate(([0],sig_axes[0].axis))
+                y = nav_axes[0].axis
             elif len(nav_axes) == 0:
-                X = np.concatenate(([0],sig_axes[0].axis))
-                Y = sig_axes[1].axis
+                x = np.concatenate(([0],sig_axes[0].axis))
+                y = sig_axes[1].axis
             else:
-                X = np.concatenate(([0],nav_axes[0].axis))
-                Y = nav_axes[1].axis
+                x = np.concatenate(([0],nav_axes[0].axis))
+                y = nav_axes[1].axis
             if transpose:
-                output = np.hstack((X.reshape(X.size,1), 
-                                    np.vstack((Y, np.transpose(S.data)))))
+                output = np.hstack((x.reshape(x.size,1), 
+                                    np.vstack((y, np.transpose(S.data)))))
             else:
-                output = np.vstack((X, np.hstack((Y.reshape(Y.size,1), S.data))))
+                output = np.vstack((x, np.hstack((y.reshape(y.size,1), S.data))))
         else:
             if transpose:
                 output = np.transpose(S.data)
