@@ -2,7 +2,7 @@
 
 [![Build Status](https://dev.azure.com/Lumispy/lumispy/_apis/build/status/LumiSpy.lumispy?branchName=master)](https://dev.azure.com/Lumispy/lumispy/_build/latest?definitionId=3&branchName=master)
 ![Tests](https://github.com/lumispy/lumispy/workflows/Tests/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/LumiSpy/lumispy/badge.svg?branch=master)](https://coveralls.io/github/LumiSpy/lumispy?branch=master)
+[![Codecov Status](https://codecov.io/gh/lumispy/lumispy/branch/master/graph/badge.svg?token=8ZFX8X4Z1I)](https://codecov.io/gh/lumispy/lumispy)
 
 [![Python Version](https://img.shields.io/pypi/pyversions/lumispy.svg?style=flat)](https://pypi.python.org/pypi/lumispy)
 [![PyPi Version](http://img.shields.io/pypi/v/lumispy.svg?style=flat)](https://pypi.python.org/pypi/lumispy)
