@@ -4,6 +4,7 @@
 ![Tests](https://github.com/lumispy/lumispy/workflows/Tests/badge.svg)
 [![Codecov Status](https://codecov.io/gh/lumispy/lumispy/branch/master/graph/badge.svg?token=8ZFX8X4Z1I)](https://codecov.io/gh/lumispy/lumispy)
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python Version](https://img.shields.io/pypi/pyversions/lumispy.svg?style=flat)](https://pypi.python.org/pypi/lumispy)
 [![PyPi Version](http://img.shields.io/pypi/v/lumispy.svg?style=flat)](https://pypi.python.org/pypi/lumispy)
 [![DOI](https://zenodo.org/badge/222482347.svg)](https://zenodo.org/badge/latestdoi/222482347)
@@ -13,11 +14,8 @@ provided by the [HyperSpy](http://hyperspy.org) library. It is aimed at helping
 with the analysis of luminescence spectroscopy data (cathodoluminescence, 
 photoluminescence, electroluminescence, Raman, SNOM).
 
-LumiSpy is released under the GPL v3 license. 
-
 If analysis using LumiSpy forms a part of published work please consider 
-recognising the code development by citing the
-[github repository](www.github.com/lumispy/lumispy).
+recognising the code development by citing the project using the [Zenodo-DOI](https://zenodo.org/badge/latestdoi/222482347).
 
 Instructions on how to install LumiSpy and get started: [installation guide](www.github.com/lumispy/lumispy/blob/master/INSTALLATION.md).
 
