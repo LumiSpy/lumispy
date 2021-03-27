@@ -17,7 +17,7 @@ photoluminescence, electroluminescence, Raman, SNOM).
 If analysis using LumiSpy forms a part of published work please consider 
 recognising the code development by citing the project using the [Zenodo-DOI](https://zenodo.org/badge/latestdoi/222482347).
 
-Instructions on how to install LumiSpy and get started: [installation guide](www.github.com/lumispy/lumispy/blob/master/INSTALLATION.md).
+Instructions on how to install LumiSpy and get started: [installation guide](INSTALLATION.md).
 
 [Tutorials and example workflows](https://github.com/lumispy/lumispy-demos)
 have been curated as a series of Jupyter notebooks that you can work through 
@@ -28,4 +28,4 @@ and modify to perform many common analyses. Simply:
 3. In Jupyter lab, navigate to the folder and start using the notebook
 
 Everyone is welcome to contribute. Please read our
-[contributing guidelines](https://github.com/lumispy/lumispy/blob/master/.github/CONTRIBUTING.md) and get started!
+[contributing guidelines](CONTRIBUTING.md) and get started!
