@@ -28,4 +28,4 @@ and modify to perform many common analyses. Simply:
 3. In Jupyter lab, navigate to the folder and start using the notebook
 
 Everyone is welcome to contribute. Please read our
-[contributing guidelines](CONTRIBUTING.md) and get started!
+[contributing guidelines](.github/CONTRIBUTING.md) and get started!
