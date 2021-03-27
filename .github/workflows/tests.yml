@@ -20,7 +20,7 @@ jobs:
         include:
           - PYTHON_VERSION: 3.8
             PIP_SELECTOR: '[tests, coverage]'
-            PYTEST_ARGS_COVERAGE: --cov=lumispy
+            PYTEST_ARGS_COVERAGE: --cov=lumispy. --cov-report=xml
             LABEL: /coverage
     steps:
       - uses: actions/checkout@v2
@@ -51,6 +51,6 @@ jobs:
         run: |
           pytest ${{ env.PYTEST_ARGS }} ${{ matrix.PYTEST_ARGS_COVERAGE }}
 
-      - name: Coveralls
+      - name: Upload coverage to Codecov
         if: ${{ always() }} && ${{ matrix.PYTEST_ARGS_COVERAGE }} 
-        uses: AndreMiras/coveralls-python-action@develop
+        uses: codecov/codecov-action@v1
