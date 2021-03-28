@@ -28,6 +28,37 @@ from lumispy import savetxt
 
 
 @mark.parametrize('axes', (True, False))
+def test_to_array_spectrum(axes):
+    s = LumiSpectrum(arange(5))
+    a = s.to_array(axes=axes)
+    if axes:
+        assert_array_equal(s.axes_manager[0].axis,a[:,0])
+    else:
+        assert_array_equal(s.data,a)
+
+
+@mark.parametrize('axes', (True, False))
+@mark.parametrize('transpose', (True, False))
+def test_to_array_linescan(axes, transpose):
+    s = LumiSpectrum(arange(20).reshape((4,5)))
+    a = s.to_array(axes=axes, transpose=transpose)
+    if axes:
+        if transpose:
+            assert_array_equal(s.axes_manager[0].axis,a[0,1:])
+            assert_array_equal(s.axes_manager[1].axis,a[1:,0])
+            assert_array_equal(s.data.T,a[1:,1:])
+        else:
+            assert_array_equal(s.axes_manager[1].axis,a[0,1:])
+            assert_array_equal(s.axes_manager[0].axis,a[1:,0])
+            assert_array_equal(s.data,a[1:,1:])
+    else:
+        if transpose:
+            assert_array_equal(s.data.T,a)
+        else:
+            assert_array_equal(s.data,a)
+
+
+@mark.parametrize('axes', (True, False))
 def test_savetxt_spectrum(axes, tmp_path):
     s = LumiSpectrum(arange(5))
     fname = tmp_path / 'test.txt'
@@ -128,3 +159,8 @@ def test_savetxt_dimension_error(tmp_path):
     fname = tmp_path / 'test.txt'
     with raises(NotImplementedError):
         s.savetxt('fname')
+
+def test_to_array_dimension_error():
+    s = LumiSpectrum(arange(60).reshape((3,4,5)))
+    with raises(NotImplementedError):
+        s.to_array()

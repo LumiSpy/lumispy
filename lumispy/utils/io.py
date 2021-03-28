@@ -35,7 +35,7 @@ SAVETXT_PARAMETERS = \
     delimiter : str, optional
         String or character separating columns. Default is ','
     axes : bool, optional
-        If True (default), include axes in saved false. If False, save the data
+        If True (default), include axes in saved file. If False, save the data
         array only.
     transpose : bool, optional
         If True, transpose data array and exchange axes. Default is false.
@@ -56,8 +56,8 @@ SAVETXT_EXAMPLE = \
     >>> import numpy as np
     
     # Spectrum:
-    >>> s = lum.signals.LumiSpectrum(np.arange(5))
-    >>> lum.savetxt(s, 'spectrum.txt')
+    >>> S = lum.signals.LumiSpectrum(np.arange(5))
+    >>> lum.savetxt(S, 'spectrum.txt')
     # 0.00000	0.00000
     # 1.00000	1.00000
     # 2.00000	2.00000
@@ -65,8 +65,8 @@ SAVETXT_EXAMPLE = \
     # 4.00000	4.00000
     
     # Linescan:
-    >>> l = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
-    >>> lum.savetxt(l, 'linescan.txt')
+    >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
+    >>> lum.savetxt(L, 'linescan.txt')
     # 0.00000	0.00000	1.00000	2.00000	3.00000	4.00000
     # 0.00000	0.00000	5.00000	10.00000	15.00000	20.00000
     # 1.00000	1.00000	6.00000	11.00000	16.00000	21.00000
@@ -75,14 +75,66 @@ SAVETXT_EXAMPLE = \
     # 4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
     """
 
+TOARRAY_DOCSTRING = \
+    """
+    
+    Returns single spectra as two-column array.
+    Returns linescan data as array with signal axis as first row and
+        navigation axis as first column (flipped if `transpose=True`)."""
 
-def savetxt(S, filename, fmt='%.5f', delimiter='\t', axes=True,
-            transpose=False, **kwargs):
-    """Writes signal object to simple text file.
+TOARRAY_PARAMETERS = \
+    """
+    Parameters
+    ----------
+    axes : bool, optional
+        If True (default), include axes in array. If False, return the data
+        array only.
+    transpose : bool, optional
+        If True, transpose data array and exchange axes. Default is false.
+        Ignored for single spectra.
+    **kwargs 
+        Takes any additional arguments of numpy.loadtxt, e.g. `newline`
+        `header`, `footer`, `comments`, or `encoding`."""
+
+TOARRAY_EXAMPLE = \
+    """
+    Note
+    --------
+    The output of this function can be used to convert a signal object to a
+    pandas dataframe, e.g. using `df = pd.Dataframe(lum.to_array(S))`.
+    
+    Examples
+    --------
+    >>> import lumispy as lum
+    >>> import numpy as np
+    
+    # Spectrum:
+    >>> S = lum.signals.LumiSpectrum(np.arange(5))
+    >>> lum.to_array(S)
+    # array([[0., 0.],
+    #    [1., 1.],
+    #    [2., 2.],
+    #    [3., 3.],
+    #    [4., 4.]])
+    
+    # Linescan:
+    >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
+    >>> lum.to_array(L)
+    # array([[ 0.,  0.,  1.,  2.,  3.,  4.],
+    #    [ 0.,  0.,  1.,  2.,  3.,  4.],
+    #    [ 1.,  5.,  6.,  7.,  8.,  9.],
+    #    [ 2., 10., 11., 12., 13., 14.],
+    #    [ 3., 15., 16., 17., 18., 19.],
+    #    [ 4., 20., 21., 22., 23., 24.]])
+    """
+
+
+def to_array(S, axes=True, transpose=False):
+    """Returns signal object as numpy array (optionally including the axes).
     %s
-    Writes image to file with the navigation axes as first column and first
+    Returns image as array with the navigation axes as first column and first
         row.
-    Writes 2D data (e.g. map of a fit parameter value) to file with the signal
+    Returns 2D data (e.g. map of a fit parameter value) as array with the signal
         axes as first column and first row.
     %s
     %s
@@ -90,7 +142,7 @@ def savetxt(S, filename, fmt='%.5f', delimiter='\t', axes=True,
     nav_axes = S.axes_manager.navigation_axes
     sig_axes = S.axes_manager.signal_axes
     dim = len(nav_axes) + len(sig_axes)
-    # Write single spectrum or data with only navigation axis
+    # Convert single spectrum or data with only navigation axis
     if dim == 1:
         if axes:
             if len(sig_axes) == 1:
@@ -100,8 +152,7 @@ def savetxt(S, filename, fmt='%.5f', delimiter='\t', axes=True,
             output = np.array([x,S.data]).T
         else:
             output = S.data
-        np.savetxt(filename, output, fmt=fmt, delimiter=delimiter, **kwargs)
-    # Write linescan or matrix
+    # Convert linescan or matrix
     elif dim == 2:
         if axes:
             if len(sig_axes) == 1:
@@ -123,6 +174,28 @@ def savetxt(S, filename, fmt='%.5f', delimiter='\t', axes=True,
                 output = np.transpose(S.data)
             else: 
                 output = S.data
+    else:
+        raise NotImplementedError("The to_array function currently handles a "
+                                   "maximum of two axes.")
+    return output
+
+to_array.__doc__ %= (TOARRAY_DOCSTRING, TOARRAY_PARAMETERS, TOARRAY_EXAMPLE)
+
+
+def savetxt(S, filename, fmt='%.5f', delimiter='\t', axes=True,
+            transpose=False, **kwargs):
+    """Writes signal object to simple text file.
+    %s
+    Writes image to file with the navigation axes as first column and first
+        row.
+    Writes 2D data (e.g. map of a fit parameter value) to file with the signal
+        axes as first column and first row.
+    %s
+    %s
+    """
+    dim = len(S.axes_manager.signal_axes) + len(S.axes_manager.navigation_axes)
+    if dim <= 2:
+        output = to_array(S, axes, transpose)
         np.savetxt(filename, output, fmt=fmt, delimiter=delimiter, **kwargs)
     else:
         raise NotImplementedError("The savetxt function currently handles a "
