@@ -22,6 +22,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 from lumispy.utils.axes import nm2eV, eV2nm, nm2invcm, invcm2nm, join_spectra
+from lumispy.utils.plot import plot_linescan
 
 from lumispy import signals
 from lumispy import components
