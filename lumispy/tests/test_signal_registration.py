@@ -21,16 +21,19 @@ from numpy import arange
 
 from hyperspy.signals import Signal1D, Signal2D
 
-from lumispy.signals import (LumiSpectrum, CLSpectrum, CLSEMSpectrum, CLSTEMSpectrum,
-                     PLSpectrum, ELSpectrum, LumiTransient, LazyLumiSpectrum,
-                     LazyCLSpectrum, LazyCLSEMSpectrum, LazyCLSTEMSpectrum,
-                     LazyPLSpectrum, LazyELSpectrum, LazyLumiTransient)
+from lumispy.signals import (LumiSpectrum, CLSpectrum, CLSEMSpectrum,
+                     CLSTEMSpectrum, PLSpectrum, ELSpectrum, LumiTransient,
+                     CLTransient, PLTransient, LazyLumiSpectrum, LazyCLSpectrum,
+                     LazyCLSEMSpectrum, LazyCLSTEMSpectrum, LazyPLSpectrum, 
+                     LazyELSpectrum, LazyLumiTransient, LazyCLTransient,
+                     LazyPLTransient)
 
 signal1d_class_list = [LumiSpectrum, CLSpectrum, CLSEMSpectrum, CLSTEMSpectrum,
                        PLSpectrum, ELSpectrum, LazyLumiSpectrum,
                        LazyCLSpectrum, LazyCLSEMSpectrum, LazyCLSTEMSpectrum,
                        LazyPLSpectrum, LazyELSpectrum]
-signal2d_class_list = [LumiTransient, LazyLumiTransient]
+signal2d_class_list = [LumiTransient, CLTransient, PLTransient, 
+                       LazyLumiTransient, LazyCLTransient, LazyPLTransient]
 
 
 @pytest.mark.parametrize("signal_class", signal1d_class_list)
