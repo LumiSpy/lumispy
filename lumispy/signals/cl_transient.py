@@ -22,19 +22,19 @@
 from hyperspy.signals import Signal2D
 from hyperspy._signals.lazy import LazySignal
 
-from lumispy.signals.common_luminescence import CommonLumi
+from lumispy.signals.luminescence_transient import LumiTransient
 
 
-class LumiTransient(Signal2D, CommonLumi):
-    """General 2D luminescence signal class (transient/time resolved).
+class CLTransient(LumiTransient):
+    """CL 2D luminescence signal class (transient/time resolved).
     """
-    _signal_type = "Luminescence"
+    _signal_type = "TRCL"
     _signal_dimension = 2
 
     pass
 
 
-class LazyLumiTransient(LazySignal, LumiTransient):
+class LazyCLTransient(LazySignal, CLTransient):
     _lazy = True
 
     pass
