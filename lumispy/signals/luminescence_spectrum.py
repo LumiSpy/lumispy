@@ -29,9 +29,11 @@ from hyperspy._signals.lazy import LazySignal
 from hyperspy.axes import DataAxis
 
 from lumispy.signals.common_luminescence import CommonLumi
-from lumispy.utils import axis2eV, data2eV, axis2invcm, data2invcm, solve_grating_equation, \
-    GRATING_EQUATION_DOCSTRING_PARAMETERS
-from lumispy import nm2invcm
+from lumispy import nm2invcm, to_array, savetxt
+from lumispy.utils import ( axis2eV, data2eV, axis2invcm, data2invcm, 
+                solve_grating_equation, GRATING_EQUATION_DOCSTRING_PARAMETERS )
+from lumispy.utils.io import ( SAVETXT_DOCSTRING, SAVETXT_PARAMETERS,
+                TOARRAY_DOCSTRING, TOARRAY_PARAMETERS )
 
 
 class LumiSpectrum(Signal1D, CommonLumi):
@@ -137,8 +139,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
             least for luminescence signals), but the transformation can be
             suppressed by setting this option to `False`.
 
-        Example
-        -------
+        Examples
+        --------
         > import numpy as np
         > from lumispy import LumiSpectrum
         > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
@@ -213,8 +215,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
             least for luminescence signals), but the transformation can be
             suppressed by setting this option to `False`.
 
-        Example
-        -------
+        Examples
+        --------
         > import numpy as np
         > from lumispy import LumiSpectrum
         > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
@@ -343,6 +345,89 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 self.metadata.set_item("Signal.background_subtracted", True)
                 self.metadata.set_item("Signal.background", bkg_y)
                 return self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True)
+
+
+    SAVETXT_EXAMPLE = \
+    """
+    Examples
+    --------
+    >>> import lumispy as lum
+    >>> import numpy as np
+    
+    # Spectrum:
+    >>> S = lum.signals.LumiSpectrum(np.arange(5))
+    >>> S.savetxt('spectrum.txt')
+    # 0.00000	0.00000
+    # 1.00000	1.00000
+    # 2.00000	2.00000
+    # 3.00000	3.00000
+    # 4.00000	4.00000
+    
+    # Linescan:
+    >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
+    >>> L.savetxt('linescan.txt')
+    # 0.00000	0.00000	1.00000	2.00000	3.00000	4.00000
+    # 0.00000	0.00000	5.00000	10.00000	15.00000	20.00000
+    # 1.00000	1.00000	6.00000	11.00000	16.00000	21.00000
+    # 2.00000	2.00000	7.00000	12.00000	17.00000	22.00000
+    # 3.00000	3.00000	8.00000	13.00000	18.00000	23.00000
+    # 4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
+    """
+
+    def savetxt(self, filename, fmt='%.5f', delimiter='\t', axes=True,
+                transpose=False, **kwargs):
+        """Writes luminescence spectrum object to simple text file.
+        %s
+        %s
+        %s
+        """
+        savetxt(self, filename, fmt, delimiter, axes, transpose, **kwargs)
+        
+    savetxt.__doc__ %= (SAVETXT_DOCSTRING, SAVETXT_PARAMETERS, SAVETXT_EXAMPLE)
+
+
+    TOARRAY_EXAMPLE = \
+    """
+    Note
+    --------
+    The output of this function can be used to convert a signal object to a
+    pandas dataframe, e.g. using `df = pd.Dataframe(S.to_array())`.
+    
+    Examples
+    --------
+    >>> import lumispy as lum
+    >>> import numpy as np
+    
+    # Spectrum:
+    >>> S = lum.signals.LumiSpectrum(np.arange(5))
+    >>> S.to_array()
+    # array([[0., 0.],
+    #    [1., 1.],
+    #    [2., 2.],
+    #    [3., 3.],
+    #    [4., 4.]])
+    
+    # Linescan:
+    >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
+    >>> L.to_array()
+    # array([[ 0.,  0.,  1.,  2.,  3.,  4.],
+    #    [ 0.,  0.,  1.,  2.,  3.,  4.],
+    #    [ 1.,  5.,  6.,  7.,  8.,  9.],
+    #    [ 2., 10., 11., 12., 13., 14.],
+    #    [ 3., 15., 16., 17., 18., 19.],
+    #    [ 4., 20., 21., 22., 23., 24.]])
+    """
+
+    def to_array(self, axes=True, transpose=False):
+        """Returns luminescence spectrum object as numpy array (optionally
+        including the axes).
+        %s
+        %s
+        %s
+        """
+        return to_array(self, axes, transpose)
+        
+    to_array.__doc__ %= (TOARRAY_DOCSTRING, TOARRAY_PARAMETERS, TOARRAY_EXAMPLE)
 
 
     def px_to_nm_grating_solver(self, gamma_deg, deviation_angle_deg, focal_length_mm, ccd_width_mm,

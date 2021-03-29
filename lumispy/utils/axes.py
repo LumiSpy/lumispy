@@ -35,9 +35,7 @@ from hyperspy.axes import *
 
 def _n_air(x):
     """Refractive index of air as a function of WL in nm.
-
     This analytical function is correct for the range 185-1700 nm.
-
     According to `E.R. Peck and K. Reeder. Dispersion of air, 
     J. Opt. Soc. Am. 62, 958-962 (1972).`
     """
