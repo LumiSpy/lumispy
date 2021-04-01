@@ -78,7 +78,7 @@ setup(
         'hyperspy >= 1.5.2',        # earlier versions incompatible with numpy >= 1.17.0
     ],
     extras_require={"tests": ["pytest>=5.0"],
-                    "coverage": ["pytest-cov>=2.8.1", "codecov"]},,
+                    "coverage": ["pytest-cov>=2.8.1", "codecov"]},
     package_data={
         "lumispy": ["*.py", "hyperspy_extension.yaml"],
     },
