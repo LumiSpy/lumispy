@@ -2,8 +2,6 @@ name: Release
 # This workflow builds the wheels "on tag".
 # If run from the lumispy/lumispy repository, the wheels will be uploaded to pypi ;
 # otherwise, the wheels will be available as a github artefact.
-# This workflow overwrites the version in `lumispy/version.py`
-# with the tag
 on:
   push:
     # Sequence of patterns matched against refs/tags
@@ -50,14 +48,6 @@ jobs:
       - name: Install release dependencies
         run: |
           python -m pip install twine wheel
-
-      - name: Overwrite `version.py` with tag
-        if: startsWith(github.ref, 'refs/tags/')
-        env: 
-          version_file: lumispy/version.py
-          VERSION: ${{ needs.create_release.outputs.VERSION }}
-        run: |
-          echo '__version__ = "${{ env.VERSION }}"' > ${{ env.version_file }}
 
       - name: Build source distribution
         run: |

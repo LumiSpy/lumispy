@@ -1,9 +1,9 @@
 name = "lumispy"
 version = "0.1.0"
-author = "Duncan Johnstone, Jordi Ferrer Orri, Jonas Lähnemann"
+author = "The LumiSpy developers"
 copyright = "Copyright 2019-2021, LumiSpy developers"
-credits = ["Duncan Johnstone"]
-license = "GPLv3"
-maintainer = "Duncan Johnstone, Jordi Ferrer Orri"
+credits = ["LumiSpy developers"]
+license = "GPL v3"
+maintainer = "Jordi Ferrer Orri, Jonas Lähnemann"
 email = "jf631@cam.ac.uk"
 status = "Development"
