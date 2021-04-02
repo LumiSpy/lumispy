@@ -10,7 +10,7 @@
 [![DOI](https://zenodo.org/badge/222482347.svg)](https://zenodo.org/badge/latestdoi/222482347)
 
 ![image info](doc/media/logo_rec_april21.svg)
-<img src="doc/media/logo_rec_april21.svg" alt="LumiSpy logo" width="200"/>
+<img src="doc/media/logo_rec_april21.svg" width="60%">
 
 LumiSpy is an extension Python package for multi-dimensional data analysis 
 provided by the [HyperSpy](http://hyperspy.org) library. It is aimed at helping 
