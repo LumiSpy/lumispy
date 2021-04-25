@@ -43,10 +43,10 @@ jobs:
   build_wheels_linux:
     name: Wheels on ubuntu-latest
     needs: create_release
-    if ${{ env.GITHUB_ENV == env.SETUP_VERSION }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        if ${{ env.GITHUB_ENV == env.SETUP_VERSION }}
 
       - name: Set up Python
         uses: actions/setup-python@v2
