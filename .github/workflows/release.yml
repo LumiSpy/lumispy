@@ -38,7 +38,7 @@ jobs:
       - name: Check version
         if: ${{env.VERSION != env.SETUP_VERSION}}
         run: |
-            echo "Version mismatch between pushed tag (${env.VERSION}) and `release_info.py` (${env.SETUP_VERSION})"
+            echo "Version mismatch between pushed tag ($VERSION) and `release_info.py` ($SETUP_VERSION)"
             exit 1
 
   build_wheels_linux:
