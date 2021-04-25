@@ -31,6 +31,7 @@ jobs:
           draft: false
           prerelease: false
       - name: Get version (on tag)
+        id: get_version
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           echo "VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
@@ -45,7 +46,7 @@ jobs:
     name: Wheels on ubuntu-latest
     needs: create_release
     runs-on: ubuntu-latest
-    if: ${{ needs.create_release.outputs.VERSION == needs.create_release.outputs.SETUP_VERSION }}
+    if: ${{steps.get_version.outputs.VERSION == steps.get_version.SETUP_VERSION}}
     steps:
       - uses: actions/checkout@v2
 
