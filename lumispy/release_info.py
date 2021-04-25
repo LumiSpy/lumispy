@@ -2,6 +2,7 @@ name = "lumispy"
 version = "0.1.1"
 author = "The LumiSpy developers"
 copyright = "Copyright 2019-2021, LumiSpy developers"
+credits = ["The LumiSpy developers"]
 license = "GPLv3"
 maintainer = "Jordi Ferrer Orri, Jonas Lähnemann, Duncan Johnstone"
 email = "jf631@cam.ac.uk"
