@@ -34,11 +34,17 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           echo "VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
+      - name: Get version (from file)
+        env:
+          SETUP_VERSION: $(python setup.py --version)
+        run: |
+          echo "Version in `releas_info.py is $SETUP_VERSION"
 
   build_wheels_linux:
     name: Wheels on ubuntu-latest
     needs: create_release
     runs-on: ubuntu-latest
+    if env.GITHUB_ENV == env.SETUP_VERSION
     steps:
       - uses: actions/checkout@v2
 
