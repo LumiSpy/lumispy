@@ -37,7 +37,7 @@ jobs:
           echo "VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
           echo "SETUP_VERSION=$(python setup.py --version)" >> $GITHUB_ENV
       - name: Check version
-        if: ${{env.VERSION != env.SETUP_VERSION}}
+        if: ${{steps.get_version.outputs.SOURCE_NAME != steps.get_version.outputs.SOURCE_NAME}}
         run: |
             echo "Version mismatch between pushed tag ($VERSION) and `release_info.py` ($SETUP_VERSION)"
             exit 1
