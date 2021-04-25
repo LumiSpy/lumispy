@@ -41,7 +41,7 @@ jobs:
     name: Wheels on ubuntu-latest
     needs: create_release
     runs-on: ubuntu-latest
-    if ${{ needs.create_release.outputs.VERSION == needs.create_release.outputs.SETUP_VERSION }}
+    if: ${{ needs.create_release.outputs.VERSION == needs.create_release.outputs.SETUP_VERSION }}
     steps:
       - uses: actions/checkout@v2
 
