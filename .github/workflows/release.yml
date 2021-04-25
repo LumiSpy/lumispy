@@ -31,11 +31,15 @@ jobs:
           draft: false
           prerelease: false
       - name: Get version (on tag)
-        id: get_version
         if: startsWith(github.ref, 'refs/tags/')
         run: |
           echo "VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
           echo "SETUP_VERSION=$(python setup.py --version)" >> $GITHUB_ENV
+      - name Check version
+        if: env.VERSION != env.SETUP_VERSION
+        run: |
+            echo "Version mismatch between pushed tag and release_info.py"
+            exit 1
 
   build_wheels_linux:
     name: Wheels on ubuntu-latest
