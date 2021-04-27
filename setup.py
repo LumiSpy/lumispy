@@ -24,11 +24,12 @@ exec(open('lumispy/release_info.py').read())  # grab version info
 setup(
     name='lumispy',
     version=version,
-    description='Luminescence spectroscopy data analysis with HyperSpy.',
+    description=description,
     author=author,
     #author_email=email,
     license=license,
-    url="https://github.com/lumispy/lumispy",
+    platforms=platforms,
+    url=url,
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     classifiers=[
@@ -45,7 +46,8 @@ setup(
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Physics",
     ],
-
+    keywords=keywords,
+    
     packages=find_packages(),
     # adjust the tabbing
     install_requires=[
@@ -54,7 +56,7 @@ setup(
         'hyperspy >= 1.5.2',        # earlier versions incompatible with numpy >= 1.17.0
     ],
     extras_require={"tests": ["pytest>=5.0"],
-                    "coverage": ["pytest-cov>=2.8.1", "coveralls>=1.10", "coverage>=5.0"]},
+                    "coverage": ["pytest-cov", "codecov"]},
     package_data={
         "lumispy": ["*.py", "hyperspy_extension.yaml"],
     },
