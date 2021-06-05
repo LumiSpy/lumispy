@@ -19,7 +19,6 @@
 from pytest import raises, mark
 from numpy import loadtxt, arange
 from numpy.testing import assert_array_equal
-import tempfile
 
 from hyperspy.signals import Signal2D
 
@@ -62,8 +61,8 @@ def test_to_array_linescan(axes, transpose):
 def test_savetxt_spectrum(axes, tmp_path):
     s = LumiSpectrum(arange(5))
     fname = tmp_path / 'test.txt'
-    s.savetxt('fname', axes=axes)
-    s2 = loadtxt('fname')
+    s.savetxt(fname, axes=axes)
+    s2 = loadtxt(fname)
     if axes:
         assert_array_equal(s.axes_manager[0].axis,s2[:,0])
     else:
@@ -75,8 +74,8 @@ def test_savetxt_navigate1D(axes, tmp_path):
     s = LumiSpectrum(arange(5))
     s.axes_manager[0].navigate=True
     fname = tmp_path / 'test.txt'
-    s.savetxt('fname', axes=axes)
-    s2 = loadtxt('fname')
+    s.savetxt(fname, axes=axes)
+    s2 = loadtxt(fname)
     if axes:
         assert_array_equal(s.axes_manager[0].axis,s2[:,0])
     else:
@@ -88,8 +87,8 @@ def test_savetxt_navigate1D(axes, tmp_path):
 def test_savetxt_linescan(axes, transpose, tmp_path):
     s = LumiSpectrum(arange(20).reshape((4,5)))
     fname = tmp_path / 'test.txt'
-    s.savetxt('fname', axes=axes, transpose=transpose)
-    s2 = loadtxt('fname')
+    s.savetxt(fname, axes=axes, transpose=transpose)
+    s2 = loadtxt(fname)
     if axes:
         if transpose:
             assert_array_equal(s.axes_manager[0].axis,s2[0,1:])
@@ -111,8 +110,8 @@ def test_savetxt_linescan(axes, transpose, tmp_path):
 def test_savetxt_signal2D(axes, transpose, tmp_path):
     s = Signal2D(arange(20).reshape((4,5)))
     fname = tmp_path / 'test.txt'
-    savetxt(s, 'fname', axes=axes, transpose=transpose)
-    s2 = loadtxt('fname')
+    savetxt(s, fname, axes=axes, transpose=transpose)
+    s2 = loadtxt(fname)
     if axes:
         if transpose:
             assert_array_equal(s.axes_manager[1].axis,s2[0,1:])
@@ -136,8 +135,8 @@ def test_savetxt_navigate2D(axes, transpose, tmp_path):
     s.axes_manager[0].navigate=True
     s.axes_manager[1].navigate=True
     fname = tmp_path / 'test.txt'
-    savetxt(s, 'fname', axes=axes, transpose=transpose)
-    s2 = loadtxt('fname')
+    savetxt(s, fname, axes=axes, transpose=transpose)
+    s2 = loadtxt(fname)
     if axes:
         if transpose:
             assert_array_equal(s.axes_manager[1].axis,s2[0,1:])
@@ -158,7 +157,7 @@ def test_savetxt_dimension_error(tmp_path):
     s = LumiSpectrum(arange(60).reshape((3,4,5)))
     fname = tmp_path / 'test.txt'
     with raises(NotImplementedError):
-        s.savetxt('fname')
+        s.savetxt(fname)
 
 def test_to_array_dimension_error():
     s = LumiSpectrum(arange(60).reshape((3,4,5)))

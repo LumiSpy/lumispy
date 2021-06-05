@@ -109,7 +109,7 @@ class CLSpectrum(LumiSpectrum):
                     In the form of an array of pairwise elements [[peak1_x, peak1_width], [peak2_x, peak2_width],...]
                     in the units of the signal axis. It creates a signal_mask protecting the peak regions.
                     To be used instead of `signal_mask`.
-                
+
                 Returns
                 ----------
                 :return: None or CLSpectrum
@@ -146,14 +146,12 @@ class CLSEMSpectrum(CLSpectrum):
 
         """
 
-        # Avoid correcting for this shift twice (first time it fails, so except
-        # block runs. Second time, try succeeds, so except block is skipped):
-        try:
-            self.metadata.Signal.grating_corrected == True
-        except AttributeError:
+        # Don't correct for grating shift if this is already corrected
+        if self.metadata.get_item('Signal.grating_corrected') is True:
+            raise RuntimeError("The grating shift has already been corrected.")
+        else:
             # Get all relevant parameters
-            nx = self.axes_manager.navigation_shape[0]
-            ny = self.axes_manager.navigation_shape[1]
+            (nx, ny) = self.axes_manager.navigation_shape[:2]
             fov = sem_magnification
 
             # Correction of the Wavelength Shift along the X-Axis
@@ -168,8 +166,6 @@ class CLSEMSpectrum(CLSpectrum):
 
             # Store modification in metadata
             self.metadata.set_item("Signal.grating_corrected", True)
-        else:
-            raise Exception("You already corrected for the grating shift.")
 
 
 class LazyCLSEMSpectrum(LazySignal, CLSEMSpectrum):
