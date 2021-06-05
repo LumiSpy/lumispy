@@ -16,34 +16,36 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-from unittest import TestCase
-from numpy import allclose, arange, full, ones
-from numpy.random import random
+import hyperspy
+import numpy as np
+import pytest
 
 from lumispy.signals import CLSEMSpectrum
 
-param_list = [(1e-10, 1e-10, 1e-10, 10, 10),
-              (1e-10, 1e-10, 1e-10, 20, 10),
-              (1e-10, 1e-10, 1e-10, 10, 20),]
 
+class TestCLSEMSpectrum():
 
-class TestCLSEMSpectrum(TestCase):
+    @pytest.mark.skipif(hyperspy.__version__ == '1.6.2',
+                        reason='Broken with hyperspy 1.6.2')
+    @pytest.mark.parametrize('nx, ny', [(10, 20), (20, 10)])
+    def test_correct_grating_shift(self, nx, ny):
+        calx, corg, fov = 1E-10, 1E-10, 1E-10
+        s = CLSEMSpectrum(np.random.random(nx*ny*100).reshape(ny, nx, 100))
 
-    def test_correct_grating_shift(self):
-        for calx, corg, fov, nx, ny in param_list:
-            with self.subTest():
-                s = CLSEMSpectrum(ones((nx, ny, 100)) * random())
-                garray = arange((-corg / 2) * calx / (fov * nx) * 1000 * nx,
-                                   (corg / 2) * calx / (fov * nx) * 1000 * nx,
-                                   corg * calx / (fov * nx) * 1000)
-                barray = full((ny, nx), garray)
-                s2 = s.deepcopy()
-                s.correct_grating_shift(calx, corg, fov)
-                s2.shift1D(barray)
-                assert allclose(s2.data, s.data)
+        garray = np.arange((-corg / 2) * calx / (fov * nx) * 1000 * nx,
+                           (corg / 2) * calx / (fov * nx) * 1000 * nx,
+                           corg * calx / (fov * nx) * 1000)
+        barray = np.full((ny, nx), garray)
 
+        s2 = s.deepcopy()
+        s.correct_grating_shift(calx, corg, fov)
+        s2.shift1D(barray)
+        np.testing.assert_allclose(s2.data, s.data)
+
+    @pytest.mark.skipif(hyperspy.__version__ == '1.6.2',
+                        reason='Broken with hyperspy 1.6.2')
     def test_double_correct_grating_shift(self):
-        s = CLSEMSpectrum(ones((10, 10, 10)))
+        s = CLSEMSpectrum(np.ones((10, 10, 10)))
         s.correct_grating_shift(1e-10, 1e-10, 1e-10)
-        self.assertRaises(Exception, s.correct_grating_shift, 1, 1, 1)
-
+        with pytest.raises(BaseException):
+            s.correct_grating_shift(1, 1, 1)
