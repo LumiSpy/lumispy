@@ -18,20 +18,20 @@
 
 from setuptools import setup, find_packages
 
-exec(open('lumispy/release_info.py').read())  # grab version info
+exec(open("lumispy/release_info.py").read())  # grab version info
 
 
 setup(
-    name='lumispy',
+    name="lumispy",
     version=version,
     description=description,
     author=author,
-    #author_email=email,
+    # author_email=email,
     license=license,
     platforms=platforms,
     url=url,
-    long_description=open('README.md').read(),
-    long_description_content_type='text/markdown',
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
@@ -47,22 +47,20 @@ setup(
         "Topic :: Scientific/Engineering :: Physics",
     ],
     keywords=keywords,
-    
     packages=find_packages(),
     # adjust the tabbing
     install_requires=[
-        'numpy',
-        'scipy',
-        'hyperspy >= 1.5.2',        # earlier versions incompatible with numpy >= 1.17.0
+        "numpy",
+        "scipy",
+        "hyperspy >= 1.5.2",  # earlier versions incompatible with numpy >= 1.17.0
     ],
-    extras_require={"tests": ["pytest>=5.0"],
-                    "coverage": ["pytest-cov", "codecov"]},
+    extras_require={"tests": ["pytest>=5.0"], "coverage": ["pytest-cov", "codecov"]},
     package_data={
         "lumispy": ["*.py", "hyperspy_extension.yaml"],
     },
-    entry_points={'hyperspy.extensions': ['lumispy = lumispy']},
+    entry_points={"hyperspy.extensions": ["lumispy = lumispy"]},
     project_urls={  # Optional
-        'Bug Reports': 'https://github.com/lumispy/lumispy/issues',
-        'Source': 'https://github.com/lumispy/lumispy',
+        "Bug Reports": "https://github.com/lumispy/lumispy/issues",
+        "Source": "https://github.com/lumispy/lumispy",
     },
-    )
+)

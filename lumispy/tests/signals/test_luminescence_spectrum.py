@@ -23,21 +23,26 @@ from pytest import warns
 
 
 backgrounds = [
-    ([np.ones(50)], [np.zeros(50, dtype='float64')]),
-    ([np.linspace(0, 49, num=50, dtype='float64'), np.ones(50)], [np.zeros(50, dtype='float64')]),
-    ([np.linspace(0, 50, num=30, dtype='float64'), np.ones(30)], [np.zeros(50, dtype='float64')]),
-    (LumiSpectrum(np.ones(50)), [np.zeros(50, dtype='float64')]),
+    ([np.ones(50)], [np.zeros(50, dtype="float64")]),
+    (
+        [np.linspace(0, 49, num=50, dtype="float64"), np.ones(50)],
+        [np.zeros(50, dtype="float64")],
+    ),
+    (
+        [np.linspace(0, 50, num=30, dtype="float64"), np.ones(30)],
+        [np.zeros(50, dtype="float64")],
+    ),
+    (LumiSpectrum(np.ones(50)), [np.zeros(50, dtype="float64")]),
 ]
 
 error_backgrounds = [
-    ([np.linspace(0, 49, num=10, dtype='float64'), np.ones(50)], AttributeError),
+    ([np.linspace(0, 49, num=10, dtype="float64"), np.ones(50)], AttributeError),
     ([[1, 1], [1, 1], [1, 1]], AttributeError),
-    ([np.linspace(0, 48, num=10, dtype='float64'), np.ones(50)], AttributeError),
+    ([np.linspace(0, 48, num=10, dtype="float64"), np.ones(50)], AttributeError),
 ]
 
 
 class TestLumiSpectrum(TestCase):
-
     def test_remove_background_from_file(self):
         for bkg, output in backgrounds:
             s = LumiSpectrum(np.ones(50))
@@ -46,7 +51,7 @@ class TestLumiSpectrum(TestCase):
             assert np.allclose(s.data, output)
             assert np.allclose(s2.data, output)
             assert s.metadata.Signal.background_subtracted is True
-            assert hasattr(s.metadata.Signal, 'background')
+            assert hasattr(s.metadata.Signal, "background")
 
     def test_errors_raise(self):
         s = LumiSpectrum(np.ones(50))
@@ -56,12 +61,13 @@ class TestLumiSpectrum(TestCase):
         # s.remove_background_from_file()
         # Test double background removal
         s.remove_background_from_file(backgrounds[0][0], inplace=True)
-        self.assertRaises(RecursionError, s.remove_background_from_file, backgrounds[0][0])
+        self.assertRaises(
+            RecursionError, s.remove_background_from_file, backgrounds[0][0]
+        )
 
     # github-actions tests fail due to missing hyperspy-gui packages
-    #def test_warnings(self):
+    # def test_warnings(self):
     #    s = LumiSpectrum(np.ones(50))
     #    with warns(SyntaxWarning) as warninfo:
     #        s.remove_background_from_file(background=None, display=False)
     #    assert warninfo[0].message.args[0][:18] == "Using the Hyperspy"
-

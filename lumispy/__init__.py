@@ -35,7 +35,7 @@ __all__ = [
     "components",
     "signals",
     "utils",
-    ]
+]
 
 __version__ = release_info.version
 __author__ = release_info.author
