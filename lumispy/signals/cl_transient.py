@@ -26,8 +26,8 @@ from lumispy.signals.luminescence_transient import LumiTransient
 
 
 class CLTransient(LumiTransient):
-    """CL 2D luminescence signal class (transient/time resolved).
-    """
+    """CL 2D luminescence signal class (transient/time resolved)."""
+
     _signal_type = "TRCL"
     _signal_dimension = 2
 

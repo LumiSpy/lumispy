@@ -28,6 +28,7 @@ class PLSpectrum(LumiSpectrum):
     """General 1D Photoluminescence signal class.
     ----------
     """
+
     _signal_type = "PL"
     _signal_dimension = 1
 
