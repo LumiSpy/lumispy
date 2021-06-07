@@ -224,7 +224,8 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
         ):
             raise ValueError("Signal axes not overlapping")
     # Make sure that r is of type int
-    if not type(r) is int: r = int(r)
+    if not type(r) is int:
+        r = int(r)
 
     # take first spectrum as basis
     S1 = S[0].deepcopy()
