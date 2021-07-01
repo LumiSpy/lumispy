@@ -162,3 +162,5 @@ def test_joinspectra_FunctionalDA(average, scale, kind):
         assert s.data[-1] == 1
     else:
         assert s.data[-1] == 2
+    # test that join_spectra works for r that is float not int
+    s = join_spectra([s1, s2], r=2.1, average=average, scale=scale, kind=kind)
