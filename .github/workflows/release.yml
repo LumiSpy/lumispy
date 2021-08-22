@@ -91,4 +91,4 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
           twine upload dist/*.whl --verbose 
-          twine upload sdist/*.tar.gz --verbose 
+          twine upload dist/*.tar.gz --verbose 
