@@ -63,7 +63,7 @@ jobs:
       - name: Build source distribution
         run: |
           python setup.py sdist bdist_wheel
-  
+
       - name: Display content dist folder
         run: |
           ls dist/
@@ -87,8 +87,8 @@ jobs:
           # Github secret set in the lumispy/lumispy repository
           # Not available from fork or pull request
           # Secrets are not passed to workflows that are triggered by a pull request from a fork
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
           twine upload dist/*.whl --verbose 
-          twine upload sdist/*.tar.gz --verbose 
+          twine upload dist/*.tar.gz --verbose 
