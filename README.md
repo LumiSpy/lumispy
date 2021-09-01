@@ -9,7 +9,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 
-<img src="./doc/media/logo_rec_april21.svg" width="300" alt="LumiSpy">
+<img src="https://github.com/LumiSpy/lumispy/raw/main/doc/media/logo_rec_april21.svg" width="300" alt="LumiSpy">
 
 LumiSpy is an extension Python package for multi-dimensional data analysis 
 provided by the [HyperSpy](http://hyperspy.org) library. It is aimed at helping 
