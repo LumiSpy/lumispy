@@ -1,6 +1,6 @@
-[![Build Status](https://dev.azure.com/Lumispy/lumispy/_apis/build/status/LumiSpy.lumispy?branchName=master)](https://dev.azure.com/Lumispy/lumispy/_build/latest?definitionId=3&branchName=master)
+[![Build Status](https://dev.azure.com/Lumispy/lumispy/_apis/build/status/LumiSpy.lumispy?branchName=main)](https://dev.azure.com/Lumispy/lumispy/_build/latest?definitionId=3&branchName=main)
 [![Tests](https://github.com/lumispy/lumispy/workflows/Tests/badge.svg)](https://github.com/lumispy/lumispy/actions)
-[![Codecov Status](https://codecov.io/gh/lumispy/lumispy/branch/master/graph/badge.svg?token=8ZFX8X4Z1I)](https://codecov.io/gh/lumispy/lumispy)
+[![Codecov Status](https://codecov.io/gh/lumispy/lumispy/branch/main/graph/badge.svg?token=8ZFX8X4Z1I)](https://codecov.io/gh/lumispy/lumispy)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4640445.svg)](https://doi.org/10.5281/zenodo.4640445)
 
 [![Python Version](https://img.shields.io/pypi/pyversions/lumispy.svg?style=flat)](https://pypi.python.org/pypi/lumispy)
