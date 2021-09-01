@@ -3,7 +3,7 @@
 To publish a new LumiSpy release do the following steps:
 
 ### Preparation
-- Create a new PR to the 'master' branch for the release process
+- Create a new PR to the 'main' branch for the release process
 - Make sure to have the code ready, including changelog
 - Set the correct version number in `lumispy/release_info.py` (increase the third 
   digit for a patch release, the second digit for a regular minor release, the
