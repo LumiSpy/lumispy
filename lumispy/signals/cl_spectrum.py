@@ -67,7 +67,7 @@ class CLSpectrum(LumiSpectrum):
         threshold="auto",
         show_diagnosis_histogram=False,
         inplace=False,
-        luminescence_roi=None,
+        luminescence_roi=_e,
         signal_mask=None,
         add_noise=False,
         navigation_mask=None,
@@ -78,7 +78,7 @@ class CLSpectrum(LumiSpectrum):
         if not "threshold" in getfullargspec(self.spikes_removal_tool)[0]:
             raise ImportError(
                 "Spike removal works only "
-                "if the non_uniform_axis branch of HyperSpy is used."
+                "if the RELEASE_next_minor branch of HyperSpy is used."
             )
 
         if luminescence_roi is not None and signal_mask is not None:
