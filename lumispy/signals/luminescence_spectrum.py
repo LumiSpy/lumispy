@@ -84,7 +84,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         Note
         ----
-        Using a non-linear axis works only for the non_uniform_axis development
+        Using a non-linear axis works only for the RELEASE_next_minor development
         branch of HyperSpy.
 
         """
