@@ -21,9 +21,9 @@ To publish a new LumiSpy release do the following steps:
   PyPi automatically). :warning: this is a point of no return :warning:
   
  ### Post-release action
-- Increment the version and set it back to dev: `vx.y.zdev`
+- Increment the version and set it back to dev: `vx.y.zdev0`
 - Update version in other branches if necessary
-- Prepare `CHANGELOG.md` for development
+- Prepare `CHANGELOG.md` for development by adding `## UNRELEASED` headline
 - Merge the PR
 
 ### Follow-up
