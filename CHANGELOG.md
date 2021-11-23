@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## UNRELEASED
+### Changed
+- Mentions of the now deleted `non_uniform_axes` branch in HyperSpy updated to `RELEASE_next_minor`
+- Change 'master' to 'main' branch
+- Updated/corrected badges in README.md
 
 ## 2021-08-22 - version 0.1.2
 ### Added
