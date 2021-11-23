@@ -7,7 +7,7 @@ credits = ["The LumiSpy developers"]
 url = "http://lumispy.org"
 license = "GPLv3"
 platforms = ["Linux", "Mac OSX", "Windows XP/2000/NT", "Windows 95/98/ME"]
-maintainer = "Jordi Ferrer Orri, Jonas Lähnemann, Duncan Johnstone"
+maintainer = "Jordi Ferrer Orri, Jonas Lähnemann, Duncan Johnstone, Eric Prestat"
 email = "jf631@cam.ac.uk"
 status = "Development"
 
