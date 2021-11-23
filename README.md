@@ -16,7 +16,7 @@ provided by the [HyperSpy](http://hyperspy.org) library. It is aimed at helping
 with the analysis of luminescence spectroscopy data (cathodoluminescence, 
 photoluminescence, electroluminescence, Raman, SNOM).
 
-If analysis using LumiSpy forms a part of published work please consider 
+If analysis using LumiSpy forms a part of published work, please consider 
 recognising the code development by citing the project using the [Zenodo-DOI](https://doi.org/10.5281/zenodo.4640445).
 
 Instructions on how to install LumiSpy and get started: [installation guide](INSTALLATION.md).
