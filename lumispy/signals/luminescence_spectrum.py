@@ -84,7 +84,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         Note
         ----
-        Using a non-linear axis works only for the non_uniform_axis development
+        Using a non-linear axis works only for the RELEASE_next_minor development
         branch of HyperSpy.
 
         """
@@ -93,7 +93,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         if not "axis" in getfullargspec(DataAxis)[0]:
             raise ImportError(
                 "Conversion to energy axis works only "
-                "if the non_uniform_axis branch of HyperSpy is used."
+                "if the RELEASE_next_minor branch of HyperSpy is used."
             )
 
         evaxis, factor = axis2eV(self.axes_manager.signal_axes[0])
@@ -174,7 +174,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         Note
         ----
-        Using a non-linear axis works only for the non_uniform_axis development
+        Using a non-linear axis works only for the RELEASE_next_minor development
         branch of HyperSpy.
 
         """
@@ -183,7 +183,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         if not "axis" in getfullargspec(DataAxis)[0]:
             raise ImportError(
                 "Conversion to wavenumber axis works only"
-                " if the non_uniform_axis branch of HyperSpy is used."
+                " if the RELEASE_next_minor branch of HyperSpy is used."
             )
 
         invcmaxis, factor = axis2invcm(self.axes_manager.signal_axes[0])
@@ -267,7 +267,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         Note
         ----
-        Using a non-linear axis works only for the non_uniform_axis development
+        Using a non-linear axis works only for the RELEASE_next_minor development
         branch of HyperSpy.
 
         """
@@ -276,7 +276,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         if not "axis" in getfullargspec(DataAxis)[0]:
             raise ImportError(
                 "Conversion to wavenumber axis works only"
-                " if the non_uniform_axis branch of HyperSpy is used."
+                " if the RELEASE_next_minor branch of HyperSpy is used."
             )
 
         invcmaxis, factor = axis2invcm(self.axes_manager.signal_axes[0])

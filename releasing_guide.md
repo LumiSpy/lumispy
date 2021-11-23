@@ -15,7 +15,7 @@ To publish a new LumiSpy release do the following steps:
 - Create a tag e.g. `git tag -a v0.1.1 -m "LumiSpy version 0.1.1"`
 - Push tag to user fork for a test run `git push origin v0.1.1`. Will run the release
   workflow without uploading to PyPi
-- Push tag to lumispy repository to trigger release `git push upstream v0.1.1`
+- Push tag to LumiSpy repository to trigger release `git push upstream v0.1.1`
   (this triggers the GitHub action to create the sdist and wheel and upload to
   PyPi automatically). :warning: this is a point of no return :warning:
   
@@ -27,5 +27,5 @@ To publish a new LumiSpy release do the following steps:
 
 ### Follow-up
 
-- Tidy up and close corresponding milestone
+- Tidy up and close corresponding milestone or project
 - A PR to the conda-forge feedstock will be created by the conda-forge bot

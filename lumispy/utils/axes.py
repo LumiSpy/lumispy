@@ -90,7 +90,7 @@ def axis2eV(ax0):
     if not "axis" in getfullargspec(DataAxis)[0]:
         raise ImportError(
             "Conversion to energy axis works only "
-            "if the non_uniform_axis branch of HyperSpy is used."
+            "if the RELEASE_next_minor branch of HyperSpy is used."
         )
     if ax0.units == "eV":
         raise AttributeError("Signal unit is already eV.")
@@ -140,7 +140,7 @@ def axis2invcm(ax0):
     if not "axis" in getfullargspec(DataAxis)[0]:
         raise ImportError(
             "Conversion to energy axis works only "
-            "if the non_uniform_axis branch of HyperSpy is used."
+            "if the RELEASE_next_minor branch of HyperSpy is used."
         )
 
     if ax0.units == r"cm$^{-1}$":
