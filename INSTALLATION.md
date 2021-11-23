@@ -28,7 +28,7 @@ Installation is completed! To start using it, check the next section.
 
 #### OPTIONAL: Working with eV instead of wavelength units
 
-In order to convert your signal luminescence axes (normally in wavelength in nanometers) to energy units, you will need to reinstall the `hyperspy` package to its developing branch `non-uniform-axes`. **If you skip this, all lumispy function will work, except the energy conversion functions.**
+In order to convert your signal luminescence axes (normally in wavelength in nanometers) to energy units, you will need to reinstall the `hyperspy` package to its developing branch `RELEASE_next_minor`. **If you skip this, all lumispy function will work, except the energy conversion functions.**
 
 To do that, follow these steps:
 
@@ -40,7 +40,7 @@ To do that, follow these steps:
     $ conda activate lumispy
     $ conda install git -y
     $ pip uninstall hyperspy -y
-    $ pip install git+git://github.com/hyperspy/hyperspy@non_uniform_axes
+    $ pip install git+git://github.com/hyperspy/hyperspy@RELEASE_next_minor
 ```
 
 Now you are ready to use all the functionalites of lumispy.
