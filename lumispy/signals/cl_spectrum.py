@@ -67,7 +67,7 @@ class CLSpectrum(LumiSpectrum):
         threshold="auto",
         show_diagnosis_histogram=False,
         inplace=False,
-        luminescence_roi=_e,
+        luminescence_roi=None,
         signal_mask=None,
         add_noise=False,
         navigation_mask=None,
