@@ -15,17 +15,27 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
-from unittest import TestCase
 
+from inspect import getfullargspec
 from numpy import arange, ones
 from numpy.testing import assert_allclose
-from pytest import raises, mark, skip, warns
-from inspect import getfullargspec
+from pytest import raises, mark, skip
+import warnings
 
-from hyperspy.axes import *
+from hyperspy.axes import DataAxis
 
-from lumispy.signals import LumiSpectrum, CLSEMSpectrum
-from lumispy.utils.axes import *
+from lumispy.signals import LumiSpectrum
+from lumispy.utils.axes import (
+    nm2eV,
+    eV2nm,
+    axis2eV,
+    data2eV,
+    nm2invcm,
+    invcm2nm,
+    axis2invcm,
+    data2invcm,
+    solve_grating_equation,
+)
 
 
 def test_nm2eV():
@@ -323,6 +333,8 @@ def test_solve_grating_equation():
     if "scale" in getfullargspec(DataAxis)[0]:
         axis_class = DataAxis
     else:
+        from hyperspy.axes import UniformDataAxis
+
         axis_class = UniformDataAxis
 
     with warnings.catch_warnings(record=True) as w:

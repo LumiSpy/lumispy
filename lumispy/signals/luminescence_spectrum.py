@@ -376,11 +376,11 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 y = background.data
                 background = [x, y]
 
-            background_xy = np.array(background)
+            background_xy = np.asanyarray(background)
 
             if background_xy.shape[0] == 1 and background_xy.dtype != "O":
                 bkg_x = signal_x
-                bkg_y = background_xy
+                bkg_y = background_xy.squeeze()
             elif background_xy.shape[0] == 2 and background_xy.dtype != "O":
                 try:
                     bkg_x = background_xy[0]
@@ -395,7 +395,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     )
             else:
                 raise AttributeError(
-                    "Please, provide a background of shape (2, n) or (n)"
+                    "Please, provide a background of shape (2, n) or (n,)"
                 )
 
             if not np.array_equal(bkg_x, signal_x):
@@ -419,7 +419,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
     --------
     >>> import lumispy as lum
     >>> import numpy as np
-    
+
     # Spectrum:
     >>> S = lum.signals.LumiSpectrum(np.arange(5))
     >>> S.savetxt('spectrum.txt')
@@ -428,7 +428,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
     # 2.00000	2.00000
     # 3.00000	3.00000
     # 4.00000	4.00000
-    
+
     # Linescan:
     >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
     >>> L.savetxt('linescan.txt')
@@ -457,12 +457,12 @@ class LumiSpectrum(Signal1D, CommonLumi):
     --------
     The output of this function can be used to convert a signal object to a
     pandas dataframe, e.g. using `df = pd.Dataframe(S.to_array())`.
-    
+
     Examples
     --------
     >>> import lumispy as lum
     >>> import numpy as np
-    
+
     # Spectrum:
     >>> S = lum.signals.LumiSpectrum(np.arange(5))
     >>> S.to_array()
@@ -471,7 +471,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
     #    [2., 2.],
     #    [3., 3.],
     #    [4., 4.]])
-    
+
     # Linescan:
     >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
     >>> L.to_array()

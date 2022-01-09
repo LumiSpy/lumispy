@@ -17,13 +17,12 @@
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
-from unittest import TestCase
-from pytest import raises, warns
+import pytest
 
 from lumispy.signals import LumiSpectrum, LumiTransient
 
 
-class TestCommonLumi(TestCase):
+class TestCommonLumi:
     def test_crop_edges(self):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
         s2 = LumiTransient(np.ones((10, 10, 10, 10)))
@@ -34,7 +33,8 @@ class TestCommonLumi(TestCase):
         assert s1.axes_manager.navigation_shape[1] == 6
         assert s2.axes_manager.navigation_shape[0] == 6
         assert s2.axes_manager.navigation_shape[1] == 6
-        self.assertRaises(ValueError, s3.crop_edges, crop_px=2)
+        with pytest.raises(ValueError):
+            s3.crop_edges(crop_px=2)
 
     def test_remove_negative(self):
         s1 = LumiSpectrum(np.random.random((10, 10, 10))) - 0.3
@@ -87,18 +87,18 @@ class TestCommonLumi(TestCase):
         # Test for errors
         s4 = LumiSpectrum(np.ones((10)))
         s4.normalize(inplace=True)
-        with raises(AttributeError) as excinfo:
+        with pytest.raises(AttributeError) as excinfo:
             s4.scale_by_exposure(inplace=True, exposure=0.5)
         assert str(excinfo.value) == "Data was normalized and cannot be " "scaled."
         s5 = LumiSpectrum(np.ones((10)))
-        with raises(AttributeError) as excinfo:
+        with pytest.raises(AttributeError) as excinfo:
             s5.scale_by_exposure(inplace=True)
         assert (
             str(excinfo.value) == "Exposure not given and can not be "
             "extracted automatically from metadata."
         )
         s5.scale_by_exposure(inplace=True, exposure=0.5)
-        with raises(AttributeError) as excinfo:
+        with pytest.raises(AttributeError) as excinfo:
             s5.scale_by_exposure(inplace=True, exposure=0.5)
         assert str(excinfo.value) == "Data was already scaled."
 
@@ -143,7 +143,7 @@ class TestCommonLumi(TestCase):
         assert s3a == s3
         assert s4a == s4
         assert s4.metadata.Signal.quantity == "Normalized intensity"
-        with warns(UserWarning) as warninfo:
+        with pytest.warns(UserWarning) as warninfo:
             s1.normalize(inplace=True)
         assert len(warninfo) == 1
         assert warninfo[0].message.args[0][:8] == "Data was"
