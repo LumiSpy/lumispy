@@ -16,10 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-from unittest import TestCase
 import numpy as np
+import pytest
+
 from lumispy.signals.luminescence_spectrum import LumiSpectrum
-from pytest import warns
 
 
 backgrounds = [
@@ -42,7 +42,7 @@ error_backgrounds = [
 ]
 
 
-class TestLumiSpectrum(TestCase):
+class TestLumiSpectrum:
     def test_remove_background_from_file(self):
         for bkg, output in backgrounds:
             s = LumiSpectrum(np.ones(50))
@@ -56,18 +56,18 @@ class TestLumiSpectrum(TestCase):
     def test_errors_raise(self):
         s = LumiSpectrum(np.ones(50))
         for bkg, error in error_backgrounds:
-            self.assertRaises(error, s.remove_background_from_file, bkg)
+            with pytest.raises(error):
+                s.remove_background_from_file(bkg)
         # Test that a GUI is opened if s.remove_background_from_file is passed without a background
         # s.remove_background_from_file()
         # Test double background removal
         s.remove_background_from_file(backgrounds[0][0], inplace=True)
-        self.assertRaises(
-            RecursionError, s.remove_background_from_file, backgrounds[0][0]
-        )
+        with pytest.raises(RecursionError):
+            s.remove_background_from_file(backgrounds[0][0])
 
-    # github-actions tests fail due to missing hyperspy-gui packages
-    # def test_warnings(self):
-    #    s = LumiSpectrum(np.ones(50))
-    #    with warns(SyntaxWarning) as warninfo:
-    #        s.remove_background_from_file(background=None, display=False)
-    #    assert warninfo[0].message.args[0][:18] == "Using the Hyperspy"
+    def test_warnings(self):
+        pytest.importorskip("hyperspy_gui_ipywidgets")
+        s = LumiSpectrum(np.ones(50))
+        with pytest.warns(SyntaxWarning) as warninfo:
+            s.remove_background_from_file(background=None, display=False)
+        assert warninfo[0].message.args[0][:18] == "Using the Hyperspy"
