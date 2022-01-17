@@ -304,7 +304,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
         if inplace:
             if jacobian:
                 self.data = data2invcm(
-                    self.data, factor, self.axes_manager.signal_axes[0].axis, absaxis
+                    self.data,
+                    factor,
+                    absaxis,
                 )
             # else:
             #    self.data = self.isig[::-1].data
@@ -314,7 +316,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
         else:
             if jacobian:
                 s2data = data2invcm(
-                    self.data, factor, self.axes_manager.signal_axes[0].axis, absaxis
+                    self.data,
+                    factor,
+                    absaxis,
                 )
             else:
                 s2data = self.data
