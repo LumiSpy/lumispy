@@ -112,18 +112,21 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     evaxis.axis,
                 )
                 if self.metadata.has_item("Signal.Noise_properties.variance"):
-                    var = var2eV(
-                        self.isig[::-1].data,
+                    svar = self.metadata.Signal.Noise_properties.variance
+                    svar.axes_manager.remove(-1)
+                    svar.axes_manager._axes.append(evaxis)
+                    svar.data = var2eV(
+                        svar.isig[::-1].data,
                         factor,
                         self.axes_manager.signal_axes[0],
-                        invcmaxis.axis,
+                        evaxis.axis,
                     )
+                    self.estimate_poissonian_noise_variance(svar)
             else:
                 self.data = self.isig[::-1].data
             self.axes_manager.remove(-1)
             self.axes_manager._axes.append(evaxis)
-            if jacobian:
-                self.estimate_poissonian_noise_variance(var)
+
         # create and return new signal
         else:
             if jacobian:
@@ -133,37 +136,20 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     self.axes_manager.signal_axes[0],
                     evaxis.axis,
                 )
-                if self.metadata.has_item("Signal.Noise_properties.variance"):
-                    s2var = var2eV(
-                        self.isig[::-1].data,
-                        factor,
-                        self.axes_manager.signal_axes[0],
-                        invcmaxis.axis,
-                    )
             else:
                 s2data = self.isig[::-1].data
-            if self.data.ndim == 1:
-                s2 = LumiSpectrum(s2data, axes=(evaxis.get_axis_dictionary(),))
-            elif self.data.ndim == 2:
-                s2 = LumiSpectrum(
-                    s2data,
-                    axes=(
-                        self.axes_manager.navigation_axes[0].get_axis_dictionary(),
-                        evaxis.get_axis_dictionary(),
-                    ),
-                )
-            else:
-                s2 = LumiSpectrum(
-                    s2data,
-                    axes=(
-                        self.axes_manager.navigation_axes[1].get_axis_dictionary(),
-                        self.axes_manager.navigation_axes[0].get_axis_dictionary(),
-                        evaxis.get_axis_dictionary(),
-                    ),
-                )
-            s2.set_signal_type(self.metadata.Signal.signal_type)
-            s2.metadata = self.metadata
-            if jacobian:
+
+            s2 = self._deepcopy_with_new_data(s2data)
+            s2.axes_manager.remove(-1)
+            s2.axes_manager._axes.append(evaxis)
+            if jacobian and self.metadata.has_item("Signal.Noise_properties.variance"):
+                var = self.metadata.Signal.Noise_properties.variance
+                s2var = s2._deepcopy_with_new_data(var2eV(
+                        var.isig[::-1].data,
+                        factor,
+                        self.axes_manager.signal_axes[0],
+                        evaxis.axis,
+                    ))
                 s2.estimate_poissonian_noise_variance(s2var)
             return s2
 
@@ -222,17 +208,20 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     invcmaxis.axis,
                 )
                 if self.metadata.has_item("Signal.Noise_properties.variance"):
-                    var = var2eV(
-                        self.isig[::-1].data,
+                    svar = self.metadata.Signal.Noise_properties.variance
+                    svar.axes_manager.remove(-1)
+                    svar.axes_manager._axes.append(invcmaxis)
+                    svar.data = var2invcm(
+                        svar.isig[::-1].data,
                         factor,
                         invcmaxis.axis,
                     )
+                    self.estimate_poissonian_noise_variance(svar)
             else:
                 self.data = self.isig[::-1].data
             self.axes_manager.remove(-1)
             self.axes_manager._axes.append(invcmaxis)
-            if jacobian:
-                self.estimate_poissonian_noise_variance(var)
+
         # create and return new signal
         else:
             if jacobian:
@@ -241,36 +230,19 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     factor,
                     invcmaxis.axis,
                 )
-                if self.metadata.has_item("Signal.Noise_properties.variance"):
-                    s2var = var2eV(
-                        self.isig[::-1].data,
-                        factor,
-                        invcmaxis.axis,
-                    )
             else:
                 s2data = self.isig[::-1].data
-            if self.data.ndim == 1:
-                s2 = LumiSpectrum(s2data, axes=(invcmaxis.get_axis_dictionary(),))
-            elif self.data.ndim == 2:
-                s2 = LumiSpectrum(
-                    s2data,
-                    axes=(
-                        self.axes_manager.navigation_axes[0].get_axis_dictionary(),
-                        invcmaxis.get_axis_dictionary(),
-                    ),
-                )
-            else:
-                s2 = LumiSpectrum(
-                    s2data,
-                    axes=(
-                        self.axes_manager.navigation_axes[1].get_axis_dictionary(),
-                        self.axes_manager.navigation_axes[0].get_axis_dictionary(),
-                        invcmaxis.get_axis_dictionary(),
-                    ),
-                )
-            s2.set_signal_type(self.metadata.Signal.signal_type)
-            s2.metadata = self.metadata
-            if jacobian:
+
+            s2 = self._deepcopy_with_new_data(s2data)
+            s2.axes_manager.remove(-1)
+            s2.axes_manager._axes.append(invcmaxis)
+            if jacobian and self.metadata.has_item("Signal.Noise_properties.variance"):
+                var = self.metadata.Signal.Noise_properties.variance
+                s2var = s2._deepcopy_with_new_data(var2invcm(
+                        var.isig[::-1].data,
+                        factor,
+                        invcmaxis.axis,
+                    ))
                 s2.estimate_poissonian_noise_variance(s2var)
             return s2
 
