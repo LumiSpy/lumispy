@@ -112,15 +112,13 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     evaxis.axis,
                 )
                 if self.metadata.has_item("Signal.Noise_properties.variance"):
-                    svar = self.metadata.Signal.Noise_properties.variance
-                    svar.axes_manager.remove(-1)
-                    svar.axes_manager._axes.append(evaxis)
-                    svar.data = var2eV(
-                        svar.isig[::-1].data,
+                    var = self.metadata.Signal.Noise_properties.variance
+                    svar = self._deepcopy_with_new_data(var2eV(
+                        var.isig[::-1].data,
                         factor,
                         self.axes_manager.signal_axes[0],
                         evaxis.axis,
-                    )
+                    ))
                     self.estimate_poissonian_noise_variance(svar)
             else:
                 self.data = self.isig[::-1].data
@@ -208,14 +206,12 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     invcmaxis.axis,
                 )
                 if self.metadata.has_item("Signal.Noise_properties.variance"):
-                    svar = self.metadata.Signal.Noise_properties.variance
-                    svar.axes_manager.remove(-1)
-                    svar.axes_manager._axes.append(invcmaxis)
-                    svar.data = var2invcm(
-                        svar.isig[::-1].data,
+                    var = self.metadata.Signal.Noise_properties.variance
+                    svar = self._deepcopy_with_new_data(var2invcm(
+                        var.isig[::-1].data,
                         factor,
                         invcmaxis.axis,
-                    )
+                    ))
                     self.estimate_poissonian_noise_variance(svar)
             else:
                 self.data = self.isig[::-1].data
