@@ -33,8 +33,10 @@ from lumispy import nm2invcm, to_array, savetxt
 from lumispy.utils import (
     axis2eV,
     data2eV,
+    var2eV,
     axis2invcm,
     data2invcm,
+    var2invcm,
     solve_grating_equation,
     GRATING_EQUATION_DOCSTRING_PARAMETERS,
 )
@@ -63,7 +65,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
         The intensity is converted from counts/nm (counts/µm) to counts/meV by
         doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin.
         142, 202 (2013), which ensures that integrated signals are correct also
-        in the energy domain.
+        in the energy domain. If the variance of the signal is known, i.e.
+        `metadata.Signal.Noise_properties.variance` is a signal representing
+        the variance, a squared renormalization of the variance is performed.
 
         Input parameters
         ----------------
@@ -107,10 +111,19 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     self.axes_manager.signal_axes[0],
                     evaxis.axis,
                 )
+                if self.metadata.has_item("Signal.Noise_properties.variance"):
+                    var = var2eV(
+                        self.isig[::-1].data,
+                        factor,
+                        self.axes_manager.signal_axes[0],
+                        invcmaxis.axis,
+                    )
             else:
                 self.data = self.isig[::-1].data
             self.axes_manager.remove(-1)
             self.axes_manager._axes.append(evaxis)
+            if jacobian:
+                self.estimate_poissonian_noise_variance(var)
         # create and return new signal
         else:
             if jacobian:
@@ -120,6 +133,13 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     self.axes_manager.signal_axes[0],
                     evaxis.axis,
                 )
+                if self.metadata.has_item("Signal.Noise_properties.variance"):
+                    s2var = var2eV(
+                        self.isig[::-1].data,
+                        factor,
+                        self.axes_manager.signal_axes[0],
+                        invcmaxis.axis,
+                    )
             else:
                 s2data = self.isig[::-1].data
             if self.data.ndim == 1:
@@ -143,6 +163,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 )
             s2.set_signal_type(self.metadata.Signal.signal_type)
             s2.metadata = self.metadata
+            if jacobian:
+                s2.estimate_poissonian_noise_variance(s2var)
             return s2
 
     def to_invcm(self, inplace=True, jacobian=True):
@@ -153,7 +175,10 @@ class LumiSpectrum(Signal1D, CommonLumi):
         The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
         by doing a Jacobian transformation, see e.g. Wang and Townsend,
         J. Lumin. 142, 202 (2013), which ensures that integrated signals are
-        correct also in the energy domain.
+        correct also in the energy domain. If the variance of the signal is
+        known, i.e. `metadata.Signal.Noise_properties.variance` is a signal
+        representing the variance, a squared renormalization of the variance
+        is performed.
 
         Input parameters
         ----------------
@@ -194,22 +219,34 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 self.data = data2invcm(
                     self.isig[::-1].data,
                     factor,
-                    self.axes_manager.signal_axes[0].axis,
                     invcmaxis.axis,
                 )
+                if self.metadata.has_item("Signal.Noise_properties.variance"):
+                    var = var2eV(
+                        self.isig[::-1].data,
+                        factor,
+                        invcmaxis.axis,
+                    )
             else:
                 self.data = self.isig[::-1].data
             self.axes_manager.remove(-1)
             self.axes_manager._axes.append(invcmaxis)
+            if jacobian:
+                self.estimate_poissonian_noise_variance(var)
         # create and return new signal
         else:
             if jacobian:
                 s2data = data2invcm(
                     self.isig[::-1].data,
                     factor,
-                    self.axes_manager.signal_axes[0].axis,
                     invcmaxis.axis,
                 )
+                if self.metadata.has_item("Signal.Noise_properties.variance"):
+                    s2var = var2eV(
+                        self.isig[::-1].data,
+                        factor,
+                        invcmaxis.axis,
+                    )
             else:
                 s2data = self.isig[::-1].data
             if self.data.ndim == 1:
@@ -233,6 +270,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 )
             s2.set_signal_type(self.metadata.Signal.signal_type)
             s2.metadata = self.metadata
+            if jacobian:
+                s2.estimate_poissonian_noise_variance(s2var)
             return s2
 
     def to_invcm_relative(self, laser, inplace=True, jacobian=True):

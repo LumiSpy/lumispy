@@ -204,7 +204,7 @@ def test_data2invcm():
     factor = 1e7
     ax0 = arange(200, 400, 10)
     invcmaxis = nm2invcm(ax0)
-    invcmdata = data2invcm(data, factor, ax0, invcmaxis)
+    invcmdata = data2invcm(data, factor, invcmaxis)
     assert_allclose(invcmdata[-1], 1.521)
 
 
