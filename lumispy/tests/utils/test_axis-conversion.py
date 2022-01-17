@@ -98,7 +98,8 @@ def test_data2eV():
 
 
 @mark.parametrize(("jacobian"), (True, False))
-def test_to_eV(jacobian):
+@mark.parametrize(("variance"), (True, False))
+def test_to_eV(jacobian, variance):
     axis = DataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -113,6 +114,8 @@ def test_to_eV(jacobian):
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    if variance:
+        S1.estimate_poissonian_noise_variance()
     S2 = S1.to_eV(inplace=False, jacobian=jacobian)
     S1.axes_manager[0].units = "µm"
     S1.axes_manager[0].axis = axis.axis / 1000
@@ -128,6 +131,8 @@ def test_to_eV(jacobian):
     L1 = LumiSpectrum(
         ones((4, 20)), axes=[nav.get_axis_dictionary(), axis.get_axis_dictionary()]
     )
+    if variance:
+        L1.estimate_poissonian_noise_variance()
     L2 = L1.to_eV(inplace=False, jacobian=jacobian)
     L1.to_eV(jacobian=jacobian)
     assert L1.axes_manager.signal_axes[0].units == "eV"
@@ -146,6 +151,8 @@ def test_to_eV(jacobian):
             axis.get_axis_dictionary(),
         ],
     )
+    if variance:
+        M1.estimate_poissonian_noise_variance()
     M2 = M1.to_eV(inplace=False, jacobian=jacobian)
     M1.to_eV(jacobian=jacobian)
     assert M1.axes_manager.signal_axes[0].units == "eV"
@@ -155,6 +162,13 @@ def test_to_eV(jacobian):
         M1.axes_manager.signal_axes[0].axis[0] == M2.axes_manager.signal_axes[0].axis[0]
     )
     assert_allclose(M1.data, M2.data, 5e-4)
+    if variance and jacobian:
+        assert S1.metadata.Signal.Noise_properties.variance == \
+                        S2.metadata.Signal.Noise_properties.variance
+        assert L1.metadata.Signal.Noise_properties.variance == \
+                        L2.metadata.Signal.Noise_properties.variance
+        assert M1.metadata.Signal.Noise_properties.variance == \
+                        M2.metadata.Signal.Noise_properties.variance
 
 
 def test_nm2invcm():
@@ -209,7 +223,8 @@ def test_data2invcm():
 
 
 @mark.parametrize(("jacobian"), (True, False))
-def test_to_invcm(jacobian):
+@mark.parametrize(("variance"), (True, False))
+def test_to_invcm(jacobian, variance):
     axis = DataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -224,6 +239,8 @@ def test_to_invcm(jacobian):
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    if variance:
+        S1.estimate_poissonian_noise_variance()
     S2 = S1.to_invcm(inplace=False, jacobian=jacobian)
     S1.axes_manager[0].units = "µm"
     S1.axes_manager[0].axis = axis.axis / 1000
@@ -239,6 +256,8 @@ def test_to_invcm(jacobian):
     L1 = LumiSpectrum(
         ones((4, 20)), axes=[nav.get_axis_dictionary(), axis.get_axis_dictionary()]
     )
+    if variance:
+        L1.estimate_poissonian_noise_variance()
     L2 = L1.to_invcm(inplace=False, jacobian=jacobian)
     L1.to_invcm(jacobian=jacobian)
     assert L1.axes_manager.signal_axes[0].units == r"cm$^{-1}$"
@@ -257,6 +276,8 @@ def test_to_invcm(jacobian):
             axis.get_axis_dictionary(),
         ],
     )
+    if variance:
+        M1.estimate_poissonian_noise_variance()
     M2 = M1.to_invcm(inplace=False, jacobian=jacobian)
     M1.to_invcm(jacobian=jacobian)
     assert M1.axes_manager.signal_axes[0].units == r"cm$^{-1}$"
@@ -266,6 +287,13 @@ def test_to_invcm(jacobian):
         M1.axes_manager.signal_axes[0].axis[0] == M2.axes_manager.signal_axes[0].axis[0]
     )
     assert_allclose(M1.data, M2.data, 5e-4)
+    if variance and jacobian:
+        assert S1.metadata.Signal.Noise_properties.variance == \
+                        S2.metadata.Signal.Noise_properties.variance
+        assert L1.metadata.Signal.Noise_properties.variance == \
+                        L2.metadata.Signal.Noise_properties.variance
+        assert M1.metadata.Signal.Noise_properties.variance == \
+                        M2.metadata.Signal.Noise_properties.variance
 
 
 @mark.parametrize(("jacobian"), (True, False))
