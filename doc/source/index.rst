@@ -6,7 +6,7 @@ provided by the `HyperSpy <http://hyperspy.org/>`_ library. It is aimed at helpi
 with the analysis of luminescence spectroscopy data (cathodoluminescence,
 photoluminescence, electroluminescence, Raman, SNOM).
 
-Check out the :doc:user_guide:`installation` section for further information, including
+Check out the :doc:source:user_guide:`installation` section for further information, including
 how to start using this project.
 
 Everyone is welcome to contribute. Please read our
