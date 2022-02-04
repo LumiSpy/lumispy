@@ -1,13 +1,14 @@
 # Configuration file for the Sphinx documentation builder.
 
 # -- Project information
+exec(open("../../lumispy/release_info.py").read())  # grab version info
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+project = 'lumispy'
+copyright = copyright
+author = author
 
-release = '0.1'
-version = '0.1.0'
+release = version
+version = version
 
 # -- General configuration
 
