@@ -1,7 +1,7 @@
+.. _installation:
+
 Installation
 =====
-
-.. _installation:
 
 1. Creating a conda environment
 ------------
