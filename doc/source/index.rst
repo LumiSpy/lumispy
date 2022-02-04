@@ -6,13 +6,8 @@ provided by the `HyperSpy <http://hyperspy.org/>`_ library. It is aimed at helpi
 with the analysis of luminescence spectroscopy data (cathodoluminescence,
 photoluminescence, electroluminescence, Raman, SNOM).
 
-If analysis using LumiSpy forms a part of published work, please consider
-recognising the code development by citing the project using the
-`Zenodo-DOI <https://doi.org/10.5281/zenodo.4640445/>`_.
-
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
-
+Check out the :doc:`user_guide` section for further information, including
+how to start using this project.
 
 Everyone is welcome to contribute. Please read our
 `contributing guidelines <https://github.com/LumiSpy/lumispy/blob/main/.github/CONTRIBUTING.md/>`_
@@ -26,7 +21,21 @@ Contents
 --------
 
 .. toctree::
+   :maxdepth: 1
+   :caption: User Guide
 
-   usage
-   api
+   user_guide/installation.rst
+   user_guide/signal_axis.rst
+   user_guide/fitting_luminescence.rst
 
+.. toctree::
+   :maxdepth: 2
+   :caption: API References
+
+   api/modules.rst
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Credits and citation
+
+   citing.rst
