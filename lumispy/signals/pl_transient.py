@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019-2021 The LumiSpy developers
+# Copyright 2019-2022 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -26,8 +26,8 @@ from lumispy.signals.luminescence_transient import LumiTransient
 
 
 class PLTransient(LumiTransient):
-    """PL 2D luminescence signal class (transient/time resolved).
-    """
+    """PL 2D luminescence signal class (transient/time resolved)."""
+
     _signal_type = "TRPL"
     _signal_dimension = 2
 

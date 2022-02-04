@@ -1,0 +1,94 @@
+name: Release
+# This workflow builds the wheels "on tag".
+# If run from the lumispy/lumispy repository, the wheels will be uploaded to pypi ;
+# otherwise, the wheels will be available as a github artefact.
+# This workflow overwrites the version in `lumispy/version.py`
+# with the tag
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+jobs:
+  create_release:
+    permissions:
+      contents: write
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs: 
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      VERSION: ${{ env.VERSION }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Get version (on tag)
+        id: get_version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
+          echo "SETUP_VERSION=$(python setup.py --version)" >> $GITHUB_ENV
+      - name: Check version
+        if: ${{env.VERSION != env.SETUP_VERSION}}
+        run: |
+            echo "Version mismatch between pushed tag ($VERSION) and `release_info.py` ($SETUP_VERSION)"
+            exit 1
+
+  build_wheels_linux:
+    name: Wheels on ubuntu-latest
+    needs: create_release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install release dependencies
+        run: |
+          python -m pip install twine wheel
+
+      - name: Build source distribution
+        run: |
+          python setup.py sdist bdist_wheel
+
+      - name: Display content dist folder
+        run: |
+          ls dist/
+
+      - name: Install and test distribution
+        env:
+          MPLBACKEND: agg
+        run: |
+          pip install --pre --find-links dist lumispy[tests]
+          pytest --pyargs lumispy
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: |
+            ./dist/*.whl
+            ./sdist/*.tar.gz
+
+      - name: Publish wheels to PyPI
+        if: github.repository_owner == 'lumispy'
+        env:
+          # Github secret set in the lumispy/lumispy repository
+          # Not available from fork or pull request
+          # Secrets are not passed to workflows that are triggered by a pull request from a fork
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          twine upload dist/*.whl --verbose 
+          twine upload dist/*.tar.gz --verbose 

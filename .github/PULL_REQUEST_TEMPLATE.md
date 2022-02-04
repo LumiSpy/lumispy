@@ -1,5 +1,5 @@
 ### Requirements
-* Read the [contributing guidelines](https://github.com/lumispy/lumispy/blob/master/.github/CONTRIBUTING.md).
+* Read the [contributing guidelines](https://github.com/lumispy/lumispy/blob/main/.github/CONTRIBUTING.md).
 * Fill out the template; it helps the review process and it is useful to summarise the PR.
 * This template can be updated during the progression of the PR to summarise its status. 
 

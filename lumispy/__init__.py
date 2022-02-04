@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019-2021 The LumiSpy developers
+# Copyright 2019-2022 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -35,7 +35,7 @@ __all__ = [
     "components",
     "signals",
     "utils",
-    ]
+]
 
 __version__ = release_info.version
 __author__ = release_info.author

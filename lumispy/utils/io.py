@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019-2021 The LumiSpy developers
+# Copyright 2019-2022 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -18,15 +18,13 @@
 
 import numpy as np
 
-SAVETXT_DOCSTRING = \
-    """
+SAVETXT_DOCSTRING = """
     Writes single spectra to a two-column data file with signal axis as
         X and data as Y.
     Writes linescan data to file with signal axis as first row and
         navigation axis as first column (flipped if `transpose=True`)."""
 
-SAVETXT_PARAMETERS = \
-    """
+SAVETXT_PARAMETERS = """
     Parameters
     ----------
     filename : string
@@ -48,8 +46,7 @@ SAVETXT_PARAMETERS = \
     --------
     numpy.savetxt"""
 
-SAVETXT_EXAMPLE = \
-    """
+SAVETXT_EXAMPLE = """
     Examples
     --------
     >>> import lumispy as lum
@@ -75,15 +72,13 @@ SAVETXT_EXAMPLE = \
     # 4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
     """
 
-TOARRAY_DOCSTRING = \
-    """
+TOARRAY_DOCSTRING = """
     
     Returns single spectra as two-column array.
     Returns linescan data as array with signal axis as first row and
         navigation axis as first column (flipped if `transpose=True`)."""
 
-TOARRAY_PARAMETERS = \
-    """
+TOARRAY_PARAMETERS = """
     Parameters
     ----------
     axes : bool, optional
@@ -96,8 +91,7 @@ TOARRAY_PARAMETERS = \
         Takes any additional arguments of numpy.loadtxt, e.g. `newline`
         `header`, `footer`, `comments`, or `encoding`."""
 
-TOARRAY_EXAMPLE = \
-    """
+TOARRAY_EXAMPLE = """
     Note
     --------
     The output of this function can be used to convert a signal object to a
@@ -149,41 +143,45 @@ def to_array(S, axes=True, transpose=False):
                 x = sig_axes[0].axis
             else:
                 x = nav_axes[0].axis
-            output = np.array([x,S.data]).T
+            output = np.array([x, S.data]).T
         else:
             output = S.data
     # Convert linescan or matrix
     elif dim == 2:
         if axes:
             if len(sig_axes) == 1:
-                x = np.concatenate(([0],sig_axes[0].axis))
+                x = np.concatenate(([0], sig_axes[0].axis))
                 y = nav_axes[0].axis
             elif len(nav_axes) == 0:
-                x = np.concatenate(([0],sig_axes[0].axis))
+                x = np.concatenate(([0], sig_axes[0].axis))
                 y = sig_axes[1].axis
             else:
-                x = np.concatenate(([0],nav_axes[0].axis))
+                x = np.concatenate(([0], nav_axes[0].axis))
                 y = nav_axes[1].axis
             if transpose:
-                output = np.hstack((x.reshape(x.size,1), 
-                                    np.vstack((y, np.transpose(S.data)))))
+                output = np.hstack(
+                    (x.reshape(x.size, 1), np.vstack((y, np.transpose(S.data))))
+                )
             else:
-                output = np.vstack((x, np.hstack((y.reshape(y.size,1), S.data))))
+                output = np.vstack((x, np.hstack((y.reshape(y.size, 1), S.data))))
         else:
             if transpose:
                 output = np.transpose(S.data)
-            else: 
+            else:
                 output = S.data
     else:
-        raise NotImplementedError("The to_array function currently handles a "
-                                   "maximum of two axes.")
+        raise NotImplementedError(
+            "The to_array function currently handles a " "maximum of two axes."
+        )
     return output
+
 
 to_array.__doc__ %= (TOARRAY_DOCSTRING, TOARRAY_PARAMETERS, TOARRAY_EXAMPLE)
 
 
-def savetxt(S, filename, fmt='%.5f', delimiter='\t', axes=True,
-            transpose=False, **kwargs):
+def savetxt(
+    S, filename, fmt="%.5f", delimiter="\t", axes=True, transpose=False, **kwargs
+):
     """Writes signal object to simple text file.
     %s
     Writes image to file with the navigation axes as first column and first
@@ -198,7 +196,9 @@ def savetxt(S, filename, fmt='%.5f', delimiter='\t', axes=True,
         output = to_array(S, axes, transpose)
         np.savetxt(filename, output, fmt=fmt, delimiter=delimiter, **kwargs)
     else:
-        raise NotImplementedError("The savetxt function currently handles a "
-                                   "maximum of two axes.")
+        raise NotImplementedError(
+            "The savetxt function currently handles a " "maximum of two axes."
+        )
+
 
 savetxt.__doc__ %= (SAVETXT_DOCSTRING, SAVETXT_PARAMETERS, SAVETXT_EXAMPLE)

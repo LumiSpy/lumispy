@@ -1,9 +1,43 @@
 name = "lumispy"
-version = "0.1.0"
-author = "Duncan Johnstone, Jordi Ferrer Orri, Jonas Lähnemann"
-copyright = "Copyright 2019-2021, LumiSpy developers"
-credits = ["Duncan Johnstone"]
+version = "0.2dev0"
+description = "Analysis of luminescence spectroscopy data with HyperSpy."
+author = "The LumiSpy developers"
+copyright = "Copyright 2019-2022, LumiSpy developers"
+credits = ["The LumiSpy developers"]
+url = "http://lumispy.org"
 license = "GPLv3"
-maintainer = "Duncan Johnstone, Jordi Ferrer Orri"
+platforms = ["Linux", "Mac OSX", "Windows XP/2000/NT", "Windows 95/98/ME"]
+maintainer = "Jordi Ferrer Orri, Jonas Lähnemann, Duncan Johnstone, Eric Prestat"
 email = "jf631@cam.ac.uk"
 status = "Development"
+
+keywords = [
+    "CL",
+    "PL",
+    "EL",
+    "TRCL",
+    "TRPL",
+    "SEM",
+    "STEM",
+    "TEM",
+    "cathodoluminescence",
+    "photoluminescence",
+    "electroluminescence",
+    "Raman",
+    "curve fitting",
+    "electron microscopy",
+    "hyperspectral",
+    "hyperspectrum",
+    "hyperspy",
+    "luminescence spectroscopy",
+    "lumispy",
+    "machine learning",
+    "model",
+    "multidimensional",
+    "numpy",
+    "python",
+    "scipy",
+    "spectroscopy",
+    "spectrum image",
+    "time-resolved",
+]

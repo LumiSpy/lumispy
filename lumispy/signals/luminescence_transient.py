@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019-2021 The LumiSpy developers
+# Copyright 2019-2022 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -26,8 +26,8 @@ from lumispy.signals.common_luminescence import CommonLumi
 
 
 class LumiTransient(Signal2D, CommonLumi):
-    """General 2D luminescence signal class (transient/time resolved).
-    """
+    """General 2D luminescence signal class (transient/time resolved)."""
+
     _signal_type = "Luminescence"
     _signal_dimension = 2
 
