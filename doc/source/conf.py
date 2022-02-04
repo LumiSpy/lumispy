@@ -38,14 +38,18 @@ templates_path = ['_templates']
 
 html_theme = 'sphinx_rtd_theme'
 
+# Add custom css formatting
+html_static_path = ['_static']
+#html_css_files = ['custom.css']
+
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = '../media/logo_sq_april21.svg'
+html_logo = '../_static/logo_sq_april21.svg'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = '../media/lumispy.ico'
+html_favicon = '../_static/lumispy.ico'
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
