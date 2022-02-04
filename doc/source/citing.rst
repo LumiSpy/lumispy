@@ -10,5 +10,5 @@ version. If you are citing LumiSpy because you have used it to process data,
 please use the DOI of the specific version that you have employed. You can
 find iy by clicking on the DOI badge below.
 
-.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.4640445.svg
-   :target: https://doi.org/10.5281/zenodo.4640445/
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.5722508.svg
+   :target: https://doi.org/10.5281/zenodo.5722508
