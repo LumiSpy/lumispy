@@ -7,7 +7,7 @@
 [![PyPi Version](http://img.shields.io/pypi/v/lumispy.svg?style=flat)](https://pypi.python.org/pypi/lumispy)
 [![Anaconda Version](https://anaconda.org/conda-forge/lumispy/badges/version.svg)](https://anaconda.org/conda-forge/lumispy)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Documentation Status](https://readthedocs.org/projects/lumispy-lumispy/badge/?version=latest)](https://lumispy-lumispy.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/lumispy/badge/?version=latest)](https://lumispy.readthedocs.io/en/latest/?badge=latest)
 
 
 <img src="https://github.com/LumiSpy/lumispy/raw/main/doc/_static/logo_rec_april21.svg" width="300" alt="LumiSpy">
