@@ -97,6 +97,10 @@ def test_data2eV():
     assert_allclose(evdata[0], 12.271168e-3)
 
 
+#def test_var2eV():
+# to be implemented
+
+
 @mark.parametrize(("jacobian"), (True, False))
 @mark.parametrize(("variance"), (True, False))
 def test_to_eV(jacobian, variance):
@@ -220,6 +224,10 @@ def test_data2invcm():
     invcmaxis = nm2invcm(ax0)
     invcmdata = data2invcm(data, factor, invcmaxis)
     assert_allclose(invcmdata[-1], 1.521)
+
+
+#def test_var2eV():
+# to be implemented
 
 
 @mark.parametrize(("jacobian"), (True, False))

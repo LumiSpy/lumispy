@@ -64,8 +64,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         The intensity is converted from counts/nm (counts/µm) to counts/meV by
         doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin.
-        142, 202 (2013), which ensures that integrated signals are correct also
-        in the energy domain. If the variance of the signal is known, i.e.
+        142, 202 (2013), doi:10.1016/j.jlumin.2013.03.052, which ensures that
+        integrated signals are correct also in the energy domain. If the
+        variance of the signal is known, i.e.
         `metadata.Signal.Noise_properties.variance` is a signal representing
         the variance, a squared renormalization of the variance is performed.
 
@@ -122,8 +123,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     self.estimate_poissonian_noise_variance(svar)
             else:
                 self.data = self.isig[::-1].data
-            self.axes_manager.remove(-1)
-            self.axes_manager._axes.append(evaxis)
+            self.axes_manager.set_axis(evaxis, self.axes_manager.signal_axes[0].index_in_axes_manager)
 
         # create and return new signal
         else:
@@ -138,8 +138,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 s2data = self.isig[::-1].data
 
             s2 = self._deepcopy_with_new_data(s2data)
-            s2.axes_manager.remove(-1)
-            s2.axes_manager._axes.append(evaxis)
+            s2.axes_manager.set_axis(evaxis, self.axes_manager.signal_axes[0].index_in_axes_manager)
             if jacobian and self.metadata.has_item("Signal.Noise_properties.variance"):
                 var = self.metadata.Signal.Noise_properties.variance
                 s2var = s2._deepcopy_with_new_data(var2eV(
@@ -158,11 +157,11 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
         by doing a Jacobian transformation, see e.g. Wang and Townsend,
-        J. Lumin. 142, 202 (2013), which ensures that integrated signals are
-        correct also in the energy domain. If the variance of the signal is
-        known, i.e. `metadata.Signal.Noise_properties.variance` is a signal
-        representing the variance, a squared renormalization of the variance
-        is performed.
+        J. Lumin. 142, 202 (2013), doi:10.1016/j.jlumin.2013.03.052, which
+        ensures that integrated signals are correct also in the energy domain.
+        If the variance of the signal is known, i.e.
+        `metadata.Signal.Noise_properties.variance` is a signal representing
+        the variance, a squared renormalization of the variance is performed.
 
         Input parameters
         ----------------
@@ -215,8 +214,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     self.estimate_poissonian_noise_variance(svar)
             else:
                 self.data = self.isig[::-1].data
-            self.axes_manager.remove(-1)
-            self.axes_manager._axes.append(invcmaxis)
+            self.axes_manager.set_axis(invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager)
 
         # create and return new signal
         else:
@@ -230,8 +228,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 s2data = self.isig[::-1].data
 
             s2 = self._deepcopy_with_new_data(s2data)
-            s2.axes_manager.remove(-1)
-            s2.axes_manager._axes.append(invcmaxis)
+            s2.axes_manager.set_axis(invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager)
             if jacobian and self.metadata.has_item("Signal.Noise_properties.variance"):
                 var = self.metadata.Signal.Noise_properties.variance
                 s2var = s2._deepcopy_with_new_data(var2invcm(
@@ -250,8 +247,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
         by doing a Jacobian transformation, see e.g. Wang and Townsend,
-        J. Lumin. 142, 202 (2013), which ensures that integrated signals are
-        correct also in the energy domain.
+        J. Lumin. 142, 202 (2013), doi:10.1016/j.jlumin.2013.03.052, which
+        ensures that integrated signals are correct also in the energy domain.
 
         Input parameters
         ----------------
@@ -306,8 +303,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 )
             # else:
             #    self.data = self.isig[::-1].data
-            self.axes_manager.remove(-1)
-            self.axes_manager._axes.append(invcmaxis)
+            self.axes_manager.set_axis(invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager)
         # create and return new signal
         else:
             if jacobian:
@@ -554,8 +550,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
         else:
             s = self.deepcopy()
 
-        s.axes_manager.remove(-1)
-        s.axes_manager._axes.append(nm_axis)
+        s.axes_manager.set_axis(nm_axis, self.axes_manager.signal_axes[0].index_in_axes_manager)
+
 
         return s
 
