@@ -7,9 +7,10 @@
 [![PyPi Version](http://img.shields.io/pypi/v/lumispy.svg?style=flat)](https://pypi.python.org/pypi/lumispy)
 [![Anaconda Version](https://anaconda.org/conda-forge/lumispy/badges/version.svg)](https://anaconda.org/conda-forge/lumispy)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Documentation Status](https://readthedocs.org/projects/lumispy/badge/?version=latest)](https://lumispy.readthedocs.io/en/latest/?badge=latest)
 
 
-<img src="https://github.com/LumiSpy/lumispy/raw/main/doc/media/logo_rec_april21.svg" width="300" alt="LumiSpy">
+<img src="https://github.com/LumiSpy/lumispy/raw/main/doc/_static/logo_rec_april21.svg" width="300" alt="LumiSpy">
 
 LumiSpy is an extension Python package for multi-dimensional data analysis 
 provided by the [HyperSpy](http://hyperspy.org) library. It is aimed at helping 
@@ -19,7 +20,7 @@ photoluminescence, electroluminescence, Raman, SNOM).
 If analysis using LumiSpy forms a part of published work, please consider 
 recognising the code development by citing the project using the [Zenodo-DOI](https://doi.org/10.5281/zenodo.4640445).
 
-Instructions on how to install LumiSpy and get started: [installation guide](https://github.com/LumiSpy/lumispy/blob/main/INSTALLATION.md).
+Go to the documentation for instructions on how to install LumiSpy and get started with analysis: [Read the docs](lumispy.readthedocs.io).
 
 [Tutorials and example workflows](https://github.com/lumispy/lumispy-demos)
 have been curated as a series of Jupyter notebooks that you can work through 
