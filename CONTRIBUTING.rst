@@ -40,7 +40,7 @@ For `docstrings <https://www.python.org/dev/peps/pep-0257/>`_, we follow the `nu
 
 Package imports should be structured into three blocks with blank lines between them
 (descending order): standard library (like ``os`` and ``typing``), third party packages
-(like ``numpy`` and ``hyperspy``) and finally kikuchipy imports.
+(like ``numpy`` and ``hyperspy``) and finally ``lumispy`` imports.
 
 
 
