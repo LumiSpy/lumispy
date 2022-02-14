@@ -26,7 +26,7 @@ from warnings import warn
 
 from traits import traits
 
-from hyperspy.axes import *
+from hyperspy.axes import DataAxis, UniformDataAxis
 
 
 #
