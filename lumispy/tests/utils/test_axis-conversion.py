@@ -212,7 +212,8 @@ def test_to_eV(jacobian, variance):
         assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
 
 
-def test_reset_variance_linear_model_eV():
+@mark.parametrize(("jacobian"), (True, False))
+def test_reset_variance_linear_model_eV(jacobian):
     axis = DataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -230,18 +231,32 @@ def test_reset_variance_linear_model_eV():
         "Signal.Noise_properties.Variance_linear_model.correlation_factor", 2
     )
     S1.estimate_poissonian_noise_variance()
-    S2 = S1.to_eV(inplace=False, jacobian=True)
-    with warns(UserWarning, match="Following"):
-        S1.to_eV(inplace=True, jacobian=True)
-    assert S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 1
-    assert S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset == 0
-    assert (
-        S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor
-        == 1
-    )
-    assert (
-        S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model") == False
-    )
+    S2 = S1.to_eV(inplace=False, jacobian=jacobian)
+    if jacobian:
+        with warns(UserWarning, match="Following"):
+            S1.to_eV(inplace=True, jacobian=jacobian)
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 1
+        )
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset == 0
+        )
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor
+            == 1
+        )
+        assert (
+            S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model")
+            == False
+        )
+    else:
+        S1.to_invcm(inplace=True, jacobian=jacobian)
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 2
+        )
+        assert (
+            S2.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 2
+        )
 
 
 def test_nm2invcm():
@@ -404,7 +419,8 @@ def test_to_invcm(jacobian, variance):
         assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
 
 
-def test_reset_variance_linear_model_eV():
+@mark.parametrize(("jacobian"), (True, False))
+def test_reset_variance_linear_model_invcm(jacobian):
     axis = DataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -422,18 +438,32 @@ def test_reset_variance_linear_model_eV():
         "Signal.Noise_properties.Variance_linear_model.correlation_factor", 2
     )
     S1.estimate_poissonian_noise_variance()
-    S2 = S1.to_invcm(inplace=False, jacobian=True)
-    with warns(UserWarning, match="Following"):
-        S1.to_invcm(inplace=True, jacobian=True)
-    assert S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 1
-    assert S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset == 0
-    assert (
-        S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor
-        == 1
-    )
-    assert (
-        S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model") == False
-    )
+    S2 = S1.to_invcm(inplace=False, jacobian=jacobian)
+    if jacobian:
+        with warns(UserWarning, match="Following"):
+            S1.to_invcm(inplace=True, jacobian=jacobian)
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 1
+        )
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset == 0
+        )
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor
+            == 1
+        )
+        assert (
+            S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model")
+            == False
+        )
+    else:
+        S1.to_invcm(inplace=True, jacobian=jacobian)
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 2
+        )
+        assert (
+            S2.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 2
+        )
 
 
 @mark.parametrize(("jacobian"), (True, False))
