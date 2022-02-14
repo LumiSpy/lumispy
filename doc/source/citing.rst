@@ -2,6 +2,9 @@
  Citing LumiSpy
 ================
 
+LumiSpy is maintened by an `active community of developers 
+<https://github.com/lumispy/lumispy/contributors>`_.
+
 If LumiSpy has been significant to a project that leads to an academic
 publication, please acknowledge that fact by citing it. The DOI in the
 badge below is the `Concept DOI <https://help.zenodo.org/#versioning>`_.
