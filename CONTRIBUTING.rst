@@ -38,9 +38,11 @@ with `The Black Code style
 For `docstrings <https://www.python.org/dev/peps/pep-0257/>`_, we follow the `numpydoc
 <https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard>`_ standard.
 
-Package imports should be structured into three blocks with blank lines between them
-(descending order): standard library (like ``os`` and ``typing``), third party packages
-(like ``numpy`` and ``hyperspy``) and finally ``lumispy`` imports.
+Package imports should be structured into three blocks with blank lines between
+them:
+- standard libraries (like ``os`` and ``typing``),
+- third party packages (like ``numpy`` and ``hyperspy``),
+- and finally ``lumispy`` imports.
 
 
 
