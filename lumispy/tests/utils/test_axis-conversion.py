@@ -187,6 +187,15 @@ def test_to_eV(jacobian, variance):
     )
     assert_allclose(M1.data, M2.data, 5e-4)
     if variance:
+        if variance != "constant":
+            assert (
+                S1.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S1.axes_manager[-1].axis[0]
+            )
+            assert (
+                S2.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S2.axes_manager[-1].axis[0]
+            )
         assert (
             S1.metadata.Signal.Noise_properties.variance
             == S2.metadata.Signal.Noise_properties.variance
@@ -338,6 +347,15 @@ def test_to_invcm(jacobian, variance):
     )
     assert_allclose(M1.data, M2.data, 5e-4)
     if variance:
+        if variance != "constant":
+            assert (
+                S1.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S1.axes_manager[-1].axis[0]
+            )
+            assert (
+                S2.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S2.axes_manager[-1].axis[0]
+            )
         assert (
             S1.metadata.Signal.Noise_properties.variance
             == S2.metadata.Signal.Noise_properties.variance
@@ -429,6 +447,15 @@ def test_to_invcm_relative(jacobian, variance):
     )
     assert_allclose(M1.data, M2.data, 5e-4)
     if variance:
+        if variance != "constant":
+            assert (
+                S1.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S1.axes_manager[-1].axis[0]
+            )
+            assert (
+                S2.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S2.axes_manager[-1].axis[0]
+            )
         assert (
             S1.metadata.Signal.Noise_properties.variance
             == S2.metadata.Signal.Noise_properties.variance

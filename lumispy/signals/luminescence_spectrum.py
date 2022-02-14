@@ -107,6 +107,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         # in place conversion
         if inplace:
+            # convert data
             if jacobian:
                 self.data = data2eV(
                     self.isig[::-1].data,
@@ -114,6 +115,15 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     self.axes_manager.signal_axes[0],
                     evaxis.axis,
                 )
+            else:
+                self.data = self.isig[::-1].data
+            # convert axis
+            oldaxis = self.axes_manager.signal_axes[0]
+            self.axes_manager.set_axis(
+                evaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
+            )
+            # convert variance
+            if jacobian:
                 if self.metadata.has_item("Signal.Noise_properties.variance"):
                     var = self.metadata.Signal.Noise_properties.variance
                     if isinstance(var, (float, int)):
@@ -125,25 +135,23 @@ class LumiSpectrum(Signal1D, CommonLumi):
                         var2eV(
                             var.isig[::-1].data,
                             factor,
-                            self.axes_manager.signal_axes[0],
+                            oldaxis,
                             evaxis.axis,
                         )
                     )
                     self.estimate_poissonian_noise_variance(svar)
             else:
-                self.data = self.isig[::-1].data
                 if self.metadata.has_item("Signal.Noise_properties.variance"):
                     var = self.metadata.Signal.Noise_properties.variance
+                    # variance left unchanged, if it is a number and Jacobian not performed
                     if not isinstance(var, (float, int)):
                         self.set_noise_variance(
                             self._deepcopy_with_new_data(var.isig[::-1].data)
                         )
-            self.axes_manager.set_axis(
-                evaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
-            )
 
         # create and return new signal
         else:
+            # create new data array
             if jacobian:
                 s2data = data2eV(
                     self.isig[::-1].data,
@@ -154,18 +162,22 @@ class LumiSpectrum(Signal1D, CommonLumi):
             else:
                 s2data = self.isig[::-1].data
 
+            # create new signal object with correct data, axes, metadata
             s2 = self._deepcopy_with_new_data(s2data)
             s2.axes_manager.set_axis(
                 evaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
             )
+            # convert variance
             if self.metadata.has_item("Signal.Noise_properties.variance"):
                 var = self.metadata.Signal.Noise_properties.variance
                 if jacobian:
+                    # cast variance into signal, if necessary
                     if isinstance(var, (float, int)):
                         self.set_noise_variance(
                             self._deepcopy_with_new_data(np.ones(self.data.shape) * var)
                         )
                         var = self.metadata.Signal.Noise_properties.variance
+                    # convert
                     s2var = s2._deepcopy_with_new_data(
                         var2eV(
                             var.isig[::-1].data,
@@ -182,11 +194,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                         )
                     else:
                         s2.set_noise_variance(
-                            self._deepcopy_with_new_data(
-                                self.metadata.Signal.Noise_properties.variance.isig[
-                                    ::-1
-                                ].data
-                            )
+                            s2._deepcopy_with_new_data(var.isig[::-1].data)
                         )
             return s2
 
@@ -245,19 +253,30 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         # in place conversion
         if inplace:
+            # convert data
             if jacobian:
                 self.data = data2invcm(
                     self.isig[::-1].data,
                     factor,
                     invcmaxis.axis,
                 )
+            else:
+                self.data = self.isig[::-1].data
+            # convert axis
+            self.axes_manager.set_axis(
+                invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
+            )
+            # convert variance
+            if jacobian:
                 if self.metadata.has_item("Signal.Noise_properties.variance"):
                     var = self.metadata.Signal.Noise_properties.variance
+                    # cast variance into signal, if necessary
                     if isinstance(var, (float, int)):
                         self.set_noise_variance(
                             self._deepcopy_with_new_data(np.ones(self.data.shape) * var)
                         )
                         var = self.metadata.Signal.Noise_properties.variance
+                    # convert
                     svar = self._deepcopy_with_new_data(
                         var2invcm(
                             var.isig[::-1].data,
@@ -267,19 +286,17 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     )
                     self.estimate_poissonian_noise_variance(svar)
             else:
-                self.data = self.isig[::-1].data
                 if self.metadata.has_item("Signal.Noise_properties.variance"):
                     var = self.metadata.Signal.Noise_properties.variance
+                    # variance left unchanged, if it is a number and Jacobian not performed
                     if not isinstance(var, (float, int)):
                         self.set_noise_variance(
                             self._deepcopy_with_new_data(var.isig[::-1].data)
                         )
-            self.axes_manager.set_axis(
-                invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
-            )
 
         # create and return new signal
         else:
+            # create new data array
             if jacobian:
                 s2data = data2invcm(
                     self.isig[::-1].data,
@@ -289,10 +306,12 @@ class LumiSpectrum(Signal1D, CommonLumi):
             else:
                 s2data = self.isig[::-1].data
 
+            # create new signal object with correct data, axes, metadata
             s2 = self._deepcopy_with_new_data(s2data)
             s2.axes_manager.set_axis(
                 invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
             )
+            # convert variance
             if self.metadata.has_item("Signal.Noise_properties.variance"):
                 var = self.metadata.Signal.Noise_properties.variance
                 if jacobian:
@@ -314,7 +333,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                         s2.set_noise_variance(var)
                     else:
                         s2.set_noise_variance(
-                            self._deepcopy_with_new_data(var.isig[::-1].data)
+                            s2._deepcopy_with_new_data(var.isig[::-1].data)
                         )
             return s2
 
@@ -367,12 +386,30 @@ class LumiSpectrum(Signal1D, CommonLumi):
             self.axes_manager.set_axis(
                 invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
             )
+            # raplace variance axis
+            if self.metadata.has_item(
+                "Signal.Noise_properties.variance"
+            ) and not isinstance(
+                self.metadata.Signal.Noise_properties.variance, (float, int)
+            ):
+                self.metadata.Signal.Noise_properties.variance.axes_manager.set_axis(
+                    invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
+                )
         # create and return new signal
         else:
             s2 = self.to_invcm(inplace=inplace, jacobian=jacobian)
             s2.axes_manager.set_axis(
                 invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
             )
+            # raplace variance axis
+            if s2.metadata.has_item(
+                "Signal.Noise_properties.variance"
+            ) and not isinstance(
+                s2.metadata.Signal.Noise_properties.variance, (float, int)
+            ):
+                s2.metadata.Signal.Noise_properties.variance.axes_manager.set_axis(
+                    invcmaxis, s2.axes_manager.signal_axes[0].index_in_axes_manager
+                )
             return s2
 
     to_invcm_relative.__doc__ %= (TO_INVCM_DOCSTRING, TO_INVCMREL_EXAMPLE)
