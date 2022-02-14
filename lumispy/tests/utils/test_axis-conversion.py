@@ -113,7 +113,7 @@ def test_var2eV():
 
 
 @mark.parametrize(("jacobian"), (True, False))
-@mark.parametrize(("variance"), (True, False, 'constant'))
+@mark.parametrize(("variance"), (True, False, "constant"))
 def test_to_eV(jacobian, variance):
     axis = DataAxis(size=20, offset=200, scale=10)
     data = ones(20)
@@ -130,7 +130,7 @@ def test_to_eV(jacobian, variance):
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
     if variance:
-        if variance == 'constant':
+        if variance == "constant":
             S1.set_noise_variance(1.0)
         else:
             S1.estimate_poissonian_noise_variance()
@@ -150,7 +150,7 @@ def test_to_eV(jacobian, variance):
         ones((4, 20)), axes=[nav.get_axis_dictionary(), axis.get_axis_dictionary()]
     )
     if variance:
-        if variance == 'constant':
+        if variance == "constant":
             L1.set_noise_variance(1.0)
         else:
             L1.estimate_poissonian_noise_variance()
@@ -173,7 +173,7 @@ def test_to_eV(jacobian, variance):
         ],
     )
     if variance:
-        if variance == 'constant':
+        if variance == "constant":
             M1.set_noise_variance(1.0)
         else:
             M1.estimate_poissonian_noise_variance()
@@ -187,12 +187,18 @@ def test_to_eV(jacobian, variance):
     )
     assert_allclose(M1.data, M2.data, 5e-4)
     if variance:
-        assert S1.metadata.Signal.Noise_properties.variance == \
-                        S2.metadata.Signal.Noise_properties.variance
-        assert L1.metadata.Signal.Noise_properties.variance == \
-                        L2.metadata.Signal.Noise_properties.variance
-        assert M1.metadata.Signal.Noise_properties.variance == \
-                        M2.metadata.Signal.Noise_properties.variance
+        assert (
+            S1.metadata.Signal.Noise_properties.variance
+            == S2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            L1.metadata.Signal.Noise_properties.variance
+            == L2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            M1.metadata.Signal.Noise_properties.variance
+            == M2.metadata.Signal.Noise_properties.variance
+        )
     else:
         assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
 
@@ -258,7 +264,7 @@ def test_var2invcm():
 
 
 @mark.parametrize(("jacobian"), (True, False))
-@mark.parametrize(("variance"), (True, False, 'constant'))
+@mark.parametrize(("variance"), (True, False, "constant"))
 def test_to_invcm(jacobian, variance):
     axis = DataAxis(size=20, offset=200, scale=10)
     data = ones(20)
@@ -275,7 +281,7 @@ def test_to_invcm(jacobian, variance):
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
     if variance:
-        if variance == 'constant':
+        if variance == "constant":
             S1.set_noise_variance(1.0)
         else:
             S1.estimate_poissonian_noise_variance()
@@ -295,7 +301,7 @@ def test_to_invcm(jacobian, variance):
         ones((4, 20)), axes=[nav.get_axis_dictionary(), axis.get_axis_dictionary()]
     )
     if variance:
-        if variance == 'constant':
+        if variance == "constant":
             L1.set_noise_variance(1.0)
         else:
             L1.estimate_poissonian_noise_variance()
@@ -318,7 +324,7 @@ def test_to_invcm(jacobian, variance):
         ],
     )
     if variance:
-        if variance == 'constant':
+        if variance == "constant":
             M1.set_noise_variance(1.0)
         else:
             M1.estimate_poissonian_noise_variance()
@@ -332,18 +338,24 @@ def test_to_invcm(jacobian, variance):
     )
     assert_allclose(M1.data, M2.data, 5e-4)
     if variance:
-        assert S1.metadata.Signal.Noise_properties.variance == \
-                        S2.metadata.Signal.Noise_properties.variance
-        assert L1.metadata.Signal.Noise_properties.variance == \
-                        L2.metadata.Signal.Noise_properties.variance
-        assert M1.metadata.Signal.Noise_properties.variance == \
-                        M2.metadata.Signal.Noise_properties.variance
+        assert (
+            S1.metadata.Signal.Noise_properties.variance
+            == S2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            L1.metadata.Signal.Noise_properties.variance
+            == L2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            M1.metadata.Signal.Noise_properties.variance
+            == M2.metadata.Signal.Noise_properties.variance
+        )
     else:
         assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
 
 
 @mark.parametrize(("jacobian"), (True, False))
-@mark.parametrize(("variance"), (True, False, 'constant'))
+@mark.parametrize(("variance"), (True, False, "constant"))
 def test_to_invcm_relative(jacobian, variance):
     axis = DataAxis(size=20, offset=200, scale=10)
     data = ones(20)
@@ -360,7 +372,7 @@ def test_to_invcm_relative(jacobian, variance):
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
     if variance:
-        if variance == 'constant':
+        if variance == "constant":
             S1.set_noise_variance(1.0)
         else:
             S1.estimate_poissonian_noise_variance()
@@ -380,7 +392,7 @@ def test_to_invcm_relative(jacobian, variance):
         ones((4, 20)), axes=[nav.get_axis_dictionary(), axis.get_axis_dictionary()]
     )
     if variance:
-        if variance == 'constant':
+        if variance == "constant":
             L1.set_noise_variance(1.0)
         else:
             L1.estimate_poissonian_noise_variance()
@@ -403,7 +415,7 @@ def test_to_invcm_relative(jacobian, variance):
         ],
     )
     if variance:
-        if variance == 'constant':
+        if variance == "constant":
             M1.set_noise_variance(1.0)
         else:
             M1.estimate_poissonian_noise_variance()
@@ -417,12 +429,18 @@ def test_to_invcm_relative(jacobian, variance):
     )
     assert_allclose(M1.data, M2.data, 5e-4)
     if variance:
-        assert S1.metadata.Signal.Noise_properties.variance == \
-                        S2.metadata.Signal.Noise_properties.variance
-        assert L1.metadata.Signal.Noise_properties.variance == \
-                        L2.metadata.Signal.Noise_properties.variance
-        assert M1.metadata.Signal.Noise_properties.variance == \
-                        M2.metadata.Signal.Noise_properties.variance
+        assert (
+            S1.metadata.Signal.Noise_properties.variance
+            == S2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            L1.metadata.Signal.Noise_properties.variance
+            == L2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            M1.metadata.Signal.Noise_properties.variance
+            == M2.metadata.Signal.Noise_properties.variance
+        )
     else:
         assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
 

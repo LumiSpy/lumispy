@@ -61,8 +61,8 @@ def _n_air(x):
     return (
         1
         + 806051e-10
-        + 2480990e-8 / (132274e-3 - 1 / wl ** 2)
-        + 174557e-9 / (3932957e-5 - 1 / wl ** 2)
+        + 2480990e-8 / (132274e-3 - 1 / wl**2)
+        + 174557e-9 / (3932957e-5 - 1 / wl**2)
     )
 
 
@@ -116,10 +116,10 @@ def data2eV(data, factor, ax0, evaxis):
             * factor
             * c.h
             * c.c
-            / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis ** 2)
+            / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis**2)
         )
     else:
-        return data * factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis ** 2)
+        return data * factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)
 
 
 def var2eV(variance, factor, ax0, evaxis):
@@ -129,14 +129,14 @@ def var2eV(variance, factor, ax0, evaxis):
     if ax0.units == "µm":
         return (
             variance
-            * (factor
-            * c.h
-            * c.c
-            / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis ** 2)) ** 2
+            * (factor * c.h * c.c / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis**2))
+            ** 2
         )
     else:
-        return variance * (factor * c.h * c.c 
-            / (c.e * _n_air(ax0.axis[::-1]) * evaxis ** 2)) ** 2
+        return (
+            variance
+            * (factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)) ** 2
+        )
 
 
 def nm2invcm(x):
@@ -181,14 +181,14 @@ def data2invcm(data, factor, invcmaxis):
     Townsend, J. Lumin. 142, 202 (2013). Ensures that integrated signals are
     still correct.
     """
-    return data * factor / (invcmaxis ** 2)
+    return data * factor / (invcmaxis**2)
 
 
 def var2invcm(variance, factor, invcmaxis):
     r"""The variance is converted doing a squared Jacobian renormalization to
     match with the transformation of the data.
     """
-    return variance * (factor / (invcmaxis ** 2)) ** 2
+    return variance * (factor / (invcmaxis**2)) ** 2
 
 
 #
