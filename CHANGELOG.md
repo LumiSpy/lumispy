@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## UNRELEASED
 ### Changed
+- Set up read the docs documentation
 - Fix error in background dimensions that allows compatibility for updated `map` in HyperSpy (failing integration tests)
 - Fix for links in PyPi
 
