@@ -42,7 +42,7 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['../_static']
-html_css_files = ['custom.css']
+html_css_files = ['css/custom.css']
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -75,3 +75,5 @@ def run_apidoc(_):
 
 def setup(app):
     app.connect('builder-inited', run_apidoc)
+    app.add_css_file("css/dark.css")
+    app.add_css_file("css/light.css")
