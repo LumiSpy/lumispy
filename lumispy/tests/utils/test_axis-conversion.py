@@ -216,17 +216,32 @@ def test_reset_variance_linear_model_eV():
     axis = DataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    
+    if not "axis" in getfullargspec(DataAxis)[0]:
+        raises(ImportError, S1.to_invcm)
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        skip("HyperSpy version doesn't support non-uniform axis")
+    
     S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_factor", 2)
     S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_offset", 1)
-    S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.correlation_factor", 2)
+    S1.metadata.set_item(
+        "Signal.Noise_properties.Variance_linear_model.correlation_factor", 2
+    )
     S1.estimate_poissonian_noise_variance()
     S2 = S1.to_eV(inplace=False, jacobian=True)
     with warns(UserWarning, match="Following"):
         S1.to_eV(inplace=True, jacobian=True)
-    assert(S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 1)
-    assert(S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset == 0)
-    assert(S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor == 1)
-    assert(S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model") == False)
+    assert S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 1
+    assert S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset == 0
+    assert (
+        S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor
+        == 1
+    )
+    assert (
+        S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model") == False
+    )
 
 
 def test_nm2invcm():
@@ -393,17 +408,32 @@ def test_reset_variance_linear_model_eV():
     axis = DataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    
+    if not "axis" in getfullargspec(DataAxis)[0]:
+        raises(ImportError, S1.to_invcm)
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        skip("HyperSpy version doesn't support non-uniform axis")
+    
     S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_factor", 2)
     S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_offset", 1)
-    S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.correlation_factor", 2)
+    S1.metadata.set_item(
+        "Signal.Noise_properties.Variance_linear_model.correlation_factor", 2
+    )
     S1.estimate_poissonian_noise_variance()
     S2 = S1.to_invcm(inplace=False, jacobian=True)
     with warns(UserWarning, match="Following"):
         S1.to_invcm(inplace=True, jacobian=True)
-    assert(S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 1)
-    assert(S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset == 0)
-    assert(S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor == 1)
-    assert(S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model") == False)
+    assert S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 1
+    assert S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset == 0
+    assert (
+        S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor
+        == 1
+    )
+    assert (
+        S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model") == False
+    )
 
 
 @mark.parametrize(("jacobian"), (True, False))
