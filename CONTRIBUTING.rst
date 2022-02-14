@@ -11,6 +11,7 @@ Issues
 The [issue tracker](https://github.com/lumispy/lumispy/issues) can be used to
 report bugs or propose new features. When reporting a bug, the following is
 useful:
+
 - give a minimal example demonstrating the bug,
 - copy and paste the error traceback.
 
@@ -40,6 +41,7 @@ For `docstrings <https://www.python.org/dev/peps/pep-0257/>`_, we follow the `nu
 
 Package imports should be structured into three blocks with blank lines between
 them:
+
 - standard libraries (like ``os`` and ``typing``),
 - third party packages (like ``numpy`` and ``hyperspy``),
 - and finally ``lumispy`` imports.
