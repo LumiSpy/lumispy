@@ -19,7 +19,7 @@
 from inspect import getfullargspec
 from numpy import arange, ones
 from numpy.testing import assert_allclose
-from pytest import raises, mark, skip
+from pytest import raises, mark, skip, warns
 import warnings
 
 from hyperspy.axes import DataAxis
@@ -212,6 +212,23 @@ def test_to_eV(jacobian, variance):
         assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
 
 
+def test_reset_variance_linear_model_eV():
+    axis = DataAxis(size=20, offset=200, scale=10)
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_factor", 2)
+    S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_offset", 1)
+    S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.correlation_factor", 2)
+    S1.estimate_poissonian_noise_variance()
+    S2 = S1.to_eV(inplace=False, jacobian=True)
+    with warns(UserWarning, match="Following"):
+        S1.to_eV(inplace=True, jacobian=True)
+    assert(S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 1)
+    assert(S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset == 0)
+    assert(S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor == 1)
+    assert(S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model") == False)
+
+
 def test_nm2invcm():
     wl = arange(300, 410, 100)
     invcm = nm2invcm(wl)
@@ -370,6 +387,23 @@ def test_to_invcm(jacobian, variance):
         )
     else:
         assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
+
+
+def test_reset_variance_linear_model_eV():
+    axis = DataAxis(size=20, offset=200, scale=10)
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_factor", 2)
+    S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_offset", 1)
+    S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.correlation_factor", 2)
+    S1.estimate_poissonian_noise_variance()
+    S2 = S1.to_invcm(inplace=False, jacobian=True)
+    with warns(UserWarning, match="Following"):
+        S1.to_invcm(inplace=True, jacobian=True)
+    assert(S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 1)
+    assert(S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset == 0)
+    assert(S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor == 1)
+    assert(S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model") == False)
 
 
 @mark.parametrize(("jacobian"), (True, False))

@@ -57,6 +57,45 @@ class LumiSpectrum(Signal1D, CommonLumi):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def _reset_variance_linear_model(self):
+        """Resets the variance linear model parameters to their default values,
+        as they are not applicable any longer after a Jacobian transformation.
+        """
+        if (
+            (
+                self.metadata.has_item(
+                    "Signal.Noise_properties.Variance_linear_model.gain_factor"
+                )
+                and self.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor
+                != 1
+            )
+            or (
+                self.metadata.has_item(
+                    "Signal.Noise_properties.Variance_linear_model.gain_offset"
+                )
+                and self.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset
+                != 0
+            )
+            or (
+                self.metadata.has_item(
+                    "Signal.Noise_properties.Variance_linear_model.correlation_factor"
+                )
+                and self.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor
+                != 1
+            )
+        ):
+            self.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor = 1
+            self.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset = 0
+            self.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor = (
+                1
+            )
+            warn(
+                "Following the Jacobian transformation, the parameters of the "
+                "`Variance_linear_model` are reset to their default values "
+                "(gain_factor=1, gain_offset=0, correlation_factor=1).",
+                UserWarning,
+            )
+
     def to_eV(self, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear energy axis (eV)
         using wavelength dependent permittivity of air. Assumes wavelength in
@@ -145,7 +184,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
                         copy_variance=False,
                         copy_learning_results=False,
                     )
-                    self.estimate_poissonian_noise_variance(svar)
+                    self.set_noise_variance(svar)
+                    self._reset_variance_linear_model()
             else:
                 if self.metadata.has_item("Signal.Noise_properties.variance"):
                     var = self.get_noise_variance()
@@ -204,7 +244,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                         copy_variance=False,
                         copy_learning_results=False,
                     )
-                    s2.estimate_poissonian_noise_variance(s2var)
+                    s2.set_noise_variance(s2var)
                 else:
                     if isinstance(var, (float, int)):
                         s2.set_noise_variance(self.get_noise_variance())
@@ -310,7 +350,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
                         copy_variance=False,
                         copy_learning_results=False,
                     )
-                    self.estimate_poissonian_noise_variance(svar)
+                    self.set_noise_variance(svar)
+                    self._reset_variance_linear_model()
             else:
                 if self.metadata.has_item("Signal.Noise_properties.variance"):
                     var = self.get_noise_variance()
@@ -365,7 +406,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                         copy_variance=False,
                         copy_learning_results=False,
                     )
-                    s2.estimate_poissonian_noise_variance(s2var)
+                    s2.set_noise_variance(s2var)
                 else:
                     if isinstance(var, (float, int)):
                         s2.set_noise_variance(var)
@@ -428,7 +469,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
             self.axes_manager.set_axis(
                 invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
             )
-            # raplace variance axis
+            # replace variance axis
             if self.metadata.has_item(
                 "Signal.Noise_properties.variance"
             ) and not isinstance(self.get_noise_variance(), (float, int)):
@@ -441,7 +482,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
             s2.axes_manager.set_axis(
                 invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
             )
-            # raplace variance axis
+            # replace variance axis
             if s2.metadata.has_item(
                 "Signal.Noise_properties.variance"
             ) and not isinstance(s2.get_noise_variance(), (float, int)):
