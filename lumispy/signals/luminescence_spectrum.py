@@ -156,46 +156,49 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 s2.estimate_poissonian_noise_variance(s2var)
             return s2
 
-    def _to_invcm(self, inplace=True, jacobian=True):
-        """ Private function to perform conversion to non-linear wavenumber axis
-        for the code that is equivalent in to_invcm and to_invcm_relative.
-        """
+
+    TO_INVCM_DOCSTRING = """
+    The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
+    by doing a Jacobian transformation, see e.g. Wang and Townsend,
+    J. Lumin. 142, 202 (2013), doi:10.1016/j.jlumin.2013.03.052, which
+    ensures that integrated signals are correct also in the wavenumber 
+    domain.
+
+    If the variance of the signal is known, i.e.
+    `metadata.Signal.Noise_properties.variance` is a signal representing
+    the variance, a squared renormalization of the variance is performed.
+
+    Input parameters
+    ----------------
+    inplace : boolean
+        If `False`, a new signal object is created and returned. Otherwise
+        (default) the operation is performed on the existing signal object.
+    jacobian : boolean
+        The default is to do the Jacobian transformation (recommended at
+        least for luminescence signals), but the transformation can be
+        suppressed by setting this option to `False`.
+    """
+
+    TO_INVCM_EXAMPLE = """
+    Examples
+    --------
+    > import numpy as np
+    > from lumispy import LumiSpectrum
+    > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+    > S1.to_invcm()
+
+    Note
+    ----
+    Using a non-linear axis works only for the RELEASE_next_minor development
+    branch of HyperSpy.    
+    """
 
     def to_invcm(self, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear wavenumber axis
         (cm^-1). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
-
-        The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
-        by doing a Jacobian transformation, see e.g. Wang and Townsend,
-        J. Lumin. 142, 202 (2013), doi:10.1016/j.jlumin.2013.03.052, which
-        ensures that integrated signals are correct also in the energy domain.
-        If the variance of the signal is known, i.e.
-        `metadata.Signal.Noise_properties.variance` is a signal representing
-        the variance, a squared renormalization of the variance is performed.
-
-        Input parameters
-        ----------------
-        inplace : boolean
-            If `False`, a new signal object is created and returned. Otherwise
-            (default) the operation is performed on the existing signal object.
-        jacobian : boolean
-            The default is to do the Jacobian transformation (recommended at
-            least for luminescence signals), but the transformation can be
-            suppressed by setting this option to `False`.
-
-        Examples
-        --------
-        > import numpy as np
-        > from lumispy import LumiSpectrum
-        > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
-        > S1.to_invcm()
-
-        Note
-        ----
-        Using a non-linear axis works only for the RELEASE_next_minor development
-        branch of HyperSpy.
-
+        %s
+        %s
         """
 
         # Check if non_uniform_axis is available in hyperspy version
@@ -255,42 +258,30 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     ))
                 s2.estimate_poissonian_noise_variance(s2var)
             return s2
+    to_invcm.__doc__ %= (TO_INVCM_DOCSTRING, TO_INVCM_EXAMPLE)
+
+
+    TO_INVCMREL_EXAMPLE = """
+    Examples
+    --------
+    > import numpy as np
+    > from lumispy import LumiSpectrum
+    > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+    > S1.to_invcm(laser=325)
+
+    Note
+    ----
+    Using a non-linear axis works only for the RELEASE_next_minor development
+    branch of HyperSpy.    
+    """
 
     def to_invcm_relative(self, laser, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear wavenumber axis
         (cm^-1) relative to the exciting laser wavelength (Stokes/Anti-Stokes
         shift). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
-
-        The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
-        by doing a Jacobian transformation, see e.g. Wang and Townsend,
-        J. Lumin. 142, 202 (2013), doi:10.1016/j.jlumin.2013.03.052, which
-        ensures that integrated signals are correct also in the energy domain.
-
-        Input parameters
-        ----------------
-        laser : float
-            Laser wavelength in same units as signal axes (nm or µm).
-        inplace : boolean
-            If `False`, a new signal object is created and returned. Otherwise
-            (default) the operation is performed on the existing signal object.
-        jacobian : boolean
-            The default is to do the Jacobian transformation (recommended at
-            least for luminescence signals), but the transformation can be
-            suppressed by setting this option to `False`.
-
-        Examples
-        --------
-        > import numpy as np
-        > from lumispy import LumiSpectrum
-        > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
-        > S1.to_invcm()
-
-        Note
-        ----
-        Using a non-linear axis works only for the RELEASE_next_minor development
-        branch of HyperSpy.
-
+        %s
+        %s
         """
 
         # Check if non_uniform_axis is available in hyperspy version
@@ -310,49 +301,18 @@ class LumiSpectrum(Signal1D, CommonLumi):
         absaxis = invcmaxis.axis[::-1]
         invcmaxis.axis = invcmlaser - absaxis
 
-        # in place conversion, use absolute scale for Jacobian
+        # replace signal axis after conversion
+        # in place conversion (using absolute scale for Jacobian)
         if inplace:
-            if jacobian:
-                self.data = data2invcm(
-                    self.data,
-                    factor,
-                    absaxis,
-                )
-            # else:
-            #    self.data = self.isig[::-1].data
+            self.to_invcm(inplace=inplace, jacobian=jacobian)
             self.axes_manager.set_axis(invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager)
         # create and return new signal
         else:
-            if jacobian:
-                s2data = data2invcm(
-                    self.data,
-                    factor,
-                    absaxis,
-                )
-            else:
-                s2data = self.data
-            if self.data.ndim == 1:
-                s2 = LumiSpectrum(s2data, axes=(invcmaxis.get_axis_dictionary(),))
-            elif self.data.ndim == 2:
-                s2 = LumiSpectrum(
-                    s2data,
-                    axes=(
-                        self.axes_manager.navigation_axes[0].get_axis_dictionary(),
-                        invcmaxis.get_axis_dictionary(),
-                    ),
-                )
-            else:
-                s2 = LumiSpectrum(
-                    s2data,
-                    axes=(
-                        self.axes_manager.navigation_axes[1].get_axis_dictionary(),
-                        self.axes_manager.navigation_axes[0].get_axis_dictionary(),
-                        invcmaxis.get_axis_dictionary(),
-                    ),
-                )
-            s2.set_signal_type(self.metadata.Signal.signal_type)
-            s2.metadata = self.metadata
+            s2 = self.to_invcm(inplace=inplace, jacobian=jacobian)
+            s2.axes_manager.set_axis(invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager)
             return s2
+    to_invcm_relative.__doc__ %= (TO_INVCM_DOCSTRING, TO_INVCMREL_EXAMPLE)
+
 
     def remove_background_from_file(self, background=None, inplace=False, **kwargs):
         """
