@@ -41,4 +41,4 @@ Contents
 
    citing.rst
    contributing.rst
-   Code source on GitHub <https://github.com/LumiSpy/lumispy>
+   On GitHub <https://github.com/LumiSpy/lumispy>
