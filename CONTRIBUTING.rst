@@ -8,7 +8,7 @@ In the following we refer to some resources to help you make useful contribution
 Issues
 ======
 
-The [issue tracker](https://github.com/lumispy/lumispy/issues) can be used to
+The `issue tracker <https://github.com/lumispy/lumispy/issues>`_ can be used to
 report bugs or propose new features. When reporting a bug, the following is
 useful:
 
@@ -19,20 +19,39 @@ Pull Requests
 =============
 
 If you want to contribute to the LumiSpy source code, you can send us a
-[pull request](https://github.com/lumispy/lumispy/pulls).
+`pull request <https://github.com/lumispy/lumispy/pulls>`_.
 
 Please refer to the 
-[HyperSpy developer guide](http://hyperspy.org/hyperspy-doc/current/dev_guide/intro.html)
+`HyperSpy developer guide <http://hyperspy.org/hyperspy-doc/current/dev_guide/intro.html>`_
 in order to get started and for detailed contributing guidelines.
 
-The [kikuchypy contributors guide](https://kikuchipy.org/en/stable/contributing.html),
+The `kikuchypy contributors guide https://kikuchipy.org/en/stable/contributing.html>`_,
 another HyperSpy extension, also is a valuable resource that can get you
 started and provides useful guidelines.
+
+Documentation
+=============
+
+The LumiSpy documentation consists of three elements:
+
+- `Docstrings <https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard>`_
+  that document the functionality of individual methods on `GitHub
+  <https://github.com/LumiSpy/lumispy/tree/main/lumispy/>`_.
+- The `documentation <https://lumispy.org>`_ written using `Sphinx
+  <https://www.sphinx-doc.org/en/master/>`_ and hosted on `Read the Docs
+  <https://lumispy.readthedocs.io/>`_. The source is part of the `GitHub repository
+  <https://github.com/LumiSpy/lumispy/tree/main/doc/source>`_.
+- A set of curated Jupyter notebooks in the `LumiSpy demos repository
+  <https://github.com/lumispy/lumispy-demos>`_ on GitHub that provide tutorials and example
+  workflows.
+
+Improving documentation is always welcome and a good way of starting out to learn the GitHub
+functionality. You can contribute through pull requests to the respective repositories.
 
 Code style
 ==========
 
-LumiSpy follows `Style Guide for Python Code <https://www.python.org/dev/peps/pep-0008/>`_ 
+LumiSpy follows `Style Guide for Python Code <https://www.python.org/dev/peps/pep-0008/>`_
 with `The Black Code style
 <https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html>`_.
 
@@ -46,11 +65,20 @@ them:
 - third party packages (like ``numpy`` and ``hyperspy``),
 - and finally ``lumispy`` imports.
 
+Writing tests
+=============
+
+All functionality in LumiSpy is tested via the `pytest <https://docs.pytest.org>`_
+framework. The tests reside in the ``test`` directory. Tests are short methods that call
+functions in LumiSpy and compare resulting output values with known answers.
+Please refer to the `HyperSpy development guide
+<https://hyperspy.org/hyperspy-doc/current/dev_guide/testing.html>`_ for further
+information on tests.
 
 Releasing a new version
 =======================
 
-LumiSpy versioning follows `semantic versioning <https://semver.org/spec/v2.0.0.html>`_ 
+LumiSpy versioning follows `semantic versioning <https://semver.org/spec/v2.0.0.html>`_
 and the version number is therefore a three-part number: MAJOR.MINOR.PATCH.
 Each number will change depending on the type of changes according to the following:
 
@@ -58,4 +86,6 @@ Each number will change depending on the type of changes according to the follow
 - MINOR increases when adding functionality in a backwards compatible manner, and
 - PATCH increases when making backwards compatible bug fixes.
 
-The process to release a new version that is pushed to `PyPI <https://pypi.org>`_ and `Conda-Forge <https://conda-forge.org/>`_ is documented in the `Releasing guide <releasing_guide.rst>`_.
+The process to release a new version that is pushed to `PyPI <https://pypi.org>`_ and
+`Conda-Forge <https://conda-forge.org/>`_ is documented in the `Releasing guide
+<releasing_guide.rst>`_.
