@@ -47,4 +47,15 @@ them:
 - and finally ``lumispy`` imports.
 
 
+Releasing a new version
+=======================
 
+LumiSpy versioning follows `semantic versioning <https://semver.org/spec/v2.0.0.html>`_ 
+and the version number is therefore a three-part number: MAJOR.MINOR.PATCH.
+Each number will change depending on the type of changes according to the following:
+
+- MAJOR increases when making incompatible API changes,
+- MINOR increases when adding functionality in a backwards compatible manner, and
+- PATCH increases when making backwards compatible bug fixes.
+
+The process to release a new version that is pushed to `PyPI <https://pypi.org>`_ and `Conda-Forge <https://conda-forge.org/>`_ is documented in the `Releasing guide <releasing_guide.rst>`_.
