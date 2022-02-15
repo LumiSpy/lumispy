@@ -2,7 +2,7 @@ Welcome to LumiSpy's documentation!
 ===================================
 
 **LumiSpy** is a Python package extending the functionality for multi-dimensional
-data analysis provided by the `HyperSpy <http://hyperspy.org/>`_ library. It is
+data analysis provided by the `HyperSpy <https://hyperspy.org/>`_ library. It is
 aimed at helping with the analysis of luminescence spectroscopy data
 (cathodoluminescence, photoluminescence, electroluminescence, Raman, SNOM).
 
@@ -10,7 +10,7 @@ Check out the :ref:`installation-label` section for further information, includi
 how to start using this project.
 
 Everyone is welcome to contribute. Please read our
-`contributing guidelines <https://github.com/LumiSpy/lumispy/blob/main/.github/CONTRIBUTING.md/>`_
+`contributing guidelines <contributing.rst>`_
 and get started!
 
 .. note::
@@ -41,3 +41,4 @@ Contents
 
    citing.rst
    contributing.rst
+   `On GitHub <https://github.com/LumiSpy/lumispy>`_
