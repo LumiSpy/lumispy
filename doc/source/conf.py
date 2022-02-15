@@ -71,7 +71,6 @@ def run_apidoc(_):
         "SPHINX_APIDOC_OPTIONS"
     ] = "members,private-members,no-undoc-members,show-inheritance,ignore-module-all"
 
-
     from sphinx.ext.apidoc import main
 
     cur_dir = os.path.normpath(os.path.dirname(__file__))
