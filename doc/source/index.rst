@@ -41,4 +41,4 @@ Contents
 
    citing.rst
    contributing.rst
-   `On GitHub <https://github.com/LumiSpy/lumispy>`_
+   On GitHub <https://github.com/LumiSpy/lumispy>
