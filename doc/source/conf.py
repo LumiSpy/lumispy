@@ -28,7 +28,7 @@ extensions = [
     "sphinx.ext.imgmath",
     "sphinx.ext.graphviz",
     "sphinx.ext.autosummary",
-#    "sphinx_toggleprompt",
+    #    "sphinx_toggleprompt",
 ]
 
 intersphinx_mapping = {
