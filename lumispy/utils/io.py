@@ -20,9 +20,9 @@ import numpy as np
 
 SAVETXT_DOCSTRING = """
     Writes single spectra to a two-column data file with signal axis as
-        X and data as Y.
+    X and data as Y.
     Writes linescan data to file with signal axis as first row and
-        navigation axis as first column (flipped if `transpose=True`)."""
+    navigation axis as first column (flipped if `transpose=True`)."""
 
 SAVETXT_PARAMETERS = """
     Parameters
@@ -76,7 +76,7 @@ TOARRAY_DOCSTRING = """
     
     Returns single spectra as two-column array.
     Returns linescan data as array with signal axis as first row and
-        navigation axis as first column (flipped if `transpose=True`)."""
+    navigation axis as first column (flipped if `transpose=True`)."""
 
 TOARRAY_PARAMETERS = """
     Parameters
@@ -127,9 +127,9 @@ def to_array(S, axes=True, transpose=False):
     """Returns signal object as numpy array (optionally including the axes).
     %s
     Returns image as array with the navigation axes as first column and first
-        row.
+    row.
     Returns 2D data (e.g. map of a fit parameter value) as array with the signal
-        axes as first column and first row.
+    axes as first column and first row.
     %s
     %s
     """
@@ -185,9 +185,9 @@ def savetxt(
     """Writes signal object to simple text file.
     %s
     Writes image to file with the navigation axes as first column and first
-        row.
+    row.
     Writes 2D data (e.g. map of a fit parameter value) to file with the signal
-        axes as first column and first row.
+    axes as first column and first row.
     %s
     %s
     """

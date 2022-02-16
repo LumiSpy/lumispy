@@ -49,6 +49,7 @@ Contents
    :caption: User Guide
 
    user_guide/installation.rst
+   user_guide/introduction.rst
    user_guide/signal_axis.rst
    user_guide/fitting_luminescence.rst
 

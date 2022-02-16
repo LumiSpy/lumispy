@@ -497,8 +497,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
     to_invcm_relative.__doc__ %= (TO_INVCM_DOCSTRING, TO_INVCMREL_EXAMPLE)
 
     def remove_background_from_file(self, background=None, inplace=False, **kwargs):
-        """
-        Subtract the background to the signal in all navigation axes.If no
+        """Subtract the background to the signal in all navigation axes.If no
         background file is passed as argument, the `remove_background()` from
         HyperSpy is called with the GUI.
 
@@ -670,8 +669,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         grating_density_gr_mm,
         inplace=False,
     ):
-        """
-        Converts signal axis of 1D signal (in pixels) to wavelength, solving the grating
+        """Converts signal axis of 1D signal (in pixels) to wavelength, solving the grating
         equation.
         See ``lumispy.axes.solve_grating_equation` for more details.
 
