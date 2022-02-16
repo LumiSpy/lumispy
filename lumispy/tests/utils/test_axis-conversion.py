@@ -19,7 +19,7 @@
 from inspect import getfullargspec
 from numpy import arange, ones
 from numpy.testing import assert_allclose
-from pytest import raises, mark, skip
+from pytest import raises, mark, skip, warns
 import warnings
 
 from hyperspy.axes import DataAxis
@@ -30,10 +30,12 @@ from lumispy.utils.axes import (
     eV2nm,
     axis2eV,
     data2eV,
+    var2eV,
     nm2invcm,
     invcm2nm,
     axis2invcm,
     data2invcm,
+    var2invcm,
     solve_grating_equation,
 )
 
@@ -97,8 +99,22 @@ def test_data2eV():
     assert_allclose(evdata[0], 12.271168e-3)
 
 
+def test_var2eV():
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        skip("HyperSpy version doesn't support non-uniform axis")
+
+    data = 100 * ones(20)
+    ax0 = DataAxis(axis=arange(200, 400, 10), units="nm")
+    evaxis, factor = axis2eV(ax0)
+    evvar = var2eV(data, factor, ax0, evaxis.axis)
+    assert_allclose(evvar[0], 1.5058156)
+
+
 @mark.parametrize(("jacobian"), (True, False))
-def test_to_eV(jacobian):
+@mark.parametrize(("variance"), (True, False, "constant"))
+def test_to_eV(jacobian, variance):
     axis = DataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -113,6 +129,11 @@ def test_to_eV(jacobian):
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    if variance:
+        if variance == "constant":
+            S1.set_noise_variance(1.0)
+        else:
+            S1.estimate_poissonian_noise_variance()
     S2 = S1.to_eV(inplace=False, jacobian=jacobian)
     S1.axes_manager[0].units = "µm"
     S1.axes_manager[0].axis = axis.axis / 1000
@@ -128,6 +149,11 @@ def test_to_eV(jacobian):
     L1 = LumiSpectrum(
         ones((4, 20)), axes=[nav.get_axis_dictionary(), axis.get_axis_dictionary()]
     )
+    if variance:
+        if variance == "constant":
+            L1.set_noise_variance(1.0)
+        else:
+            L1.estimate_poissonian_noise_variance()
     L2 = L1.to_eV(inplace=False, jacobian=jacobian)
     L1.to_eV(jacobian=jacobian)
     assert L1.axes_manager.signal_axes[0].units == "eV"
@@ -146,6 +172,11 @@ def test_to_eV(jacobian):
             axis.get_axis_dictionary(),
         ],
     )
+    if variance:
+        if variance == "constant":
+            M1.set_noise_variance(1.0)
+        else:
+            M1.estimate_poissonian_noise_variance()
     M2 = M1.to_eV(inplace=False, jacobian=jacobian)
     M1.to_eV(jacobian=jacobian)
     assert M1.axes_manager.signal_axes[0].units == "eV"
@@ -155,6 +186,77 @@ def test_to_eV(jacobian):
         M1.axes_manager.signal_axes[0].axis[0] == M2.axes_manager.signal_axes[0].axis[0]
     )
     assert_allclose(M1.data, M2.data, 5e-4)
+    if variance:
+        if variance != "constant":
+            assert (
+                S1.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S1.axes_manager[-1].axis[0]
+            )
+            assert (
+                S2.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S2.axes_manager[-1].axis[0]
+            )
+        assert (
+            S1.metadata.Signal.Noise_properties.variance
+            == S2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            L1.metadata.Signal.Noise_properties.variance
+            == L2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            M1.metadata.Signal.Noise_properties.variance
+            == M2.metadata.Signal.Noise_properties.variance
+        )
+    else:
+        assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
+
+
+@mark.parametrize(("jacobian"), (True, False))
+def test_reset_variance_linear_model_eV(jacobian):
+    axis = DataAxis(size=20, offset=200, scale=10)
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+
+    if not "axis" in getfullargspec(DataAxis)[0]:
+        raises(ImportError, S1.to_invcm)
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        skip("HyperSpy version doesn't support non-uniform axis")
+
+    S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_factor", 2)
+    S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_offset", 1)
+    S1.metadata.set_item(
+        "Signal.Noise_properties.Variance_linear_model.correlation_factor", 2
+    )
+    S1.estimate_poissonian_noise_variance()
+    S2 = S1.to_eV(inplace=False, jacobian=jacobian)
+    if jacobian:
+        with warns(UserWarning, match="Following"):
+            S1.to_eV(inplace=True, jacobian=jacobian)
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 1
+        )
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset == 0
+        )
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor
+            == 1
+        )
+        assert (
+            S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model")
+            == False
+        )
+    else:
+        S1.to_invcm(inplace=True, jacobian=jacobian)
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 2
+        )
+        assert (
+            S2.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 2
+        )
 
 
 def test_nm2invcm():
@@ -204,12 +306,22 @@ def test_data2invcm():
     factor = 1e7
     ax0 = arange(200, 400, 10)
     invcmaxis = nm2invcm(ax0)
-    invcmdata = data2invcm(data, factor, ax0, invcmaxis)
+    invcmdata = data2invcm(data, factor, invcmaxis)
     assert_allclose(invcmdata[-1], 1.521)
 
 
+def test_var2invcm():
+    data = 100 * ones(20)
+    factor = 1e7
+    ax0 = arange(200, 400, 10)
+    invcmaxis = nm2invcm(ax0)
+    invcmdata = var2invcm(data, factor, invcmaxis)
+    assert_allclose(invcmdata[-1], 0.02313441)
+
+
 @mark.parametrize(("jacobian"), (True, False))
-def test_to_invcm(jacobian):
+@mark.parametrize(("variance"), (True, False, "constant"))
+def test_to_invcm(jacobian, variance):
     axis = DataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -224,6 +336,11 @@ def test_to_invcm(jacobian):
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    if variance:
+        if variance == "constant":
+            S1.set_noise_variance(1.0)
+        else:
+            S1.estimate_poissonian_noise_variance()
     S2 = S1.to_invcm(inplace=False, jacobian=jacobian)
     S1.axes_manager[0].units = "µm"
     S1.axes_manager[0].axis = axis.axis / 1000
@@ -239,6 +356,11 @@ def test_to_invcm(jacobian):
     L1 = LumiSpectrum(
         ones((4, 20)), axes=[nav.get_axis_dictionary(), axis.get_axis_dictionary()]
     )
+    if variance:
+        if variance == "constant":
+            L1.set_noise_variance(1.0)
+        else:
+            L1.estimate_poissonian_noise_variance()
     L2 = L1.to_invcm(inplace=False, jacobian=jacobian)
     L1.to_invcm(jacobian=jacobian)
     assert L1.axes_manager.signal_axes[0].units == r"cm$^{-1}$"
@@ -257,6 +379,11 @@ def test_to_invcm(jacobian):
             axis.get_axis_dictionary(),
         ],
     )
+    if variance:
+        if variance == "constant":
+            M1.set_noise_variance(1.0)
+        else:
+            M1.estimate_poissonian_noise_variance()
     M2 = M1.to_invcm(inplace=False, jacobian=jacobian)
     M1.to_invcm(jacobian=jacobian)
     assert M1.axes_manager.signal_axes[0].units == r"cm$^{-1}$"
@@ -266,10 +393,82 @@ def test_to_invcm(jacobian):
         M1.axes_manager.signal_axes[0].axis[0] == M2.axes_manager.signal_axes[0].axis[0]
     )
     assert_allclose(M1.data, M2.data, 5e-4)
+    if variance:
+        if variance != "constant":
+            assert (
+                S1.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S1.axes_manager[-1].axis[0]
+            )
+            assert (
+                S2.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S2.axes_manager[-1].axis[0]
+            )
+        assert (
+            S1.metadata.Signal.Noise_properties.variance
+            == S2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            L1.metadata.Signal.Noise_properties.variance
+            == L2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            M1.metadata.Signal.Noise_properties.variance
+            == M2.metadata.Signal.Noise_properties.variance
+        )
+    else:
+        assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
 
 
 @mark.parametrize(("jacobian"), (True, False))
-def test_to_invcm_relative(jacobian):
+def test_reset_variance_linear_model_invcm(jacobian):
+    axis = DataAxis(size=20, offset=200, scale=10)
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+
+    if not "axis" in getfullargspec(DataAxis)[0]:
+        raises(ImportError, S1.to_invcm)
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        skip("HyperSpy version doesn't support non-uniform axis")
+
+    S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_factor", 2)
+    S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_offset", 1)
+    S1.metadata.set_item(
+        "Signal.Noise_properties.Variance_linear_model.correlation_factor", 2
+    )
+    S1.estimate_poissonian_noise_variance()
+    S2 = S1.to_invcm(inplace=False, jacobian=jacobian)
+    if jacobian:
+        with warns(UserWarning, match="Following"):
+            S1.to_invcm(inplace=True, jacobian=jacobian)
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 1
+        )
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset == 0
+        )
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor
+            == 1
+        )
+        assert (
+            S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model")
+            == False
+        )
+    else:
+        S1.to_invcm(inplace=True, jacobian=jacobian)
+        assert (
+            S1.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 2
+        )
+        assert (
+            S2.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor == 2
+        )
+
+
+@mark.parametrize(("jacobian"), (True, False))
+@mark.parametrize(("variance"), (True, False, "constant"))
+def test_to_invcm_relative(jacobian, variance):
     axis = DataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -284,6 +483,11 @@ def test_to_invcm_relative(jacobian):
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    if variance:
+        if variance == "constant":
+            S1.set_noise_variance(1.0)
+        else:
+            S1.estimate_poissonian_noise_variance()
     S2 = S1.to_invcm_relative(laser=244, inplace=False, jacobian=jacobian)
     S1.axes_manager[0].units = "µm"
     S1.axes_manager[0].axis = axis.axis / 1000
@@ -299,6 +503,11 @@ def test_to_invcm_relative(jacobian):
     L1 = LumiSpectrum(
         ones((4, 20)), axes=[nav.get_axis_dictionary(), axis.get_axis_dictionary()]
     )
+    if variance:
+        if variance == "constant":
+            L1.set_noise_variance(1.0)
+        else:
+            L1.estimate_poissonian_noise_variance()
     L2 = L1.to_invcm_relative(laser=244, inplace=False, jacobian=jacobian)
     L1.to_invcm_relative(laser=244, jacobian=jacobian)
     assert L1.axes_manager.signal_axes[0].units == r"cm$^{-1}$"
@@ -317,6 +526,11 @@ def test_to_invcm_relative(jacobian):
             axis.get_axis_dictionary(),
         ],
     )
+    if variance:
+        if variance == "constant":
+            M1.set_noise_variance(1.0)
+        else:
+            M1.estimate_poissonian_noise_variance()
     M2 = M1.to_invcm_relative(laser=244, inplace=False, jacobian=jacobian)
     M1.to_invcm_relative(laser=244, jacobian=jacobian)
     assert M1.axes_manager.signal_axes[0].units == r"cm$^{-1}$"
@@ -326,6 +540,30 @@ def test_to_invcm_relative(jacobian):
         M1.axes_manager.signal_axes[0].axis[0] == M2.axes_manager.signal_axes[0].axis[0]
     )
     assert_allclose(M1.data, M2.data, 5e-4)
+    if variance:
+        if variance != "constant":
+            assert (
+                S1.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S1.axes_manager[-1].axis[0]
+            )
+            assert (
+                S2.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S2.axes_manager[-1].axis[0]
+            )
+        assert (
+            S1.metadata.Signal.Noise_properties.variance
+            == S2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            L1.metadata.Signal.Noise_properties.variance
+            == L2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            M1.metadata.Signal.Noise_properties.variance
+            == M2.metadata.Signal.Noise_properties.variance
+        )
+    else:
+        assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
 
 
 def test_solve_grating_equation():

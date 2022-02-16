@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## UNRELEASED
 ### Added
 - Set up read the docs documentation
+- Add proper handling of variance on Jacobian transformation during axis conversion (eV, invcm)
+upstream/main
 
 ### Changed
 - Fix error in background dimensions that allows compatibility for updated `map` in HyperSpy (failing integration tests)

@@ -61,8 +61,8 @@ def _n_air(x):
     return (
         1
         + 806051e-10
-        + 2480990e-8 / (132274e-3 - 1 / wl ** 2)
-        + 174557e-9 / (3932957e-5 - 1 / wl ** 2)
+        + 2480990e-8 / (132274e-3 - 1 / wl**2)
+        + 174557e-9 / (3932957e-5 - 1 / wl**2)
     )
 
 
@@ -116,10 +116,27 @@ def data2eV(data, factor, ax0, evaxis):
             * factor
             * c.h
             * c.c
-            / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis ** 2)
+            / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis**2)
         )
     else:
-        return data * factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis ** 2)
+        return data * factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)
+
+
+def var2eV(variance, factor, ax0, evaxis):
+    """The variance is converted doing a squared Jacobian renormalization to
+    match with the transformation of the data.
+    """
+    if ax0.units == "µm":
+        return (
+            variance
+            * (factor * c.h * c.c / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis**2))
+            ** 2
+        )
+    else:
+        return (
+            variance
+            * (factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)) ** 2
+        )
 
 
 def nm2invcm(x):
@@ -139,7 +156,7 @@ def axis2invcm(ax0):
     # Check if non_uniform_axis is available in hyperspy version
     if not "axis" in getfullargspec(DataAxis)[0]:
         raise ImportError(
-            "Conversion to energy axis works only "
+            "Conversion to wavenumber axis works only "
             "if the RELEASE_next_minor branch of HyperSpy is used."
         )
 
@@ -158,13 +175,20 @@ def axis2invcm(ax0):
     return axis, factor
 
 
-def data2invcm(data, factor, ax0, invcmaxis):
+def data2invcm(data, factor, invcmaxis):
     r"""The intensity is converted from counts/nm (counts/µm) to
     counts/cm$^{-1}$ by doing a Jacobian transformation, see e.g. Wang and
     Townsend, J. Lumin. 142, 202 (2013). Ensures that integrated signals are
     still correct.
     """
-    return data * factor / (invcmaxis ** 2)
+    return data * factor / (invcmaxis**2)
+
+
+def var2invcm(variance, factor, invcmaxis):
+    r"""The variance is converted doing a squared Jacobian renormalization to
+    match with the transformation of the data.
+    """
+    return variance * (factor / (invcmaxis**2)) ** 2
 
 
 #
