@@ -1,7 +1,7 @@
 .. _fitting_luminescence:
 
 Fitting luminescence data
-=====
+=========================
 
 LumiSpy is compatible with model fitting as Hyperspy. It can fit both in linear and non-linear axes.
 

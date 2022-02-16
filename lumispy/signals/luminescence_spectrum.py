@@ -111,8 +111,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
         Note that if the variance is a number (not a signal instance), it is
         converted to a signal if the Jacobian transformation is performed
 
-        Input parameters
-        ----------------
+        Parameters
+        ----------
         inplace : boolean
             If `False`, a new signal object is created and returned. Otherwise
             (default) the operation is performed on the existing signal object.
@@ -121,18 +121,17 @@ class LumiSpectrum(Signal1D, CommonLumi):
             least for luminescence signals), but the transformation can be
             suppressed by setting this option to `False`.
 
-        Example
-        -------
-        > import numpy as np
-        > from lumispy import LumiSpectrum
-        > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
-        > S1.to_eV()
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from lumispy import LumiSpectrum
+        >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+        >>> S1.to_eV()
 
         Note
         ----
         Using a non-linear axis works only for the RELEASE_next_minor development
         branch of HyperSpy.
-
         """
 
         # Check if non_uniform_axis is available in hyperspy version
@@ -271,8 +270,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
     Note that if the variance is a number (not a signal instance), it is
     converted to a signal if the Jacobian transformation is performed
 
-    Input parameters
-    ----------------
+    Parameters
+    ----------
     inplace : boolean
         If `False`, a new signal object is created and returned. Otherwise
         (default) the operation is performed on the existing signal object.
@@ -285,10 +284,10 @@ class LumiSpectrum(Signal1D, CommonLumi):
     TO_INVCM_EXAMPLE = """
     Examples
     --------
-    > import numpy as np
-    > from lumispy import LumiSpectrum
-    > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
-    > S1.to_invcm()
+    >>> import numpy as np
+    >>> from lumispy import LumiSpectrum
+    >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+    >>> S1.to_invcm()
 
     Note
     ----
@@ -300,6 +299,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         """Converts signal axis of 1D signal to non-linear wavenumber axis
         (cm^-1). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
+
         %s
         %s
         """
@@ -428,10 +428,10 @@ class LumiSpectrum(Signal1D, CommonLumi):
     TO_INVCMREL_EXAMPLE = """
     Examples
     --------
-    > import numpy as np
-    > from lumispy import LumiSpectrum
-    > S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
-    > S1.to_invcm(laser=325)
+    >>> import numpy as np
+    >>> from lumispy import LumiSpectrum
+    >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+    >>> S1.to_invcm(laser=325)
 
     Note
     ----
@@ -516,6 +516,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         -------
         signal : LumiSpectrum
             A background subtracted signal.
+
         Note
         ----
         This function does not work with non-linear axes.
@@ -584,25 +585,25 @@ class LumiSpectrum(Signal1D, CommonLumi):
     --------
     >>> import lumispy as lum
     >>> import numpy as np
-
-    # Spectrum:
+    ...
+    >>> # Spectrum:
     >>> S = lum.signals.LumiSpectrum(np.arange(5))
     >>> S.savetxt('spectrum.txt')
-    # 0.00000	0.00000
-    # 1.00000	1.00000
-    # 2.00000	2.00000
-    # 3.00000	3.00000
-    # 4.00000	4.00000
-
-    # Linescan:
+    0.00000	0.00000
+    1.00000	1.00000
+    2.00000	2.00000
+    3.00000	3.00000
+    4.00000	4.00000
+    ...
+    >>> # Linescan:
     >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
     >>> L.savetxt('linescan.txt')
-    # 0.00000	0.00000	1.00000	2.00000	3.00000	4.00000
-    # 0.00000	0.00000	5.00000	10.00000	15.00000	20.00000
-    # 1.00000	1.00000	6.00000	11.00000	16.00000	21.00000
-    # 2.00000	2.00000	7.00000	12.00000	17.00000	22.00000
-    # 3.00000	3.00000	8.00000	13.00000	18.00000	23.00000
-    # 4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
+    0.00000	0.00000	1.00000	2.00000	3.00000	4.00000
+    0.00000	0.00000	5.00000	10.00000	15.00000	20.00000
+    1.00000	1.00000	6.00000	11.00000	16.00000	21.00000
+    2.00000	2.00000	7.00000	12.00000	17.00000	22.00000
+    3.00000	3.00000	8.00000	13.00000	18.00000	23.00000
+    4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
     """
 
     def savetxt(
@@ -619,7 +620,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
     TOARRAY_EXAMPLE = """
     Note
-    --------
+    ----
     The output of this function can be used to convert a signal object to a
     pandas dataframe, e.g. using `df = pd.Dataframe(S.to_array())`.
 
@@ -627,25 +628,25 @@ class LumiSpectrum(Signal1D, CommonLumi):
     --------
     >>> import lumispy as lum
     >>> import numpy as np
-
-    # Spectrum:
+    ...
+    >>> # Spectrum:
     >>> S = lum.signals.LumiSpectrum(np.arange(5))
     >>> S.to_array()
-    # array([[0., 0.],
-    #    [1., 1.],
-    #    [2., 2.],
-    #    [3., 3.],
-    #    [4., 4.]])
-
-    # Linescan:
+    array([[0., 0.],
+          [1., 1.],
+          [2., 2.],
+          [3., 3.],
+          [4., 4.]])
+    ...
+    >>> # Linescan:
     >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
     >>> L.to_array()
-    # array([[ 0.,  0.,  1.,  2.,  3.,  4.],
-    #    [ 0.,  0.,  1.,  2.,  3.,  4.],
-    #    [ 1.,  5.,  6.,  7.,  8.,  9.],
-    #    [ 2., 10., 11., 12., 13., 14.],
-    #    [ 3., 15., 16., 17., 18., 19.],
-    #    [ 4., 20., 21., 22., 23., 24.]])
+    array([[ 0.,  0.,  1.,  2.,  3.,  4.],
+          [ 0.,  0.,  1.,  2.,  3.,  4.],
+          [ 1.,  5.,  6.,  7.,  8.,  9.],
+          [ 2., 10., 11., 12., 13., 14.],
+          [ 3., 15., 16., 17., 18., 19.],
+          [ 4., 20., 21., 22., 23., 24.]])
     """
 
     def to_array(self, axes=True, transpose=False):
@@ -669,27 +670,27 @@ class LumiSpectrum(Signal1D, CommonLumi):
         grating_density_gr_mm,
         inplace=False,
     ):
-        """Converts signal axis of 1D signal (in pixels) to wavelength, solving the grating
-        equation.
-        See ``lumispy.axes.solve_grating_equation` for more details.
+        """Converts signal axis of 1D signal (in pixels) to wavelength, solving
+        the grating equation. See `lumispy.axes.solve_grating_equation` for
+        more details.
 
-        Parameters
-        ----------------
+        Parameters:
+        -----------
         %s
         inplace : bool
             If False, it returns a new object with the transformation. If True,
             the original object is transformed, returning no object.
 
         Returns
-        ---------------
+        -------
         signal : LumiSpectrum
             A signal with calibrated wavelength units.
 
-        Example
-        -------
-        > s = LumiSpectrum(np.ones(20),))
-        > s.px_to_nm_grating_solver(*params, inplace=True)
-        > s.axes_manager.signal_axes[0].units == 'nm'
+        Examples
+        --------
+        >>> s = LumiSpectrum(np.ones(20),))
+        >>> s.px_to_nm_grating_solver(*params, inplace=True)
+        >>> s.axes_manager.signal_axes[0].units == 'nm'
         """
 
         nm_axis = solve_grating_equation(

@@ -31,18 +31,24 @@ from lumispy.signals import LumiSpectrum
 
 class CLSpectrum(LumiSpectrum):
     """General 1D Cathodoluminescence signal class.
-    ----------
     """
 
     _signal_type = "CL"
     _signal_dimension = 1
 
     def _make_signal_mask(self, luminescence_roi):
-        """
-        Creates a mask from the peak position and peak widths of the luminescence spectrum.
-        :param luminescence_roi: array
-            In the form of an array of pairwise elements [[peak1_x, peak1_width], [peak2_x, peak2_width],...].
-        :return: array
+        """Creates a mask from the peak position and peak widths of the
+        luminescence spectrum.
+
+        Parameters
+        ----------
+        luminescence_roi: array
+            In the form of an array of pairwise elements
+            [[peak1_x, peak1_width], [peak2_x, peak2_width],...].
+
+        Returns
+        -------
+        array
             A `signal_mask`.
         """
 
@@ -118,24 +124,24 @@ class CLSpectrum(LumiSpectrum):
             return signal
 
     REMOVE_SPIKES_DOCSTRINGS = """
-                Hyperspy-based spike removal tool adapted to Lumispy to run non-interactively and
-                without noise addition by default.
-                %s
-                show_diagnosis_histogram: bool
-                    Plot or not the derivative histogram to show the magnitude of the spikes present.
-                inplace: bool
-                    If False, a new signal object is created and returned. If True, the original signal object is modified.
-                luminescence_roi: array
-                    The peak position and peak widths of the peaks in the luminescence spectrum.
-                    In the form of an array of pairwise elements [[peak1_x, peak1_width], [peak2_x, peak2_width],...]
-                    in the units of the signal axis. It creates a signal_mask protecting the peak regions.
-                    To be used instead of `signal_mask`.
+        Hyperspy-based spike removal tool adapted to Lumispy to run non-interactively and
+        without noise addition by default.
+        %s
+        show_diagnosis_histogram: bool
+            Plot or not the derivative histogram to show the magnitude of the spikes present.
+        inplace: bool
+            If False, a new signal object is created and returned. If True, the original signal object is modified.
+        luminescence_roi: array
+            The peak position and peak widths of the peaks in the luminescence spectrum.
+            In the form of an array of pairwise elements [[peak1_x, peak1_width], [peak2_x, peak2_width],...]
+            in the units of the signal axis. It creates a signal_mask protecting the peak regions.
+            To be used instead of `signal_mask`.
 
-                Returns
-                ----------
-                :return: None or CLSpectrum
-                    Depends on inplace, returns or overwrites the CLSpectrum after spike removal.
-                """
+        Returns
+        -------
+        None or CLSpectrum
+            Depends on inplace, returns or overwrites the CLSpectrum after spike removal.
+        """
     remove_spikes.__doc__ = REMOVE_SPIKES_DOCSTRINGS % (
         LumiSpectrum.spikes_removal_tool.__doc__
     )
@@ -157,15 +163,20 @@ class CLSEMSpectrum(CLSpectrum):
     def correct_grating_shift(
         self, cal_factor_x_axis, corr_factor_grating, sem_magnification, **kwargs
     ):
-        """ "
-        Applies shift caused by the grating offset wrt the scanning centre.
+        """Applies shift caused by the grating offset wrt the scanning centre.
         Authorship: Gunnar Kusch (gk419@cam.ac.uk)
 
-        :param cal_factor_x_axis: The navigation correction factor.
-        :param corr_factor_grating: The grating correction factor.
-        :param sem_magnification: The SEM (real) magnification value.
+        Parameters
+        ----------
+        cal_factor_x_axis
+            The navigation correction factor.
+        corr_factor_grating
+            The grating correction factor.
+        sem_magnification
+            The SEM (real) magnification value.
             For the Attolight original metadata, take the `SEM.Real_Magnification` value
-        :param kwargs: The parameters passed to `hyperspy.align1D()` function like:
+        kwargs
+            The parameters passed to `hyperspy.align1D()` function like:
             interpolation_method ('linear', 'nearest', 'zero', 'slinear', 'quadratic, 'cubic')
             parallel: Bool
             crop, expand, fill_value ...

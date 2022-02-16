@@ -25,7 +25,7 @@ Please refer to the
 `HyperSpy developer guide <http://hyperspy.org/hyperspy-doc/current/dev_guide/intro.html>`_
 in order to get started and for detailed contributing guidelines.
 
-The `kikuchypy contributors guide https://kikuchipy.org/en/stable/contributing.html>`_,
+The `kikuchypy contributors guide <https://kikuchipy.org/en/stable/contributing.html>`_,
 another HyperSpy extension, also is a valuable resource that can get you
 started and provides useful guidelines.
 
@@ -34,7 +34,8 @@ Documentation
 
 The LumiSpy documentation consists of three elements:
 
-- `Docstrings <https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard>`_
+- Docstrings following the `numpy standard
+  <https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard>`_
   that document the functionality of individual methods on `GitHub
   <https://github.com/LumiSpy/lumispy/tree/main/lumispy/>`_.
 - The `documentation <https://lumispy.org>`_ written using `Sphinx

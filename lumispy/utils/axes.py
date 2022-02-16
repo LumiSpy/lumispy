@@ -393,14 +393,16 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
     return S1
 
 
-GRATING_EQUATION_DOCSTRING_PARAMETERS = """
+GRATING_EQUATION_DOCSTRING_PARAMETERS = r"""
+    Parameters
+    ----------
     gamma_deg: float
         Inclination angle between the focal plane and the centre of the grating
         (found experimentally from calibration). In degree.
     deviation_angle_deg: float
         Also known as included angle. It is defined as the difference between
-        angle of diffraction ($\\beta$) and angle of incidence ($\\alpha$).
-        Given by manufacturer specsheet. In degree.
+        angle of diffraction (:math:`\beta`) and angle of incidence
+        (:math:`\alpha`). Given by manufacturer specsheet. In degree.
     focal_length_mm: float
         Given by manufacturer specsheet. In mm.
     ccd_width_mm: float
@@ -409,6 +411,7 @@ GRATING_EQUATION_DOCSTRING_PARAMETERS = """
         Wavelength at the centre of the grating, where exit slit is placed. In nm.
     grating_density_gr_mm: int
         Grating density in gratings per mm.
+
     """
 
 
@@ -421,8 +424,9 @@ def solve_grating_equation(
     grating_central_wavelength_nm,
     grating_density_gr_mm,
 ):
-    """Solves the grating equation.
-    See `horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position` for equations.
+    r"""Solves the grating equation.
+    See `horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position`
+    for equations.
 
     Parameters
     ----------
@@ -433,6 +437,7 @@ def solve_grating_equation(
     Returns
     -------
     axis: hyperspy.axis
+        HyperSpy axis object.
     """
 
     # From axis --> x-array

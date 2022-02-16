@@ -23,8 +23,12 @@ extensions = [
     "sphinx.ext.duration",
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
+    "sphinx.ext.imgmath",
+    "sphinx.ext.graphviz",
+    "sphinx.ext.autosummary",
+    "sphinx_toggleprompt",
 ]
 
 intersphinx_mapping = {
@@ -79,6 +83,7 @@ def run_apidoc(_):
     exclude_pattern = [
         "../../lumispy/tests",
         "../../lumispy/components",
+        "../../lumispy/release_info.py",
     ]
     main(["-e", "-f", "-P", "-o", output_path, modules, *exclude_pattern])
 
