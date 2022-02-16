@@ -48,7 +48,6 @@ Contents
    :maxdepth: 1
    :caption: User Guide
 
-   changelog.rst
    user_guide/installation.rst
    user_guide/signal_axis.rst
    user_guide/fitting_luminescence.rst
@@ -58,6 +57,12 @@ Contents
    :caption: API References
 
    api/modules.rst
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Release Notes
+
+   changelog.rst
 
 .. toctree::
    :maxdepth: 1
