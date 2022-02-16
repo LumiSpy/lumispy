@@ -30,8 +30,7 @@ from lumispy.signals import LumiSpectrum
 
 
 class CLSpectrum(LumiSpectrum):
-    """General 1D Cathodoluminescence signal class.
-    """
+    """General 1D Cathodoluminescence signal class."""
 
     _signal_type = "CL"
     _signal_dimension = 1

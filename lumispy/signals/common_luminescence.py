@@ -24,8 +24,7 @@ from warnings import warn
 
 
 class CommonLumi:
-    """General Luminescence signal class (dimensionless).
-    """
+    """General Luminescence signal class (dimensionless)."""
 
     def crop_edges(self, crop_px):
         """Crop the amount of pixels from the four edges of the scanning
