@@ -23,8 +23,12 @@ extensions = [
     "sphinx.ext.duration",
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
+    "sphinx.ext.imgmath",
+    "sphinx.ext.graphviz",
+    "sphinx.ext.autosummary",
+    #    "sphinx_toggleprompt",
 ]
 
 intersphinx_mapping = {
@@ -39,11 +43,15 @@ templates_path = ["_templates"]
 
 html_theme = "sphinx_rtd_theme"
 
+html_theme_options = {
+    "logo_only": True,
+}
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["../_static"]
-html_css_files = ["custom.css"]
+html_css_files = ["css/custom.css"]
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -75,9 +83,12 @@ def run_apidoc(_):
     exclude_pattern = [
         "../../lumispy/tests",
         "../../lumispy/components",
+        "../../lumispy/release_info.py",
     ]
     main(["-e", "-f", "-P", "-o", output_path, modules, *exclude_pattern])
 
 
 def setup(app):
     app.connect("builder-inited", run_apidoc)
+    app.add_css_file("css/dark.css")
+    app.add_css_file("css/light.css")

@@ -20,9 +20,9 @@ import numpy as np
 
 SAVETXT_DOCSTRING = """
     Writes single spectra to a two-column data file with signal axis as
-        X and data as Y.
+    X and data as Y.
     Writes linescan data to file with signal axis as first row and
-        navigation axis as first column (flipped if `transpose=True`)."""
+    navigation axis as first column (flipped if `transpose=True`)."""
 
 SAVETXT_PARAMETERS = """
     Parameters
@@ -51,32 +51,32 @@ SAVETXT_EXAMPLE = """
     --------
     >>> import lumispy as lum
     >>> import numpy as np
-    
-    # Spectrum:
+    ...
+    >>> # Spectrum:
     >>> S = lum.signals.LumiSpectrum(np.arange(5))
     >>> lum.savetxt(S, 'spectrum.txt')
-    # 0.00000	0.00000
-    # 1.00000	1.00000
-    # 2.00000	2.00000
-    # 3.00000	3.00000
-    # 4.00000	4.00000
-    
-    # Linescan:
+    0.00000	0.00000
+    1.00000	1.00000
+    2.00000	2.00000
+    3.00000	3.00000
+    4.00000	4.00000
+    ...
+    >>> # Linescan:
     >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
     >>> lum.savetxt(L, 'linescan.txt')
-    # 0.00000	0.00000	1.00000	2.00000	3.00000	4.00000
-    # 0.00000	0.00000	5.00000	10.00000	15.00000	20.00000
-    # 1.00000	1.00000	6.00000	11.00000	16.00000	21.00000
-    # 2.00000	2.00000	7.00000	12.00000	17.00000	22.00000
-    # 3.00000	3.00000	8.00000	13.00000	18.00000	23.00000
-    # 4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
+    0.00000	0.00000	1.00000	2.00000	3.00000	4.00000
+    0.00000	0.00000	5.00000	10.00000	15.00000	20.00000
+    1.00000	1.00000	6.00000	11.00000	16.00000	21.00000
+    2.00000	2.00000	7.00000	12.00000	17.00000	22.00000
+    3.00000	3.00000	8.00000	13.00000	18.00000	23.00000
+    4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
     """
 
 TOARRAY_DOCSTRING = """
     
     Returns single spectra as two-column array.
     Returns linescan data as array with signal axis as first row and
-        navigation axis as first column (flipped if `transpose=True`)."""
+    navigation axis as first column (flipped if `transpose=True`)."""
 
 TOARRAY_PARAMETERS = """
     Parameters
@@ -101,25 +101,25 @@ TOARRAY_EXAMPLE = """
     --------
     >>> import lumispy as lum
     >>> import numpy as np
-    
-    # Spectrum:
+    ...
+    >>> # Spectrum:
     >>> S = lum.signals.LumiSpectrum(np.arange(5))
     >>> lum.to_array(S)
-    # array([[0., 0.],
-    #    [1., 1.],
-    #    [2., 2.],
-    #    [3., 3.],
-    #    [4., 4.]])
-    
-    # Linescan:
+    array([[0., 0.],
+          [1., 1.],
+          [2., 2.],
+          [3., 3.],
+          [4., 4.]])
+    ...
+    >>> # Linescan:
     >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
     >>> lum.to_array(L)
-    # array([[ 0.,  0.,  1.,  2.,  3.,  4.],
-    #    [ 0.,  0.,  1.,  2.,  3.,  4.],
-    #    [ 1.,  5.,  6.,  7.,  8.,  9.],
-    #    [ 2., 10., 11., 12., 13., 14.],
-    #    [ 3., 15., 16., 17., 18., 19.],
-    #    [ 4., 20., 21., 22., 23., 24.]])
+    array([[ 0.,  0.,  1.,  2.,  3.,  4.],
+          [ 0.,  0.,  1.,  2.,  3.,  4.],
+          [ 1.,  5.,  6.,  7.,  8.,  9.],
+          [ 2., 10., 11., 12., 13., 14.],
+          [ 3., 15., 16., 17., 18., 19.],
+          [ 4., 20., 21., 22., 23., 24.]])
     """
 
 
@@ -127,9 +127,9 @@ def to_array(S, axes=True, transpose=False):
     """Returns signal object as numpy array (optionally including the axes).
     %s
     Returns image as array with the navigation axes as first column and first
-        row.
+    row.
     Returns 2D data (e.g. map of a fit parameter value) as array with the signal
-        axes as first column and first row.
+    axes as first column and first row.
     %s
     %s
     """
@@ -185,9 +185,9 @@ def savetxt(
     """Writes signal object to simple text file.
     %s
     Writes image to file with the navigation axes as first column and first
-        row.
+    row.
     Writes 2D data (e.g. map of a fit parameter value) to file with the signal
-        axes as first column and first row.
+    axes as first column and first row.
     %s
     %s
     """

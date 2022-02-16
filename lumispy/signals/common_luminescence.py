@@ -24,13 +24,11 @@ from warnings import warn
 
 
 class CommonLumi:
-    """General Luminescence signal class (dimensionless).
-    ----------
-    """
+    """General Luminescence signal class (dimensionless)."""
 
     def crop_edges(self, crop_px):
-        """
-        Crop the amount of pixels from the four edges of the scanning region, from out the edges inwards.
+        """Crop the amount of pixels from the four edges of the scanning
+        region, from out the edges inwards.
 
         Parameters
         ----------
@@ -69,16 +67,16 @@ class CommonLumi:
         """Sets all negative values to 'basevalue', e.g. for logarithmic scale
         plots.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         basevalue : float
             Value by which negative values are replaced (default = 1).
         inplace : boolean
             If `False`, a new signal object is created and returned. Otherwise
             (default) the operation is performed on the existing signal object.
 
-        Notes:
-        ------
+        Notes
+        -----
         Sets `metadata.Signal.negative_removed` to `True`.
         """
         if inplace:
@@ -93,8 +91,8 @@ class CommonLumi:
     def scale_by_exposure(self, exposure=float("nan"), inplace=False):
         """Scale data in spectrum by exposure (e.g. convert counts to counts/s).
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         exposure : float
             Exposure time in s. If not given, the function tries to find
             'exposure' or 'dwell_time' in the metadata (for the moment only at
@@ -103,8 +101,8 @@ class CommonLumi:
             If `False` (default), a new signal object is created and returned.
             If `True`, the operation is performed on the existing signal object.
 
-        Notes:
-        ------
+        Notes
+        -----
         Sets `metadata.Signal.scaled` to `True`. If intensity units is 'counts',
         replaces them by 'counts/s'.
         """
@@ -153,8 +151,8 @@ class CommonLumi:
         Can be helpful for e.g. plotting, but does not make sense to use
         on signals that will be used as input for further calculations!
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         pos : float, int
             If 'nan' (default), spectra are normalized to the maximum.
             If `float`, position along signal axis in calibrated units at which
@@ -167,8 +165,8 @@ class CommonLumi:
             If `False` (default), a new signal object is created and returned.
             If `True`, the operation is performed on the existing signal object.
 
-        Notes:
-        ------
+        Notes
+        -----
         Sets `metadata.Signal.normalized` to `True`. If
         `metadata.Signal.quantity` contains the word 'Intensity', replaces this
         field with 'Normalized intensity'.

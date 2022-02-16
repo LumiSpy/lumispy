@@ -1,0 +1,36 @@
+@media (prefers-color-scheme: light) {
+
+    .wy-side-nav-search {
+        background-color: rgb(0, 0, 0);
+        color: rgb(230, 228, 225);
+    }
+
+    .wy-side-nav-search input[type="text"] {
+        border-color: rgb(110, 111, 112);
+    }
+
+    .wy-side-nav-search img {
+        background-color: rgb(0, 0, 0);
+    }
+
+    .wy-side-nav-search > a,
+    .wy-side-nav-search .wy-dropdown > a {
+        color: rgb(230, 228, 225);
+    }
+
+    .wy-side-nav-search > a:hover,
+    .wy-side-nav-search .wy-dropdown > a:hover {
+        background-image: initial;
+        background-color: rgba(102, 102, 102, 0.1);
+    }
+
+    .wy-menu-vertical li.toctree-l2.current a,
+    .wy-menu-vertical li.toctree-l3.current a {
+        background-color: #c9c9c9;
+    }
+
+    .wy-side-nav-search > div.version {
+        color: rgba(232, 230, 227, 0.3);
+    }
+
+}
