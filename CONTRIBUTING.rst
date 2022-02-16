@@ -88,4 +88,4 @@ Each number will change depending on the type of changes according to the follow
 
 The process to release a new version that is pushed to `PyPI <https://pypi.org>`_ and
 `Conda-Forge <https://conda-forge.org/>`_ is documented in the `Releasing guide
-<releasing_guide.rst>`_.
+<https://github.com/LumiSpy/lumispy/blob/main/releasing_guide.md>`_.

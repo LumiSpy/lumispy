@@ -34,4 +34,4 @@ Everyone is welcome to contribute. Please read our
 [contributing guidelines](https://github.com/LumiSpy/lumispy/blob/main/CONTRIBUTING.rst) and get started!
 
 Development of LumiSpy is documented in the
-[changelog](https://github.com/LumiSpy/lumispy/blob/main/CHANGELOG.rst).
+[changelog](https://github.com/LumiSpy/lumispy/blob/main/CHANGELOG.md).
