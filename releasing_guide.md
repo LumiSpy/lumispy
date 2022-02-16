@@ -11,7 +11,7 @@ To publish a new LumiSpy release do the following steps:
   first digit for a major release)
 - Let that PR collect comments for a day to ensure that other maintainers are comfortable 
   with releasing
-- Set correct date and version number in `CHANGELOG.md`
+- Set correct date and version number in `CHANGELOG.rst`
   
 ## Tag and Release
 
@@ -26,7 +26,7 @@ To publish a new LumiSpy release do the following steps:
  
 - Increment the version and set it back to dev: `vx.y.zdev0`
 - Update version in other branches if necessary
-- Prepare `CHANGELOG.md` for development by adding `## UNRELEASED` headline
+- Prepare `CHANGELOG.rst` for development by adding `UNRELEASED` headline
 - Merge the PR
 
 ## Follow-up

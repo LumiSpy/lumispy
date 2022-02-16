@@ -1,3 +1,3 @@
-.. This is a stub, see the top level CHANGELOG.md file for the changelog.
+.. This is a stub, see the top level CHANGELOG.rst file for the changelog.
 
-.. include:: ../../CHANGELOG.md
+.. include:: ../../CHANGELOG.rst

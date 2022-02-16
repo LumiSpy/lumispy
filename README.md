@@ -27,11 +27,11 @@ have been curated as a series of Jupyter notebooks that you can work through
 and modify to perform many common analyses. Simply:
 
 1. Download the `lumispy_demos` repository in your desired folder
-2. Load LumiSpy (see [installation guide](https://github.com/LumiSpy/lumispy/blob/main/INSTALLATION.md))
+2. Load LumiSpy (see [installation guide](https://lumispy.readthedocs.io/en/latest/user_guide/installation.html))
 3. In Jupyter lab, navigate to the folder and start using the notebook
 
 Everyone is welcome to contribute. Please read our
 [contributing guidelines](https://github.com/LumiSpy/lumispy/blob/main/CONTRIBUTING.rst) and get started!
 
 Development of LumiSpy is documented in the
-[changelog](https://github.com/LumiSpy/lumispy/blob/main/CHANGELOG.md).
+[changelog](https://github.com/LumiSpy/lumispy/blob/main/CHANGELOG.rst).
