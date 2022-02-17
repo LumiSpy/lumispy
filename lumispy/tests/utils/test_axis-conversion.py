@@ -229,7 +229,6 @@ def test_reset_variance_linear_model_eV(jacobian):
         "Signal.Noise_properties.Variance_linear_model.correlation_factor", 2
     )
     S1.estimate_poissonian_noise_variance()
-    # with warns(UserWarning, match="(range exceeds)"):
     S2 = S1.to_eV(inplace=False, jacobian=jacobian)
     if jacobian:
         with warns(UserWarning, match="Following"):
