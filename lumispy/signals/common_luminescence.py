@@ -16,7 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Signal class for Luminescence data (BaseSignal class).
+"""
+Signal class for luminescence data (BaseSignal class)
+-----------------------------------------------------
 """
 
 from numpy import isnan
@@ -24,7 +26,7 @@ from warnings import warn
 
 
 class CommonLumi:
-    """General Luminescence signal class (dimensionless)."""
+    """**General luminescence signal class (dimensionless)**"""
 
     def crop_edges(self, crop_px):
         """Crop the amount of pixels from the four edges of the scanning

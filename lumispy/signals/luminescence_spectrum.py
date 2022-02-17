@@ -49,7 +49,7 @@ from lumispy.utils.io import (
 
 
 class LumiSpectrum(Signal1D, CommonLumi):
-    """General 1D Luminescence signal class."""
+    """**General 1D luminescence signal class.**"""
 
     _signal_type = "Luminescence"
     _signal_dimension = 1
@@ -128,8 +128,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
         >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
         >>> S1.to_eV()
 
-        Note
-        ----
+        Notes
+        -----
         Using a non-linear axis works only for the RELEASE_next_minor development
         branch of HyperSpy.
         """
@@ -289,8 +289,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
     >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
     >>> S1.to_invcm()
 
-    Note
-    ----
+    Notes
+    -----
     Using a non-linear axis works only for the RELEASE_next_minor development
     branch of HyperSpy.    
     """
@@ -433,8 +433,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
     >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
     >>> S1.to_invcm(laser=325)
 
-    Note
-    ----
+    Notes
+    -----
     Using a non-linear axis works only for the RELEASE_next_minor development
     branch of HyperSpy.    
     """
@@ -517,8 +517,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
         signal : LumiSpectrum
             A background subtracted signal.
 
-        Note
-        ----
+        Notes
+        -----
         This function does not work with non-linear axes.
         """
         if hasattr(self.metadata.Signal, "background_subtracted"):
@@ -619,8 +619,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
     savetxt.__doc__ %= (SAVETXT_DOCSTRING, SAVETXT_PARAMETERS, SAVETXT_EXAMPLE)
 
     TOARRAY_EXAMPLE = """
-    Note
-    ----
+    Notes
+    -----
     The output of this function can be used to convert a signal object to a
     pandas dataframe, e.g. using `df = pd.Dataframe(S.to_array())`.
 
@@ -674,8 +674,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
         the grating equation. See `lumispy.axes.solve_grating_equation` for
         more details.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         %s
         inplace : bool
             If False, it returns a new object with the transformation. If True,
@@ -718,6 +718,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
+    """**General lazy 1D luminescence signal class.**"""
+
     _lazy = True
 
     pass

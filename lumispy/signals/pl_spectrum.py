@@ -16,7 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Signal class for Photoluminescence spectral data.
+"""
+Signal class for Photoluminescence spectral data
+------------------------------------------------
 """
 
 from hyperspy._signals.lazy import LazySignal
@@ -25,9 +27,7 @@ from lumispy.signals import LumiSpectrum
 
 
 class PLSpectrum(LumiSpectrum):
-    """General 1D Photoluminescence signal class.
-    ----------
-    """
+    """**General 1D photoluminescence signal class**"""
 
     _signal_type = "PL"
     _signal_dimension = 1
@@ -36,6 +36,7 @@ class PLSpectrum(LumiSpectrum):
 
 
 class LazyPLSpectrum(LazySignal, PLSpectrum):
+    """**General lazy 1D photoluminescence signal class**"""
 
     _lazy = True
 

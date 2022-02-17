@@ -92,8 +92,8 @@ TOARRAY_PARAMETERS = """
         `header`, `footer`, `comments`, or `encoding`."""
 
 TOARRAY_EXAMPLE = """
-    Note
-    --------
+    Notes
+    -----
     The output of this function can be used to convert a signal object to a
     pandas dataframe, e.g. using `df = pd.Dataframe(lum.to_array(S))`.
     
