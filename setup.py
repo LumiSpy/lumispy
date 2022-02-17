@@ -54,7 +54,11 @@ setup(
         "scipy",
         "hyperspy >= 1.5.2",  # earlier versions incompatible with numpy >= 1.17.0
     ],
-    extras_require={"tests": ["pytest>=5.0"], "coverage": ["pytest-cov", "codecov"]},
+    extras_require={
+        "tests": ["pytest>=5.0"],
+        "coverage": ["pytest-cov", "codecov"],
+        "build-doc": ["sphinx>=1.7", "sphinx_rtd_theme", "sphinx-toggleprompt"],
+    },
     package_data={
         "lumispy": ["*.py", "hyperspy_extension.yaml"],
     },
