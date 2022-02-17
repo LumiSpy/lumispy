@@ -20,7 +20,6 @@ from inspect import getfullargspec
 from numpy import arange, ones
 from numpy.testing import assert_allclose
 from pytest import raises, mark, skip, warns
-import warnings
 
 from hyperspy.axes import DataAxis
 
@@ -116,11 +115,9 @@ def test_var2eV():
 @mark.parametrize(("variance"), (True, False, "constant"))
 def test_to_eV(jacobian, variance):
     axis = DataAxis(size=20, offset=200, scale=10)
-    data = ones(20)
-    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
 
     if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, S1.to_eV)
+        raises(ImportError, axis2eV, axis)
     try:
         from hyperspy.axes import UniformDataAxis
     except ImportError:
@@ -215,22 +212,24 @@ def test_to_eV(jacobian, variance):
 @mark.parametrize(("jacobian"), (True, False))
 def test_reset_variance_linear_model_eV(jacobian):
     axis = DataAxis(size=20, offset=200, scale=10)
-    data = ones(20)
-    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
 
     if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, S1.to_invcm)
+        raises(ImportError, axis2eV, axis)
     try:
         from hyperspy.axes import UniformDataAxis
     except ImportError:
         skip("HyperSpy version doesn't support non-uniform axis")
 
+    axis = UniformDataAxis(size=20, offset=200, scale=10)
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
     S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_factor", 2)
     S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_offset", 1)
     S1.metadata.set_item(
         "Signal.Noise_properties.Variance_linear_model.correlation_factor", 2
     )
     S1.estimate_poissonian_noise_variance()
+    # with warns(UserWarning, match="(range exceeds)"):
     S2 = S1.to_eV(inplace=False, jacobian=jacobian)
     if jacobian:
         with warns(UserWarning, match="Following"):
@@ -323,11 +322,9 @@ def test_var2invcm():
 @mark.parametrize(("variance"), (True, False, "constant"))
 def test_to_invcm(jacobian, variance):
     axis = DataAxis(size=20, offset=200, scale=10)
-    data = ones(20)
-    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
 
     if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, S1.to_invcm)
+        raises(ImportError, axis2invcm, axis)
     try:
         from hyperspy.axes import UniformDataAxis
     except ImportError:
@@ -422,16 +419,17 @@ def test_to_invcm(jacobian, variance):
 @mark.parametrize(("jacobian"), (True, False))
 def test_reset_variance_linear_model_invcm(jacobian):
     axis = DataAxis(size=20, offset=200, scale=10)
-    data = ones(20)
-    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
 
     if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, S1.to_invcm)
+        raises(ImportError, axis2invcm, axis)
     try:
         from hyperspy.axes import UniformDataAxis
     except ImportError:
         skip("HyperSpy version doesn't support non-uniform axis")
 
+    axis = UniformDataAxis(size=20, offset=200, scale=10)
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
     S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_factor", 2)
     S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_offset", 1)
     S1.metadata.set_item(
@@ -470,11 +468,9 @@ def test_reset_variance_linear_model_invcm(jacobian):
 @mark.parametrize(("variance"), (True, False, "constant"))
 def test_to_invcm_relative(jacobian, variance):
     axis = DataAxis(size=20, offset=200, scale=10)
-    data = ones(20)
-    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
 
     if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, S1.to_invcm_relative, 244)
+        raises(ImportError, axis2invcm, axis)
     try:
         from hyperspy.axes import UniformDataAxis
     except ImportError:
@@ -575,15 +571,9 @@ def test_solve_grating_equation():
 
         axis_class = UniformDataAxis
 
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("always")
-        # Trigger a warning.
+    with warns(SyntaxWarning, match="(not in pixel units)"):
         axis = axis_class(size=20, offset=200, scale=10, units="nm")
         solve_grating_equation(axis, 3, -20, 300, 25, 600, 150)
-        # Verify some things
-        assert len(w) == 1
-        assert issubclass(w[-1].category, SyntaxWarning)
-        assert "(not in pixel units)" in str(w[-1].message)
 
     axis1 = axis_class(
         size=10,
@@ -593,7 +583,8 @@ def test_solve_grating_equation():
     axis2 = axis_class(size=10, offset=200, scale=10, units="px")
 
     nm_axis1 = solve_grating_equation(axis1, 3, -20, 300, 25, 600, 150)
-    nm_axis2 = solve_grating_equation(axis2, 1, 1, 1, 1, 1, 1)
+    with warns(UserWarning, match="(range exceeds)"):
+        nm_axis2 = solve_grating_equation(axis2, 1, 1, 1, 1, 1, 1)
 
     assert nm_axis1.name == "Wavelength"
     assert nm_axis1.units == "nm"
