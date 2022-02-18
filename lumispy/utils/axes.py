@@ -393,10 +393,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
     return S1
 
 
-GRATING_EQUATION_DOCSTRING_PARAMETERS = r"""
-    Parameters
-    ----------
-    gamma_deg: float
+GRATING_EQUATION_DOCSTRING_PARAMETERS = r"""gamma_deg: float
         Inclination angle between the focal plane and the centre of the grating
         (found experimentally from calibration). In degree.
     deviation_angle_deg: float
@@ -411,7 +408,6 @@ GRATING_EQUATION_DOCSTRING_PARAMETERS = r"""
         Wavelength at the centre of the grating, where exit slit is placed. In nm.
     grating_density_gr_mm: int
         Grating density in gratings per mm.
-
     """
 
 

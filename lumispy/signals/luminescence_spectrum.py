@@ -260,46 +260,45 @@ class LumiSpectrum(Signal1D, CommonLumi):
             return s2
 
     TO_INVCM_DOCSTRING = """
-    The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
-    by doing a Jacobian transformation, see e.g. Wang and Townsend,
-    J. Lumin. 142, 202 (2013), doi:10.1016/j.jlumin.2013.03.052, which
-    ensures that integrated signals are correct also in the wavenumber 
-    domain. If the variance of the signal is known, i.e.
-    `metadata.Signal.Noise_properties.variance` is a signal representing the
-    variance, a squared renormalization of the variance is performed.
-    Note that if the variance is a number (not a signal instance), it is
-    converted to a signal if the Jacobian transformation is performed
+        The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
+        by doing a Jacobian transformation, see e.g. Wang and Townsend,
+        J. Lumin. 142, 202 (2013), doi:10.1016/j.jlumin.2013.03.052, which
+        ensures that integrated signals are correct also in the wavenumber 
+        domain. If the variance of the signal is known, i.e.
+        `metadata.Signal.Noise_properties.variance` is a signal representing the
+        variance, a squared renormalization of the variance is performed.
+        Note that if the variance is a number (not a signal instance), it is
+        converted to a signal if the Jacobian transformation is performed
 
-    Parameters
-    ----------
-    inplace : boolean
-        If `False`, a new signal object is created and returned. Otherwise
-        (default) the operation is performed on the existing signal object.
-    jacobian : boolean
-        The default is to do the Jacobian transformation (recommended at
-        least for luminescence signals), but the transformation can be
-        suppressed by setting this option to `False`.
-    """
+        Parameters
+        ----------
+        inplace : boolean
+            If `False`, a new signal object is created and returned. Otherwise
+            (default) the operation is performed on the existing signal object.
+        jacobian : boolean
+            The default is to do the Jacobian transformation (recommended at
+            least for luminescence signals), but the transformation can be
+            suppressed by setting this option to `False`.
+        """
 
     TO_INVCM_EXAMPLE = """
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from lumispy import LumiSpectrum
-    >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
-    >>> S1.to_invcm()
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from lumispy import LumiSpectrum
+        >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+        >>> S1.to_invcm()
 
-    Notes
-    -----
-    Using a non-linear axis works only for the RELEASE_next_minor development
-    branch of HyperSpy.    
-    """
+        Notes
+        -----
+        Using a non-linear axis works only for the RELEASE_next_minor development
+        branch of HyperSpy.    
+        """
 
     def to_invcm(self, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear wavenumber axis
         (cm^-1). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
-
         %s
         %s
         """
@@ -426,17 +425,17 @@ class LumiSpectrum(Signal1D, CommonLumi):
     to_invcm.__doc__ %= (TO_INVCM_DOCSTRING, TO_INVCM_EXAMPLE)
 
     TO_INVCMREL_EXAMPLE = """
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from lumispy import LumiSpectrum
-    >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
-    >>> S1.to_invcm(laser=325)
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from lumispy import LumiSpectrum
+        >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+        >>> S1.to_invcm(laser=325)
 
-    Notes
-    -----
-    Using a non-linear axis works only for the RELEASE_next_minor development
-    branch of HyperSpy.    
+        Notes
+        -----
+        Using a non-linear axis works only for the RELEASE_next_minor development
+        branch of HyperSpy.    
     """
 
     def to_invcm_relative(self, laser, inplace=True, jacobian=True):
@@ -504,10 +503,11 @@ class LumiSpectrum(Signal1D, CommonLumi):
         Parameters
         ----------
         background : array shape (2, n) or Signal1D
-            An array containing the background x-axis and the intensity values [[xs],[ys]] or a Signal1D object.
-            If the x-axis values do not match the signal_axes, then interpolation is done before subtraction.
-            If only the intensity values are provided, [ys], the functions assumes no interpolation needed.
-
+            An array containing the background x-axis and the intensity values
+            [[xs],[ys]] or a Signal1D object. If the x-axis values do not match
+            the signal_axes, then interpolation is done before subtraction. If
+            only the intensity values are provided, [ys], the functions assumes
+            no interpolation needed.
         inplace : boolean
             If False, it returns a new object with the transformation. If True,
             the original object is transformed, returning no object.
@@ -652,8 +652,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
     def to_array(self, axes=True, transpose=False):
         """Returns luminescence spectrum object as numpy array (optionally
         including the axes).
-        %s
-        %s
+            %s
+            %s
         %s
         """
         return to_array(self, axes, transpose)
@@ -671,27 +671,27 @@ class LumiSpectrum(Signal1D, CommonLumi):
         inplace=False,
     ):
         """Converts signal axis of 1D signal (in pixels) to wavelength, solving
-        the grating equation. See `lumispy.axes.solve_grating_equation` for
-        more details.
+    the grating equation. See `lumispy.axes.solve_grating_equation` for
+    more details.
 
-        Parameters
-        ----------
-        %s
-        inplace : bool
-            If False, it returns a new object with the transformation. If True,
-            the original object is transformed, returning no object.
+    Parameters
+    ----------
+    %s
+    inplace : bool
+        If False, it returns a new object with the transformation. If True,
+        the original object is transformed, returning no object.
 
-        Returns
-        -------
-        signal : LumiSpectrum
-            A signal with calibrated wavelength units.
+    Returns
+    -------
+    signal : LumiSpectrum
+        A signal with calibrated wavelength units.
 
-        Examples
-        --------
-        >>> s = LumiSpectrum(np.ones(20),))
-        >>> s.px_to_nm_grating_solver(*params, inplace=True)
-        >>> s.axes_manager.signal_axes[0].units == 'nm'
-        """
+    Examples
+    --------
+    >>> s = LumiSpectrum(np.ones(20),))
+    >>> s.px_to_nm_grating_solver(*params, inplace=True)
+    >>> s.axes_manager.signal_axes[0].units == 'nm'
+    """
 
         nm_axis = solve_grating_equation(
             self.axes_manager.signal_axes[0],

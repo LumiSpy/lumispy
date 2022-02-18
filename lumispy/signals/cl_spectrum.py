@@ -124,10 +124,12 @@ class CLSpectrum(LumiSpectrum):
         else:
             return signal
 
-    REMOVE_SPIKES_DOCSTRINGS = """
-        Hyperspy-based spike removal tool adapted to Lumispy to run non-interactively and
-        without noise addition by default.
+    REMOVE_SPIKES_DOCSTRINGS = """HyperSpy-based spike removal tool adapted to
+        LumiSpy to run non-interactively and without noise addition by default.
         %s
+        
+        Other Parameters
+        ----------------
         show_diagnosis_histogram: bool
             Plot or not the derivative histogram to show the magnitude of the spikes present.
         inplace: bool

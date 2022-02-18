@@ -158,7 +158,7 @@ class CommonLumi:
         pos : float, int
             If 'nan' (default), spectra are normalized to the maximum.
             If `float`, position along signal axis in calibrated units at which
-                to normalize the spectra.
+            to normalize the spectra.
             If `int`, index along signal axis at which to normalize the spectra.
         element_wise: boolean
             If `False` (default), a spectrum image is normalized by a common factor.
