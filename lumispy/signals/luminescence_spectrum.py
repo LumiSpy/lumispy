@@ -19,9 +19,10 @@
 """Signal class for Luminescence spectral data (1D).
 """
 import warnings
+import numpy as np
 from inspect import getfullargspec
 from warnings import warn
-import numpy as np
+from textwrap import indent
 
 
 from hyperspy.signals import Signal1D
@@ -671,27 +672,27 @@ class LumiSpectrum(Signal1D, CommonLumi):
         inplace=False,
     ):
         """Converts signal axis of 1D signal (in pixels) to wavelength, solving
-    the grating equation. See `lumispy.axes.solve_grating_equation` for
-    more details.
+        the grating equation. See `lumispy.axes.solve_grating_equation` for
+        more details.
 
-    Parameters
-    ----------
-    %s
-    inplace : bool
-        If False, it returns a new object with the transformation. If True,
-        the original object is transformed, returning no object.
+        Parameters
+        ----------
+        %s
+            inplace : bool
+                If False, it returns a new object with the transformation. If
+                True, the original object is transformed, returning no object.
 
-    Returns
-    -------
-    signal : LumiSpectrum
-        A signal with calibrated wavelength units.
+        Returns
+        -------
+        signal : LumiSpectrum
+            A signal with calibrated wavelength units.
 
-    Examples
-    --------
-    >>> s = LumiSpectrum(np.ones(20),))
-    >>> s.px_to_nm_grating_solver(*params, inplace=True)
-    >>> s.axes_manager.signal_axes[0].units == 'nm'
-    """
+        Examples
+        --------
+        >>> s = LumiSpectrum(np.ones(20),))
+        >>> s.px_to_nm_grating_solver(*params, inplace=True)
+        >>> s.axes_manager.signal_axes[0].units == 'nm'
+        """
 
         nm_axis = solve_grating_equation(
             self.axes_manager.signal_axes[0],
@@ -714,7 +715,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         return s
 
-    px_to_nm_grating_solver.__doc__ %= GRATING_EQUATION_DOCSTRING_PARAMETERS
+    px_to_nm_grating_solver.__doc__ %= GRATING_EQUATION_DOCSTRING_PARAMETERS.replace(
+        "\n", "\n\t"
+    )
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
