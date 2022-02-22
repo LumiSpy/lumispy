@@ -3,17 +3,25 @@
 LumiSpy metadata structure
 **************************
 
-LumiSpy extends the `HyperSpy metadata structure <https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html>`_ with conventions for metadata specific to its signal types. Refer to `HyperSpy <https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html>`_ for general metadata fields.
+LumiSpy extends the `HyperSpy metadata structure
+<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html>`_
+with conventions for metadata specific to its signal types. Refer to `HyperSpy
+<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html>`_
+for general metadata fields.
 
-The metadata of any **signal objects** is stored in the `metadata` attribute, which has a tree structure.
+The metadata of any **signal objects** is stored in the `metadata` attribute,
+which has a tree structure. By convention, the node labels are capitalized and
+the ones for leaves are not capitalized. When a leaf contains a quantity that
+is not dimensionless, the units can be given in an extra leaf with the same
+label followed by the ``_units`` suffix.
 
-By convention, the node labels are capitalized and the ones for leaves are not capitalized.
-
-When a leaf contains a quantity that is not dimensionless, the units can be given in an extra leaf with the same label followed by the `_units` suffix.
-
-The luminescence specific metadata structure is represented in the following tree diagram. The
-default units are given in parentheses. Details about the leaves can be found
-in the following sections of this chapter. Note that not all types of leaves will apply to every type of measurements. For example, while parallel acquisition with a CCD is characterized by the `central_wavelength`, a serial acquisition with a PMT will require a `start_wavelength` and a `step_size`.
+The luminescence specific metadata structure is represented in the following
+tree diagram. The default units are given in parentheses. Details about the
+leaves can be found in the following sections of this chapter. Note that not
+all types of leaves will apply to every type of measurements. For example,
+while parallel acquisition with a CCD is characterized by the
+``central_wavelength``, a serial acquisition with a PMT will require a
+``start_wavelength`` and a ``step_size``.
 
 ::
 
@@ -121,7 +129,7 @@ blazing_angle
 blazing_wavelength
     type: int
 
-    Wavelength that the grating blaze is optimized for in 'nm'.
+    Wavelength that the grating blaze is optimized for in nm.
 
 Filters
 -------
@@ -150,12 +158,12 @@ optical_density
 
     Optical density in case of an intensity filter.
 
-cut_on_wavelength (nm)
+cut_on_wavelength
     type: int
 
     Cut on wavelength in nm in case of a long-pass or bandpass filter.
 
-cut_off_wavelength (nm)
+cut_off_wavelength
     type: int
 
     Cut off wavelength in nm in case of a short-pass or bandpass filter.
@@ -181,15 +189,16 @@ life_time (ms)
     type: float
 
 real_time (ms)
+    type: float
 
 exposure (s)
-
+    type: float
 
 frame_number
-
+    type: int
 
 integration_time (s)
-
+    type: float
 
 saturation_fraction
     type: float
@@ -214,12 +223,12 @@ read_area
 signal_amplification
     type: float
 
-     (xN)
+     in xN
 
 readout_rate
     type: float
 
-     (MHz)
+     in MHz
 
 pixel_width
     type: float
