@@ -71,4 +71,5 @@ Contents
 
    citing.rst
    contributing.rst
+   license.rst
    On GitHub <https://github.com/LumiSpy/lumispy>
