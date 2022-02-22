@@ -1,5 +1,5 @@
 Welcome to LumiSpy's documentation!
-===================================
+***********************************
 
 |Build_status|_ |Tests|_ |Codecov_status|_ |DOI|_
 
@@ -42,7 +42,7 @@ and get started!
    This project is under active development.
 
 Contents
---------
+========
 
 .. toctree::
    :maxdepth: 1

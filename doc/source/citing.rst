@@ -1,5 +1,5 @@
 Citing LumiSpy
-==============
+**************
 
 LumiSpy is maintained by an `active community of developers 
 <https://github.com/lumispy/lumispy/contributors>`_.
