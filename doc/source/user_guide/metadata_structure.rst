@@ -59,7 +59,7 @@ while parallel acquisition with a CCD is characterized by the
         │   ├── signal_amplification (xN)
         │   ├── readout_rate (MHz)
         │   └── pixel_width (mm)
-        └── SpectralImage
+        └── Spectral_image
             ├── mode
             ├── step_size
             ├── step_size_units (nm)
@@ -236,7 +236,7 @@ pixel_width
     Diameter of a pixel in mm.
 
 
-SpectralImage
+Spectral_image
 =============
 
 Contains information about mapping parameters, such as step size, drift
