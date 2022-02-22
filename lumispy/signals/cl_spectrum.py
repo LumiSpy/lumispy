@@ -16,7 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Signal class for Cathodoluminescence spectral data.
+"""
+Signal class for cathodoluminescence spectral data
+--------------------------------------------------
 """
 
 from inspect import getfullargspec
@@ -30,7 +32,7 @@ from lumispy.signals import LumiSpectrum
 
 
 class CLSpectrum(LumiSpectrum):
-    """General 1D Cathodoluminescence signal class."""
+    """**General 1D cathodoluminescence signal class.**"""
 
     _signal_type = "CL"
     _signal_dimension = 1
@@ -122,10 +124,12 @@ class CLSpectrum(LumiSpectrum):
         else:
             return signal
 
-    REMOVE_SPIKES_DOCSTRINGS = """
-        Hyperspy-based spike removal tool adapted to Lumispy to run non-interactively and
-        without noise addition by default.
+    REMOVE_SPIKES_DOCSTRINGS = """HyperSpy-based spike removal tool adapted to
+        LumiSpy to run non-interactively and without noise addition by default.
         %s
+        
+        Other Parameters
+        ----------------
         show_diagnosis_histogram: bool
             Plot or not the derivative histogram to show the magnitude of the spikes present.
         inplace: bool
@@ -147,6 +151,8 @@ class CLSpectrum(LumiSpectrum):
 
 
 class LazyCLSpectrum(LazySignal, CLSpectrum):
+    """**General lazy 1D cathodoluminescence signal class.**"""
+
     _lazy = True
 
     pass
@@ -157,6 +163,8 @@ class LazyCLSpectrum(LazySignal, CLSpectrum):
 
 
 class CLSEMSpectrum(CLSpectrum):
+    """**1D scanning electron microscopy cathodoluminescence signal class.**"""
+
     _signal_type = "CL_SEM"
 
     def correct_grating_shift(
@@ -207,6 +215,8 @@ class CLSEMSpectrum(CLSpectrum):
 
 
 class LazyCLSEMSpectrum(LazySignal, CLSEMSpectrum):
+    """**Lazy 1D scanning electron microscopy cathodoluminescence signal class.**"""
+
     _lazy = True
 
     pass
@@ -217,6 +227,7 @@ class LazyCLSEMSpectrum(LazySignal, CLSEMSpectrum):
 
 
 class CLSTEMSpectrum(CLSpectrum):
+    """**1D scanning transmission electron microscopy cathodoluminescence signal class.**"""
 
     _signal_type = "CL_STEM"
 
@@ -224,6 +235,7 @@ class CLSTEMSpectrum(CLSpectrum):
 
 
 class LazyCLSTEMSpectrum(LazySignal, CLSTEMSpectrum):
+    """**Lazy 1D scanning transmission electron microscopy cathodoluminescence signal class.**"""
 
     _lazy = True
 

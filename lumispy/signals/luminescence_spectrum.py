@@ -19,9 +19,10 @@
 """Signal class for Luminescence spectral data (1D).
 """
 import warnings
+import numpy as np
 from inspect import getfullargspec
 from warnings import warn
-import numpy as np
+from textwrap import indent
 
 
 from hyperspy.signals import Signal1D
@@ -49,7 +50,7 @@ from lumispy.utils.io import (
 
 
 class LumiSpectrum(Signal1D, CommonLumi):
-    """General 1D Luminescence signal class."""
+    """**General 1D luminescence signal class.**"""
 
     _signal_type = "Luminescence"
     _signal_dimension = 1
@@ -128,8 +129,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
         >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
         >>> S1.to_eV()
 
-        Note
-        ----
+        Notes
+        -----
         Using a non-linear axis works only for the RELEASE_next_minor development
         branch of HyperSpy.
         """
@@ -260,46 +261,45 @@ class LumiSpectrum(Signal1D, CommonLumi):
             return s2
 
     TO_INVCM_DOCSTRING = """
-    The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
-    by doing a Jacobian transformation, see e.g. Wang and Townsend,
-    J. Lumin. 142, 202 (2013), doi:10.1016/j.jlumin.2013.03.052, which
-    ensures that integrated signals are correct also in the wavenumber 
-    domain. If the variance of the signal is known, i.e.
-    `metadata.Signal.Noise_properties.variance` is a signal representing the
-    variance, a squared renormalization of the variance is performed.
-    Note that if the variance is a number (not a signal instance), it is
-    converted to a signal if the Jacobian transformation is performed
+        The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
+        by doing a Jacobian transformation, see e.g. Wang and Townsend,
+        J. Lumin. 142, 202 (2013), doi:10.1016/j.jlumin.2013.03.052, which
+        ensures that integrated signals are correct also in the wavenumber 
+        domain. If the variance of the signal is known, i.e.
+        `metadata.Signal.Noise_properties.variance` is a signal representing the
+        variance, a squared renormalization of the variance is performed.
+        Note that if the variance is a number (not a signal instance), it is
+        converted to a signal if the Jacobian transformation is performed
 
-    Parameters
-    ----------
-    inplace : boolean
-        If `False`, a new signal object is created and returned. Otherwise
-        (default) the operation is performed on the existing signal object.
-    jacobian : boolean
-        The default is to do the Jacobian transformation (recommended at
-        least for luminescence signals), but the transformation can be
-        suppressed by setting this option to `False`.
-    """
+        Parameters
+        ----------
+        inplace : boolean
+            If `False`, a new signal object is created and returned. Otherwise
+            (default) the operation is performed on the existing signal object.
+        jacobian : boolean
+            The default is to do the Jacobian transformation (recommended at
+            least for luminescence signals), but the transformation can be
+            suppressed by setting this option to `False`.
+        """
 
     TO_INVCM_EXAMPLE = """
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from lumispy import LumiSpectrum
-    >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
-    >>> S1.to_invcm()
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from lumispy import LumiSpectrum
+        >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+        >>> S1.to_invcm()
 
-    Note
-    ----
-    Using a non-linear axis works only for the RELEASE_next_minor development
-    branch of HyperSpy.    
-    """
+        Notes
+        -----
+        Using a non-linear axis works only for the RELEASE_next_minor development
+        branch of HyperSpy.    
+        """
 
     def to_invcm(self, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear wavenumber axis
         (cm^-1). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
-
         %s
         %s
         """
@@ -426,17 +426,17 @@ class LumiSpectrum(Signal1D, CommonLumi):
     to_invcm.__doc__ %= (TO_INVCM_DOCSTRING, TO_INVCM_EXAMPLE)
 
     TO_INVCMREL_EXAMPLE = """
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from lumispy import LumiSpectrum
-    >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
-    >>> S1.to_invcm(laser=325)
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from lumispy import LumiSpectrum
+        >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+        >>> S1.to_invcm(laser=325)
 
-    Note
-    ----
-    Using a non-linear axis works only for the RELEASE_next_minor development
-    branch of HyperSpy.    
+        Notes
+        -----
+        Using a non-linear axis works only for the RELEASE_next_minor development
+        branch of HyperSpy.    
     """
 
     def to_invcm_relative(self, laser, inplace=True, jacobian=True):
@@ -504,10 +504,11 @@ class LumiSpectrum(Signal1D, CommonLumi):
         Parameters
         ----------
         background : array shape (2, n) or Signal1D
-            An array containing the background x-axis and the intensity values [[xs],[ys]] or a Signal1D object.
-            If the x-axis values do not match the signal_axes, then interpolation is done before subtraction.
-            If only the intensity values are provided, [ys], the functions assumes no interpolation needed.
-
+            An array containing the background x-axis and the intensity values
+            [[xs],[ys]] or a Signal1D object. If the x-axis values do not match
+            the signal_axes, then interpolation is done before subtraction. If
+            only the intensity values are provided, [ys], the functions assumes
+            no interpolation needed.
         inplace : boolean
             If False, it returns a new object with the transformation. If True,
             the original object is transformed, returning no object.
@@ -517,8 +518,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
         signal : LumiSpectrum
             A background subtracted signal.
 
-        Note
-        ----
+        Notes
+        -----
         This function does not work with non-linear axes.
         """
         if hasattr(self.metadata.Signal, "background_subtracted"):
@@ -619,8 +620,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
     savetxt.__doc__ %= (SAVETXT_DOCSTRING, SAVETXT_PARAMETERS, SAVETXT_EXAMPLE)
 
     TOARRAY_EXAMPLE = """
-    Note
-    ----
+    Notes
+    -----
     The output of this function can be used to convert a signal object to a
     pandas dataframe, e.g. using `df = pd.Dataframe(S.to_array())`.
 
@@ -652,8 +653,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
     def to_array(self, axes=True, transpose=False):
         """Returns luminescence spectrum object as numpy array (optionally
         including the axes).
-        %s
-        %s
+            %s
+            %s
         %s
         """
         return to_array(self, axes, transpose)
@@ -674,12 +675,12 @@ class LumiSpectrum(Signal1D, CommonLumi):
         the grating equation. See `lumispy.axes.solve_grating_equation` for
         more details.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         %s
-        inplace : bool
-            If False, it returns a new object with the transformation. If True,
-            the original object is transformed, returning no object.
+            inplace : bool
+                If False, it returns a new object with the transformation. If
+                True, the original object is transformed, returning no object.
 
         Returns
         -------
@@ -714,10 +715,14 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         return s
 
-    px_to_nm_grating_solver.__doc__ %= GRATING_EQUATION_DOCSTRING_PARAMETERS
+    px_to_nm_grating_solver.__doc__ %= GRATING_EQUATION_DOCSTRING_PARAMETERS.replace(
+        "\n", "\n\t"
+    )
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):
+    """**General lazy 1D luminescence signal class.**"""
+
     _lazy = True
 
     pass

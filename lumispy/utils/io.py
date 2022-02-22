@@ -73,7 +73,6 @@ SAVETXT_EXAMPLE = """
     """
 
 TOARRAY_DOCSTRING = """
-    
     Returns single spectra as two-column array.
     Returns linescan data as array with signal axis as first row and
     navigation axis as first column (flipped if `transpose=True`)."""
@@ -92,8 +91,8 @@ TOARRAY_PARAMETERS = """
         `header`, `footer`, `comments`, or `encoding`."""
 
 TOARRAY_EXAMPLE = """
-    Note
-    --------
+    Notes
+    -----
     The output of this function can be used to convert a signal object to a
     pandas dataframe, e.g. using `df = pd.Dataframe(lum.to_array(S))`.
     
@@ -119,8 +118,7 @@ TOARRAY_EXAMPLE = """
           [ 1.,  5.,  6.,  7.,  8.,  9.],
           [ 2., 10., 11., 12., 13., 14.],
           [ 3., 15., 16., 17., 18., 19.],
-          [ 4., 20., 21., 22., 23., 24.]])
-    """
+          [ 4., 20., 21., 22., 23., 24.]])"""
 
 
 def to_array(S, axes=True, transpose=False):

@@ -16,7 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Signal class for Luminescence data (BaseSignal class).
+"""
+Signal class for luminescence data (BaseSignal class)
+-----------------------------------------------------
 """
 
 from numpy import isnan
@@ -24,7 +26,7 @@ from warnings import warn
 
 
 class CommonLumi:
-    """General Luminescence signal class (dimensionless)."""
+    """**General luminescence signal class (dimensionless)**"""
 
     def crop_edges(self, crop_px):
         """Crop the amount of pixels from the four edges of the scanning
@@ -156,7 +158,7 @@ class CommonLumi:
         pos : float, int
             If 'nan' (default), spectra are normalized to the maximum.
             If `float`, position along signal axis in calibrated units at which
-                to normalize the spectra.
+            to normalize the spectra.
             If `int`, index along signal axis at which to normalize the spectra.
         element_wise: boolean
             If `False` (default), a spectrum image is normalized by a common factor.
