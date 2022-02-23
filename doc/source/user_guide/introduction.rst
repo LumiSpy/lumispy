@@ -68,8 +68,8 @@ As an extension to HyperSpy, LumiSpy provides several signal types extending the
 <https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html>`_. When
 the LumiSpy library is installed, these additional signal types are directly
 available to HyperSpy. To print all available specialised
-:py:class:`hyperspy.signal.BaseSignal` subclasses installed in your system call
-the :py:func:`hyperspy.utils.print_known_signal_types` function:
+:external:py:class:`hyperspy.signal.BaseSignal` subclasses installed in your system call
+the :external:py:func:`hyperspy.utils.print_known_signal_types` function:
 
 .. code-block:: python
 
@@ -109,20 +109,20 @@ signal types (or inheriting) signal types.
 The hierarchy of the LumiSpy signal types is summarized in the following
 diagram:
 
-::
-
-    └─── :py:class:`hyperspy.signal.BaseSignal`
-        ├── :py:class:`hyperspy.signal.Signal1D`
-        │   └── :py:class:`~.signals.luminescence_spectrum.LumiSpectrum`
-        │       ├── :py:class:`~.signals.cl_spectrum.CLSpectrum`
-        │       │   ├── :py:class:`~.signals.cl_spectrum.CLSEMSpectrum` 
-        │       │   └── :py:class:`~.signals.cl_spectrum.CLSTEMSpectrum` 
-        │       ├── :py:class:`~.signals.cl_spectrum.ELSpectrum`
-        │       └── :py:class:`~.signals.cl_spectrum.PLSpectrum`
-        └── :py:class:`hyperspy.signal.Signal2D`
-            └── :py:class:`~.signals.luminescence_transient.LumiTransient`
-               ├── :py:class:`~.signals.cl_transient.CLTransient` 
-               └── :py:class:`~.signals.cl_transient.PLTransient` 
+|   └── :external:py:class:`hyperspy.signal.BaseSignal`
+|       ├── :external:py:class:`hyperspy._signals.signal1d.Signal1D`
+|       │   └── :py:class:`~.signals.luminescence_spectrum.LumiSpectrum`
+|       │       ├── :py:class:`~.signals.cl_spectrum.CLSpectrum`
+|       │       │   ├── :py:class:`~.signals.cl_spectrum.CLSEMSpectrum` 
+|       │       │   └── :py:class:`~.signals.cl_spectrum.CLSTEMSpectrum` 
+|       │       ├── :py:class:`~.signals.cl_spectrum.ELSpectrum`
+|       │       └── :py:class:`~.signals.cl_spectrum.PLSpectrum`
+|       └── :py:class:`hyperspy.signal.Signal2D`
+|           └── :py:class:`~.signals.luminescence_transient.LumiTransient`
+|               ├── :py:class:`~.signals.cl_transient.CLTransient` 
+|               └── :py:class:`~.signals.cl_transient.PLTransient` 
+|
+|
 
 
 Where are we heading
