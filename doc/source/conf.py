@@ -34,6 +34,11 @@ extensions = [
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
     "sphinx": ("https://www.sphinx-doc.org/en/master/", None),
+    "hyperspyweb": ("https://hyperspy.org/", None),
+    "matplotlib": ("https://matplotlib.org", None),
+    "numpy": ("https://docs.scipy.org/doc/numpy", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/reference/", None),
+    "hyperspy": ("https://hyperspy.org/hyperspy-doc/current/", None),
 }
 intersphinx_disabled_domains = ["std"]
 

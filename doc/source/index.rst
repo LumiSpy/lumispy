@@ -1,5 +1,5 @@
 Welcome to LumiSpy's documentation!
-===================================
+***********************************
 
 |Build_status|_ |Tests|_ |Codecov_status|_ |DOI|_
 
@@ -33,16 +33,12 @@ aimed at helping with the analysis of luminescence spectroscopy data
 Check out the :ref:`installation-label` section for further information, including
 how to start using this project.
 
-Everyone is welcome to contribute. Please read our
-`contributing guidelines <contributing.rst>`_
-and get started!
-
 .. note::
 
-   This project is under active development.
+   This project is under active development. Everyone is welcome to contribute. Please read our (see :ref:`contributing_label`) guidelines and get started!
 
 Contents
---------
+========
 
 .. toctree::
    :maxdepth: 1
