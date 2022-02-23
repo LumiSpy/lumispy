@@ -6,8 +6,8 @@ Introduction
 What is LumiSpy
 ===============
 
-**LumiSpy** is an open-source python library aimed at helping with the analysis of
-luminescence spectroscopy data -- the development started mainly with
+**LumiSpy** is an open-source python library aimed at helping with the analysis
+of luminescence spectroscopy data -- the development started mainly with
 photoluminescence (PL), cathodoluminescence (CL), electroluminescence (EL) and
 Raman spectroscopy in mind. Besides the standard continuous-excitation spectral
 data, the idea is to provide tools also for the analysis of time-resolved
@@ -20,7 +20,7 @@ spectroscopy (FTIR).
 that facilitates hyperspectral data analysis, i.e. maps or linescans where a
 spectrum is collected at each pixel. Or more general, multidimensional datasets
 that can be described as multidimensional arrays of a given signal. Notable 
-features that HyperSpy provides are:
+features that **HyperSpy** provides are:
 
 - `base signal classes <https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html>`_
   for the handling of (multidimensional) spectral data,
@@ -37,8 +37,8 @@ features that HyperSpy provides are:
   <https://hyperspy.org/hyperspy-doc/current/user_guide/big_data.html>`_,
 - functions for `data visualization 
   <https://hyperspy.org/hyperspy-doc/current/user_guide/visualisation.html>`_
-  both to evaluate datasets during the analysis and provide interactive operation
-  for certain functions, as well as for plotting of data.
+  both to evaluate datasets during the analysis and provide interactive
+  operation for certain functions, as well as for plotting of data.
 - extracting subsets of data from multidimensional datasets via `regions of
   interest <https://hyperspy.org/hyperspy-doc/current/user_guide/interactive_operations_ROIs.html>`_
   and a powerful numpy-style `indexing mechanism
@@ -68,8 +68,9 @@ As an extension to HyperSpy, LumiSpy provides several signal types extending the
 <https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html>`_. When
 the LumiSpy library is installed, these additional signal types are directly
 available to HyperSpy. To print all available specialised
-:external:py:class:`hyperspy.signal.BaseSignal` subclasses installed in your system call
-the :external:py:func:`hyperspy.utils.print_known_signal_types` function:
+:external:py:class:`hyperspy.signal.BaseSignal` subclasses installed in your
+ ystem call the :external:py:func:`hyperspy.utils.print_known_signal_types`
+ function:
 
 .. code-block:: python
 
@@ -106,8 +107,8 @@ signal types (or inheriting) signal types.
     |  :py:class:`~.signals.pl_transient.PLTransient`              |        2         |      TRPL     |  real   | TR photoluminescence, time-resolved photoluminescence     |
     +--------------------------------------------------------------+------------------+---------------+---------+-----------------------------------------------------------+
 
-The hierarchy of the LumiSpy signal types is summarized in the following
-diagram:
+The hierarchy of the LumiSpy signal types and their inheritance from HyperSpy
+is summarized in the following diagram:
 
 |   └── :external:py:class:`hyperspy.signal.BaseSignal`
 |       ├── :external:py:class:`hyperspy._signals.signal1d.Signal1D`
@@ -125,18 +126,19 @@ diagram:
 |
 
 
-Where are we heading
-====================
+Where are we heading?
+=====================
 
 LumiSpy is under active development, and as a user-driven project, we welcome
-contributions (see :ref:`contributing_label`) to the code and documentation from any
-other users.
+contributions (see :ref:`contributing_label`) to the code and documentation
+from any other users.
 
 Currrently, we have implemented the base functionality that extends 
 `HyperSpy's capabilities <https://hyperspy.org/hyperspy-doc/current/index.html>`_
-to additional signal classes. In the near future, the following functions should
-be developed:
+to additional signal classes. In the near future, the following functions
+should be developed:
 
-- handling of transient (time-resolved) data.
-- reading of common PL data formats.
+- handling of transient (time-resolved) data,
+- reading of common PL data formats,
+- more dedicated analysis functionalities,
 - ...
