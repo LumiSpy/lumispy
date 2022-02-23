@@ -30,6 +30,7 @@ while parallel acquisition with a CCD is characterized by the
         │   ├── model_name
         │   ├── acquisition_mode
         │   ├── entrance_slit_width (mm)
+        │   ├── exit_slit_width (mm)
         │   ├── central_wavelength (nm)
         │   ├── start_wavelength (nm)
         │   ├── step_size (nm)
@@ -37,28 +38,22 @@ while parallel acquisition with a CCD is characterized by the
         │   │   ├── groove_density (grooves/mm)
         │   │   ├── blazing_angle (º)
         │   │   └── blazing_wavelength (nm)
-        │   └── Filters
-        │       └── Filter1
-        │           ├── filter_type
-        │           ├── position
-        │           ├── optical_density
-        │           ├── cut_on_wavelength (nm)
-        │           └── cut_off_wavelength (nm)
+        │   └── Filter
+        │       ├── filter_type
+        │       ├── position
+        │       ├── optical_density
+        │       ├── cut_on_wavelength (nm)
+        │       └── cut_off_wavelength (nm)
         ├── Detector
-        |   ├── detector_type
+        │   ├── detector_type
         │   ├── model_name
-        │   ├── life_time (ms)
-        │   ├── real_time (ms)
-        │   ├── exposure (s)
-        │   ├── frame_number = 1
+        │   ├── frame_number
         │   ├── integration_time (s)
         │   ├── saturation_fraction
         │   ├── binning
         │   ├── processing
-        │   ├── read_area
-        │   ├── signal_amplification (xN)
-        │   ├── readout_rate (MHz)
-        │   └── pixel_width (mm)
+        │   ├── sensor_roi
+        │   └── pixel_width (µm)
         └── Spectral_image
             ├── mode
             ├── step_size
@@ -74,7 +69,8 @@ Spectrometer
 ============
 
 Contains information about the spectrometer, configuration and grating used
-for the measurement.
+for the measurement. In case multiple spectrometers are connected in series,
+they should be numbered `Spectrometer_1`, etc.
 
 model_name
     type: string
@@ -131,15 +127,11 @@ blazing_wavelength
 
     Wavelength that the grating blaze is optimized for in nm.
 
-Filters
+Filter
 -------
 
-Information about additional filters entered into the lightpath.
-
-Filter1
-^^^^^^^
-
-Multiple filters are numbered sequentially.
+Information about additional filters entered into the lightpath. In case
+multiple filters are used, they should be numbered `Filter_1`, etc.
 
 filter_type
     type: string
@@ -185,23 +177,23 @@ model_name
 
     The model of the used detector.
 
-life_time (ms)
-    type: float
-
-real_time (ms)
-    type: float
-
-exposure (s)
-    type: float
-
 frame_number
     type: int
+
+    Number of frames that are summed to yield the total integration time.
 
 integration_time (s)
     type: float
 
+    Time over which the signal is integrated. In case multiple frames are
+    summed, it is the total exposure time. In case of serial acquisition, it is
+    the dwell time per data point.
+
 saturation_fraction
     type: float
+
+    Fraction of the signal intensity compared with the saturation threshold of
+    the CCD.
 
 binning
     type: tuple of int
@@ -215,29 +207,19 @@ processing
     Information about automatic processing performed on the data, e.g. 'dark
     subtracted'.
 
-read_area
+sensor_roi
     type: tuple of int
 
     Tuple that specifies range of pixels on a detector that are read out.
 
-signal_amplification
-    type: float
-
-     in xN
-
-readout_rate
-    type: float
-
-     in MHz
-
 pixel_width
     type: float
 
-    Diameter of a pixel in mm.
+    Diameter of a pixel in µm.
 
 
 Spectral_image
-=============
+==============
 
 Contains information about mapping parameters, such as step size, drift
 correction, etc.
