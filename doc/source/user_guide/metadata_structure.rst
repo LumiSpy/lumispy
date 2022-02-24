@@ -47,7 +47,7 @@ while parallel acquisition with a CCD is characterized by the
         ├── Detector
         │   ├── detector_type
         │   ├── model_name
-        │   ├── frame_number
+        │   ├── frames
         │   ├── integration_time (s)
         │   ├── saturation_fraction
         │   ├── binning
@@ -151,12 +151,12 @@ optical_density
     Optical density in case of an intensity filter.
 
 cut_on_wavelength
-    type: int
+    type: float
 
     Cut on wavelength in nm in case of a long-pass or bandpass filter.
 
 cut_off_wavelength
-    type: int
+    type: float
 
     Cut off wavelength in nm in case of a short-pass or bandpass filter.
 
@@ -177,7 +177,7 @@ model_name
 
     The model of the used detector.
 
-frame_number
+frames
     type: int
 
     Number of frames that are summed to yield the total integration time.
