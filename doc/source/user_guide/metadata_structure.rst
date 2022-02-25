@@ -16,6 +16,14 @@ the ones for leaves are not capitalized. When a leaf contains a quantity that
 is not dimensionless, the units can be given in an extra leaf with the same
 label followed by the ``_units`` suffix.
 
+Besides directly accesing the metadata tree structure, e.g.
+``s.metadata.Signal.signal_type``, the HyperSpy methods
+:external:py:meth:`hyperspy.misc.utils.DictionaryTreeBrowser.set_item`,
+:external:py:meth:`hyperspy.misc.utils.DictionaryTreeBrowser.has_item` and
+:external:py:meth:`hyperspy.misc.utils.DictionaryTreeBrowser.get_item`
+can be used to add to, search for and read from items in the metadata tree,
+respectively.
+
 The luminescence specific metadata structure is represented in the following
 tree diagram. The default units are given in parentheses. Details about the
 leaves can be found in the following sections of this chapter. Note that not
@@ -26,6 +34,7 @@ while parallel acquisition with a CCD is characterized by the
 
 ::
 
+    metadata
     ├── General
     │   └── # see HyperSpy
     ├── Sample
