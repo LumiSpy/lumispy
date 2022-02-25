@@ -50,7 +50,7 @@ while parallel acquisition with a CCD is characterized by the
         │   ├── wavelength (nm)
         │   ├── power (mW)
         │   ├── objective_magnification
-        │   └── Filter
+        │   ├── Filter
         │   │   ├── filter_type
         │   │   ├── position
         │   │   ├── optical_density
