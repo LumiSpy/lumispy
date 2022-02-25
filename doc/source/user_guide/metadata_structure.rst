@@ -27,13 +27,13 @@ while parallel acquisition with a CCD is characterized by the
 ::
 
     ├── General
-    │   └── see HyperSpy
+    │   └── # see HyperSpy
     ├── Sample
-    │   └── see HyperSpy
+    │   └── # see HyperSpy
     ├── Signal
     │   ├── signal_type
     │   ├── quantity
-    │   └── otherwise see HyperSpy
+    │   └── # otherwise see HyperSpy
     └── Acquisition_instrument
         ├── Laser / SEM / TEM
         │   ├── laser_type
@@ -41,7 +41,13 @@ while parallel acquisition with a CCD is characterized by the
         │   ├── wavelength (nm)
         │   ├── power (mW)
         │   ├── objective_magnification
-        │   └── for SEM/TEM see HyperSpy
+        │   └── Filter
+        │   │   ├── filter_type
+        │   │   ├── position
+        │   │   ├── optical_density
+        │   │   ├── cut_on_wavelength (nm)
+        │   │   └── cut_off_wavelength (nm)
+        │   └── # for SEM/TEM see HyperSpy
         ├── Spectrometer
         │   ├── model
         │   ├── acquisition_mode
@@ -150,6 +156,42 @@ objective_magnification
     Magnification of the microscope objective used to focus the beam to the
     sample.
 
+.. _filter_label:
+
+Filter
+-------
+
+Information about additional filters entered into the lightpath before the
+sample. In case multiple filters are used, they should be numbered
+`Filter_1`, etc.
+
+filter_type
+    type: string
+
+    Type of filter (e.g. 'optical density', 'short pass', 'long pass',
+    'bandpass', 'color').
+
+position
+    type: string
+
+    Position in the beam (e.g. 'excitation' vs. 'detection' in case of optical
+    excitation).
+
+optical_density
+    type: float
+
+    Optical density in case of an intensity filter.
+
+cut_on_wavelength
+    type: float
+
+    Cut on wavelength in nm in case of a long-pass or bandpass filter.
+
+cut_off_wavelength
+    type: float
+
+    Cut off wavelength in nm in case of a short-pass or bandpass filter.
+
 Spectrometer
 ============
 
@@ -215,35 +257,10 @@ blazing_wavelength
 Filter
 -------
 
-Information about additional filters entered into the lightpath. In case
-multiple filters are used, they should be numbered `Filter_1`, etc.
-
-filter_type
-    type: string
-
-    Type of filter (e.g. 'optical density', 'short pass', 'long pass',
-    'bandpass', 'color').
-
-position
-    type: string
-
-    Position in the beam (e.g. 'excitation' vs. 'detection' in case of optical
-    excitation).
-
-optical_density
-    type: float
-
-    Optical density in case of an intensity filter.
-
-cut_on_wavelength
-    type: float
-
-    Cut on wavelength in nm in case of a long-pass or bandpass filter.
-
-cut_off_wavelength
-    type: float
-
-    Cut off wavelength in nm in case of a short-pass or bandpass filter.
+Information about additional filters entered into the lightpath after the
+sample. In case multiple filters are used, they should be numbered
+`Filter_1`, etc. See :ref:`filter-label` above for details on items that
+may potentially be included.
 
 Detector
 ========
