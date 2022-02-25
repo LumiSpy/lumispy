@@ -26,11 +26,15 @@ while parallel acquisition with a CCD is characterized by the
 
 ::
 
+    ├── General
+    │   └── see HyperSpy
+    ├── Sample
+    │   └── see HyperSpy
+    ├── Signal
+    │   ├── signal_type
+    │   ├── quantity
+    │   └── otherwise see HyperSpy
     └── Acquisition_instrument
-        ├── General
-        │   └── see HyperSpy
-        ├── Sample
-        │   └── see HyperSpy
         ├── Laser / SEM / TEM
         │   ├── laser_type
         │   ├── model
@@ -85,6 +89,28 @@ Sample
 
 See `HyperSpy-Metadata-Sample
 <https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#sample>`_.
+
+Signal
+======
+
+signal_type
+    type: string
+
+    String that describes the type of signal. The LumiSpy specific signal classes are
+    summarized under :ref:`signal_types`.
+
+quantity
+    type: string
+
+    The name of the quantity of the “intensity axis” with the units in round brackets if
+    required, for example 'Intensity (counts/s)'.
+
+See `HyperSpy-Metadata-Signal
+<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#sample>`_
+for additional fields.
+
+Acquisition Instrument
+======================
 
 Laser / SEM / TEM
 =================
