@@ -5,7 +5,8 @@ LumiSpy metadata structure
 
 LumiSpy extends the `HyperSpy metadata structure
 <https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html>`_
-with conventions for metadata specific to its signal types. Refer to `HyperSpy
+with conventions for metadata specific to its signal types. Refer to the
+`HyperSpy metadata documentation
 <https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html>`_
 for general metadata fields.
 
