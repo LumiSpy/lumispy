@@ -18,7 +18,7 @@ label followed by the ``_units`` suffix.
 The luminescence specific metadata structure is represented in the following
 tree diagram. The default units are given in parentheses. Details about the
 leaves can be found in the following sections of this chapter. Note that not
-all types of leaves will apply to every type of measurements. For example,
+all types of leaves will apply to every type of measurement. For example,
 while parallel acquisition with a CCD is characterized by the
 ``central_wavelength``, a serial acquisition with a PMT will require a
 ``start_wavelength`` and a ``step_size``.
@@ -26,8 +26,19 @@ while parallel acquisition with a CCD is characterized by the
 ::
 
     └── Acquisition_instrument
+        ├── General
+        │   └── see HyperSpy
+        ├── Sample
+        │   └── see HyperSpy
+        ├── Laser / SEM / TEM
+        │   ├── laser_type
+        │   ├── model
+        │   ├── wavelength (nm)
+        │   ├── power (mW)
+        │   ├── objective_magnification
+        │   └── for SEM/TEM see HyperSpy
         ├── Spectrometer
-        │   ├── model_name
+        │   ├── model
         │   ├── acquisition_mode
         │   ├── entrance_slit_width (mm)
         │   ├── exit_slit_width (mm)
@@ -46,7 +57,7 @@ while parallel acquisition with a CCD is characterized by the
         │       └── cut_off_wavelength (nm)
         ├── Detector
         │   ├── detector_type
-        │   ├── model_name
+        │   ├── model
         │   ├── frames
         │   ├── integration_time (s)
         │   ├── saturation_fraction
@@ -61,9 +72,56 @@ while parallel acquisition with a CCD is characterized by the
             ├── drift_correction_periodicity
             └── drift_correction_units (s)
 
-    
-::
 
+General
+=======
+
+See `HyperSpy-Metadata-General
+<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#general>`_.
+
+Sample
+======
+
+See `HyperSpy-Metadata-Sample
+<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#sample>`_.
+
+Laser / SEM / TEM
+=================
+
+For **SEM** or **TEM** see `HyperSpy-Metadata-SEM
+<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#sem>`_
+or `HyperSpy-Metadata-TEM
+<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#tem>`_.
+
+
+Laser
+-----
+
+laser_type
+    type: string
+
+    The type of laser used, e.g. 'HeCd'.
+
+model
+    type: string
+
+    Model of the laser (branding by manufacturer).
+
+wavelength
+    type: float
+
+    Emission wavelength of the exciting laser in nm.
+
+power
+    type: float
+
+    Measured power of the excitation laser in mW.
+
+objective_magnification
+    type: int
+
+    Magnification of the microscope objective used to focus the beam to the
+    sample.
 
 Spectrometer
 ============
@@ -72,10 +130,10 @@ Contains information about the spectrometer, configuration and grating used
 for the measurement. In case multiple spectrometers are connected in series,
 they should be numbered `Spectrometer_1`, etc.
 
-model_name
+model
     type: string
 
-    Model of the spectrometer.
+    Model of the spectrometer (branding by manufacturer).
 
 acquisition_mode
     type: string
@@ -170,9 +228,9 @@ detector_type
     type: string
 
     The type of detector used to acquire the signal (CCD, PMT, StreakCamera, 
-    TCSPD)
+    TCSPD).
 
-model_name
+model
     type: string
 
     The model of the used detector.
