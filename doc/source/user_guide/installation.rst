@@ -1,12 +1,12 @@
 .. _installation-label:
 
 Installation
-============
+************
 
 Follow these 3 steps to install LumiSpy.
 
 Creating a conda environment
-----------------------------
+============================
 
 LumiSpy requires Python 3 and conda -- we suggest using the Python 3 version
 of `Miniconda <https://conda.io/miniconda.html/>`_.
@@ -24,7 +24,7 @@ environment:
 
 
 Installing the package in the new environment
----------------------------------------------
+=============================================
 
 Now activate the LumiSpy environment and install the package using pip:
 
@@ -60,7 +60,7 @@ Installation is completed! To start using it, check the next section.
     Now you are ready to use all the functionalites of LumiSpy.
 
 Getting Started
----------------
+===============
 
 To get started using LumiSpy, especially if you are unfamiliar with Python, we
 recommend using `Jupyter notebooks <https://jupyter.org/>`_. Having installed
