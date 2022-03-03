@@ -7,11 +7,11 @@ assignees: ''
 
 ---
 
-**Describe the functionality you would like to see.**
+#### Describe the functionality you would like to see.
 A clear and concise description of what you would like to do.
 
-**Describe the context**
+#### Describe the context
 Do you want to extend existing functionalities, what types of signals should it apply to, etc.
 
-**Additional context**
+#### Additional information
 Add any other context or screenshots about the feature request here.
