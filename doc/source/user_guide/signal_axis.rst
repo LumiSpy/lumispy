@@ -1,14 +1,132 @@
-.. _signal_axis:
+.. _signal_axis-label:
 
 Non-uniform signal axes
 ***********************
 
-LumiSpy enables the use of non-linear axis (e.g. ``eV``) in an easy way.
+LumiSpy facilitates the use of non-uniform axes, where the points of the axis
+vector are not uniformly spaced, in particular when converting a wavelength
+scale to energy (eV) or wavenumbers (e.g. for Raman shifts).
 
-The function :py:func:`~.signals.luminescence_spectrum.LumiSpectrum.to_eV` simplifies the definition
+The conversion of the signal axis can be performed using the functions 
+:py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_eV`,
+:py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_invcm` and
+:py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_raman_shift`
+(alias for :py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_invcm_relative`).
+If the unit of the signal axis is set, the functions can handle wavelengths in
+either nm or µm.
 
-TODO: Explain the Jacobian transform.
-TODO: Show how the transform is done ``s.to_eV()``.
+Accepted parameters are ``inplace=True/False`` (default is True), which
+determines whether a the current signal object is modified or a new one is
+created, and ``jacobian=True/False`` (default is True, see
+:ref:`jacobian-label`).
 
-TODO: Note on signal noise.
+.. Note::
 
+    The non-uniform axis functionality will be available from HyperSpy v.1.7.
+    If this version is not yet available, you need to use the development branch.
+
+
+.. _energy_axis-label:
+
+The energy axis
+===============
+
+The transformation from wavelength :math:`\lambda` to energy :math:`E` is
+defined as :math:`E = h c/ \lambda`. Taking into account the permittivity of
+air and doing a conversion from nm to eV, we get:
+
+.. math::
+
+    E = \frac{times10^9 h c}{e \epsilon_r \lambda},
+
+where :math:`h` is the Planck constant, :math:`c` is the speed of light,
+:math:`e` is the elementary charge and :math:`\epsilon_r` is the relative
+permittivity of air.
+
+.. Note::
+
+    The relative permittivity of air :math:`\epsilon_r` is wavelength
+    dependent. This dependence is taken into account by LumiSpy based on the
+    analytical formula given by [Peck]_ valid from 185-1700 nm
+    (outside of this range, the permittivity values at the edges of the range
+    are used and a warning is raised).
+
+.. code-block:: python
+
+    >>> s2 = s.to_eV(inplace=False)
+    >>> s.to_eV()
+
+
+.. _wavenumber_axis-label:
+
+The wavenumber axis/Raman shifts
+================================
+
+The transformation from wavelength :math:`\lambda` to wavenumber
+:math:`\tilde{\nu}` (spatial frequency of the wave) is defined as
+:math:`\tilde{\nu} = 1/ \lambda`. The wavenumber is usually given in units of
+:math:`\mathrm{cm}^{-1}`.
+
+When converting a signal to Raman shift, i.e. the shift in wavenumbers from
+the exciting laser wavelength. Unless the laser wavelength is contained in the
+:ref:`metadata-label`, it has to be passed to the function using the parameter
+``laser`` using the same units as for the original axis (e.g. 325 for nm or
+0.325 for µm).
+
+TODO: Automatically read laser wavelength from metadata if given there.
+
+.. code-block:: python
+
+    >>> s2 = s.to_invcm(inplace=False)
+    >>> s.to_invcm()
+    >>> s2 = s.to_raman_shift(inplace=False, laser=325)
+    >>> s.to_raman_shift(laser=325)
+
+
+.. _jacobian-label:
+
+Jacobian transformation
+=======================
+
+When transforming the signal axis, the signal intensity is automatically
+rescaled (Jacobian transformation), unless the ``jacobian=False`` option is
+given. Only converting the signal axis, and leaving the signal intensity
+unchanged, implies that the integral of the signal over the same interval will
+lead to different results depending on the quantity on the axis.
+
+TODO: Figure that illustrates the intensity change
+
+For the energy axis as example, if we require :math:`I(E)dE = I(\lambda)d\lambda`,
+then :math:`E=hc/\lambda` implies
+
+.. math ::
+
+    I(E) = I(\lambda)\frac{d\lambda}{dE} = I(\lambda)\frac{d}{dE}
+    \frac{h c}{\lambda} = - I(\lambda) \frac{h c}{E^2}
+
+Where the minus sign just reflects the different directions of integration in
+the wavelength and energy domains. The same argument holds for the conversion
+from wavelength to wavenumber (just without the additional prefactors in the
+equation).
+
+See also [Mooney]_.
+
+.. _jacobian_variance-label:
+
+Transformation of the variance
+------------------------------
+
+TODO: Note on signal variance with reference to additional section on noise
+handling in the fitting chapter.
+
+See also :ref:`fitting_variance-label`
+
+
+.. rubric:: References
+
+.. [Peck] E.R. Peck and K. Reeder, J. Opt. Soc. Am. **62**, 958
+    (1972). `doi:10.1364/JOSA.62.000958 <https://doi.org/10.1364/JOSA.62.000958>`_
+
+.. [Mooney] J. Mooney and P. Kambhampati, The Journal of
+    Physical Chemistry Letters **4**, 3316 (2013).
+    `doi:10.1021/jz401508t <https://doi.org/10.1021/jz401508t>`_

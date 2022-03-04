@@ -35,7 +35,7 @@ from hyperspy.axes import *
 
 
 def _n_air(x):
-    """Refractive index of air as a function of WL in nm.
+    """Relative permittivity of air as a function of WL in nm.
     This analytical function is correct for the range 185-1700 nm.
     According to `E.R. Peck and K. Reeder. Dispersion of air,
     J. Opt. Soc. Am. 62, 958-962 (1972).`
@@ -107,8 +107,9 @@ def axis2eV(ax0):
 
 def data2eV(data, factor, ax0, evaxis):
     """The intensity is converted from counts/nm (counts/µm) to counts/meV by
-    doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin. 142,
-    202 (2013). Ensures that integrated signals are still correct.
+    doing a Jacobian transformation, see e.g. Mooney and Kambhampati, J. Phys.
+    Chem. Lett. 4, 3316 (2013). Ensures that integrated signals are still
+    correct.
     """
     if ax0.units == "µm":
         return (
@@ -177,9 +178,9 @@ def axis2invcm(ax0):
 
 def data2invcm(data, factor, invcmaxis):
     r"""The intensity is converted from counts/nm (counts/µm) to
-    counts/cm$^{-1}$ by doing a Jacobian transformation, see e.g. Wang and
-    Townsend, J. Lumin. 142, 202 (2013). Ensures that integrated signals are
-    still correct.
+    counts/cm$^{-1}$ by doing a Jacobian transformation, see e.g. Mooney and
+    Kambhampati, J. Phys. Chem. Lett. 4, 3316 (2013). Ensures that integrated
+    signals are still correct.
     """
     return data * factor / (invcmaxis**2)
 

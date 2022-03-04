@@ -560,6 +560,32 @@ def test_to_invcm_relative(jacobian, variance):
         assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
 
 
+@mark.parametrize(("jacobian"), (True, False))
+def test_to_raman_shift(jacobian):
+    axis = DataAxis(size=20, offset=200, scale=10)
+
+    if not "axis" in getfullargspec(DataAxis)[0]:
+        raises(ImportError, axis2invcm, axis)
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        skip("HyperSpy version doesn't support non-uniform axis")
+
+    axis = UniformDataAxis(size=20, offset=200, scale=10)
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    S2 = S1.to_raman_shift(laser=244, inplace=False, jacobian=jacobian)
+    S1.axes_manager[0].units = "µm"
+    S1.axes_manager[0].axis = axis.axis / 1000
+    S1.data *= 1000
+    S1.to_raman_shift(laser=0.244, jacobian=jacobian)
+    assert S1.axes_manager[0].units == r"cm$^{-1}$"
+    assert S2.axes_manager[0].name == "Wavenumber"
+    assert S2.axes_manager[0].size == 20
+    assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
+    assert_allclose(S1.data, S2.data, 5e-4)
+
+
 def test_solve_grating_equation():
     # Check which version of hyperspy is installed
     if "scale" in getfullargspec(DataAxis)[0]:

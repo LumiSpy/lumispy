@@ -1,4 +1,4 @@
-.. _fitting_luminescence:
+.. _fitting_luminescence-label:
 
 Fitting luminescence data
 *************************
@@ -9,3 +9,7 @@ TODO: Link to Hyperspy guide
 TODO: Note on advantages of fitting Gaussians in the ``eV`` axis.
 TODO: Show how to extract the *modeled signal* with all/one component.
 
+.. _fitting_variance-label:
+
+Signal variance (noise)
+=======================
