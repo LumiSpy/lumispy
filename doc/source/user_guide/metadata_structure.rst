@@ -84,11 +84,9 @@ while parallel acquisition with a CCD is characterized by the
         │   ├── binning
         │   ├── processing
         │   ├── sensor_roi
-        │   └── pixel_width (µm)
+        │   └── pixel_size (µm)
         └── Spectral_image
             ├── mode
-            ├── step_size
-            ├── step_size_units (nm)
             ├── drift_correction_periodicity
             └── drift_correction_units (s)
 
@@ -159,7 +157,7 @@ power
 
     Measured power of the excitation laser in mW.
 
-objective_magnification
+magnification
     type: int
 
     Magnification of the microscope objective used to focus the beam to the
@@ -321,12 +319,15 @@ processing
 sensor_roi
     type: tuple of int
 
-    Tuple that specifies range of pixels on a detector that are read out.
+    Tuple of length 2 or 4 that specifies range of pixels on a detector that
+    are read out: (offset x, offset y, size x, size y) for a 2D array detector
+    and (offset, size) for a 1D line detector.
 
-pixel_width
-    type: float
+pixel_size
+    type: float or tuple of float
 
-    Diameter of a pixel in µm.
+    Size of a pixel in µm. Tuple of length 2 (width, height), when the pixel is
+    not square.
 
 
 Spectral_image
@@ -339,16 +340,6 @@ mode
     type: string
 
     Mode of the spectrum image acquisition such as 'Map' or 'Linescan'.
-
-step_size
-    type: float
-
-    Distance between subsequent pixels in the spectral image.
-
-step_size_units
-    type: string
-
-    Units of the step size (standard 'nm').
 
 drift_correction_periodicity
     type: int/float
