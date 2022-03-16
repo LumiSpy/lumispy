@@ -16,7 +16,7 @@ If the unit of the signal axis is set, the functions can handle wavelengths in
 either nm or µm.
 
 Accepted parameters are ``inplace=True/False`` (default is True), which
-determines whether a the current signal object is modified or a new one is
+determines whether the current signal object is modified or a new one is
 created, and ``jacobian=True/False`` (default is True, see
 :ref:`jacobian-label`).
 
@@ -37,7 +37,7 @@ air and doing a conversion from nm to eV, we get:
 
 .. math::
 
-    E = \frac{times10^9 h c}{e \epsilon_r \lambda},
+    E = \frac{\times10^9 h c}{e \epsilon_r \lambda},
 
 where :math:`h` is the Planck constant, :math:`c` is the speed of light,
 :math:`e` is the elementary charge and :math:`\epsilon_r` is the relative
@@ -111,15 +111,32 @@ equation).
 
 See also [Mooney]_.
 
+
 .. _jacobian_variance-label:
 
 Transformation of the variance
 ------------------------------
 
-TODO: Note on signal variance with reference to additional section on noise
-handling in the fitting chapter.
+Scaling the signal intensities will affect a stored variance of the signal.
+According to :math:`Var(aX) = a^2Var(X)`, the variance has to be multiplied
+with the square of the Jacobian (squared renormalization). In particular,
+homoscedastic (constant) noise will consequently become heteroscedastic
+(changing as a function of the signal axis vector). Therefore, if the
+``metadata.Signal.Noise_properties.variance`` attribute is a constant, it is
+converted into a :external:py:class:`hyperspy.signal.BaseSignal` object before
+the transformation.
 
-See also :ref:`fitting_variance-label`
+See :ref:`fitting_variance-label` for more general information on data variance
+in the context of model fitting and the HyperSpy documentation on `setting
+the noise properties <https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html?highlight=variance_linear_model#setting-the-noise-properties>`_.
+
+.. Note::
+
+    If the Jacobian transformation is performed, the values of
+    ``Variance_linear_model`` are reset to their default values
+    (``gain_factor=1``, ``gain_offset=0`` and ``correlation_factor=1``). If
+    these values deviate from the defaults, make sure to run
+    ``s.estimate_poissonian_noise_variance()`` prior to the transformation.
 
 
 .. rubric:: References

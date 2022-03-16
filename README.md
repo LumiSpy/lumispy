@@ -18,17 +18,16 @@ aimed at helping with the analysis of luminescence spectroscopy data
 (cathodoluminescence, photoluminescence, electroluminescence, Raman, SNOM).
 
 If analysis using LumiSpy forms a part of published work, please consider 
-recognising the code development by citing the project using the [Zenodo-DOI](https://doi.org/10.5281/zenodo.4640445).
+recognising the code development by citing the project using the
+[Zenodo-DOI](https://doi.org/10.5281/zenodo.4640445).
 
-Go to the documentation for instructions on how to install LumiSpy and get started with analysis: [Read the docs](https://lumispy.readthedocs.io).
+Go to the documentation for instructions on how to install LumiSpy and start an
+analysis: [Read the docs](https://lumispy.readthedocs.io).
 
-[Tutorials and example workflows](https://github.com/lumispy/lumispy-demos)
+[Tutorials and exemplary workflows](https://github.com/lumispy/lumispy-demos)
 have been curated as a series of Jupyter notebooks that you can work through 
-and modify to perform many common analyses. Simply:
-
-1. Download the `lumispy_demos` repository in your desired folder
-2. Load LumiSpy (see [installation guide](https://lumispy.readthedocs.io/en/latest/user_guide/installation.html))
-3. In Jupyter lab, navigate to the folder and start using the notebook
+and modify to perform many common analyses. These can be either downloaded and
+run locally or tried out using interactive online sessions.
 
 Everyone is welcome to contribute. Please read our
 [contributing guidelines](https://github.com/LumiSpy/lumispy/blob/main/CONTRIBUTING.rst) and get started!

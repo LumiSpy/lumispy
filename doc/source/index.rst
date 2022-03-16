@@ -33,6 +33,10 @@ aimed at helping with the analysis of luminescence spectroscopy data
 Check out the :ref:`installation-label` section for further information, including
 how to start using this project.
 
+Complementing this documentation, the `LumiSpy Demos <https://github.com/LumiSpy/lumispy-demos>`_
+repository contains curated Jupyter notebooks to provide tutorials and exemplary
+workflows.
+
 .. note::
 
    This project is under active development. Everyone is welcome to contribute. Please read our (see :ref:`contributing_label`) guidelines and get started!
@@ -55,6 +59,12 @@ Contents
    :caption: API References
 
    api/modules.rst
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Tutorials
+
+   Demo notebooks <https://github.com/LumiSpy/lumispy-demos>
 
 .. toctree::
    :maxdepth: 1
