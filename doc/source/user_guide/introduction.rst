@@ -16,7 +16,7 @@ measurements, such as absorption or transmission spectroscopy, scanning optical
 near field miscroscopy (SNOM), as well as fourier-transform infrared
 spectroscopy (FTIR).
 
-**LumiSpy** is an extension to the python package `HyperSpy <https://hyperspy.org>`_
+**LumiSpy** is an extension to the python package **`HyperSpy <https://hyperspy.org>`_**
 that facilitates hyperspectral data analysis, i.e. maps or linescans where a
 spectrum is collected at each pixel. Or more general, multidimensional datasets
 that can be described as multidimensional arrays of a given signal. Notable 
@@ -69,8 +69,8 @@ As an extension to HyperSpy, LumiSpy provides several signal types extending the
 the LumiSpy library is installed, these additional signal types are directly
 available to HyperSpy. To print all available specialised
 :external:py:class:`hyperspy.signal.BaseSignal` subclasses installed in your
- ystem call the :external:py:func:`hyperspy.utils.print_known_signal_types`
- function:
+system call the :external:py:func:`hyperspy.utils.print_known_signal_types`
+function:
 
 .. code-block:: python
 
