@@ -499,7 +499,6 @@ class LumiSpectrum(Signal1D, CommonLumi):
     # Alias Method Name
     to_raman_shift = to_invcm_relative
 
-
     def remove_background_from_file(self, background=None, inplace=False, **kwargs):
         """Subtract the background to the signal in all navigation axes.If no
         background file is passed as argument, the `remove_background()` from
