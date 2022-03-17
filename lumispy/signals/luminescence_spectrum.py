@@ -439,12 +439,14 @@ class LumiSpectrum(Signal1D, CommonLumi):
         branch of HyperSpy.    
     """
 
-    def to_invcm_relative(self, laser, inplace=True, jacobian=True):
+    def to_invcm_relative(self, laser=None, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear wavenumber axis
         (cm^-1) relative to the exciting laser wavelength (Stokes/Anti-Stokes
         shift). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
         %s
+        laser: float or None
+            Laser wavelength in the same units as the signal axis
         %s
         """
 
@@ -453,6 +455,21 @@ class LumiSpectrum(Signal1D, CommonLumi):
             raise ImportError(
                 "Conversion to wavenumber axis works only"
                 " if the RELEASE_next_minor branch of HyperSpy is used."
+            )
+
+        # check if laser wavelength is available
+        if laser == None:
+            if not self.metadata.has_item('Acquisition_instrument.Laser.wavelength'):
+                raise AttributeError(
+                "Laser wavelength is neither given in the metadata nor passed"
+                " to the function."
+            )
+            else:
+                laser = self.metadata.get_item('Acquisition_instrument.Laser.wavelength')
+        # check if laser units make sense in respect to signal units
+        if (self.axes_manager.signal_axes[0].units == "µm" and laser>10) or (self.axes_manager.signal_axes[0].units == "nm" and laser<100):
+            raise AttributeError(
+                "Laser wavelength units do not seem to match the signal units."
             )
 
         invcmaxis, factor = axis2invcm(self.axes_manager.signal_axes[0])
