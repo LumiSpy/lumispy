@@ -3,9 +3,11 @@
 Non-uniform signal axes
 ***********************
 
-LumiSpy facilitates the use of non-uniform axes, where the points of the axis
-vector are not uniformly spaced, in particular when converting a wavelength
-scale to energy (eV) or wavenumbers (e.g. for Raman shifts).
+LumiSpy facilitates the use of `non-uniform axes 
+<https://hyperspy.org/hyperspy-doc/current/user_guide/axes.html#non-uniform-data-axis>`_,
+where the points of the axis vector are not uniformly spaced. This situation
+occurs in particular when converting a wavelength scale to energy (eV) or
+wavenumbers (e.g. for Raman shifts).
 
 The conversion of the signal axis can be performed using the functions 
 :py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_eV`,
@@ -23,7 +25,8 @@ created, and ``jacobian=True/False`` (default is True, see
 .. Note::
 
     The non-uniform axis functionality will be available from HyperSpy v.1.7.
-    If this version is not yet available, you need to use the development branch.
+    If this version is not yet available, you need to use the `development
+    branch <https://github.com/hyperspy/hyperspy>`_.
 
 
 .. _energy_axis-label:
@@ -37,11 +40,16 @@ air and doing a conversion from nm to eV, we get:
 
 .. math::
 
-    E = \frac{\times10^9 h c}{e \epsilon_r \lambda},
+    E = \frac{10^9 h c}{e \epsilon_r \lambda},
 
 where :math:`h` is the Planck constant, :math:`c` is the speed of light,
 :math:`e` is the elementary charge and :math:`\epsilon_r` is the relative
 permittivity of air.
+
+.. code-block:: python
+
+    >>> s2 = s.to_eV(inplace=False)
+    >>> s.to_eV()
 
 .. Note::
 
@@ -50,11 +58,6 @@ permittivity of air.
     analytical formula given by [Peck]_ valid from 185-1700 nm
     (outside of this range, the permittivity values at the edges of the range
     are used and a warning is raised).
-
-.. code-block:: python
-
-    >>> s2 = s.to_eV(inplace=False)
-    >>> s.to_eV()
 
 
 .. _wavenumber_axis-label:
@@ -68,10 +71,10 @@ The transformation from wavelength :math:`\lambda` to wavenumber
 :math:`\mathrm{cm}^{-1}`.
 
 When converting a signal to Raman shift, i.e. the shift in wavenumbers from
-the exciting laser wavelength. Unless the laser wavelength is contained in the
-:ref:`metadata-label`, it has to be passed to the function using the parameter
+the exciting laser wavelength, the laser wavelength has to be passed to the function using the parameter
 ``laser`` using the same units as for the original axis (e.g. 325 for nm or
-0.325 for µm).
+0.325 for µm) unless it is contained in the :ref:`metadata_structure` under
+``Acquisition_instrument.Laser.wavelength``.
 
 TODO: Automatically read laser wavelength from metadata if given there.
 
@@ -91,10 +94,9 @@ Jacobian transformation
 When transforming the signal axis, the signal intensity is automatically
 rescaled (Jacobian transformation), unless the ``jacobian=False`` option is
 given. Only converting the signal axis, and leaving the signal intensity
-unchanged, implies that the integral of the signal over the same interval will
-lead to different results depending on the quantity on the axis.
-
-TODO: Figure that illustrates the intensity change
+unchanged, implies that the integral of the signal over the same interval would
+lead to different results depending on the quantity on the axis (see e.g.
+[Mooney]_.).
 
 For the energy axis as example, if we require :math:`I(E)dE = I(\lambda)d\lambda`,
 then :math:`E=hc/\lambda` implies
@@ -104,12 +106,16 @@ then :math:`E=hc/\lambda` implies
     I(E) = I(\lambda)\frac{d\lambda}{dE} = I(\lambda)\frac{d}{dE}
     \frac{h c}{\lambda} = - I(\lambda) \frac{h c}{E^2}
 
-Where the minus sign just reflects the different directions of integration in
+The minus sign just reflects the different directions of integration in
 the wavelength and energy domains. The same argument holds for the conversion
 from wavelength to wavenumber (just without the additional prefactors in the
-equation).
+equation). The renormalization in LumiSpy is defined such that the intensity is
+converted from counts/nm (or counts/µm) to counts/meV. The following
+figure illustrates the effect of the Jacobian transformation:
 
-See also [Mooney]_.
+.. image:: images/jacobian.png
+  :width: 700
+  :alt: Illustration of the Jacobian transformation from wavelength (nm) to energy (eV).
 
 
 .. _jacobian_variance-label:
@@ -117,26 +123,29 @@ See also [Mooney]_.
 Transformation of the variance
 ------------------------------
 
-Scaling the signal intensities will affect a stored variance of the signal.
-According to :math:`Var(aX) = a^2Var(X)`, the variance has to be multiplied
-with the square of the Jacobian (squared renormalization). In particular,
-homoscedastic (constant) noise will consequently become heteroscedastic
-(changing as a function of the signal axis vector). Therefore, if the
-``metadata.Signal.Noise_properties.variance`` attribute is a constant, it is
-converted into a :external:py:class:`hyperspy.signal.BaseSignal` object before
-the transformation.
+Scaling the signal intensities implies that also the stored variance of the
+signal needs to be scaled accordingly. According to :math:`Var(aX) = a^2Var(X)`,
+the variance has to be multiplied with the square of the Jacobian. This squared
+renormalization is automatically performed by LumiSpy if ``jacobian=True``.
+In particular, homoscedastic (constant) noise will consequently become
+heteroscedastic (changing as a function of the signal axis vector). Therefore,
+if the ``metadata.Signal.Noise_properties.variance`` attribute is a constant,
+it is converted into a :external:py:class:`hyperspy.signal.BaseSignal` object
+before the transformation.
 
 See :ref:`fitting_variance-label` for more general information on data variance
 in the context of model fitting and the HyperSpy documentation on `setting
-the noise properties <https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html?highlight=variance_linear_model#setting-the-noise-properties>`_.
+the noise properties
+<https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html?highlight=variance_linear_model#setting-the-noise-properties>`_.
 
 .. Note::
 
     If the Jacobian transformation is performed, the values of
-    ``Variance_linear_model`` are reset to their default values
-    (``gain_factor=1``, ``gain_offset=0`` and ``correlation_factor=1``). If
-    these values deviate from the defaults, make sure to run
-    ``s.estimate_poissonian_noise_variance()`` prior to the transformation.
+    ``metadata.Signal.Noise_properties.Variance_linear_model`` are reset to
+    their default values (``gain_factor=1``, ``gain_offset=0`` and ``correlation_factor=1``).
+    Should these values deviate from the defaults, make sure to run
+    :external:py:meth:`hyperspy.signal.BaseSignal.estimate_poissonian_noise_variance`
+    prior to the transformation.
 
 
 .. rubric:: References
