@@ -459,15 +459,19 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         # check if laser wavelength is available
         if laser == None:
-            if not self.metadata.has_item('Acquisition_instrument.Laser.wavelength'):
+            if not self.metadata.has_item("Acquisition_instrument.Laser.wavelength"):
                 raise AttributeError(
-                "Laser wavelength is neither given in the metadata nor passed"
-                " to the function."
-            )
+                    "Laser wavelength is neither given in the metadata nor passed"
+                    " to the function."
+                )
             else:
-                laser = self.metadata.get_item('Acquisition_instrument.Laser.wavelength')
+                laser = self.metadata.get_item(
+                    "Acquisition_instrument.Laser.wavelength"
+                )
         # check if laser units make sense in respect to signal units
-        if (self.axes_manager.signal_axes[0].units == "µm" and laser>10) or (self.axes_manager.signal_axes[0].units == "nm" and laser<100):
+        if (self.axes_manager.signal_axes[0].units == "µm" and laser > 10) or (
+            self.axes_manager.signal_axes[0].units == "nm" and laser < 100
+        ):
             raise AttributeError(
                 "Laser wavelength units do not seem to match the signal units."
             )

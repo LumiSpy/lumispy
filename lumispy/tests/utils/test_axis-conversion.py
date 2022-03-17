@@ -598,28 +598,28 @@ def test_to_raman_shift_laser():
     except ImportError:
         skip("HyperSpy version doesn't support non-uniform axis")
 
-    axis = UniformDataAxis(size=20, offset=200, scale=10, units='nm')
+    axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
     with raises(AttributeError, match="Laser wavelength"):
         S1.to_raman_shift()
     with raises(AttributeError, match="Laser wavelength units"):
         S1.to_raman_shift(laser=0.244)
-    S1.metadata.set_item('Acquisition_instrument.Laser.wavelength', 244)
+    S1.metadata.set_item("Acquisition_instrument.Laser.wavelength", 244)
     S2 = S1.to_raman_shift(inplace=False)
     S1.axes_manager[0].units = "µm"
     S1.axes_manager[0].axis = axis.axis / 1000
     S1.data *= 1000
     with raises(AttributeError, match="Laser wavelength units"):
         S1.to_raman_shift(laser=244)
-    S1.metadata.set_item('Acquisition_instrument.Laser.wavelength', 0.244)
+    S1.metadata.set_item("Acquisition_instrument.Laser.wavelength", 0.244)
     S1.to_raman_shift()
     assert S1.axes_manager[0].units == r"cm$^{-1}$"
     assert S2.axes_manager[0].name == "Wavenumber"
     assert S2.axes_manager[0].size == 20
     assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
     assert_allclose(S1.data, S2.data, 5e-4)
-    
+
 
 def test_solve_grating_equation():
     # Check which version of hyperspy is installed
