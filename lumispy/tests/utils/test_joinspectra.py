@@ -88,6 +88,16 @@ def test_joinspectra2():
     assert s.data[28] == 28 / 3
 
 
+def test_joinspectra_length1():
+    s1 = LumiSpectrum(arange(32))
+    s2 = LumiSpectrum(arange(32) + 28)
+    s2.axes_manager.signal_axes[0].offset = 28
+    s = join_spectra([s1, s2], r=1, average=False, scale=True)
+    assert s.data[-1] == 59
+    with raises(ValueError, match="Averaging can not be performed for r=1."):
+        s = join_spectra([s1, s2], r=1, average=True, scale=True)
+
+
 def test_joinspectra_errors():
     s1 = LumiSpectrum(ones(32))
     s2 = LumiSpectrum(ones(32) * 2)

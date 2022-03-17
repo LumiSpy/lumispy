@@ -326,6 +326,11 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
             )
             # join data vectors interpolating to a common uniform axis
             if average:  # average over range
+                if r == 1:
+                    raise ValueError(
+                        "Averaging can not be performed for r=1. "
+                        "Set average=False or r>1."
+                    )
                 ind2r = axis2.value2index(axis.axis[ind1 - r])
                 length = axis.axis[ind1 - r : ind1 + r].size
                 grad = 1 / (length - 1)
