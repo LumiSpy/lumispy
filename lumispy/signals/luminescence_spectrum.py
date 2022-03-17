@@ -446,7 +446,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
         specifically set to µm.
         %s
         laser: float or None
-            Laser wavelength in the same units as the signal axis
+            Laser wavelength in the same units as the signal axis. If None
+            (default), checks if it is stored in
+            `metadata.Acquisition_instrument.Laser.wavelength`.
         %s
         """
 
