@@ -543,7 +543,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 y = background.data
                 background = [x, y]
 
-            background_xy = np.asanyarray(background)
+            background_xy = np.array(background, dtype="object")
 
             if background_xy.shape[0] == 1 and background_xy.dtype != "O":
                 bkg_x = signal_x
