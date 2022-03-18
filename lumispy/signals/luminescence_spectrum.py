@@ -497,7 +497,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
     to_invcm_relative.__doc__ %= (TO_INVCM_DOCSTRING, TO_INVCMREL_EXAMPLE)
 
     def remove_background_from_file(self, background=None, inplace=False, **kwargs):
-        """Subtract the background to the signal in all navigation axes.If no
+        """Subtract the background to the signal in all navigation axes. If no
         background file is passed as argument, the `remove_background()` from
         HyperSpy is called with the GUI.
 
@@ -543,7 +543,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 y = background.data
                 background = [x, y]
 
-            background_xy = np.array(background, dtype="object")
+            background_xy = np.array(background, dtype=object)
 
             if background_xy.shape[0] == 1 and background_xy.dtype != "O":
                 bkg_x = signal_x
