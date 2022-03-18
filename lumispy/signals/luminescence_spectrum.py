@@ -543,12 +543,12 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 y = background.data
                 background = [x, y]
 
-            background_xy = np.array(background, dtype=object)
+            background_xy = background
 
-            if background_xy.shape[0] == 1:
+            if np.shape(background_xy)[0] == 1:
                 bkg_x = signal_x
-                bkg_y = background_xy.squeeze()
-            elif background_xy.shape[0] == 2:
+                bkg_y = background_xy[0]
+            elif np.shape(background_xy)[0] == 2:
                 try:
                     bkg_x = background_xy[0]
                     bkg_y = background_xy[1]
