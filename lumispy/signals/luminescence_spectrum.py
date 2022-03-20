@@ -103,9 +103,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
         units of nm unless the axis units are specifically set to µm.
 
         The intensity is converted from counts/nm (counts/µm) to counts/meV by
-        doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin.
-        142, 202 (2013), doi:10.1016/j.jlumin.2013.03.052, which ensures that
-        integrated signals are correct also in the energy domain. If the
+        doing a Jacobian transformation, see e.g. Mooney and Kambhampati, J.
+        Phys. Chem. Lett. 4, 3316 (2013), doi:10.1021/jz401508t, which ensures
+        that integrated signals are correct also in the energy domain. If the
         variance of the signal is known, i.e.
         `metadata.Signal.Noise_properties.variance` is a signal representing
         the variance, a squared renormalization of the variance is performed.
@@ -262,8 +262,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
     TO_INVCM_DOCSTRING = """
         The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
-        by doing a Jacobian transformation, see e.g. Wang and Townsend,
-        J. Lumin. 142, 202 (2013), doi:10.1016/j.jlumin.2013.03.052, which
+        by doing a Jacobian transformation, see e.g. Mooney and Kambhampati,
+        J. Phys. Chem. Lett. 4, 3316 (2013), doi:10.1021/jz401508t, which
         ensures that integrated signals are correct also in the wavenumber 
         domain. If the variance of the signal is known, i.e.
         `metadata.Signal.Noise_properties.variance` is a signal representing the
@@ -439,12 +439,16 @@ class LumiSpectrum(Signal1D, CommonLumi):
         branch of HyperSpy.    
     """
 
-    def to_invcm_relative(self, laser, inplace=True, jacobian=True):
+    def to_invcm_relative(self, laser=None, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear wavenumber axis
         (cm^-1) relative to the exciting laser wavelength (Stokes/Anti-Stokes
         shift). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
         %s
+        laser: float or None
+            Laser wavelength in the same units as the signal axis. If None
+            (default), checks if it is stored in
+            `metadata.Acquisition_instrument.Laser.wavelength`.
         %s
         """
 
@@ -453,6 +457,25 @@ class LumiSpectrum(Signal1D, CommonLumi):
             raise ImportError(
                 "Conversion to wavenumber axis works only"
                 " if the RELEASE_next_minor branch of HyperSpy is used."
+            )
+
+        # check if laser wavelength is available
+        if laser == None:
+            if not self.metadata.has_item("Acquisition_instrument.Laser.wavelength"):
+                raise AttributeError(
+                    "Laser wavelength is neither given in the metadata nor passed"
+                    " to the function."
+                )
+            else:
+                laser = self.metadata.get_item(
+                    "Acquisition_instrument.Laser.wavelength"
+                )
+        # check if laser units make sense in respect to signal units
+        if (self.axes_manager.signal_axes[0].units == "µm" and laser > 10) or (
+            self.axes_manager.signal_axes[0].units == "nm" and laser < 100
+        ):
+            raise AttributeError(
+                "Laser wavelength units do not seem to match the signal units."
             )
 
         invcmaxis, factor = axis2invcm(self.axes_manager.signal_axes[0])
@@ -495,6 +518,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
             return s2
 
     to_invcm_relative.__doc__ %= (TO_INVCM_DOCSTRING, TO_INVCMREL_EXAMPLE)
+
+    # Alias Method Name
+    to_raman_shift = to_invcm_relative
 
     def remove_background_from_file(self, background=None, inplace=False, **kwargs):
         """Subtract the background to the signal in all navigation axes.If no

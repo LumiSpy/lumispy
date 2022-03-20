@@ -67,7 +67,8 @@ def test_axis2eV():
     axis3 = DataAxis(axis=arange(1, 2, 0.1), units="eV")
     evaxis, factor = axis2eV(axis)
     evaxis2, factor2 = axis2eV(axis2)
-    raises(AttributeError, axis2eV, axis3)
+    with raises(AttributeError, match="Signal unit is already eV."):
+        axis2eV(axis3)
     assert factor == 1e6
     assert factor2 == 1e3
     assert evaxis.name == "Energy"
@@ -285,7 +286,8 @@ def test_axis2invcm():
     axis3 = DataAxis(axis=arange(1, 2, 0.1), units=r"cm$^{-1}$")
     invcmaxis, factor = axis2invcm(axis)
     invcmaxis2, factor2 = axis2invcm(axis2)
-    raises(AttributeError, axis2invcm, axis3)
+    with raises(AttributeError, match="Signal unit is already"):
+        axis2invcm(axis3)
     assert factor == 1e7
     assert factor2 == 1e4
     assert invcmaxis.name == "Wavenumber"
@@ -558,6 +560,65 @@ def test_to_invcm_relative(jacobian, variance):
         )
     else:
         assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
+
+
+@mark.parametrize(("jacobian"), (True, False))
+def test_to_raman_shift(jacobian):
+    axis = DataAxis(size=20, offset=200, scale=10)
+
+    if not "axis" in getfullargspec(DataAxis)[0]:
+        raises(ImportError, axis2invcm, axis)
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        skip("HyperSpy version doesn't support non-uniform axis")
+
+    axis = UniformDataAxis(size=20, offset=200, scale=10)
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    S2 = S1.to_raman_shift(laser=244, inplace=False, jacobian=jacobian)
+    S1.axes_manager[0].units = "µm"
+    S1.axes_manager[0].axis = axis.axis / 1000
+    S1.data *= 1000
+    S1.to_raman_shift(laser=0.244, jacobian=jacobian)
+    assert S1.axes_manager[0].units == r"cm$^{-1}$"
+    assert S2.axes_manager[0].name == "Wavenumber"
+    assert S2.axes_manager[0].size == 20
+    assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
+    assert_allclose(S1.data, S2.data, 5e-4)
+
+
+def test_to_raman_shift_laser():
+    axis = DataAxis(size=20, offset=200, scale=10)
+
+    if not "axis" in getfullargspec(DataAxis)[0]:
+        raises(ImportError, axis2invcm, axis)
+    try:
+        from hyperspy.axes import UniformDataAxis
+    except ImportError:
+        skip("HyperSpy version doesn't support non-uniform axis")
+
+    axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
+    data = ones(20)
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    with raises(AttributeError, match="Laser wavelength"):
+        S1.to_raman_shift()
+    with raises(AttributeError, match="Laser wavelength units"):
+        S1.to_raman_shift(laser=0.244)
+    S1.metadata.set_item("Acquisition_instrument.Laser.wavelength", 244)
+    S2 = S1.to_raman_shift(inplace=False)
+    S1.axes_manager[0].units = "µm"
+    S1.axes_manager[0].axis = axis.axis / 1000
+    S1.data *= 1000
+    with raises(AttributeError, match="Laser wavelength units"):
+        S1.to_raman_shift(laser=244)
+    S1.metadata.set_item("Acquisition_instrument.Laser.wavelength", 0.244)
+    S1.to_raman_shift()
+    assert S1.axes_manager[0].units == r"cm$^{-1}$"
+    assert S2.axes_manager[0].name == "Wavenumber"
+    assert S2.axes_manager[0].size == 20
+    assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
+    assert_allclose(S1.data, S2.data, 5e-4)
 
 
 def test_solve_grating_equation():
