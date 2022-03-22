@@ -96,9 +96,10 @@ class CommonLumi:
         Parameters
         ----------
         exposure : float
-            Exposure time in s. If not given, the function tries to find
-            'exposure' or 'dwell_time' in the metadata (for the moment only at
-            Gatan specific nodes).
+            Exposure time in s. If not given, the function tries to use the
+            'metadata.Acqusition_instrument.Detector.integration_time' field or
+            alternatively find any 'integration_time', 'exposure' or
+            'dwell_time' fields in the metadata.
         inplace : boolean
             If `False` (default), a new signal object is created and returned.
             If `True`, the operation is performed on the existing signal object.
@@ -118,18 +119,26 @@ class CommonLumi:
 
         # Make sure exposure is given or contained in metadata
         if isnan(exposure):
-            # use nested_get from hyperspy when it is available
-            if self.metadata.has_item("Acquisition_instrument.CL.exposure"):
+            if self.metadata.has_item(
+                "Acquisition_instrument.Detector.integration_time"
+            ):
                 exposure = float(
-                    self.metadata.get_item("Acquisition_instrument.CL.exposure")
+                    self.metadata.get_item(
+                        "Acquisition_instrument.Detector.integration_time"
+                    )
                 )
-            elif self.metadata.has_item("Acquisition_instrument.CL.dwell_time"):
+            # following will work only from hyperspy v1.7
+            elif self.metadata.has_item("integration_time", full_path=False):
                 exposure = float(
-                    self.metadata.get_item("Acquisition_instrument.CL.dwell_time")
+                    self.metadata.get_item("integration_time", full_path=False)
                 )
+            elif self.metadata.has_item("exposure", full_path=False):
+                exposure = float(self.metadata.get_item("exposure", full_path=False))
+            elif self.metadata.has_item("dwell_time", full_path=False):
+                exposure = float(self.metadata.get_item("dwell_time", full_path=False))
             else:
                 raise AttributeError(
-                    "Exposure not given and can not be "
+                    "Exposure (integration time) not given and can not be "
                     "extracted automatically from metadata."
                 )
         if inplace:
