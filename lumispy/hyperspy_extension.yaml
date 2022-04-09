@@ -130,22 +130,22 @@ signals:
     module: lumispy.signals.cl_spectrum
 
   LumiTransient:
-    signal_type: Luminescence
+    signal_type: Transient
     signal_type_aliases:
       - TRLumi
       - TR luminescence
       - time-resolved luminescence
-    signal_dimension: 2
+    signal_dimension: 1
     dtype: real
     lazy: False
     module: lumispy.signals.luminescence_transient
   LazyLumiTransient:
-    signal_type: Luminescence
+    signal_type: Transient
     signal_type_aliases:
       - TRLumi
       - TR luminescence
       - time-resolved luminescence
-    signal_dimension: 2
+    signal_dimension: 1
     dtype: real
     lazy: True
     module: lumispy.signals.luminescence_transient
@@ -155,7 +155,7 @@ signals:
     signal_type_aliases:
       - TR cathodoluminescence
       - time-resolved cathodoluminescence
-    signal_dimension: 2
+    signal_dimension: 1
     dtype: real
     lazy: False
     module: lumispy.signals.cl_transient
@@ -164,7 +164,7 @@ signals:
     signal_type_aliases:
       - TR cathodoluminescence
       - time-resolved cathodoluminescence
-    signal_dimension: 2
+    signal_dimension: 1
     dtype: real
     lazy: True
     module: lumispy.signals.cl_transient
@@ -174,7 +174,7 @@ signals:
     signal_type_aliases:
       - TR photoluminescence
       - time-resolved photoluminescence
-    signal_dimension: 2
+    signal_dimension: 1
     dtype: real
     lazy: False
     module: lumispy.signals.pl_transient
@@ -183,7 +183,66 @@ signals:
     signal_type_aliases:
       - TR photoluminescence
       - time-resolved photoluminescence
-    signal_dimension: 2
+    signal_dimension: 1
     dtype: real
     lazy: True
     module: lumispy.signals.pl_transient
+
+  LumiTransientSpectrum:
+    signal_type: TransientSpec
+    signal_type_aliases:
+      - TRLumiSpec
+      - TR luminescence spectrum
+      - time-resolved luminescence spectrum
+    signal_dimension: 2
+    dtype: real
+    lazy: False
+    module: lumispy.signals.luminescence_streak
+  LazyLumiTransientSpectrum:
+    signal_type: TransientSpec
+    signal_type_aliases:
+      - TRLumiSpec
+      - TR luminescence spectrum
+      - time-resolved luminescence spectrum
+    signal_dimension: 2
+    dtype: real
+    lazy: True
+    module: lumispy.signals.luminescence_streak
+
+  CLTransientSpectrum:
+    signal_type: TRCLSpec
+    signal_type_aliases:
+      - TR cathodoluminescence spectrum
+      - time-resolved cathodoluminescence spectrum
+    signal_dimension: 2
+    dtype: real
+    lazy: False
+    module: lumispy.signals.cl_streak
+  LazyCLTransientSpectrum:
+    signal_type: TRCLSpec
+    signal_type_aliases:
+      - TR cathodoluminescence spectrum
+      - time-resolved cathodoluminescence spectrum
+    signal_dimension: 2
+    dtype: real
+    lazy: True
+    module: lumispy.signals.cl_streak
+
+  PLTransientSpectrum:
+    signal_type: TRPLSpec
+    signal_type_aliases:
+      - TR photoluminescence spectrum
+      - time-resolved photoluminescence spectrum
+    signal_dimension: 2
+    dtype: real
+    lazy: False
+    module: lumispy.signals.pl_streak
+  LazyPLTransientSpectrum:
+    signal_type: TRPLSpec
+    signal_type_aliases:
+      - TR photoluminescence spectrum
+      - time-resolved photoluminescence spectrum
+    signal_dimension: 2
+    dtype: real
+    lazy: True
+    module: lumispy.signals.pl_streak

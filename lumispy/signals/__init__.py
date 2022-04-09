@@ -25,6 +25,9 @@ from .el_spectrum import ELSpectrum, LazyELSpectrum
 from .luminescence_transient import LumiTransient, LazyLumiTransient
 from .cl_transient import CLTransient, LazyCLTransient
 from .pl_transient import PLTransient, LazyPLTransient
+from .luminescence_streak import LumiTransientSpectrum, LazyLumiTransientSpectrum
+from .cl_streak import CLTransientSpectrum, LazyCLTransientSpectrum
+from .pl_streak import PLTransientSpectrum, LazyPLTransientSpectrum
 
 
 __all__ = [
@@ -46,4 +49,10 @@ __all__ = [
     "LazyCLTransient",
     "PLTransient",
     "LazyPLTransient",
+    "LumiTransientSpectrum",
+    "LazyLumiTransientSpectrum",
+    "CLTransientSpectrum",
+    "LazyCLTransientSpectrum",
+    "PLTransientSpectrum",
+    "LazyPLTransientSpectrum",
 ]

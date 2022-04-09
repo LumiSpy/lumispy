@@ -17,27 +17,26 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 """
-Signal class for cathodoluminescence transient data (2D)
+Signal class for cathodoluminescence transient data (1D)
 --------------------------------------------------------
 """
 
-from hyperspy.signals import Signal2D
 from hyperspy._signals.lazy import LazySignal
 
 from lumispy.signals.luminescence_transient import LumiTransient
 
 
 class CLTransient(LumiTransient):
-    """**General 2D cathodoluminescence signal class (transient/time resolved)**"""
+    """**General 1D cathodoluminescence signal class (transient/time resolved)**"""
 
     _signal_type = "TRCL"
-    _signal_dimension = 2
+    _signal_dimension = 1
 
     pass
 
 
 class LazyCLTransient(LazySignal, CLTransient):
-    """**General lazy 2D cathodoluminescence signal class (transient/time resolved)**"""
+    """**General lazy 1D cathodoluminescence signal class (transient/time resolved)**"""
 
     _lazy = True
 
