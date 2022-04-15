@@ -17,26 +17,26 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 """
-Signal class for photoluminescence transient data (2D)
-------------------------------------------------------
+Signal class for cathodoluminescence transient data (2D)
+--------------------------------------------------------
 """
 
 from hyperspy._signals.lazy import LazySignal
 
-from lumispy.signals.luminescence_streak import LumiTransientSpectrum
+from lumispy.signals.luminescence_transientspec import LumiTransientSpectrum
 
 
-class PLTransientSpectrum(LumiTransientSpectrum):
-    """**General 2D photoluminescence signal class (transient/time resolved)**"""
+class CLTransientSpectrum(LumiTransientSpectrum):
+    """**General 2D cathodoluminescence signal class (transient/time resolved)**"""
 
-    _signal_type = "TRPLSpec"
+    _signal_type = "TRCLSpec"
     _signal_dimension = 2
 
     pass
 
 
-class LazyPLTransientSpectrum(LazySignal, PLTransientSpectrum):
-    """**General lazy 2D photoluminescence signal class (transient/time resolved)**"""
+class LazyCLTransientSpectrum(LazySignal, CLTransientSpectrum):
+    """**General lazy 2D cathodoluminescence signal class (transient/time resolved)**"""
 
     _lazy = True
 

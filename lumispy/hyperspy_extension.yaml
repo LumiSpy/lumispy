@@ -197,7 +197,7 @@ signals:
     signal_dimension: 2
     dtype: real
     lazy: False
-    module: lumispy.signals.luminescence_streak
+    module: lumispy.signals.luminescence_transientspec
   LazyLumiTransientSpectrum:
     signal_type: TransientSpec
     signal_type_aliases:
@@ -207,7 +207,7 @@ signals:
     signal_dimension: 2
     dtype: real
     lazy: True
-    module: lumispy.signals.luminescence_streak
+    module: lumispy.signals.luminescence_transientspec
 
   CLTransientSpectrum:
     signal_type: TRCLSpec
@@ -217,7 +217,7 @@ signals:
     signal_dimension: 2
     dtype: real
     lazy: False
-    module: lumispy.signals.cl_streak
+    module: lumispy.signals.cl_transientspec
   LazyCLTransientSpectrum:
     signal_type: TRCLSpec
     signal_type_aliases:
@@ -226,7 +226,7 @@ signals:
     signal_dimension: 2
     dtype: real
     lazy: True
-    module: lumispy.signals.cl_streak
+    module: lumispy.signals.cl_transientspec
 
   PLTransientSpectrum:
     signal_type: TRPLSpec
@@ -236,7 +236,7 @@ signals:
     signal_dimension: 2
     dtype: real
     lazy: False
-    module: lumispy.signals.pl_streak
+    module: lumispy.signals.pl_transientspec
   LazyPLTransientSpectrum:
     signal_type: TRPLSpec
     signal_type_aliases:
@@ -245,4 +245,4 @@ signals:
     signal_dimension: 2
     dtype: real
     lazy: True
-    module: lumispy.signals.pl_streak
+    module: lumispy.signals.pl_transientspec
