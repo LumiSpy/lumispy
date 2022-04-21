@@ -35,29 +35,6 @@ Now activate the LumiSpy environment and install the package using pip:
 
 Installation is completed! To start using it, check the next section.
 
-.. note::
-
-    **Working with eV instead of wavelength units**
-
-    In order to convert your signal luminescence axes (normally in wavelength in nanometers) to energy units,
-    you will need to reinstall the ``hyperspy`` package to its developing branch ``RELEASE_next_minor``.
-
-    *If you skip this, all LumiSpy functions will work, except the energy conversion.*
-
-    To do that, follow these steps:
-
-    1. Load the anaconda prompt.
-    2. Activate the LumiSpy environment using ``conda activate lumispy``).
-    3. Install ``git`` and reinstall the HyperSpy package running:
-
-    .. code-block:: bash
-
-        (base) conda activate lumispy
-        (lumispy) conda install git -y
-        (lumispy) pip uninstall hyperspy -y
-        (lumispy) pip install git+git://github.com/hyperspy/hyperspy@RELEASE_next_minor
-
-    Now you are ready to use all the functionalites of LumiSpy.
 
 Getting Started
 ===============

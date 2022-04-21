@@ -21,7 +21,7 @@ from numpy import arange, ones
 from numpy.testing import assert_allclose
 from pytest import raises, mark, skip, warns
 
-from hyperspy.axes import DataAxis
+from hyperspy.axes import DataAxis,UniformDataAxis
 from lumispy.signals import LumiSpectrum
 from lumispy.utils.axes import (
     nm2eV,
@@ -53,15 +53,6 @@ def test_eV2nm():
 
 
 def test_axis2eV():
-    axis = DataAxis(size=20, offset=200, scale=10)
-
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, axis2eV, axis)
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
-
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     axis2 = DataAxis(axis=arange(0.2, 0.400, 0.01), units="µm")
     axis3 = DataAxis(axis=arange(1, 2, 0.1), units="eV")
@@ -82,11 +73,6 @@ def test_axis2eV():
 
 
 def test_data2eV():
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
-
     data = 100 * ones(20)
     ax0 = DataAxis(axis=arange(200, 400, 10), units="nm")
     evaxis, factor = axis2eV(ax0)
@@ -99,11 +85,6 @@ def test_data2eV():
 
 
 def test_var2eV():
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
-
     data = 100 * ones(20)
     ax0 = DataAxis(axis=arange(200, 400, 10), units="nm")
     evaxis, factor = axis2eV(ax0)
@@ -114,15 +95,6 @@ def test_var2eV():
 @mark.parametrize(("jacobian"), (True, False))
 @mark.parametrize(("variance"), (True, False, "constant"))
 def test_to_eV(jacobian, variance):
-    axis = DataAxis(size=20, offset=200, scale=10)
-
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, axis2eV, axis)
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
-
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -211,15 +183,6 @@ def test_to_eV(jacobian, variance):
 
 @mark.parametrize(("jacobian"), (True, False))
 def test_reset_variance_linear_model_eV(jacobian):
-    axis = DataAxis(size=20, offset=200, scale=10)
-
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, axis2eV, axis)
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
-
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -272,15 +235,6 @@ def test_invcm2nm():
 
 
 def test_axis2invcm():
-    axis = DataAxis(size=20, offset=200, scale=10)
-
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, axis2invcm, axis)
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
-
     axis = UniformDataAxis(size=21, offset=200, scale=10)
     axis2 = DataAxis(axis=arange(0.2, 0.410, 0.01), units="µm")
     axis3 = DataAxis(axis=arange(1, 2, 0.1), units=r"cm$^{-1}$")
@@ -321,15 +275,6 @@ def test_var2invcm():
 @mark.parametrize(("jacobian"), (True, False))
 @mark.parametrize(("variance"), (True, False, "constant"))
 def test_to_invcm(jacobian, variance):
-    axis = DataAxis(size=20, offset=200, scale=10)
-
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, axis2invcm, axis)
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
-
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -418,15 +363,6 @@ def test_to_invcm(jacobian, variance):
 
 @mark.parametrize(("jacobian"), (True, False))
 def test_reset_variance_linear_model_invcm(jacobian):
-    axis = DataAxis(size=20, offset=200, scale=10)
-
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, axis2invcm, axis)
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
-
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -467,15 +403,6 @@ def test_reset_variance_linear_model_invcm(jacobian):
 @mark.parametrize(("jacobian"), (True, False))
 @mark.parametrize(("variance"), (True, False, "constant"))
 def test_to_invcm_relative(jacobian, variance):
-    axis = DataAxis(size=20, offset=200, scale=10)
-
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, axis2invcm, axis)
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
-
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -564,15 +491,6 @@ def test_to_invcm_relative(jacobian, variance):
 
 @mark.parametrize(("jacobian"), (True, False))
 def test_to_raman_shift(jacobian):
-    axis = DataAxis(size=20, offset=200, scale=10)
-
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, axis2invcm, axis)
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
-
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -589,15 +507,6 @@ def test_to_raman_shift(jacobian):
 
 
 def test_to_raman_shift_laser():
-    axis = DataAxis(size=20, offset=200, scale=10)
-
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raises(ImportError, axis2invcm, axis)
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
-
     axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))

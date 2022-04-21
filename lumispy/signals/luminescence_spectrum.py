@@ -128,19 +128,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         >>> from lumispy import LumiSpectrum
         >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
         >>> S1.to_eV()
-
-        Notes
-        -----
-        Using a non-linear axis works only for the RELEASE_next_minor development
-        branch of HyperSpy.
         """
-
-        # Check if non_uniform_axis is available in hyperspy version
-        if not "axis" in getfullargspec(DataAxis)[0]:
-            raise ImportError(
-                "Conversion to energy axis works only "
-                "if the RELEASE_next_minor branch of HyperSpy is used."
-            )
 
         evaxis, factor = axis2eV(self.axes_manager.signal_axes[0])
 
@@ -289,11 +277,6 @@ class LumiSpectrum(Signal1D, CommonLumi):
         >>> from lumispy import LumiSpectrum
         >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
         >>> S1.to_invcm()
-
-        Notes
-        -----
-        Using a non-linear axis works only for the RELEASE_next_minor development
-        branch of HyperSpy.    
         """
 
     def to_invcm(self, inplace=True, jacobian=True):
@@ -303,13 +286,6 @@ class LumiSpectrum(Signal1D, CommonLumi):
         %s
         %s
         """
-
-        # Check if non_uniform_axis is available in hyperspy version
-        if not "axis" in getfullargspec(DataAxis)[0]:
-            raise ImportError(
-                "Conversion to wavenumber axis works only"
-                " if the RELEASE_next_minor branch of HyperSpy is used."
-            )
 
         invcmaxis, factor = axis2invcm(self.axes_manager.signal_axes[0])
 
@@ -452,13 +428,6 @@ class LumiSpectrum(Signal1D, CommonLumi):
         %s
         """
 
-        # Check if non_uniform_axis is available in hyperspy version
-        if not "axis" in getfullargspec(DataAxis)[0]:
-            raise ImportError(
-                "Conversion to wavenumber axis works only"
-                " if the RELEASE_next_minor branch of HyperSpy is used."
-            )
-
         # check if laser wavelength is available
         if laser == None:
             if not self.metadata.has_item("Acquisition_instrument.Laser.wavelength"):
@@ -546,7 +515,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         Notes
         -----
-        This function does not work with non-linear axes.
+        This function does not work with non-uniform axes.
         """
         if hasattr(self.metadata.Signal, "background_subtracted"):
             if self.metadata.Signal.background_subtracted is True:

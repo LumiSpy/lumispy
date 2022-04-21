@@ -24,9 +24,8 @@ created, and ``jacobian=True/False`` (default is True, see
 
 .. Note::
 
-    The non-uniform axis functionality will be available from HyperSpy v.1.7.
-    If this version is not yet available, you need to use the `development
-    branch <https://github.com/hyperspy/hyperspy>`_.
+    The non-uniform axis functionality was introduced in HyperSpy v.1.7, which
+    is therefore the minimum requirement for LumiSpy.
 
 
 .. _energy_axis-label:
