@@ -408,11 +408,6 @@ class LumiSpectrum(Signal1D, CommonLumi):
         >>> from lumispy import LumiSpectrum
         >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
         >>> S1.to_invcm(laser=325)
-
-        Notes
-        -----
-        Using a non-linear axis works only for the RELEASE_next_minor development
-        branch of HyperSpy.    
     """
 
     def to_invcm_relative(self, laser=None, inplace=True, jacobian=True):
