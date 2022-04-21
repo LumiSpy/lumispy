@@ -21,7 +21,7 @@ from numpy import arange, ones
 from numpy.testing import assert_allclose
 from pytest import raises, mark, skip, warns
 
-from hyperspy.axes import DataAxis,UniformDataAxis
+from hyperspy.axes import DataAxis, UniformDataAxis
 from lumispy.signals import LumiSpectrum
 from lumispy.utils.axes import (
     nm2eV,
