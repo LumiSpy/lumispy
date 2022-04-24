@@ -141,15 +141,15 @@ class CommonLumi:
             # following will work only from hyperspy v1.7
             elif self.original_metadata.has_item("integration_time", full_path=False):
                 integration_time = float(
-                    self.metadata.get_item("integration_time", full_path=False)
+                    self.original_metadata.get_item("integration_time", full_path=False)
                 )
             elif self.original_metadata.has_item("exposure", full_path=False):
                 integration_time = float(
-                    self.metadata.get_item("exposure", full_path=False)
+                    self.original_metadata.get_item("exposure", full_path=False)
                 )
             elif self.original_metadata.has_item("dwell_time", full_path=False):
                 integration_time = float(
-                    self.metadata.get_item("dwell_time", full_path=False)
+                    self.original_metadata.get_item("dwell_time", full_path=False)
                 )
             else:
                 raise AttributeError(
