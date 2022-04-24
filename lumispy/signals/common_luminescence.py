@@ -124,10 +124,12 @@ class CommonLumi:
 
         # Make sure integration_time is given or contained in metadata
         if integration_time is None:
-            if 'exposure' in kwargs:
-                integration_time = kwargs['exposure']
-                raise DeprecationWarning("The `exposure` argument will be "
-                "removed in LumiSpy 1.0, use `integration_time` instead.")
+            if "exposure" in kwargs:
+                integration_time = kwargs["exposure"]
+                raise DeprecationWarning(
+                    "The `exposure` argument will be "
+                    "removed in LumiSpy 1.0, use `integration_time` instead."
+                )
             if self.metadata.has_item(
                 "Acquisition_instrument.Detector.integration_time"
             ):
@@ -142,9 +144,13 @@ class CommonLumi:
                     self.metadata.get_item("integration_time", full_path=False)
                 )
             elif self.original_metadata.has_item("exposure", full_path=False):
-                integration_time = float(self.metadata.get_item("exposure", full_path=False))
+                integration_time = float(
+                    self.metadata.get_item("exposure", full_path=False)
+                )
             elif self.original_metadata.has_item("dwell_time", full_path=False):
-                integration_time = float(self.metadata.get_item("dwell_time", full_path=False))
+                integration_time = float(
+                    self.metadata.get_item("dwell_time", full_path=False)
+                )
             else:
                 raise AttributeError(
                     "Integration time (exposure) not given and can not be "
