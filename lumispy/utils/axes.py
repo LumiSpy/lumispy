@@ -86,12 +86,6 @@ def axis2eV(ax0):
     dependent permittivity of air. Assumes wavelength in units of nm unless the
     axis units are specifically set to µm.
     """
-    # Check if non_uniform_axis is available in hyperspy version
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raise ImportError(
-            "Conversion to energy axis works only "
-            "if the RELEASE_next_minor branch of HyperSpy is used."
-        )
     if ax0.units == "eV":
         raise AttributeError("Signal unit is already eV.")
     # transform axis, invert direction
@@ -154,13 +148,6 @@ def axis2invcm(ax0):
     r"""Converts given signal axis to wavenumber scale (cm$^{-1}$). Assumes
     wavelength in units of nm unless the axis units are specifically set to µm.
     """
-    # Check if non_uniform_axis is available in hyperspy version
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raise ImportError(
-            "Conversion to wavenumber axis works only "
-            "if the RELEASE_next_minor branch of HyperSpy is used."
-        )
-
     if ax0.units == r"cm$^{-1}$":
         raise AttributeError(r"Signal unit is already cm$^{-1}$.")
     # transform axis, invert direction

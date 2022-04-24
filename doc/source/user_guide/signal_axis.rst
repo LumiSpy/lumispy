@@ -22,11 +22,6 @@ determines whether the current signal object is modified or a new one is
 created, and ``jacobian=True/False`` (default is True, see
 :ref:`jacobian-label`).
 
-.. Note::
-
-    The non-uniform axis functionality was introduced in HyperSpy v.1.7, which
-    is therefore the minimum requirement for LumiSpy.
-
 
 .. _energy_axis-label:
 
