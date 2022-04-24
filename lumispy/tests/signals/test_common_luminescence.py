@@ -71,12 +71,12 @@ class TestCommonLumi:
         # s31.metadata.set_item("Signal.quantity", "Intensity (Counts)")
         # s32.metadata.set_item("Signal.quantity", "Intensity (Counts)")
         s4.metadata.set_item("Signal.quantity", "Intensity (counts)")
-        s1a = s1.scale_by_exposure(exposure=4)
+        s1a = s1.scale_by_exposure(integration_time=4)
         s2a = s2.scale_by_exposure()
         s3a = s3.scale_by_exposure()
         # s31a = s31.scale_by_exposure()
         # s32a = s32.scale_by_exposure()
-        s4a = s4.scale_by_exposure(exposure=0.1)
+        s4a = s4.scale_by_exposure(integration_time=0.1)
         assert np.all(s1a.data == 0.25)
         assert np.all(s2a.data == 0.5)
         assert np.all(s3a.data == 2)
@@ -88,12 +88,12 @@ class TestCommonLumi:
         # assert s32a.metadata.Signal.quantity == "Intensity (Counts/s)"
         assert s4a.metadata.Signal.quantity == "Intensity (counts/s)"
         assert s4a.metadata.Signal.scaled == True
-        s1.scale_by_exposure(exposure=4, inplace=True)
+        s1.scale_by_exposure(integration_time=4, inplace=True)
         s2.scale_by_exposure(inplace=True)
         s3.scale_by_exposure(inplace=True)
         # s31.scale_by_exposure(inplace=True)
         # s32.scale_by_exposure(inplace=True)
-        s4.scale_by_exposure(exposure=0.1, inplace=True)
+        s4.scale_by_exposure(integration_time=0.1, inplace=True)
         assert s1 == s1a
         assert s2 == s2a
         assert s3 == s3a
@@ -108,13 +108,18 @@ class TestCommonLumi:
         s4 = LumiSpectrum(np.ones((10)))
         s4.normalize(inplace=True)
         with pytest.raises(AttributeError, match="Data was normalized and"):
-            s4.scale_by_exposure(inplace=True, exposure=0.5)
+            s4.scale_by_exposure(inplace=True, integration_time=0.5)
         s5 = LumiSpectrum(np.ones((10)))
         with pytest.raises(AttributeError, match="can not be extracted"):
             s5.scale_by_exposure(inplace=True)
-        s5.scale_by_exposure(inplace=True, exposure=0.5)
+        s5.scale_by_exposure(inplace=True, integration_time=0.5)
         with pytest.raises(AttributeError, match="Data was already scaled."):
-            s5.scale_by_exposure(inplace=True, exposure=0.5)
+            s5.scale_by_exposure(inplace=True, integration_time=0.5)
+        # Deprecation test for exposure argument
+        s6 = LumiSpectrum(np.ones((10)))
+        with pytest.raises(DeprecationWarning, match="removed in LumiSpy 1.0"):
+            s6.scale_by_exposure(inplace=True, exposure=0.5)
+            assert np.all(s6.data == 2)
 
     def test_normalize(self):
         s1 = LumiSpectrum(np.random.random((10, 10, 10))) * 2
