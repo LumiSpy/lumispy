@@ -15,6 +15,7 @@ Added
 
 Changed
 -------
+- Account for the general availability of non-uniform axes with the HyperSpy v1.7 release
 - Make `LumiTransient` and subclasses 1D and add 2D `LumiTransientSpectrum` classes
 - Add python 3.10 build. Remove python 3.6.
 - Fix error in background dimensions that allows compatibility for updated `map` in HyperSpy (failing integration tests)

@@ -43,7 +43,7 @@ features that **HyperSpy** provides are:
   interest <https://hyperspy.org/hyperspy-doc/current/user_guide/interactive_operations_ROIs.html>`_
   and a powerful numpy-style `indexing mechanism
   <https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html#indexing>`_,
-- handling of non-uniform data axes (to be included in the v1.7 release).
+- handling of non-uniform data axes (introduced in the v1.7 release).
 
 **LumiSpy** provides in particular:
 
