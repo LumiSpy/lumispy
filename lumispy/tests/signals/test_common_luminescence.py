@@ -62,45 +62,21 @@ class TestCommonLumi:
         s32 = LumiSpectrum(np.ones((10, 10)))
         s4 = LumiSpectrum(np.ones((10)))
         s2.metadata.set_item("Acquisition_instrument.Detector.integration_time", 2)
-        s3.original_metadata.set_item("Acquisition_instrument.CL.dwell_time", 0.5)
-        s31.original_metadata.set_item("Acquisition_instrument.CL.exposure", 1)
-        s32.original_metadata.set_item("Acquisition_instrument.CL.integration_time", 5)
-        s3.metadata.set_item("Signal.quantity", "Intensity (Counts)")
-        s31.metadata.set_item("Signal.quantity", "Intensity (Counts)")
-        s32.metadata.set_item("Signal.quantity", "Intensity (Counts)")
         s4.metadata.set_item("Signal.quantity", "Intensity (counts)")
         s1a = s1.scale_by_exposure(integration_time=4)
         s2a = s2.scale_by_exposure()
-        s3a = s3.scale_by_exposure()
-        s31a = s31.scale_by_exposure()
-        s32a = s32.scale_by_exposure()
         s4a = s4.scale_by_exposure(integration_time=0.1)
         assert np.all(s1a.data == 0.25)
         assert np.all(s2a.data == 0.5)
-        assert np.all(s3a.data == 2)
-        assert np.all(s31a.data == 1)
-        assert np.all(s32a.data == 0.2)
         assert np.all(s4a.data == 10)
-        assert s3a.metadata.Signal.quantity == "Intensity (Counts/s)"
-        assert s31a.metadata.Signal.quantity == "Intensity (Counts/s)"
-        assert s32a.metadata.Signal.quantity == "Intensity (Counts/s)"
         assert s4a.metadata.Signal.quantity == "Intensity (counts/s)"
         assert s4a.metadata.Signal.scaled == True
         s1.scale_by_exposure(integration_time=4, inplace=True)
         s2.scale_by_exposure(inplace=True)
-        s3.scale_by_exposure(inplace=True)
-        s31.scale_by_exposure(inplace=True)
-        s32.scale_by_exposure(inplace=True)
         s4.scale_by_exposure(integration_time=0.1, inplace=True)
         assert s1 == s1a
         assert s2 == s2a
-        assert s3 == s3a
-        assert s31 == s31a
-        assert s32 == s32a
         assert s4 == s4a
-        assert s3.metadata.Signal.quantity == "Intensity (Counts/s)"
-        assert s31.metadata.Signal.quantity == "Intensity (Counts/s)"
-        assert s32.metadata.Signal.quantity == "Intensity (Counts/s)"
         assert s4.metadata.Signal.quantity == "Intensity (counts/s)"
         # Test for errors
         s4 = LumiSpectrum(np.ones((10)))
@@ -108,14 +84,14 @@ class TestCommonLumi:
         with pytest.raises(AttributeError, match="Data was normalized and"):
             s4.scale_by_exposure(inplace=True, integration_time=0.5)
         s5 = LumiSpectrum(np.ones((10)))
-        with pytest.raises(AttributeError, match="can not be extracted"):
+        with pytest.raises(AttributeError, match="not included in the"):
             s5.scale_by_exposure(inplace=True)
         s5.scale_by_exposure(inplace=True, integration_time=0.5)
         with pytest.raises(AttributeError, match="Data was already scaled."):
             s5.scale_by_exposure(inplace=True, integration_time=0.5)
         # Deprecation test for exposure argument
         s6 = LumiSpectrum(np.ones((10)))
-        with pytest.raises(DeprecationWarning, match="removed in LumiSpy 1.0"):
+        with pytest.raises(DeprecationWarning, match="deprecated in LumiSpy 1.0"):
             s6.scale_by_exposure(inplace=True, exposure=0.5)
             assert np.all(s6.data == 2)
 

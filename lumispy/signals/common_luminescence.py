@@ -111,8 +111,8 @@ class CommonLumi:
         replaces them by 'counts/s'.
 
         .. deprecated:: 0.2
-          The `exposure` argument will be removed in LumiSpy 1.0, use
-          `integration_time` instead.
+          The `exposure` argument was renamed `integration_time`, and its use
+          will be deprecated in LumiSpy 1.0.
         """
         # Check metadata tags that would prevent scaling
         if self.metadata.Signal.get_item("normalized"):
@@ -127,8 +127,8 @@ class CommonLumi:
             if "exposure" in kwargs:
                 integration_time = kwargs["exposure"]
                 raise DeprecationWarning(
-                    "The `exposure` argument will be "
-                    "removed in LumiSpy 1.0, use `integration_time` instead."
+                    "The `exposure` argument was renamed `integration_time`"
+                    "and its use will be deprecated in LumiSpy 1.0."
                 )
             if self.metadata.has_item(
                 "Acquisition_instrument.Detector.integration_time"
@@ -138,23 +138,10 @@ class CommonLumi:
                         "Acquisition_instrument.Detector.integration_time"
                     )
                 )
-            # following will work only from hyperspy v1.7
-            elif self.original_metadata.has_item("integration_time", full_path=False):
-                integration_time = float(
-                    self.original_metadata.get_item("integration_time", full_path=False)
-                )
-            elif self.original_metadata.has_item("exposure", full_path=False):
-                integration_time = float(
-                    self.original_metadata.get_item("exposure", full_path=False)
-                )
-            elif self.original_metadata.has_item("dwell_time", full_path=False):
-                integration_time = float(
-                    self.original_metadata.get_item("dwell_time", full_path=False)
-                )
             else:
                 raise AttributeError(
-                    "Integration time (exposure) not given and can not be "
-                    "extracted automatically from original_metadata."
+                    "Integration time (exposure) not given and it is not "
+                    "included in the metadata."
                 )
         if inplace:
             s = self
