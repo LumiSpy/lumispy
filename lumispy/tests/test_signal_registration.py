@@ -29,11 +29,7 @@ from lumispy.signals import (
     PLSpectrum,
     ELSpectrum,
     LumiTransient,
-    CLTransient,
-    PLTransient,
     LumiTransientSpectrum,
-    CLTransientSpectrum,
-    PLTransientSpectrum,
     LazyLumiSpectrum,
     LazyCLSpectrum,
     LazyCLSEMSpectrum,
@@ -41,11 +37,7 @@ from lumispy.signals import (
     LazyPLSpectrum,
     LazyELSpectrum,
     LazyLumiTransient,
-    LazyCLTransient,
-    LazyPLTransient,
     LazyLumiTransientSpectrum,
-    LazyCLTransientSpectrum,
-    LazyPLTransientSpectrum,
 )
 
 signal1d_class_list = [
@@ -62,19 +54,11 @@ signal1d_class_list = [
     LazyPLSpectrum,
     LazyELSpectrum,
     LumiTransient,
-    CLTransient,
-    PLTransient,
     LazyLumiTransient,
-    LazyCLTransient,
-    LazyPLTransient,
 ]
 signal2d_class_list = [
     LumiTransientSpectrum,
-    CLTransientSpectrum,
-    PLTransientSpectrum,
     LazyLumiTransientSpectrum,
-    LazyCLTransientSpectrum,
-    LazyPLTransientSpectrum,
 ]
 
 
