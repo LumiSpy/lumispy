@@ -128,10 +128,6 @@ def test_joinspectra_linescan(average, scale, kind):
 @mark.parametrize(("scale"), (True, False))
 @mark.parametrize(("kind"), ("slinear", "linear"))
 def test_joinspectra_nonuniform(average, scale, kind):
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
     s1 = LumiSpectrum(arange(32))
     s2 = LumiSpectrum(arange(32) + 25)
     s2.axes_manager.signal_axes[0].offset = 25
