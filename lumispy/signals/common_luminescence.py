@@ -127,7 +127,7 @@ class CommonLumi:
             if "exposure" in kwargs:
                 integration_time = kwargs["exposure"]
                 raise DeprecationWarning(
-                    "The `exposure` argument was renamed `integration_time`"
+                    "The `exposure` argument was renamed `integration_time` "
                     "and it will be removed in LumiSpy 1.0."
                 )
             if self.metadata.has_item(
