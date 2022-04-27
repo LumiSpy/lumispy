@@ -21,7 +21,10 @@ Pull Requests
 =============
 
 If you want to contribute to the LumiSpy source code, you can send us a
-`pull request <https://github.com/lumispy/lumispy/pulls>`_.
+`pull request <https://github.com/lumispy/lumispy/pulls>`_. Small bug fixes are
+corrections to the user guide are typically a good starting point. But don't
+hesitate also for significant code contributions - if needed, we'll help you
+to get the code ready to common standards.
 
 Please refer to the 
 `HyperSpy developer guide <http://hyperspy.org/hyperspy-doc/current/dev_guide/intro.html>`_
@@ -30,6 +33,13 @@ in order to get started and for detailed contributing guidelines.
 The `kikuchypy contributors guide <https://kikuchipy.org/en/stable/contributing.html>`_,
 another HyperSpy extension, also is a valuable resource that can get you
 started and provides useful guidelines.
+
+Reviewing
+---------
+
+As quality assurance, to improve the code, and to ensure a generalized
+functionality, pull requests need to be thoroughly reviewed by at least one
+other member of the development team before being merged.
 
 Documentation
 =============

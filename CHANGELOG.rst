@@ -11,6 +11,7 @@ UNRELEASED
 Added
 -----
 - Set up read the docs documentation
+- Added metadata convention
 - Add proper handling of variance on Jacobian transformation during axis conversion (eV, invcm)
 
 Changed
@@ -20,6 +21,7 @@ Changed
 - Add python 3.10 build. Remove python 3.6.
 - Fix error in background dimensions that allows compatibility for updated `map` in HyperSpy (failing integration tests)
 - Fix for links in PyPi
+- Deprecate `exposure` argument of `scale_by_exposure` in favor of `integration_time` in line with metadata convention
 
 2021-11-23 - version 0.1.3
 ==========================

@@ -90,15 +90,17 @@ class CommonLumi:
         if not inplace:
             return s
 
-    def scale_by_exposure(self, exposure=float("nan"), inplace=False):
-        """Scale data in spectrum by exposure (e.g. convert counts to counts/s).
+    def scale_by_exposure(self, integration_time=None, inplace=False, **kwargs):
+        """Scale data in spectrum by integration time / exposure,
+        (e.g. convert counts to counts/s).
 
         Parameters
         ----------
-        exposure : float
-            Exposure time in s. If not given, the function tries to find
-            'exposure' or 'dwell_time' in the metadata (for the moment only at
-            Gatan specific nodes).
+        integration_time : float
+            Integration time (exposure) in s. If not given, the function tries to
+            use the 'metadata.Acqusition_instrument.Detector.integration_time'
+            field or alternatively find any 'integration_time', 'exposure' or
+            'dwell_time' fields in the `original_metadata`.
         inplace : boolean
             If `False` (default), a new signal object is created and returned.
             If `True`, the operation is performed on the existing signal object.
@@ -107,6 +109,10 @@ class CommonLumi:
         -----
         Sets `metadata.Signal.scaled` to `True`. If intensity units is 'counts',
         replaces them by 'counts/s'.
+
+        .. deprecated:: 0.2
+          The `exposure` argument was renamed `integration_time`, and it will
+          be removed in LumiSpy 1.0.
         """
         # Check metadata tags that would prevent scaling
         if self.metadata.Signal.get_item("normalized"):
@@ -116,27 +122,32 @@ class CommonLumi:
         ) == ("Intensity (counts/s)" or "Intensity (Counts/s)"):
             raise AttributeError("Data was already scaled.")
 
-        # Make sure exposure is given or contained in metadata
-        if isnan(exposure):
-            # use nested_get from hyperspy when it is available
-            if self.metadata.has_item("Acquisition_instrument.CL.exposure"):
-                exposure = float(
-                    self.metadata.get_item("Acquisition_instrument.CL.exposure")
+        # Make sure integration_time is given or contained in metadata
+        if integration_time is None:
+            if "exposure" in kwargs:
+                integration_time = kwargs["exposure"]
+                raise DeprecationWarning(
+                    "The `exposure` argument was renamed `integration_time` "
+                    "and it will be removed in LumiSpy 1.0."
                 )
-            elif self.metadata.has_item("Acquisition_instrument.CL.dwell_time"):
-                exposure = float(
-                    self.metadata.get_item("Acquisition_instrument.CL.dwell_time")
+            if self.metadata.has_item(
+                "Acquisition_instrument.Detector.integration_time"
+            ):
+                integration_time = float(
+                    self.metadata.get_item(
+                        "Acquisition_instrument.Detector.integration_time"
+                    )
                 )
             else:
                 raise AttributeError(
-                    "Exposure not given and can not be "
-                    "extracted automatically from metadata."
+                    "Integration time (exposure) not given and it is not "
+                    "included in the metadata."
                 )
         if inplace:
             s = self
         else:
             s = self.deepcopy()
-        s.data = s.data / exposure
+        s.data = s.data / integration_time
         s.metadata.Signal.scaled = True
         if s.metadata.get_item("Signal.quantity") == "Intensity (Counts)":
             s.metadata.Signal.quantity = "Intensity (Counts/s)"
