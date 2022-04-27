@@ -111,8 +111,8 @@ class CommonLumi:
         replaces them by 'counts/s'.
 
         .. deprecated:: 0.2
-          The `exposure` argument was renamed `integration_time`, and its use
-          will be deprecated in LumiSpy 1.0.
+          The `exposure` argument was renamed `integration_time`, and it will
+          be removed in LumiSpy 1.0.
         """
         # Check metadata tags that would prevent scaling
         if self.metadata.Signal.get_item("normalized"):
@@ -128,7 +128,7 @@ class CommonLumi:
                 integration_time = kwargs["exposure"]
                 raise DeprecationWarning(
                     "The `exposure` argument was renamed `integration_time`"
-                    "and its use will be deprecated in LumiSpy 1.0."
+                    "and it will be removed in LumiSpy 1.0."
                 )
             if self.metadata.has_item(
                 "Acquisition_instrument.Detector.integration_time"
