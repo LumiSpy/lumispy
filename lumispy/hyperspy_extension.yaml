@@ -130,60 +130,43 @@ signals:
     module: lumispy.signals.cl_spectrum
 
   LumiTransient:
-    signal_type: Luminescence
+    signal_type: Transient
     signal_type_aliases:
       - TRLumi
       - TR luminescence
       - time-resolved luminescence
-    signal_dimension: 2
+    signal_dimension: 1
     dtype: real
     lazy: False
     module: lumispy.signals.luminescence_transient
   LazyLumiTransient:
-    signal_type: Luminescence
+    signal_type: Transient
     signal_type_aliases:
       - TRLumi
       - TR luminescence
       - time-resolved luminescence
-    signal_dimension: 2
+    signal_dimension: 1
     dtype: real
     lazy: True
     module: lumispy.signals.luminescence_transient
 
-  CLTransient:
-    signal_type: TRCL
+  LumiTransientSpectrum:
+    signal_type: TransientSpec
     signal_type_aliases:
-      - TR cathodoluminescence
-      - time-resolved cathodoluminescence
+      - TRLumiSpec
+      - TR luminescence spectrum
+      - time-resolved luminescence spectrum
     signal_dimension: 2
     dtype: real
     lazy: False
-    module: lumispy.signals.cl_transient
-  LazyCLTransient:
-    signal_type: TRCL
+    module: lumispy.signals.luminescence_transientspec
+  LazyLumiTransientSpectrum:
+    signal_type: TransientSpec
     signal_type_aliases:
-      - TR cathodoluminescence
-      - time-resolved cathodoluminescence
+      - TRLumiSpec
+      - TR luminescence spectrum
+      - time-resolved luminescence spectrum
     signal_dimension: 2
     dtype: real
     lazy: True
-    module: lumispy.signals.cl_transient
-
-  PLTransient:
-    signal_type: TRPL
-    signal_type_aliases:
-      - TR photoluminescence
-      - time-resolved photoluminescence
-    signal_dimension: 2
-    dtype: real
-    lazy: False
-    module: lumispy.signals.pl_transient
-  LazyPLTransient:
-    signal_type: TRPL
-    signal_type_aliases:
-      - TR photoluminescence
-      - time-resolved photoluminescence
-    signal_dimension: 2
-    dtype: real
-    lazy: True
-    module: lumispy.signals.pl_transient
+    module: lumispy.signals.luminescence_transientspec

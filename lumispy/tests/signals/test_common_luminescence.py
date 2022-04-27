@@ -19,13 +19,13 @@
 import numpy as np
 import pytest
 
-from lumispy.signals import LumiSpectrum, LumiTransient
+from lumispy.signals import LumiSpectrum, LumiTransientSpectrum
 
 
 class TestCommonLumi:
     def test_crop_edges(self):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
-        s2 = LumiTransient(np.ones((10, 10, 10, 10)))
+        s2 = LumiTransientSpectrum(np.ones((10, 10, 10, 10)))
         s3 = LumiSpectrum(np.ones((3, 3, 10)))
         s1 = s1.crop_edges(crop_px=2)
         s2 = s2.crop_edges(crop_px=2)
@@ -38,8 +38,8 @@ class TestCommonLumi:
 
     def test_remove_negative(self):
         s1 = LumiSpectrum(np.random.random((10, 10, 10))) - 0.3
-        s2 = LumiTransient(np.random.random((10, 10, 10, 10))) - 0.3
-        s3 = LumiTransient(np.random.random((10, 10, 10, 10))) - 0.3
+        s2 = LumiTransientSpectrum(np.random.random((10, 10, 10, 10))) - 0.3
+        s3 = LumiTransientSpectrum(np.random.random((10, 10, 10, 10))) - 0.3
         s1a = s1.remove_negative(inplace=False)
         s2a = s2.remove_negative(inplace=False)
         s3a = s3.remove_negative(inplace=False, basevalue=0.1)
@@ -56,7 +56,7 @@ class TestCommonLumi:
 
     def test_scale_by_exposure(self):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
-        s2 = LumiTransient(np.ones((10, 10, 10, 10)))
+        s2 = LumiTransientSpectrum(np.ones((10, 10, 10, 10)))
         s3 = LumiSpectrum(np.ones((10, 10)))
         s4 = LumiSpectrum(np.ones((10)))
         s2.metadata.set_item("Acquisition_instrument.CL.exposure", 2)
@@ -104,7 +104,7 @@ class TestCommonLumi:
 
     def test_normalize(self):
         s1 = LumiSpectrum(np.random.random((10, 10, 10))) * 2
-        s2 = LumiTransient(np.random.random((10, 10, 10, 10))) * 2
+        s2 = LumiTransientSpectrum(np.random.random((10, 10, 10, 10))) * 2
         s3 = LumiSpectrum(np.random.random((10, 10))) * 2
         s4 = LumiSpectrum(np.random.random((10))) * 2
         s4.metadata.set_item("Signal.quantity", "Intensity (counts)")

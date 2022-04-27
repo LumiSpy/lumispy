@@ -17,27 +17,27 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 """
-Signal class for luminescence transient data (2D)
+Signal class for luminescence transient data (1D)
 -------------------------------------------------
 """
 
-from hyperspy.signals import Signal2D
+from hyperspy.signals import Signal1D
 from hyperspy._signals.lazy import LazySignal
 
-from lumispy.signals.common_luminescence import CommonLumi
+from lumispy.signals.common_transient import CommonTransient
 
 
-class LumiTransient(Signal2D, CommonLumi):
-    """**General 2D luminescence signal class (transient/time resolved)**"""
+class LumiTransient(Signal1D, CommonTransient):
+    """**General 1D luminescence signal class (transient/time resolved)**"""
 
-    _signal_type = "Luminescence"
-    _signal_dimension = 2
+    _signal_type = "Transient"
+    _signal_dimension = 1
 
     pass
 
 
 class LazyLumiTransient(LazySignal, LumiTransient):
-    """**General lazy 2D luminescence signal class (transient/time resolved)**"""
+    """**General lazy 1D luminescence signal class (transient/time resolved)**"""
 
     _lazy = True
 
