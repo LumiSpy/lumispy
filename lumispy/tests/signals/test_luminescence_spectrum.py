@@ -38,7 +38,7 @@ backgrounds = [
 error_backgrounds = [
     ([np.linspace(0, 49, num=10, dtype="float64"), np.ones(50)], AttributeError),
     ([[1, 1], [1, 1], [1, 1]], AttributeError),
-    #([np.linspace(0, 48, num=10, dtype="float64"), np.ones(50)], AttributeError),
+    # ([np.linspace(0, 48, num=10, dtype="float64"), np.ones(50)], AttributeError),
 ]
 
 
@@ -68,10 +68,10 @@ class TestLumiSpectrum:
     def test_warnings(self):
         pytest.importorskip("hyperspy_gui_ipywidgets")
         s = LumiSpectrum(np.ones(50))
-        with pytest.warns(SyntaxWarning, match='Using the Hyperspy') as warninfo:
+        with pytest.warns(SyntaxWarning, match="Using the Hyperspy"):
             s.remove_background_from_file(background=None, display=False)
 
     def test_deprecation_warning(self):
         s = LumiSpectrum(np.ones(50))
-        with pytest.warns(DeprecationWarning, match='deprecated') as warninfo:
+        with pytest.warns(DeprecationWarning, match="deprecated"):
             s.remove_background_from_file(background=backgrounds[0][0])

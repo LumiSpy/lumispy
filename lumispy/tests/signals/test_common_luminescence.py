@@ -136,7 +136,5 @@ class TestCommonLumi:
         assert s3a == s3
         assert s4a == s4
         assert s4.metadata.Signal.quantity == "Normalized intensity"
-        with pytest.warns(UserWarning) as warninfo:
+        with pytest.warns(UserWarning, match="Data was"):
             s1.normalize(inplace=True)
-        assert len(warninfo) == 1
-        assert warninfo[0].message.args[0][:8] == "Data was"
