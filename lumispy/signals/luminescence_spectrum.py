@@ -487,7 +487,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
     to_raman_shift = to_invcm_relative
 
     def remove_background_from_file(self, background=None, inplace=False, **kwargs):
-        """Subtract the background to the signal in all navigation axes.If no
+        """Subtract the background to the signal in all navigation axes. If no
         background file is passed as argument, the `remove_background()` from
         HyperSpy is called with the GUI.
 
@@ -512,6 +512,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
         -----
         This function does not work with non-uniform axes.
         """
+        warnings.warn('The use of `remove_background_from_file` is deprecated and will be removed in LumiSpy 1.0. '
+                      'Please use `remove_background_signal` from the Signal1D class.', DeprecationWarning, stacklevel=2)
         if hasattr(self.metadata.Signal, "background_subtracted"):
             if self.metadata.Signal.background_subtracted is True:
                 raise RecursionError(
@@ -533,12 +535,12 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 y = background.data
                 background = [x, y]
 
-            background_xy = np.asanyarray(background)
+            background_xy = background
 
-            if background_xy.shape[0] == 1 and background_xy.dtype != "O":
+            if np.shape(background_xy)[0] == 1:
                 bkg_x = signal_x
-                bkg_y = background_xy.squeeze()
-            elif background_xy.shape[0] == 2 and background_xy.dtype != "O":
+                bkg_y = background_xy[0]
+            elif np.shape(background_xy)[0] == 2:
                 try:
                     bkg_x = background_xy[0]
                     bkg_y = background_xy[1]
