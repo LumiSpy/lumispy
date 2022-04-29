@@ -1,5 +1,5 @@
 name = "lumispy"
-version = "0.2"
+version = "0.2.1dev"
 description = "Analysis of luminescence spectroscopy data with HyperSpy."
 author = "The LumiSpy developers"
 copyright = "Copyright 2019-2022, LumiSpy developers"
