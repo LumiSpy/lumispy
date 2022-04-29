@@ -18,7 +18,6 @@
 
 """Signal class for Luminescence spectral data (1D).
 """
-import warnings
 import numpy as np
 from inspect import getfullargspec
 from warnings import warn
@@ -512,7 +511,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         -----
         This function does not work with non-uniform axes.
         """
-        warnings.warn(
+        warn(
             "The use of `remove_background_from_file` is deprecated and will be removed in LumiSpy 1.0. "
             "Please use `remove_background_signal` from the Signal1D class.",
             DeprecationWarning,
