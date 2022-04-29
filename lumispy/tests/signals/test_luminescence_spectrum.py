@@ -75,6 +75,6 @@ class TestLumiSpectrum:
     def test_depreciation_warning(self):
         s = LumiSpectrum(np.ones(50))
         with pytest.warns(DeprecationWarning) as warninfo:
-            s.remove_background_from_file(background=backgrounds[0])
-        assert warninfo[0].message.args[0][:18] == "The use of `remove_background_from_file` is depreciated. Please " \
+            s.remove_background_from_file(background=None)
+        assert warninfo[0].message.args[0][:] == "The use of `remove_background_from_file` is depreciated. Please " \
                                                    "use `remove_background_signal` from Signal1D object "
