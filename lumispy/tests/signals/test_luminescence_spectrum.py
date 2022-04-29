@@ -68,12 +68,10 @@ class TestLumiSpectrum:
     def test_warnings(self):
         pytest.importorskip("hyperspy_gui_ipywidgets")
         s = LumiSpectrum(np.ones(50))
-        with pytest.warns(SyntaxWarning) as warninfo:
+        with pytest.warns(SyntaxWarning, match='Using the Hyperspy') as warninfo:
             s.remove_background_from_file(background=None, display=False)
-        assert warninfo[0].message.args[0][:18] == "Using the Hyperspy"
 
-    def test_depreciation_warning(self):
+    def test_deprecation_warning(self):
         s = LumiSpectrum(np.ones(50))
-        with pytest.warns(DeprecationWarning) as warninfo:
+        with pytest.warns(DeprecationWarning, match='deprecated') as warninfo:
             s.remove_background_from_file(background=backgrounds[0][0])
-        assert 'deprecated' in warninfo[0].message.args[0][:]
