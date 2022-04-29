@@ -88,6 +88,16 @@ def test_joinspectra2():
     assert s.data[28] == 28 / 3
 
 
+def test_joinspectra_length1():
+    s1 = LumiSpectrum(arange(32))
+    s2 = LumiSpectrum(arange(32) + 27)
+    s2.axes_manager.signal_axes[0].offset = 27
+    s = join_spectra([s1, s2], r=1, average=False, scale=True)
+    assert s.data[-1] == 58
+    with raises(ValueError, match="Averaging can not be performed for r=1."):
+        s = join_spectra([s1, s2], r=1, average=True, scale=True)
+
+
 def test_joinspectra_errors():
     s1 = LumiSpectrum(ones(32))
     s2 = LumiSpectrum(ones(32) * 2)
@@ -118,10 +128,6 @@ def test_joinspectra_linescan(average, scale, kind):
 @mark.parametrize(("scale"), (True, False))
 @mark.parametrize(("kind"), ("slinear", "linear"))
 def test_joinspectra_nonuniform(average, scale, kind):
-    try:
-        from hyperspy.axes import UniformDataAxis
-    except ImportError:
-        skip("HyperSpy version doesn't support non-uniform axis")
     s1 = LumiSpectrum(arange(32))
     s2 = LumiSpectrum(arange(32) + 25)
     s2.axes_manager.signal_axes[0].offset = 25

@@ -42,6 +42,16 @@ intersphinx_mapping = {
 }
 intersphinx_disabled_domains = ["std"]
 
+# imgmath: Sphinx allows use of LaTeX in the html documentation, but not directly. It is first rendered to an image.
+# You can add here whatever preamble you are used to adding to your LaTeX document.
+imgmath_latex_preamble = r"""
+    \usepackage{xcolor}
+    \definecolor{mathcolor}{rgb}{0.8,0.3,0.1}
+    \everymath{\color{mathcolor}}
+    %\everydisplay{\color{mathcolor}}
+"""
+
+
 templates_path = ["_templates"]
 
 # -- Options for HTML output

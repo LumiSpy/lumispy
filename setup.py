@@ -34,10 +34,10 @@ setup(
     long_description_content_type="text/markdown",
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -52,7 +52,7 @@ setup(
     install_requires=[
         "numpy",
         "scipy",
-        "hyperspy >= 1.5.2",  # earlier versions incompatible with numpy >= 1.17.0
+        "hyperspy >= 1.7",  # earlier versions do not provide non-uniform axes
     ],
     extras_require={
         "tests": ["pytest>=5.0"],

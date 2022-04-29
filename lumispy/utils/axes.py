@@ -35,7 +35,7 @@ from hyperspy.axes import *
 
 
 def _n_air(x):
-    """Refractive index of air as a function of WL in nm.
+    """Relative permittivity of air as a function of WL in nm.
     This analytical function is correct for the range 185-1700 nm.
     According to `E.R. Peck and K. Reeder. Dispersion of air,
     J. Opt. Soc. Am. 62, 958-962 (1972).`
@@ -86,12 +86,6 @@ def axis2eV(ax0):
     dependent permittivity of air. Assumes wavelength in units of nm unless the
     axis units are specifically set to µm.
     """
-    # Check if non_uniform_axis is available in hyperspy version
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raise ImportError(
-            "Conversion to energy axis works only "
-            "if the RELEASE_next_minor branch of HyperSpy is used."
-        )
     if ax0.units == "eV":
         raise AttributeError("Signal unit is already eV.")
     # transform axis, invert direction
@@ -107,8 +101,9 @@ def axis2eV(ax0):
 
 def data2eV(data, factor, ax0, evaxis):
     """The intensity is converted from counts/nm (counts/µm) to counts/meV by
-    doing a Jacobian transformation, see e.g. Wang and Townsend, J. Lumin. 142,
-    202 (2013). Ensures that integrated signals are still correct.
+    doing a Jacobian transformation, see e.g. Mooney and Kambhampati, J. Phys.
+    Chem. Lett. 4, 3316 (2013). Ensures that integrated signals are still
+    correct.
     """
     if ax0.units == "µm":
         return (
@@ -153,13 +148,6 @@ def axis2invcm(ax0):
     r"""Converts given signal axis to wavenumber scale (cm$^{-1}$). Assumes
     wavelength in units of nm unless the axis units are specifically set to µm.
     """
-    # Check if non_uniform_axis is available in hyperspy version
-    if not "axis" in getfullargspec(DataAxis)[0]:
-        raise ImportError(
-            "Conversion to wavenumber axis works only "
-            "if the RELEASE_next_minor branch of HyperSpy is used."
-        )
-
     if ax0.units == r"cm$^{-1}$":
         raise AttributeError(r"Signal unit is already cm$^{-1}$.")
     # transform axis, invert direction
@@ -177,9 +165,9 @@ def axis2invcm(ax0):
 
 def data2invcm(data, factor, invcmaxis):
     r"""The intensity is converted from counts/nm (counts/µm) to
-    counts/cm$^{-1}$ by doing a Jacobian transformation, see e.g. Wang and
-    Townsend, J. Lumin. 142, 202 (2013). Ensures that integrated signals are
-    still correct.
+    counts/cm$^{-1}$ by doing a Jacobian transformation, see e.g. Mooney and
+    Kambhampati, J. Phys. Chem. Lett. 4, 3316 (2013). Ensures that integrated
+    signals are still correct.
     """
     return data * factor / (invcmaxis**2)
 
@@ -325,6 +313,11 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
             )
             # join data vectors interpolating to a common uniform axis
             if average:  # average over range
+                if r == 1:
+                    raise ValueError(
+                        "Averaging can not be performed for r=1. "
+                        "Set average=False or r>1."
+                    )
                 ind2r = axis2.value2index(axis.axis[ind1 - r])
                 length = axis.axis[ind1 - r : ind1 + r].size
                 grad = 1 / (length - 1)

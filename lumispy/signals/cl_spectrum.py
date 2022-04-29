@@ -82,12 +82,6 @@ class CLSpectrum(LumiSpectrum):
         **kwargs
     ):
 
-        if not "threshold" in getfullargspec(self.spikes_removal_tool)[0]:
-            raise ImportError(
-                "Spike removal works only "
-                "if the RELEASE_next_minor branch of HyperSpy is used."
-            )
-
         if luminescence_roi is not None and signal_mask is not None:
             raise AttributeError(
                 "Only either `luminescence_roi` or the `signal_mask` can be an input."
