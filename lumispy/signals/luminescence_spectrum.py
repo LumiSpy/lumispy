@@ -512,7 +512,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         -----
         This function does not work with non-uniform axes.
         """
-        warnings.warn('The use of `remove_background_from_file` is depreciated and will be removed in LumiSpy 1.0. '
+        warnings.warn('The use of `remove_background_from_file` is deprecated and will be removed in LumiSpy 1.0. '
                       'Please use `remove_background_signal` from the Signal1D class.', DeprecationWarning, stacklevel=2)
         if hasattr(self.metadata.Signal, "background_subtracted"):
             if self.metadata.Signal.background_subtracted is True:

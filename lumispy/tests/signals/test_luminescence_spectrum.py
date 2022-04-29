@@ -76,4 +76,4 @@ class TestLumiSpectrum:
         s = LumiSpectrum(np.ones(50))
         with pytest.warns(DeprecationWarning) as warninfo:
             s.remove_background_from_file(background=backgrounds[0][0])
-        assert 'depreciated' in warninfo[0].message.args[0][:]
+        assert 'deprecated' in warninfo[0].message.args[0][:]
