@@ -8,6 +8,10 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 
 UNRELEASED
 ==========
+
+
+2022-04-29 - version 0.2
+========================
 Added
 -----
 - Set up read the docs documentation
@@ -17,11 +21,12 @@ Added
 Changed
 -------
 - Account for the general availability of non-uniform axes with the HyperSpy v1.7 release
-- Make `LumiTransient` and subclasses 1D and add 2D `LumiTransientSpectrum` classes
+- Make `LumiTransient` 1D and add 2D `LumiTransientSpectrum` class
 - Add python 3.10 build. Remove python 3.6.
 - Fix error in background dimensions that allows compatibility for updated `map` in HyperSpy (failing integration tests)
 - Fix for links in PyPi
-- Deprecate `exposure` argument of `scale_by_exposure` in favor of `integration_time` in line with metadata convention
+- Deprecate `exposure` argument of `s.scale_by_exposure` in favor of `integration_time` in line with metadata convention
+- Add deprecation warning to `remove_background_from_file`
 
 2021-11-23 - version 0.1.3
 ==========================
@@ -46,8 +51,8 @@ Changed
 - fixed join_spectra
 - fixed tests
 
-2021-03-26 - version 0.1.0
-==========================
+2021-03-26 - version 0.1
+========================
 Added
 -----
 - The first release, basic functionality implemented
