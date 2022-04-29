@@ -29,10 +29,8 @@ from lumispy.signals import LumiSpectrum
 
 def test__n_air():
     wl = arange(800) * 2 + 150
-    with warns(UserWarning) as warninfo:
+    with warns(UserWarning, match="The wavelength"):
         n = _n_air(wl)
-    assert len(warninfo) == 1
-    assert warninfo[0].message.args[0][:14] == "The wavelength"
     assert n[0] == _n_air(185)
     assert n[-1] == _n_air(1700)
     with warns(UserWarning):

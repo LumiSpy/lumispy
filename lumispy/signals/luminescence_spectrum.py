@@ -18,7 +18,6 @@
 
 """Signal class for Luminescence spectral data (1D).
 """
-import warnings
 import numpy as np
 from inspect import getfullargspec
 from warnings import warn
@@ -512,18 +511,24 @@ class LumiSpectrum(Signal1D, CommonLumi):
         -----
         This function does not work with non-uniform axes.
         """
-        warnings.warn('The use of `remove_background_from_file` is deprecated and will be removed in LumiSpy 1.0. '
-                      'Please use `remove_background_signal` from the Signal1D class.', DeprecationWarning, stacklevel=2)
+        warn(
+            "The use of `remove_background_from_file` is deprecated and will "
+            "be removed in LumiSpy 1.0. Please use `remove_background_signal` "
+            "from the Signal1D class.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if hasattr(self.metadata.Signal, "background_subtracted"):
             if self.metadata.Signal.background_subtracted is True:
                 raise RecursionError(
-                    "You have already removed background once. If you need to remove it again, "
-                    "set the s.metadata.Signal.background_subtracted to False"
+                    "You have already removed background once. If you need to "
+                    "remove it again, set the "
+                    "s.metadata.Signal.background_subtracted to False."
                 )
         elif background is None:
             warn(
-                "Using the Hyperspy specfic `remove_background` function. Use `s.remove_background()` "
-                "instead.",
+                "Using the Hyperspy specfic `remove_background` function. "
+                "Use `s.remove_background()` instead.",
                 category=SyntaxWarning,
             )
             self.remove_background(**kwargs)
