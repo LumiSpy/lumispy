@@ -42,14 +42,14 @@ class TestCommonLumi:
         s3 = LumiTransientSpectrum(np.random.random((10, 10, 10, 10))) - 0.3
         s1a = s1.remove_negative(inplace=False)
         s2a = s2.remove_negative(inplace=False)
-        s3a = s3.remove_negative(inplace=False, basevalue=0.1)
+        s3a = s3.remove_negative(basevalue=0.1)
         assert s3a.metadata.Signal.negative_removed == True
         assert np.all(s1a.data[s1 <= 0] == 1)
         assert np.all(s2a.data[s2 <= 0] == 1)
         assert np.all(s3a.data[s3 <= 0] == 0.1)
         s1.remove_negative(inplace=True)
         s2.remove_negative(inplace=True)
-        s3.remove_negative(basevalue=0.1)
+        s3.remove_negative(basevalue=0.1, inplace=True)
         assert s1 == s1a
         assert s2 == s2a
         assert s3 == s3a

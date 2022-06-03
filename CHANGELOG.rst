@@ -8,7 +8,13 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 
 UNRELEASED
 ==========
+Added
+-----
+- Improved documentation.
 
+Changed
+-------
+- `s.remove_negative` now defaults to `inplace=False` (previously `True`)
 
 2022-04-29 - version 0.2
 ========================

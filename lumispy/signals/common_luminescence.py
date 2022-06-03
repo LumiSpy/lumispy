@@ -65,7 +65,7 @@ class CommonLumi:
 
         return signal_cropped
 
-    def remove_negative(self, basevalue=1, inplace=True):
+    def remove_negative(self, basevalue=1, inplace=False):
         """Sets all negative values to 'basevalue', e.g. for logarithmic scale
         plots.
 
@@ -74,8 +74,8 @@ class CommonLumi:
         basevalue : float
             Value by which negative values are replaced (default = 1).
         inplace : boolean
-            If `False`, a new signal object is created and returned. Otherwise
-            (default) the operation is performed on the existing signal object.
+            If `False` (default), a new signal object is created and returned.
+            Otherwise, the operation is performed on the existing signal object.
 
         Notes
         -----
