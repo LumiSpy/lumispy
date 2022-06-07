@@ -53,7 +53,7 @@ Contents
    user_guide/introduction.rst
    user_guide/signal_axis.rst
    user_guide/fitting_luminescence.rst
-   user_guide/utilities.txt
+   user_guide/utilities.rst
    user_guide/metadata_structure.rst
 
 .. toctree::
