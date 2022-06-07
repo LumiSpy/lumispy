@@ -89,7 +89,7 @@ It is a convenience wrapper for :external:py:meth:`hyperspy.signal.BaseSignal.in
 
     >>> s.crop_edges(crop_px=2)
 
-TODO: add possibility to crop different amounts of pixels on different sides
+*[TODO: add possibility to crop different amounts of pixels on different sides]*
 
 
 .. _unit_conversion-label:
@@ -113,5 +113,7 @@ For the energy axis, the conversion uses the correct permittivity of air.
 Solving the grating equation
 ============================
 
-TODO: Add a paragraph about the functionality of
-:py:func:`~.utils.axes.solve_grating_equation`
+
+The function :py:func:`~.utils.axes.solve_grating_equation` follows the
+conventions described in the tutorial from 
+`Horiba Scientific <https://horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position>`_.
