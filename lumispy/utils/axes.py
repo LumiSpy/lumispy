@@ -15,7 +15,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
-import warnings
 
 import numpy as np
 import scipy.constants as c
@@ -24,9 +23,7 @@ from inspect import getfullargspec
 from copy import deepcopy
 from warnings import warn
 
-from traits import traits
-
-from hyperspy.axes import *
+from hyperspy.axes import DataAxis, FunctionalDataAxis, UniformDataAxis
 
 
 #
@@ -49,8 +46,8 @@ def _n_air(x):
             if wl > 1700:
                 wl = 1700
         else:
-            wl[wl < 185] = 185
-            wl[wl > 1700] = 1700
+            wl[wl < 185] = 185  # lgtm [py/modification-of-default-value]
+            wl[wl > 1700] = 1700  # lgtm [py/modification-of-default-value]
         warn(
             "The wavelength range exceeds the interval of 185 to 1700 nm for "
             "which the exact refractive index of air is used. Beyond this "
@@ -435,7 +432,7 @@ def solve_grating_equation(
     pixel_units = s in ["pixel", "px"]
 
     if not non_defined and not pixel_units:
-        warnings.warn(
+        warn(
             "The signal axes are already in {} units (not in pixel units)."
             "The conversion will run anyways.".format(str(axis.units)),
             SyntaxWarning,

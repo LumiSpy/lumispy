@@ -22,7 +22,6 @@ Signal class for transient data (BaseSignal class)
 """
 
 from numpy import isnan
-from warnings import warn
 
 
 class CommonTransient:

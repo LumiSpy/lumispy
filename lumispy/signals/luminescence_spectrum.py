@@ -19,10 +19,7 @@
 """Signal class for Luminescence spectral data (1D).
 """
 import numpy as np
-from inspect import getfullargspec
 from warnings import warn
-from textwrap import indent
-
 
 from hyperspy.signals import Signal1D
 from hyperspy._signals.lazy import LazySignal
@@ -423,7 +420,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         """
 
         # check if laser wavelength is available
-        if laser == None:
+        if laser is None:
             if not self.metadata.has_item("Acquisition_instrument.Laser.wavelength"):
                 raise AttributeError(
                     "Laser wavelength is neither given in the metadata nor passed"
@@ -721,5 +718,3 @@ class LazyLumiSpectrum(LazySignal, LumiSpectrum):
     """**General lazy 1D luminescence signal class.**"""
 
     _lazy = True
-
-    pass

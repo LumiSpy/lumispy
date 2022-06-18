@@ -126,11 +126,12 @@ class CommonLumi:
         if integration_time is None:
             if "exposure" in kwargs:
                 integration_time = kwargs["exposure"]
-                raise DeprecationWarning(
+                warn(
                     "The `exposure` argument was renamed `integration_time` "
-                    "and it will be removed in LumiSpy 1.0."
+                    "and it will be removed in LumiSpy 1.0.",
+                    DeprecationWarning,
                 )
-            if self.metadata.has_item(
+            elif self.metadata.has_item(
                 "Acquisition_instrument.Detector.integration_time"
             ):
                 integration_time = float(
