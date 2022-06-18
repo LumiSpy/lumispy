@@ -1,13 +1,16 @@
 [![Build Status](https://dev.azure.com/Lumispy/lumispy/_apis/build/status/LumiSpy.lumispy?branchName=main)](https://dev.azure.com/Lumispy/lumispy/_build/latest?definitionId=3&branchName=main)
 [![Tests](https://github.com/lumispy/lumispy/workflows/Tests/badge.svg)](https://github.com/lumispy/lumispy/actions)
 [![Codecov Status](https://codecov.io/gh/lumispy/lumispy/branch/main/graph/badge.svg?token=8ZFX8X4Z1I)](https://codecov.io/gh/lumispy/lumispy)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4640445.svg)](https://doi.org/10.5281/zenodo.4640445)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/LumiSpy/lumispy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/LumiSpy/lumispy/context:python)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/LumiSpy/lumispy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/LumiSpy/lumispy/alerts/)
+[![Documentation Status](https://readthedocs.org/projects/lumispy/badge/?version=latest)](https://lumispy.readthedocs.io/en/latest/?badge=latest)
+
 
 [![Python Version](https://img.shields.io/pypi/pyversions/lumispy.svg?style=flat)](https://pypi.python.org/pypi/lumispy)
 [![PyPi Version](http://img.shields.io/pypi/v/lumispy.svg?style=flat)](https://pypi.python.org/pypi/lumispy)
 [![Anaconda Version](https://anaconda.org/conda-forge/lumispy/badges/version.svg)](https://anaconda.org/conda-forge/lumispy)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Documentation Status](https://readthedocs.org/projects/lumispy/badge/?version=latest)](https://lumispy.readthedocs.io/en/latest/?badge=latest)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4640445.svg)](https://doi.org/10.5281/zenodo.4640445)
 
 
 <img src="https://github.com/LumiSpy/lumispy/raw/main/doc/_static/logo_rec_april21.svg" width="300" alt="LumiSpy">

@@ -147,8 +147,6 @@ class LazyCLSpectrum(LazySignal, CLSpectrum):
 
     _lazy = True
 
-    pass
-
 
 """SEM specific signal class for Cathodoluminescence spectral data.
 """
