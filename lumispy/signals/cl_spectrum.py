@@ -21,12 +21,10 @@ Signal class for cathodoluminescence spectral data
 --------------------------------------------------
 """
 
-from inspect import getfullargspec
 import numpy as np
 from warnings import warn
 
 from hyperspy._signals.lazy import LazySignal
-from hyperspy.signal_tools import SpikesRemoval
 
 from lumispy.signals import LumiSpectrum
 

@@ -91,7 +91,7 @@ class TestCommonLumi:
             s5.scale_by_exposure(inplace=True, integration_time=0.5)
         # Deprecation test for exposure argument
         s6 = LumiSpectrum(np.ones((10)))
-        with pytest.raises(DeprecationWarning, match="removed in LumiSpy 1.0"):
+        with pytest.warns(DeprecationWarning, match="removed in LumiSpy 1.0"):
             s6.scale_by_exposure(inplace=True, exposure=0.5)
             assert np.all(s6.data == 2)
 

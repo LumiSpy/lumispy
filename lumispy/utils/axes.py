@@ -15,7 +15,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
-import warnings
 
 import numpy as np
 import scipy.constants as c
@@ -24,9 +23,7 @@ from inspect import getfullargspec
 from copy import deepcopy
 from warnings import warn
 
-from traits import traits
-
-from hyperspy.axes import *
+from hyperspy.axes import DataAxis, FunctionalDataAxis, UniformDataAxis
 
 
 #
@@ -435,7 +432,7 @@ def solve_grating_equation(
     pixel_units = s in ["pixel", "px"]
 
     if not non_defined and not pixel_units:
-        warnings.warn(
+        warn(
             "The signal axes are already in {} units (not in pixel units)."
             "The conversion will run anyways.".format(str(axis.units)),
             SyntaxWarning,
