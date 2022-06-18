@@ -213,8 +213,6 @@ class LazyCLSEMSpectrum(LazySignal, CLSEMSpectrum):
 
     _lazy = True
 
-    pass
-
 
 """STEM specific signal class for Cathodoluminescence spectral data.
 """
@@ -225,12 +223,8 @@ class CLSTEMSpectrum(CLSpectrum):
 
     _signal_type = "CL_STEM"
 
-    pass
-
 
 class LazyCLSTEMSpectrum(LazySignal, CLSTEMSpectrum):
     """**Lazy 1D scanning transmission electron microscopy cathodoluminescence signal class.**"""
 
     _lazy = True
-
-    pass

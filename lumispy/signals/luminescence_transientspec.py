@@ -34,12 +34,8 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
     _signal_type = "TransientSpec"
     _signal_dimension = 2
 
-    pass
-
 
 class LazyLumiTransientSpectrum(LazySignal, LumiTransientSpectrum):
     """**General lazy 2D luminescence signal class (transient/time resolved)**"""
 
     _lazy = True
-
-    pass

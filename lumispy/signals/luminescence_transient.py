@@ -33,12 +33,8 @@ class LumiTransient(Signal1D, CommonTransient):
     _signal_type = "Transient"
     _signal_dimension = 1
 
-    pass
-
 
 class LazyLumiTransient(LazySignal, LumiTransient):
     """**General lazy 1D luminescence signal class (transient/time resolved)**"""
 
     _lazy = True
-
-    pass

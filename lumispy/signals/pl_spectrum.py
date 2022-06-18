@@ -32,12 +32,8 @@ class PLSpectrum(LumiSpectrum):
     _signal_type = "PL"
     _signal_dimension = 1
 
-    pass
-
 
 class LazyPLSpectrum(LazySignal, PLSpectrum):
     """**General lazy 1D photoluminescence signal class**"""
 
     _lazy = True
-
-    pass

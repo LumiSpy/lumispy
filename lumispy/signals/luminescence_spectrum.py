@@ -721,5 +721,3 @@ class LazyLumiSpectrum(LazySignal, LumiSpectrum):
     """**General lazy 1D luminescence signal class.**"""
 
     _lazy = True
-
-    pass
