@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-from inspect import getfullargspec
 from numpy import arange, ones
 from numpy.testing import assert_allclose
 from pytest import raises, mark, skip, warns
@@ -530,22 +529,17 @@ def test_to_raman_shift_laser():
     assert_allclose(S1.data, S2.data, 5e-4)
 
 
-@mark.parametrize(("axis_class"), (DataAxis, UniformDataAxis))
-def test_solve_grating_equation(axis_class):
+def test_solve_grating_equation():
     with warns(SyntaxWarning, match="(not in pixel units)"):
-        axis = axis_class(size=20, offset=200, scale=10, units="nm")
+        axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
         solve_grating_equation(axis, 3, -20, 300, 25, 600, 150)
 
-    if axis_class is UniformDataAxis:
-        axis1 = axis_class(
-            size=10,
-            offset=200,
-            scale=10,
-        )
-        axis2 = axis_class(size=10, offset=200, scale=10, units="px")
-    else:
-        axis1 = axis_class(axis=arange(10) * 10 + 200, units="px")
-        axis2 = axis_class(axis=arange(10) * 10 + 200)
+    axis1 = UniformDataAxis(
+        size=10,
+        offset=200,
+        scale=10,
+    )
+    axis2 = UniformDataAxis(size=10, offset=200, scale=10, units="px")
 
     nm_axis1 = solve_grating_equation(axis1, 3, -20, 300, 25, 600, 150)
     with warns(UserWarning, match="(range exceeds)"):
