@@ -544,8 +544,8 @@ def test_solve_grating_equation(axis_class):
         )
         axis2 = axis_class(size=10, offset=200, scale=10, units="px")
     else:
-        axis1 = axis_class(axis=arange(10)*10+200, units="px")
-        axis2 = axis_class(axis=arange(10)*10+200)
+        axis1 = axis_class(axis=arange(10) * 10 + 200, units="px")
+        axis2 = axis_class(axis=arange(10) * 10 + 200)
 
     nm_axis1 = solve_grating_equation(axis1, 3, -20, 300, 25, 600, 150)
     with warns(UserWarning, match="(range exceeds)"):
