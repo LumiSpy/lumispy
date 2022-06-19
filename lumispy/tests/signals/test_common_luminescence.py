@@ -59,7 +59,7 @@ class TestCommonLumi:
         s2 = LumiTransientSpectrum(np.ones((10, 10, 10, 10)))
         s4 = LumiSpectrum(np.ones((10)))
         s2.metadata.set_item("Acquisition_instrument.Detector.integration_time", 2)
-        s2.metadata.set_item("Signal.quantity", "Intensity (Counts/s)")
+        s2.metadata.set_item("Signal.quantity", "Intensity (Counts)")
         s4.metadata.set_item("Signal.quantity", "Intensity (counts)")
         s1a = s1.scale_by_exposure(integration_time=4)
         s2a = s2.scale_by_exposure()
