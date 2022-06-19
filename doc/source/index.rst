@@ -11,8 +11,12 @@ Welcome to LumiSpy's documentation!
 .. _Tests: https://github.com/lumispy/lumispy/actions
 .. |Codecov_status| image:: https://codecov.io/gh/lumispy/lumispy/branch/main/graph/badge.svg?token=8ZFX8X4Z1I
 .. _Codecov_status: https://codecov.io/gh/lumispy/lumispy
-.. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.4640445.svg
-.. _DOI: https://doi.org/10.5281/zenodo.4640445
+.. |Language_grade| image:: https://img.shields.io/lgtm/grade/python/g/LumiSpy/lumispy.svg?logo=lgtm&logoWidth=18
+.. _Language_grade: https://lgtm.com/projects/g/LumiSpy/lumispy/context:python
+.. |Total_alerts| image:: https://img.shields.io/lgtm/alerts/g/LumiSpy/lumispy.svg?logo=lgtm&logoWidth=18
+.. _Total_alerts: https://lgtm.com/projects/g/LumiSpy/lumispy/alerts/
+.. |Documentation_status| image:: https://readthedocs.org/projects/lumispy/badge/?version=latest
+.. _Documentation_status: https://lumispy.readthedocs.io/en/latest/?badge=latest
 
 .. |Python_version| image:: https://img.shields.io/pypi/pyversions/lumispy.svg?style=flat
 .. _Python_version: https://pypi.python.org/pypi/lumispy
@@ -22,8 +26,8 @@ Welcome to LumiSpy's documentation!
 .. _Anaconda_version: https://anaconda.org/conda-forge/lumispy
 .. |License| image:: https://img.shields.io/badge/License-GPLv3-blue.svg
 .. _License: https://www.gnu.org/licenses/gpl-3.0
-.. |Documentation_status| image:: https://readthedocs.org/projects/lumispy/badge/?version=latest
-.. _Documentation_status: https://lumispy.readthedocs.io/en/latest/?badge=latest
+.. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.4640445.svg
+.. _DOI: https://doi.org/10.5281/zenodo.4640445
 
 **LumiSpy** is a Python package extending the functionality for multi-dimensional
 data analysis provided by the `HyperSpy <https://hyperspy.org/>`_ library. It is

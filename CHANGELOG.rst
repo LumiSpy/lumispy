@@ -11,6 +11,7 @@ UNRELEASED
 Added
 -----
 - Improved documentation.
+- Use [lgtm.com](https://lgtm.com/projects/g/LumiSpy/lumispy/) to check code integrity.
 
 Changed
 -------

@@ -23,7 +23,7 @@ from inspect import getfullargspec
 from copy import deepcopy
 from warnings import warn
 
-from hyperspy.axes import DataAxis, FunctionalDataAxis, UniformDataAxis
+from hyperspy.axes import DataAxis, UniformDataAxis
 
 
 #

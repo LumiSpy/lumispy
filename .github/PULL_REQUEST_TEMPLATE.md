@@ -14,6 +14,7 @@ A few sentences and/or a bulleted list to describe and motivate the change:
 ### Progress of the PR
 - [ ] Change implemented (can be split into several points),
 - [ ] docstring updated (if appropriate),
+- [ ] update user guide (if appropriate),
 - [ ] added tests,
 - [ ] added line to CHANGELOG.md,
 - [ ] ready for review.

@@ -27,6 +27,7 @@ from hyperspy.axes import DataAxis
 
 from lumispy.signals.common_luminescence import CommonLumi
 from lumispy import nm2invcm, to_array, savetxt
+from lumispy.utils.axes import GRATING_EQUATION_DOCSTRING_PARAMETERS
 from lumispy.utils import (
     axis2eV,
     data2eV,
@@ -35,7 +36,6 @@ from lumispy.utils import (
     data2invcm,
     var2invcm,
     solve_grating_equation,
-    GRATING_EQUATION_DOCSTRING_PARAMETERS,
 )
 from lumispy.utils.io import (
     SAVETXT_DOCSTRING,
