@@ -94,6 +94,10 @@ def test_joinspectra_length1():
     assert s.data[-1] == 58
     with raises(ValueError, match="Averaging can not be performed for r=1."):
         s = join_spectra([s1, s2], r=1, average=True, scale=True)
+    s1.axes_manager[0].convert_to_non_uniform_axis()
+    s2.axes_manager[0].convert_to_non_uniform_axis()
+    s = join_spectra([s1, s2], r=1, average=True, scale=True)
+    assert s.data[-1] == 58
 
 
 def test_joinspectra_errors():

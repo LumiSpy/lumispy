@@ -57,11 +57,9 @@ class TestCommonLumi:
     def test_scale_by_exposure(self):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
         s2 = LumiTransientSpectrum(np.ones((10, 10, 10, 10)))
-        s3 = LumiSpectrum(np.ones((10, 10)))
-        s31 = LumiSpectrum(np.ones((10, 10)))
-        s32 = LumiSpectrum(np.ones((10, 10)))
         s4 = LumiSpectrum(np.ones((10)))
         s2.metadata.set_item("Acquisition_instrument.Detector.integration_time", 2)
+        s2.metadata.set_item("Signal.quantity", "Intensity (Counts/s)")
         s4.metadata.set_item("Signal.quantity", "Intensity (counts)")
         s1a = s1.scale_by_exposure(integration_time=4)
         s2a = s2.scale_by_exposure()
@@ -69,6 +67,7 @@ class TestCommonLumi:
         assert np.all(s1a.data == 0.25)
         assert np.all(s2a.data == 0.5)
         assert np.all(s4a.data == 10)
+        assert s2a.metadata.Signal.quantity == "Intensity (Counts/s)"
         assert s4a.metadata.Signal.quantity == "Intensity (counts/s)"
         assert s4a.metadata.Signal.scaled == True
         s1.scale_by_exposure(integration_time=4, inplace=True)
@@ -77,6 +76,7 @@ class TestCommonLumi:
         assert s1 == s1a
         assert s2 == s2a
         assert s4 == s4a
+        assert s2.metadata.Signal.quantity == "Intensity (Counts/s)"
         assert s4.metadata.Signal.quantity == "Intensity (counts/s)"
         # Test for errors
         s4 = LumiSpectrum(np.ones((10)))

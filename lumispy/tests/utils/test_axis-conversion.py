@@ -530,25 +530,22 @@ def test_to_raman_shift_laser():
     assert_allclose(S1.data, S2.data, 5e-4)
 
 
-def test_solve_grating_equation():
-    # Check which version of hyperspy is installed
-    if "scale" in getfullargspec(DataAxis)[0]:
-        axis_class = DataAxis
-    else:
-        from hyperspy.axes import UniformDataAxis
-
-        axis_class = UniformDataAxis
-
+@mark.parametrize(("axis_class"), (DataAxis, UniformDataAxis))
+def test_solve_grating_equation(axis_class):
     with warns(SyntaxWarning, match="(not in pixel units)"):
         axis = axis_class(size=20, offset=200, scale=10, units="nm")
         solve_grating_equation(axis, 3, -20, 300, 25, 600, 150)
 
-    axis1 = axis_class(
-        size=10,
-        offset=200,
-        scale=10,
-    )
-    axis2 = axis_class(size=10, offset=200, scale=10, units="px")
+    if axis_class is UniformDataAxis:
+        axis1 = axis_class(
+            size=10,
+            offset=200,
+            scale=10,
+        )
+        axis2 = axis_class(size=10, offset=200, scale=10, units="px")
+    else:
+        axis1 = axis_class(axis=arange(10)*10+200, units="px")
+        axis2 = axis_class(axis=arange(10)*10+200)
 
     nm_axis1 = solve_grating_equation(axis1, 3, -20, 300, 25, 600, 150)
     with warns(UserWarning, match="(range exceeds)"):
