@@ -210,14 +210,11 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 if jacobian:
                     # if variance is a numeric value, cast into signal object
                     if isinstance(var, (float, int)):
-                        self.set_noise_variance(
-                            self._deepcopy_with_new_data(
-                                np.ones(self.data.shape) * var,
-                                copy_variance=False,
-                                copy_learning_results=False,
-                            )
+                        var = self._deepcopy_with_new_data(
+                            np.ones(self.data.shape) * var,
+                            copy_variance=False,
+                            copy_learning_results=False,
                         )
-                        var = self.get_noise_variance()
                     # convert
                     s2var = s2._deepcopy_with_new_data(
                         var2eV(
@@ -364,14 +361,11 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 if jacobian:
                     # if variance is a numeric value, cast into signal object
                     if isinstance(var, (float, int)):
-                        self.set_noise_variance(
-                            self._deepcopy_with_new_data(
-                                np.ones(self.data.shape) * var,
-                                copy_variance=False,
-                                copy_learning_results=False,
-                            )
+                        var = self._deepcopy_with_new_data(
+                            np.ones(self.data.shape) * var,
+                            copy_variance=False,
+                            copy_learning_results=False,
                         )
-                        var = self.get_noise_variance()
                     s2var = s2._deepcopy_with_new_data(
                         var2invcm(
                             var.isig[::-1].data,

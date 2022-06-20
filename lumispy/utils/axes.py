@@ -357,10 +357,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                     kind=kind,
                 )
                 length1 = axis.axis[ind1 - r : ind1 + 1].size
-                if length1 == 1:
-                    grad1 = 0
-                else:
-                    grad1 = 0.5 / (length1 - 1)
+                grad1 = 0.5 / (length1 - 1)
                 vect1 = np.arange(length1)
                 length2 = axis2.axis[ind2 : ind2 + r].size
                 if length2 == 1:
@@ -481,10 +478,7 @@ def solve_grating_equation(
     # Create axis object to return
     scale = (l_max - l_min) / ch
 
-    if "scale" in getfullargspec(DataAxis)[0]:
-        axis_class = DataAxis
-    else:
-        axis_class = UniformDataAxis
+    axis_class = UniformDataAxis
 
     axis_nm = axis_class(
         scale=scale,
