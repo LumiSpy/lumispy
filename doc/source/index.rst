@@ -1,9 +1,9 @@
 Welcome to LumiSpy's documentation!
 ***********************************
 
-|Build_status|_ |Tests|_ |Codecov_status|_ |DOI|_
+|Build_status|_ |Tests|_ |Codecov_status|_ |Language_grade|_ |Total_alerts|_ |Documentation_status|_
 
-|Python_version|_ |PyPI_version|_ |Anaconda_version|_ |License|_ |Documentation_status|_
+|Python_version|_ |PyPI_version|_ |Anaconda_version|_ |License|_ |DOI|_
 
 .. |Build_status| image:: https://dev.azure.com/Lumispy/lumispy/_apis/build/status/LumiSpy.lumispy?branchName=main
 .. _Build_status: https://dev.azure.com/Lumispy/lumispy/_build/latest?definitionId=3&branchName=main
