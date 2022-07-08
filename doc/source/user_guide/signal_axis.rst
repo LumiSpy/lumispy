@@ -98,7 +98,7 @@ then :math:`E=hc/\lambda` implies
 .. math ::
 
     I(E) = I(\lambda)\frac{d\lambda}{dE} = I(\lambda)\frac{d}{dE}
-    \frac{h c}{\lambda} = - I(\lambda) \frac{h c}{E^2}
+    \frac{h c}{E} = - I(\lambda) \frac{h c}{E^2}
 
 The minus sign just reflects the different directions of integration in
 the wavelength and energy domains. The same argument holds for the conversion
