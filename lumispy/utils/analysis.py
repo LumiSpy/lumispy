@@ -1,4 +1,6 @@
 import hyperspy.drawing.widgets
+import hyperspy.roi
+import numpy as np
 
 
 class AutoPeakMap:
@@ -50,35 +52,33 @@ class AutoPeakMap:
                 
         self._aximages = {}
         
-        self._nav_bg = None
+        self._sig_bg = None
         
-        for channel in channels:
+    def plot_nav(self):
+        self.nav.plot()
+        nav_plot = self.nav._plot.signal_plot
+        
+        for channel in self.channels:
             if not channel.widget:
-                channel.create_widget(self.nav.axes_manager)
+                channel.create_widget(self.nav.axes_manager, nav_plot.ax)
 
             def cb(obj, changed_channel=channel):  # late binding nonsense!
                 return self._channel_changed(changed_channel=changed_channel)
             
             channel.widget.events.changed.connect(cb)
-        
-    def plot_nav(self):
-        self.nav.plot()
-        signal_plot = self.nav._plot.signal_plot
-        
-        for channel in self.channels:
-            channel.widget.set_mpl_ax(signal_plot.ax)        
-        
+                
     def plot_signal(self):
         self.peakmap.plot(navigator_kwds=dict(colorbar=False, scalebar_color='k'))
-        nav_plot = self.peakmap._plot.navigator_plot
-        self._nav_bg = nav_plot.figure.canvas.copy_from_bbox(nav_plot.figure.bbox)
+        sig_plot = self.peakmap._plot.navigator_plot
+        
+        self._sig_bg = sig_plot.figure.canvas.copy_from_bbox(sig_plot.figure.bbox)
         
         sigs = [channel(self.hs) for channel in self.channels]
         
         for channel in self.channels:
             self._plot_channel(channel)
             
-        nav_plot.figure.canvas.mpl_connect("draw_event", self._on_sig_draw)
+        sig_plot.figure.canvas.mpl_connect("draw_event", self._on_sig_draw)
         
     def plot(self):
         self.plot_nav()
@@ -105,13 +105,17 @@ class AutoPeakMap:
         if event is not None:
             if event.canvas != cv:
                 raise RuntimeError
-        self._nav_bg = cv.copy_from_bbox(cv.figure.bbox)
+        self._sig_bg = cv.copy_from_bbox(cv.figure.bbox)
     
     def _channel_changed(self, changed_channel):
+        # this can trigger before the peakmap is actually rendered.
+        if self.peakmap._plot is None:
+            return
+        
         fig = self.peakmap._plot.navigator_plot.figure
         ax = self.peakmap._plot.navigator_plot.ax
         
-        fig.canvas.restore_region(self._nav_bg)
+        fig.canvas.restore_region(self._sig_bg)
         
         changed_aximage = self._aximages[changed_channel]
         
@@ -178,13 +182,14 @@ class RangeChannel:
     def widget(self):
         return self._widget
         
-    def create_widget(self, am):
+    def create_widget(self, am, ax):
         """        
         Create a widget for this channel that is associated with the provided axes_manager
         
         Arguments
         ---------
         am: hyperspy.axes_manager
+        ax: matplotlib ax to plot the widget on
         
         Returns
         -------
@@ -199,9 +204,12 @@ class RangeChannel:
                                                       useblit=True, 
                                                       color=f'tab:{self.colour}',
                                                       direction='horizontal')
+        
+        widget.set_mpl_ax(ax)        
+        
         left, right = self._default_range
-        widget.set_bounds(x=left, width=right - left)
-
+        widget.set_bounds(left=left, right=right)
+        
         self._widget = widget
         return widget
         
@@ -211,7 +219,7 @@ class RangeChannel:
         The current range the widget will slice over. In axes units e.g. wavelength.
         """
         if self.widget is None:
-            return self.default_range
+            return self._default_range
         else:
             return self.widget._get_range()  
             
@@ -245,16 +253,6 @@ class RangeChannel:
     
 
 def plot_auto_peakmap(hs, nranges=1, thresh=0.2):
-    """
-    Plot an `AutoPeakMap` - for seeing the spatial distribution of peaks.
-    
-    Arguments
-    ---------
-    nranges: int
-        number of ranges/ channels to view your hs map through.
-    thresh: float
-        threshold value, below which a channel shows no colour.
-    """
     lo, hi = hs.axes_manager.signal_axes[0].axis[[0, -1]]
     width = ((hi - lo) // (nranges * 2))
     
@@ -266,6 +264,7 @@ def plot_auto_peakmap(hs, nranges=1, thresh=0.2):
                                      thresh=thresh,
                                      alpha=1 / nranges,
                                      zorder=i))
+        
     
     apm = AutoPeakMap(hs, *channels)
     apm.plot()
