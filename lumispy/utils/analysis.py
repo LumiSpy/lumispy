@@ -59,26 +59,25 @@ class AutoPeakMap:
         nav_plot = self.nav._plot.signal_plot
         
         for channel in self.channels:
-            if not channel.widget:
-                channel.create_widget(self.nav.axes_manager, nav_plot.ax)
+            if not channel.roi:
+                channel.create_roi(self.nav)
 
-            def cb(obj, changed_channel=channel):  # late binding nonsense!
+            def cb(roi, changed_channel=channel):  # late binding nonsense!
                 return self._channel_changed(changed_channel=changed_channel)
             
-            channel.widget.events.changed.connect(cb)
+            channel.roi.events.changed.connect(cb)
                 
     def plot_signal(self):
         self.peakmap.plot(navigator_kwds=dict(colorbar=False, scalebar_color='k'))
         sig_plot = self.peakmap._plot.navigator_plot
         
         self._sig_bg = sig_plot.figure.canvas.copy_from_bbox(sig_plot.figure.bbox)
+        sig_plot.figure.canvas.mpl_connect("draw_event", self._on_sig_draw)
         
         sigs = [channel(self.hs) for channel in self.channels]
         
         for channel in self.channels:
             self._plot_channel(channel)
-            
-        sig_plot.figure.canvas.mpl_connect("draw_event", self._on_sig_draw)
         
     def plot(self):
         self.plot_nav()
@@ -120,20 +119,21 @@ class AutoPeakMap:
         changed_aximage = self._aximages[changed_channel]
         
         changed_aximage.set_data(changed_channel(self.hs))
+
+        for channel in self.channels:
+            try:
+                self._aximages[channel].remove()
+            except ValueError:
+                pass
         
         for channel in self.channels: # I feel like this is possible without redrawing everything...
-            
             aximage = self._aximages[channel]
             
             aximage.set_zorder(channel.zorder)
-            
             ax.draw_artist(aximage)
-
         
         fig.canvas.blit(fig.bbox)
         fig.canvas.flush_events()
-        
-        
 
         
 class RangeChannel:
@@ -160,8 +160,8 @@ class RangeChannel:
     
     Attibutes
     ---------
-    widget: hyperspy.drawing.widgets.RangeWidget
-        `RangeWidget` rendered on `AutoPeakMap.nav` to represent this range. Only one instance is allowed, maybe this is too strict, but it's very confusing to me if there's more than one!
+    roi: hyperspy.drawing.widgets.RangeWidget
+        `SpanROI` rendered on `AutoPeakMap.nav` to represent this range. Only one instance is allowed, maybe this is too strict, but it's very confusing to me if there's more than one!
     """
     
     def __init__(self, colour, range_, thresh=0.2, alpha=0.5, zorder=None, cmap=None):
@@ -176,15 +176,19 @@ class RangeChannel:
         
         self.cmap = cmap
         
-        self._widget = None
+        self._roi = None
+        
+    def __repr__(self):
+        left, right = self.range_
+        return f'<RangeChannel left={left} right={right} roi={self._roi}'
         
     @property
-    def widget(self):
-        return self._widget
+    def roi(self):
+        return self._roi
         
-    def create_widget(self, am, ax):
+    def create_roi(self, nav):
         """        
-        Create a widget for this channel that is associated with the provided axes_manager
+        Create a roi for this channel that is associated with the provided axes_manager
         
         Arguments
         ---------
@@ -193,43 +197,36 @@ class RangeChannel:
         
         Returns
         -------
-        widget: hyperspy.drawing.widgets.RangeWidget
-            range widget for this channel.
+        roi: hyperspy.roi.SpanROI
+            SpanROI for this channel.
         """    
         
-        if self.widget:
-            raise AttributeError("Widget associated with this channel instance has already been created, please use a reference to this instead!")
-        
-        widget = hyperspy.drawing.widgets.RangeWidget(am, 
-                                                      useblit=True, 
-                                                      color=f'tab:{self.colour}',
-                                                      direction='horizontal')
-        
-        widget.set_mpl_ax(ax)        
+        if self.roi:
+            raise AttributeError("ROI associated with this channel instance has already been created, please use a reference to this instead!")
         
         left, right = self._default_range
-        widget.set_bounds(left=left, right=right)
+        roi = hyperspy.roi.SpanROI(left=left, right=right)
         
-        self._widget = widget
-        return widget
+        roi.interactive(nav, color=f'tab:{self.colour}')
+        
+        self._roi = roi
+        return roi
         
     @property
     def range_(self):
         """
-        The current range the widget will slice over. In axes units e.g. wavelength.
+        The current range the ROI will slice over. In axes units e.g. wavelength.
         """
-        if self.widget is None:
+        if self.roi is None:
             return self._default_range
         else:
-            return self.widget._get_range()  
+            return self.roi.left, self.roi.right
             
     def slice_sig(self, sig):
         """
         Slice a signal accordig to the current range for this channel.
         """
-        
-        left, right = self.range_
-        counts = sig.isig[left:right].sum(axis=-1).data
+        counts = self.roi(sig, axes=[-1]).sum(axis=-1).data
         
         return self.normalize_slice(counts)
             
@@ -250,7 +247,6 @@ class RangeChannel:
         norm_counts[mask] = np.nan
         return norm_counts
 
-    
 
 def plot_auto_peakmap(hs, nranges=1, thresh=0.2):
     lo, hi = hs.axes_manager.signal_axes[0].axis[[0, -1]]
