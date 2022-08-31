@@ -3,7 +3,7 @@ import hyperspy.roi
 import numpy as np
 
 
-class AutoPeakMap:
+class SpanMap:
     """
     A class for interactively seeing how the intensity of a hyperspectral map vary over different ranges.
     
@@ -19,8 +19,8 @@ class AutoPeakMap:
     ---------
     hs: hyperspy.signals.Signal1D 
         hyperspectra to analyse. Is intended to be of the form <BaseSignal x, y| sig>
-    channels: *RangeChannel
-        a number of RangeChannels to slice up and view `hs` via.
+    channels: *SpanChannel
+        a number of SpanChannels to slice up and view `hs` via.
         
         
     Attributes
@@ -29,8 +29,8 @@ class AutoPeakMap:
         'navigator' used to interactively set the range of each channel. Will be of the form `<BaseSignal | sig>`
     peakmap: hyperspy.signals.Signal1D
         Map showing the intensities of each channel at each pixel position. Intensities are normalised to the maximum within that channel. Will be of the form `<BaseSignal |x, y>`.
-    channels: [RangeChannel]
-        list of channels displayed in this `AutoPeakMap`.
+    channels: [SpanChannel]
+        list of channels displayed in this `SpanMap`.
         
     Examples
     --------
@@ -52,6 +52,7 @@ class AutoPeakMap:
                 
         self._aximages = {}
         
+        # for blitting, see https://matplotlib.org/stable/tutorials/advanced/blitting.html
         self._sig_bg = None
         
     def plot_nav(self):
@@ -90,7 +91,7 @@ class AutoPeakMap:
                                                     cmap=channel.cmap,
                                                     zorder=channel.zorder,
                                                     vmin=0, vmax=1)
-        
+
         self._aximages[channel] = aximage
         
     def _on_sig_draw(self, event):
@@ -114,19 +115,22 @@ class AutoPeakMap:
         fig = self.peakmap._plot.navigator_plot.figure
         ax = self.peakmap._plot.navigator_plot.ax
         
+        # draws the background
         fig.canvas.restore_region(self._sig_bg)
         
         changed_aximage = self._aximages[changed_channel]
         
         changed_aximage.set_data(changed_channel(self.hs))
 
+        # remove the maps, stops strange transparent things happening... I think!
         for channel in self.channels:
             try:
                 self._aximages[channel].remove()
             except ValueError:
                 pass
         
-        for channel in self.channels: # I feel like this is possible without redrawing everything...
+        # I feel like this is possible without redrawing everything...
+        for channel in self.channels: 
             aximage = self._aximages[channel]
             
             aximage.set_zorder(channel.zorder)
@@ -136,9 +140,9 @@ class AutoPeakMap:
         fig.canvas.flush_events()
 
         
-class RangeChannel:
+class SpanChannel:
     """
-    Range channel for AutoPeakMap plots.
+    Span Channel for SpanMap plots.
     
     A channel represents a colour in the auto_peak_map and a range of wavelengths/ energies to slice hyperspectra with.
     
@@ -146,27 +150,27 @@ class RangeChannel:
     ---------
     
     colour: {'red', 'green', 'blue'}
-        Colour used to represent this channel in `AutoPeakMap.peakmap`. Should be one of {'red', 'green', 'blue'}.
+        Colour used to represent this channel in `SpanMap.peakmap`. Should be one of {'red', 'green', 'blue'}.
     range_: [lo, hi]
-        initial range the `RangeChannel` slices over. These are in the same units as `AutoPeakMap.hs.signal_axes[0].axis`. e.g. wavelengths or energy.
+        initial range the `SpanChannel` slices over. These are in the same units as `SpanMap.hs.signal_axes[0].axis`. e.g. wavelengths or energy.
     thresh: float
         threshold value below which no colour is plotted for a given position. Default is `0.3`.
     alpha: float
-        level of transparency when colourmap is plotted in `AutoPeakMap.peakmap`.
+        level of transparency when colourmap is plotted in `SpanMap.peakmap`.
     zorder: float
-        zposition when colourmap is plotted in `AutoPeakMap.peakmap`.
+        zposition when colourmap is plotted in `SpanMap.peakmap`.
     cmap: str | matplotlib.colors.Colormap
-        colourmap used to render this RangeChannel in `AutoPeakMap.peakmap`. Defaults to `f'{colour.capitalize()}s'` e.g. `red -> Reds`.
+        colourmap used to render this SpanChannel in `SpanMap.peakmap`. Defaults to `f'{colour.capitalize()}s'` e.g. `red -> Reds`.
     
     Attibutes
     ---------
-    roi: hyperspy.drawing.widgets.RangeWidget
-        `SpanROI` rendered on `AutoPeakMap.nav` to represent this range. Only one instance is allowed, maybe this is too strict, but it's very confusing to me if there's more than one!
+    roi: hyperspy.roi.SpanROI
+        `SpanROI` rendered on `SpanMap.nav` to represent this range. Only one instance is allowed, maybe this is too strict, but it's very confusing to me if there's more than one!
     """
     
-    def __init__(self, colour, range_, thresh=0.2, alpha=0.5, zorder=None, cmap=None):
+    def __init__(self, colour, left, right, thresh=0.2, alpha=0.5, zorder=None, cmap=None):
         self.colour = colour
-        self._default_range = range_
+        self._default_span = [left, right]
         self.thresh = thresh
         self.alpha = alpha
         self.zorder = zorder
@@ -179,8 +183,7 @@ class RangeChannel:
         self._roi = None
         
     def __repr__(self):
-        left, right = self.range_
-        return f'<RangeChannel left={left} right={right} roi={self._roi}'
+        return f'<SpanChannel left={self.left} right={self.right} roi={self.roi}'
         
     @property
     def roi(self):
@@ -192,8 +195,8 @@ class RangeChannel:
         
         Arguments
         ---------
-        am: hyperspy.axes_manager
-        ax: matplotlib ax to plot the widget on
+        nav: hyperspy.signals.Signal1D
+            'navigator' this span will draw onto.
         
         Returns
         -------
@@ -204,7 +207,7 @@ class RangeChannel:
         if self.roi:
             raise AttributeError("ROI associated with this channel instance has already been created, please use a reference to this instead!")
         
-        left, right = self._default_range
+        left, right = self._default_span
         roi = hyperspy.roi.SpanROI(left=left, right=right)
         
         roi.interactive(nav, color=f'tab:{self.colour}')
@@ -213,15 +216,32 @@ class RangeChannel:
         return roi
         
     @property
-    def range_(self):
+    def left(self):
         """
-        The current range the ROI will slice over. In axes units e.g. wavelength.
+        left side the ROI will slice over. In axes units e.g. wavelength.
         """
         if self.roi is None:
-            return self._default_range
+            return self._default_range[0]
         else:
-            return self.roi.left, self.roi.right
-            
+            return self.roi.left
+
+    @property
+    def right(self):
+        """
+        right side the ROI will slice over. In axes units e.g. wavelength.
+        """
+        if self.roi is None:
+            return self._default_range[1]
+        else:
+            return self.roi.right
+
+    @property
+    def bounds(self):
+        """
+        bounds side the ROI will slice over. In axes units e.g. wavelength.
+        """
+        return self.left, self.right
+
     def slice_sig(self, sig):
         """
         Slice a signal accordig to the current range for this channel.
@@ -238,7 +258,7 @@ class RangeChannel:
         
     def normalize_slice(self, counts):
         """
-        Take slice (typically from `self.slice_sig`) then normalise it for rendering in `AutoPeakMap.peakmap`.
+        Take slice (typically from `self.slice_sig`) then normalise it for rendering in `SpanMap.peakmap`.
         
         Default behaviour is to divide by the maximum found in `counts`, then set any values below `self.thresh` to `np.nan`.
         """
@@ -248,20 +268,36 @@ class RangeChannel:
         return norm_counts
 
 
-def plot_auto_peakmap(hs, nranges=1, thresh=0.2):
+def plot_span_map(hs, nchannels=1, thresh=0.2):
+    """
+    Convenience function for creating a SpanMap - a map where regions of a the signal in a hyperspectra can be selected using spans, and
+    a map where integrating intensity of those spans is plotted as a function of position.
+
+    Arguments
+    ---------
+    nchannels: int
+        number of `SpanChannel`s to plot.
+    thresh: float
+        Threshold value where normalised integrated intensity for a given channel is plotted as fully transparent.
+
+    Notes
+    -----
+    For finer control of the plot, use the `SpanMap` and `SpanChannel` classes directly
+
+    """
     lo, hi = hs.axes_manager.signal_axes[0].axis[[0, -1]]
-    width = ((hi - lo) // (nranges * 2))
+    width = ((hi - lo) / (nchannels * 2))
     
     channels = []
     
-    for i, colour in zip(range(nranges), AutoPeakMap.colours):
-        channels.append(RangeChannel(colour, 
-                                     range_=[lo + i * width, (lo + (i + 1) * width) - 1], 
+    for i, colour in zip(range(nchannels), SpanMap.colours):
+        channels.append(SpanChannel(colour, 
+                                     left=lo + i * width, 
+                                     right=(lo + (i + 1) * width) - 1, 
                                      thresh=thresh,
-                                     alpha=1 / nranges,
+                                     alpha=1 / nchannels,
                                      zorder=i))
-        
     
-    apm = AutoPeakMap(hs, *channels)
+    apm = SpanMap(hs, *channels)
     apm.plot()
     return apm
