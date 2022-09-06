@@ -257,10 +257,6 @@ class LumiSpectrum(Signal1D, CommonLumi):
         inplace : boolean
             If `False`, a new signal object is created and returned. Otherwise
             (default) the operation is performed on the existing signal object.
-        jacobian : boolean
-            The default is to do the Jacobian transformation (recommended at
-            least for luminescence signals), but the transformation can be
-            suppressed by setting this option to `False`.
         """
 
     TO_INVCM_EXAMPLE = """
@@ -277,6 +273,10 @@ class LumiSpectrum(Signal1D, CommonLumi):
         (cm^-1). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
         %s
+        jacobian : boolean
+            The default is to do the Jacobian transformation (recommended at
+            least for luminescence signals), but the transformation can be
+            suppressed by setting this option to `False`.
         %s
         """
 
@@ -400,9 +400,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
         >>> S1.to_invcm(laser=325)
     """
 
-    def to_invcm_relative(self, laser=None, inplace=True, jacobian=True):
+    def to_invcm_relative(self, laser=None, inplace=True, jacobian=False):
         """Converts signal axis of 1D signal to non-linear wavenumber axis
-        (cm^-1) relative to the exciting laser wavelength (Stokes/Anti-Stokes
+        (cm^-1) relative to the exciting laser wavelength (Raman/Stokes
         shift). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
         %s
@@ -410,6 +410,10 @@ class LumiSpectrum(Signal1D, CommonLumi):
             Laser wavelength in the same units as the signal axis. If None
             (default), checks if it is stored in
             `metadata.Acquisition_instrument.Laser.wavelength`.
+        jacobian : boolean
+            The default is not to do the Jacobian transformation for Raman
+            shifts, but the transformation can be activated by setting this
+            option to `True`.
         %s
         """
 
@@ -441,6 +445,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
             invcmlaser = nm2invcm(laser)
         absaxis = invcmaxis.axis[::-1]
         invcmaxis.axis = invcmlaser - absaxis
+        invcmaxis.name = "Raman Shift"
 
         # replace signal axis after conversion
         # in place conversion (using absolute scale for Jacobian)
@@ -449,6 +454,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
             self.axes_manager.set_axis(
                 invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
             )
+            self.data = self.isig[::-1].data
             # replace variance axis
             if self.metadata.has_item(
                 "Signal.Noise_properties.variance"
@@ -456,18 +462,25 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 self.metadata.Signal.Noise_properties.variance.axes_manager.set_axis(
                     invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
                 )
+                self.metadata.Signal.Noise_properties.variance.data = (
+                    self.metadata.Signal.Noise_properties.variance.isig[::-1].data
+                )
         # create and return new signal
         else:
             s2 = self.to_invcm(inplace=inplace, jacobian=jacobian)
             s2.axes_manager.set_axis(
                 invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
             )
+            s2.data = s2.isig[::-1].data
             # replace variance axis
             if s2.metadata.has_item(
                 "Signal.Noise_properties.variance"
             ) and not isinstance(s2.get_noise_variance(), (float, int)):
                 s2.metadata.Signal.Noise_properties.variance.axes_manager.set_axis(
                     invcmaxis, s2.axes_manager.signal_axes[0].index_in_axes_manager
+                )
+                s2.metadata.Signal.Noise_properties.variance.data = (
+                    s2.metadata.Signal.Noise_properties.variance.isig[::-1].data
                 )
             return s2
 
