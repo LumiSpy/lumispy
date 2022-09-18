@@ -16,6 +16,7 @@ Added
 Changed
 -------
 - `s.remove_negative` now defaults to `inplace=False` (previously `True`)
+- `s.crop_edges` now takes 1,2 or 4 values as input (can crop each axis independently) and also accepts percentages.
 
 2022-04-29 - version 0.2
 ========================
