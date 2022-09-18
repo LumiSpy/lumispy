@@ -24,7 +24,7 @@ from lumispy.signals import LumiSpectrum
 
 class TestCommonLumi:
     @mark.parametrize("range, output", [(2, (6,6)), ((2,4), (6,2)), ((1,2,3,4), (6,4)), ((1,2,3), ()), ((1,2,3,4,5), ()), ('s', ()),])
-    def test_crop_edges(range, output):
+    def test_crop_edges(self, range, output):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
         
         # Check for bad input range
@@ -42,14 +42,14 @@ class TestCommonLumi:
             assert s1.axes_manager.navigation_shape[0] == output[0] 
             assert s1.axes_manager.navigation_shape[1] == output[1]
 
-    def test_crop_percent():
+    def test_crop_percent(self):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
         s2 = s1.crop_edges(crop_range= 0.1, crop_units='percent')
         assert s1.axes_manager.navigation_shape[0] == 8
         assert s2.axes_manager.navigation_shape[1] == 8
 
     @mark.parametrize("units", ['pixel', 'px', 'PIXEL', 'percent', '%', 'nm'])
-    def test_crop_edges_units(units):
+    def test_crop_edges_units(self, units):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
 
         # Check for bad units
@@ -57,14 +57,14 @@ class TestCommonLumi:
             with raises(ValueError, match='crop_units only accepts'):
                 s1.crop_edges(crop_range=1, crop_units=units)
     
-    def test_crop_edges_metadata():
+    def test_crop_edges_metadata(self):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
         s1 = s1.crop_edges(crop_range=2)
         assert s1.metadata.Signal.cropped_edges == (2,2,2,2)
         s1 = s1.crop_edges(crop_range=2)
         assert s1.metadata.Signal.cropped_edges == (4,4,4,4)
 
-    def test_crop_edges_too_far():
+    def test_crop_edges_too_far(self):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
         with warns(WarningMessage, match="The pixels to"):
             s1 = s1.crop_edges(crop_range=6)
