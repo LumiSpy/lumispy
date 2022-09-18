@@ -21,8 +21,9 @@ Signal class for luminescence data (BaseSignal class)
 -----------------------------------------------------
 """
 
+from logging import warning
 from numpy import isnan, array
-from warnings import WarningMessage, warn
+from warnings import warn
 
 
 class CommonLumi:
@@ -45,6 +46,7 @@ class CommonLumi:
         signal_cropped : CommonLuminescence
             A smaller cropped CL signal object.
         """
+
         units_accepted = ('px', 'pixel', 'percent', '%')
         if crop_units.lower() not in units_accepted:
             raise ValueError(
@@ -59,7 +61,8 @@ class CommonLumi:
             crop_vals = [crop_range] * 4
         elif crop_range_type is tuple:
             if len(crop_range) == 2:
-                crop_vals = list(crop_range) * 2, 
+                crop_vals = list(crop_range) * 2,
+                crop_vals = crop_vals[0] 
             elif len(crop_range) == 4:
                 crop_vals = list(crop_range)
             else:
@@ -71,22 +74,26 @@ class CommonLumi:
                 f"The crop_range value must be a number or a tuple, not a {crop_range_type}"
             )
 
-        crop_vals = array(crop_vals)
+        # Negative means reverse indexing
+        crop_vals = array(crop_vals) * [1,-1,-1,1]
 
         # Convert percentages to pixel units
-        if crop_units.lower() in units_accepted[:-2]:
+        if crop_units.lower() in units_accepted[-2:]:
             crop_vals = crop_vals * array([w,h]*2)
-            crop_vals.astype(int)
+            crop_vals = crop_vals.astype(int)
 
+        # Remove 0 for None
+        crop_vals = [x if x != 0 else None for x in crop_vals]
+        
         # Crop accordingly
         signal_cropped = self.inav[
-                crop_vals[0] : w - crop_vals[2] + 1, crop_vals[3] : h - crop_vals[1] + 1
+                crop_vals[0] : crop_vals[2], crop_vals[3] : crop_vals[1]
             ]
         
         # Check if cropping went too far
-        if 0 in self.axes_manager.navigation_shape:
-            warn.warn(
-                "The pixels to be cropped surpassed the width/height of the signal navigation axes.", WarningMessage,
+        if 0 in signal_cropped.axes_manager.navigation_shape:
+            warn(
+                "The pixels to be cropped surpassed the width/height of the signal navigation axes.", UserWarning,
             )           
 
         # Store transformation in metadata (or update the value if already previously transformed)
