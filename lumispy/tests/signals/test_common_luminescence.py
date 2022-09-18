@@ -17,29 +17,28 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 import numpy as np
-from pytest import raises, mark, skip, warns
+from pytest import raises, mark, warns
 from warnings import WarningMessage
-from lumispy.signals import LumiSpectrum, LumiTransientSpectrum
+from lumispy.signals import LumiSpectrum
 
 
 class TestCommonLumi:
-    @mark.parametrize(("crop_range, output"), ((2, (6,6)), ((2,4), (6,2)), ((1,2,3,4), (6,4)), ((1,2,3), ()), ((1,2,3,4,5), ()), ('s', ()),))
-    def test_crop_edges(crop_range, output):
+    @mark.parametrize("range, output", [(2, (6,6)), ((2,4), (6,2)), ((1,2,3,4), (6,4)), ((1,2,3), ()), ((1,2,3,4,5), ()), ('s', ()),])
+    def test_crop_edges(range, output):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
-        s2 = LumiTransientSpectrum(np.ones((10, 10, 10, 10)))
         
         # Check for bad input range
-        if type(crop_range) not in (int, float, tuple):
+        if type(range) not in (int, float, tuple):
             with raises(ValueError, match='value must be a number or a tuple'):
-                s1.crop_edges(crop_range)
+                s1.crop_edges(range)
 
-        elif type(crop_range) == tuple:
-            if len(crop_range) not in (1,2,4):
+        elif type(range) == tuple:
+            if len(range) not in (1,2,4):
                 with raises(ValueError, match='tuple must be either a'):
-                    s1.crop_edges(crop_range)
+                    s1.crop_edges(range)
 
         else:
-            s1 = s1.crop_edges(crop_range)
+            s1 = s1.crop_edges(range)
             assert s1.axes_manager.navigation_shape[0] == output[0] 
             assert s1.axes_manager.navigation_shape[1] == output[1]
 
@@ -49,14 +48,14 @@ class TestCommonLumi:
         assert s1.axes_manager.navigation_shape[0] == 8
         assert s2.axes_manager.navigation_shape[1] == 8
 
-    @mark.parametrize(("crop_units"), ('pixel', 'px', 'PIXEL', 'percent', '%', 'nm'))
-    def test_crop_edges_units(crop_units):
+    @mark.parametrize("units", ['pixel', 'px', 'PIXEL', 'percent', '%', 'nm'])
+    def test_crop_edges_units(units):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
 
         # Check for bad units
-        if crop_units.lower() not in ('px', 'pixel', 'percent', '%'):
+        if units.lower() not in ('px', 'pixel', 'percent', '%'):
             with raises(ValueError, match='crop_units only accepts'):
-                s1.crop_edges(crop_range=1, crop_units=crop_units)
+                s1.crop_edges(crop_range=1, crop_units=units)
     
     def test_crop_edges_metadata():
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
