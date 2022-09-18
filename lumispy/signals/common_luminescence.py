@@ -21,47 +21,74 @@ Signal class for luminescence data (BaseSignal class)
 -----------------------------------------------------
 """
 
-from numpy import isnan
-from warnings import warn
+from numpy import isnan, array
+from warnings import WarningMessage, warn
 
 
 class CommonLumi:
     """**General luminescence signal class (dimensionless)**"""
 
-    def crop_edges(self, crop_px):
+    def crop_edges(self, crop_range, crop_units='px'):
         """Crop the amount of pixels from the four edges of the scanning
-        region, from out the edges inwards.
+        region, from out the edges inwards. Cropping can happen uniformily or by specifying the croping range for each axis or each side.
 
         Parameters
         ----------
-        crop_px : int
-            Amount of pixels to be cropped on each side individually.
+        crop_range : int, tuple
+            Amount of pixels to be cropped. If an integer or a 1-tuple is passed, all sides are cropped by the same amount. If a 2-tuple is passed (crop_x, crop_y), a different amount of pixels is cropped from the x and y directions, respectively. If a 4-tuple is passed (crop_left, crop_bottom, crop_right, crop_top), a different amount of pixels is cropped from each edge individually.
+
+        crop_units : str
+            Select in which units cropping happens. It can be in pixel units (default), or in `percent`/`%` units.
 
         Returns
         -------
         signal_cropped : CommonLuminescence
-            A smaller cropped CL signal object. If inplace is True, the original
-            object is modified and no LumiSpectrum is returned.
+            A smaller cropped CL signal object.
         """
 
-        width = self.axes_manager.shape[0]
-        height = self.axes_manager.shape[1]
+        w = self.axes_manager.shape[0]
+        h = self.axes_manager.shape[1]
+        crop_range_type = type(crop_range)
 
-        if crop_px * 2 > width or crop_px * 2 > height:
-            raise ValueError(
-                "The pixels to be cropped cannot be larger than half the width or the length!"
-            )
+        if crop_range_type in (int, float):
+            crop_vals = [crop_range] * 4
+        elif crop_range_type is tuple:
+            if len(crop_range) == 2:
+                crop_vals = list(crop_range) * 2, 
+            elif len(crop_range) == 4:
+                crop_vals = list(crop_range)
+            else:
+                raise ValueError(
+                    f"The crop_range tuple must be either a 2-tuple (x,y) or a 4-tuple (left, bottom, right, top). You provided a {len(crop_range)}-tuple."
+                )
         else:
-            signal_cropped = self.inav[
-                crop_px + 1 : width - crop_px + 1, crop_px + 1 : height - crop_px + 1
+            raise ValueError(
+                f"The crop_range value must be an integer or a tuple, not a {crop_range_type}"
+            )
+
+        crop_vals = array(crop_vals)
+
+        # Convert percentages to pixel units
+        if crop_units.lower() in ('percent', '%'):
+            crop_vals = crop_vals * array([w,h]*2)
+            crop_vals.astype(int)
+
+        # Crop accordingly
+        signal_cropped = self.inav[
+                crop_vals[0] : w - crop_vals[2] + 1, crop_vals[3] : h - crop_vals[1] + 1
             ]
+        
+        # Check if cropping went too far
+        if 0 in self.axes_manager.navigation_shape:
+            warn.warn(
+                "The pixels to be cropped surpassed the width/height of the signal navigation axes.", WarningMessage,
+            )           
 
         # Store transformation in metadata (or update the value if already previously transformed)
-
         try:
-            signal_cropped.metadata.Signal.cropped_edges += crop_px
+            signal_cropped.metadata.Signal.cropped_edges += crop_vals
         except AttributeError:
-            signal_cropped.metadata.set_item("Signal.cropped_edges", crop_px)
+            signal_cropped.metadata.set_item("Signal.cropped_edges", crop_vals)
 
         return signal_cropped
 
