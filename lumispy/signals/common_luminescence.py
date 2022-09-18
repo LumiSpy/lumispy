@@ -29,7 +29,7 @@ from warnings import warn
 class CommonLumi:
     """**General luminescence signal class (dimensionless)**"""
 
-    def crop_edges(self, crop_range, crop_units='pixel'):
+    def crop_edges(self, crop_range, crop_units="pixel"):
         """Crop the amount of pixels from the four edges of the scanning
         region, from out the edges inwards. Cropping can happen uniformily or by specifying the croping range for each axis or each side.
 
@@ -47,11 +47,11 @@ class CommonLumi:
             A smaller cropped CL signal object.
         """
 
-        units_accepted = ('px', 'pixel', 'percent', '%')
+        units_accepted = ("px", "pixel", "percent", "%")
         if crop_units.lower() not in units_accepted:
             raise ValueError(
                 "The param crop_units only accepts `pixel` units or `percent`."
-            ) 
+            )
 
         w = self.axes_manager.shape[0]
         h = self.axes_manager.shape[1]
@@ -61,8 +61,8 @@ class CommonLumi:
             crop_vals = [crop_range] * 4
         elif crop_range_type is tuple:
             if len(crop_range) == 2:
-                crop_vals = list(crop_range) * 2,
-                crop_vals = crop_vals[0] 
+                crop_vals = (list(crop_range) * 2,)
+                crop_vals = crop_vals[0]
             elif len(crop_range) == 4:
                 crop_vals = list(crop_range)
             else:
@@ -75,32 +75,35 @@ class CommonLumi:
             )
 
         # Negative means reverse indexing
-        crop_vals = array(crop_vals) * [1,-1,-1,1]
+        crop_vals = array(crop_vals) * [1, -1, -1, 1]
 
         # Convert percentages to pixel units
         if crop_units.lower() in units_accepted[-2:]:
-            crop_vals = crop_vals * array([w,h]*2)
+            crop_vals = crop_vals * array([w, h] * 2)
             crop_vals = crop_vals.astype(int)
 
         # Remove 0 for None
         crop_vals = [x if x != 0 else None for x in crop_vals]
-        
+
         # Crop accordingly
         signal_cropped = self.inav[
-                crop_vals[0] : crop_vals[2], crop_vals[3] : crop_vals[1]
-            ]
-        
+            crop_vals[0] : crop_vals[2], crop_vals[3] : crop_vals[1]
+        ]
+
         # Check if cropping went too far
         if 0 in signal_cropped.axes_manager.navigation_shape:
             warn(
-                "The pixels to be cropped surpassed the width/height of the signal navigation axes.", UserWarning,
-            )           
+                "The pixels to be cropped surpassed the width/height of the signal navigation axes.",
+                UserWarning,
+            )
 
         # Store transformation in metadata (or update the value if already previously transformed)
         try:
             signal_cropped.metadata.Signal.cropped_edges += crop_vals
         except AttributeError:
-            signal_cropped.metadata.set_item("Signal.cropped_edges", crop_vals)
+            signal_cropped.metadata.set_item(
+                "Signal.cropped_edges", crop_vals
+            )
 
         return signal_cropped
 
@@ -129,7 +132,9 @@ class CommonLumi:
         if not inplace:
             return s
 
-    def scale_by_exposure(self, integration_time=None, inplace=False, **kwargs):
+    def scale_by_exposure(
+        self, integration_time=None, inplace=False, **kwargs
+    ):
         """Scale data in spectrum by integration time / exposure,
         (e.g. convert counts to counts/s).
 
@@ -155,10 +160,14 @@ class CommonLumi:
         """
         # Check metadata tags that would prevent scaling
         if self.metadata.Signal.get_item("normalized"):
-            raise AttributeError("Data was normalized and cannot be scaled.")
-        elif self.metadata.Signal.get_item("scaled") or self.metadata.Signal.get_item(
-            "quantity"
-        ) == ("Intensity (counts/s)" or "Intensity (Counts/s)"):
+            raise AttributeError(
+                "Data was normalized and cannot be scaled."
+            )
+        elif self.metadata.Signal.get_item(
+            "scaled"
+        ) or self.metadata.Signal.get_item("quantity") == (
+            "Intensity (counts/s)" or "Intensity (Counts/s)"
+        ):
             raise AttributeError("Data was already scaled.")
 
         # Make sure integration_time is given or contained in metadata
@@ -189,15 +198,23 @@ class CommonLumi:
             s = self.deepcopy()
         s.data = s.data / integration_time
         s.metadata.Signal.scaled = True
-        if s.metadata.get_item("Signal.quantity") == "Intensity (Counts)":
+        if (
+            s.metadata.get_item("Signal.quantity")
+            == "Intensity (Counts)"
+        ):
             s.metadata.Signal.quantity = "Intensity (Counts/s)"
             print(s.metadata.Signal.quantity)
-        if s.metadata.get_item("Signal.quantity") == "Intensity (counts)":
+        if (
+            s.metadata.get_item("Signal.quantity")
+            == "Intensity (counts)"
+        ):
             s.metadata.Signal.quantity = "Intensity (counts/s)"
         if not inplace:
             return s
 
-    def normalize(self, pos=float("nan"), element_wise=False, inplace=False):
+    def normalize(
+        self, pos=float("nan"), element_wise=False, inplace=False
+    ):
         """Normalizes data to value at `pos` along signal axis, defaults to
         maximum value.
 
