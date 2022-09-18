@@ -22,7 +22,7 @@ Signal class for luminescence data (BaseSignal class)
 """
 
 from logging import warning
-from numpy import isnan, array
+from numpy import isnan, array, abs
 from warnings import warn
 
 
@@ -83,11 +83,11 @@ class CommonLumi:
             crop_vals = crop_vals.astype(int)
 
         # Remove 0 for None
-        crop_vals = [x if x != 0 else None for x in crop_vals]
+        crop_ids = [x if x != 0 else None for x in crop_vals]
 
         # Crop accordingly
         signal_cropped = self.inav[
-            crop_vals[0] : crop_vals[2], crop_vals[3] : crop_vals[1]
+            crop_ids[0] : crop_ids[2], crop_ids[3] : crop_ids[1]
         ]
 
         # Check if cropping went too far
@@ -99,10 +99,10 @@ class CommonLumi:
 
         # Store transformation in metadata (or update the value if already previously transformed)
         try:
-            signal_cropped.metadata.Signal.cropped_edges += crop_vals
+            signal_cropped.metadata.Signal.cropped_edges += abs(crop_vals)
         except AttributeError:
             signal_cropped.metadata.set_item(
-                "Signal.cropped_edges", crop_vals
+                "Signal.cropped_edges", abs(crop_vals)
             )
 
         return signal_cropped
