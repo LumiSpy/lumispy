@@ -35,6 +35,9 @@ Now activate the LumiSpy environment and install the package using pip:
 
 Installation is completed! To start using it, check the next section.
 
+.. Note::
+
+    If the installation fails using ``pip``, try installing using ``conda install lumispy -c conda-forge``.
 
 Getting Started
 ===============
@@ -47,4 +50,5 @@ entered into an anaconda prompt (from scratch):
 .. code-block:: bash
 
     (base) conda activate lumispy
+    (lumispy) pip install jupyterlab
     (lumispy) jupyter lab
