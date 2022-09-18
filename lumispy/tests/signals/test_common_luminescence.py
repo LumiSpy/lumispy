@@ -17,24 +17,59 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 import numpy as np
-import pytest
-
+from pytest import raises, mark, skip, warns
+from warnings import WarningMessage
 from lumispy.signals import LumiSpectrum, LumiTransientSpectrum
 
 
 class TestCommonLumi:
-    def test_crop_edges(self):
+    @mark.parametrize(("crop_range, output"), ((2, (6,6)), ((2,4), (6,2)), ((1,2,3,4), (6,4)), ((1,2,3), ()), ((1,2,3,4,5), ()), ('s', ()),))
+    def test_crop_edges(crop_range, output):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
         s2 = LumiTransientSpectrum(np.ones((10, 10, 10, 10)))
-        s3 = LumiSpectrum(np.ones((3, 3, 10)))
-        s1 = s1.crop_edges(crop_px=2)
-        s2 = s2.crop_edges(crop_px=2)
-        assert s1.axes_manager.navigation_shape[0] == 6
-        assert s1.axes_manager.navigation_shape[1] == 6
-        assert s2.axes_manager.navigation_shape[0] == 6
-        assert s2.axes_manager.navigation_shape[1] == 6
-        with pytest.raises(ValueError):
-            s3.crop_edges(crop_px=2)
+        
+        # Check for bad input range
+        if type(crop_range) not in (int, float, tuple):
+            with raises(ValueError, match='value must be a number or a tuple'):
+                s1.crop_edges(crop_range)
+
+        elif type(crop_range) == tuple:
+            if len(crop_range) not in (1,2,4):
+                with raises(ValueError, match='tuple must be either a'):
+                    s1.crop_edges(crop_range)
+
+        else:
+            s1 = s1.crop_edges(crop_range)
+            assert s1.axes_manager.navigation_shape[0] == output[0] 
+            assert s1.axes_manager.navigation_shape[1] == output[1]
+
+    def test_crop_percent():
+        s1 = LumiSpectrum(np.ones((10, 10, 10)))
+        s2 = s1.crop_edges(crop_range= 0.1, crop_units='percent')
+        assert s1.axes_manager.navigation_shape[0] == 8
+        assert s2.axes_manager.navigation_shape[1] == 8
+
+    @mark.parametrize(("crop_units"), ('pixel', 'px', 'PIXEL', 'percent', '%', 'nm'))
+    def test_crop_edges_units(crop_units):
+        s1 = LumiSpectrum(np.ones((10, 10, 10)))
+
+        # Check for bad units
+        if crop_units.lower() not in ('px', 'pixel', 'percent', '%'):
+            with raises(ValueError, match='crop_units only accepts'):
+                s1.crop_edges(crop_range=1, crop_units=crop_units)
+    
+    def test_crop_edges_metadata():
+        s1 = LumiSpectrum(np.ones((10, 10, 10)))
+        s1 = s1.crop_edges(crop_range=2)
+        assert s1.metadata.Signal.cropped_edges == (2,2,2,2)
+        s1 = s1.crop_edges(crop_range=2)
+        assert s1.metadata.Signal.cropped_edges == (4,4,4,4)
+
+    def test_crop_edges_too_far():
+        s1 = LumiSpectrum(np.ones((10, 10, 10)))
+        with warns(WarningMessage, match="The pixels to"):
+            s1 = s1.crop_edges(crop_range=6)
+            assert s1.axes_manager.navigation_shape[0] == 0
 
     def test_remove_negative(self):
         s1 = LumiSpectrum(np.random.random((10, 10, 10))) - 0.3
@@ -81,17 +116,17 @@ class TestCommonLumi:
         # Test for errors
         s4 = LumiSpectrum(np.ones((10)))
         s4.normalize(inplace=True)
-        with pytest.raises(AttributeError, match="Data was normalized and"):
+        with raises(AttributeError, match="Data was normalized and"):
             s4.scale_by_exposure(inplace=True, integration_time=0.5)
         s5 = LumiSpectrum(np.ones((10)))
-        with pytest.raises(AttributeError, match="not included in the"):
+        with raises(AttributeError, match="not included in the"):
             s5.scale_by_exposure(inplace=True)
         s5.scale_by_exposure(inplace=True, integration_time=0.5)
-        with pytest.raises(AttributeError, match="Data was already scaled."):
+        with raises(AttributeError, match="Data was already scaled."):
             s5.scale_by_exposure(inplace=True, integration_time=0.5)
         # Deprecation test for exposure argument
         s6 = LumiSpectrum(np.ones((10)))
-        with pytest.warns(DeprecationWarning, match="removed in LumiSpy 1.0"):
+        with warns(DeprecationWarning, match="removed in LumiSpy 1.0"):
             s6.scale_by_exposure(inplace=True, exposure=0.5)
             assert np.all(s6.data == 2)
 
@@ -136,5 +171,5 @@ class TestCommonLumi:
         assert s3a == s3
         assert s4a == s4
         assert s4.metadata.Signal.quantity == "Normalized intensity"
-        with pytest.warns(UserWarning, match="Data was"):
+        with warns(UserWarning, match="Data was"):
             s1.normalize(inplace=True)
