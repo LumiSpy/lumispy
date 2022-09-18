@@ -28,23 +28,28 @@ from warnings import WarningMessage, warn
 class CommonLumi:
     """**General luminescence signal class (dimensionless)**"""
 
-    def crop_edges(self, crop_range, crop_units='px'):
+    def crop_edges(self, crop_range, crop_units='pixel'):
         """Crop the amount of pixels from the four edges of the scanning
         region, from out the edges inwards. Cropping can happen uniformily or by specifying the croping range for each axis or each side.
 
         Parameters
         ----------
-        crop_range : int, tuple
-            Amount of pixels to be cropped. If an integer or a 1-tuple is passed, all sides are cropped by the same amount. If a 2-tuple is passed (crop_x, crop_y), a different amount of pixels is cropped from the x and y directions, respectively. If a 4-tuple is passed (crop_left, crop_bottom, crop_right, crop_top), a different amount of pixels is cropped from each edge individually.
+        crop_range : int, float, tuple
+            Amount of pixels to be cropped. If an number or a 1-tuple is passed, all sides are cropped by the same amount. If a 2-tuple is passed (crop_x, crop_y), a different amount of pixels is cropped from the x and y directions, respectively. If a 4-tuple is passed (crop_left, crop_bottom, crop_right, crop_top), a different amount of pixels is cropped from each edge individually.
 
         crop_units : str
-            Select in which units cropping happens. It can be in pixel units (default), or in `percent`/`%` units.
+            Select in which units cropping happens. It can be in `pixel` units (default), or in `percent`/`%` units.
 
         Returns
         -------
         signal_cropped : CommonLuminescence
             A smaller cropped CL signal object.
         """
+        units_accepted = ('px', 'pixel', 'percent', '%')
+        if crop_units.lower() not in units_accepted:
+            raise ValueError(
+                "The param crop_units only accepts `pixel` units or `percent`."
+            ) 
 
         w = self.axes_manager.shape[0]
         h = self.axes_manager.shape[1]
@@ -63,13 +68,13 @@ class CommonLumi:
                 )
         else:
             raise ValueError(
-                f"The crop_range value must be an integer or a tuple, not a {crop_range_type}"
+                f"The crop_range value must be a number or a tuple, not a {crop_range_type}"
             )
 
         crop_vals = array(crop_vals)
 
         # Convert percentages to pixel units
-        if crop_units.lower() in ('percent', '%'):
+        if crop_units.lower() in units_accepted[:-2]:
             crop_vals = crop_vals * array([w,h]*2)
             crop_vals.astype(int)
 
