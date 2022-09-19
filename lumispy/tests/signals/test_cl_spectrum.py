@@ -70,7 +70,7 @@ class TestCLSpectrum:
         np.testing.assert_almost_equal(s1.data[0, 2, 29], 1, decimal=5)
 
         s3 = s.remove_spikes(show_diagnosis_histogram=True)
-        hist_data = s._get_spikes_diagnosis_histogram_data(bins=25)
+        hist_data = s._spikes_diagnosis(max_num_bins=25, show_plot=False, use_gui=False,)
         expected_data = np.zeros(25)
         expected_data[0] = 176
         expected_data[6] = 1
