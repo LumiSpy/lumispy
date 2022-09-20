@@ -25,7 +25,7 @@ recognising the code development by citing the project using the
 [Zenodo-DOI](https://doi.org/10.5281/zenodo.4640445).
 
 Go to the documentation for instructions on how to install LumiSpy and start an
-analysis: [Read the docs](https://lumispy.readthedocs.io).
+analysis: [Read the docs](https://docs.lumispy.org).
 
 [Tutorials and exemplary workflows](https://github.com/lumispy/lumispy-demos)
 have been curated as a series of Jupyter notebooks that you can work through 
