@@ -78,7 +78,7 @@ class TestLumiSpectrum:
     
     def test_px_to_nm_grating_solver(self):
         s = LumiSpectrum(np.ones(10))
-        ax = s.axes_manager.signal_axis[0]
+        ax = s.axes_manager.signal_axes[0]
         ax.offset = 200
         ax.scale = 10
 
