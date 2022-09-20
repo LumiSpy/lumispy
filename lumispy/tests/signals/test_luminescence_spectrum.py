@@ -75,14 +75,21 @@ class TestLumiSpectrum:
         s = LumiSpectrum(np.ones(50))
         with pytest.warns(DeprecationWarning, match="deprecated"):
             s.remove_background_from_file(background=backgrounds[0][0])
-    
+
     def test_px_to_nm_grating_solver(self):
         s = LumiSpectrum(np.ones(10))
         ax = s.axes_manager.signal_axes[0]
         ax.offset = 200
         ax.scale = 10
 
-        s_copy = s.px_to_nm_grating_solver(3, -20, 300, 25, 600, 150,)
+        s_copy = s.px_to_nm_grating_solver(
+            3,
+            -20,
+            300,
+            25,
+            600,
+            150,
+        )
         s.px_to_nm_grating_solver(3, -20, 300, 25, 600, 150, inplace=True)
 
         assert s_copy.axes_manager.signal_axes[0].name == "Wavelength"
@@ -91,7 +98,10 @@ class TestLumiSpectrum:
         assert s.axes_manager.signal_axes[0].units == "nm"
 
         assert_allclose(s_copy.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1)
-        assert_allclose(s_copy.axes_manager.signal_axes[0].axis[0].axis[-1], 768.249, atol=0.1)
+        assert_allclose(
+            s_copy.axes_manager.signal_axes[0].axis[0].axis[-1], 768.249, atol=0.1
+        )
         assert_allclose(s.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1)
-        assert_allclose(s.axes_manager.signal_axes[0].axis[0].axis[-1], 768.249, atol=0.1)
-
+        assert_allclose(
+            s.axes_manager.signal_axes[0].axis[0].axis[-1], 768.249, atol=0.1
+        )
