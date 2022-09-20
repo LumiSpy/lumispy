@@ -20,7 +20,7 @@ environment:
 
 .. code-block:: bash
 
-    (base) conda create -n lumispy
+    (base) conda create -n lumispy -y
 
 
 Installing the package in the new environment
@@ -31,24 +31,28 @@ Now activate the LumiSpy environment and install the package using pip:
 .. code-block:: bash
 
     (base) conda activate lumispy
-    (lumispy) pip install lumispy
+    (lumispy) conda install -c conda-forge lumispy -y
 
 Installation is completed! To start using it, check the next section.
 
 .. Note::
 
-    If the installation fails using ``pip``, try installing using ``conda install lumispy -c conda-forge``.
+    Alternativelt, you can also find LumiSpy in PyPI and install it using ``pip install lumispy``.
 
 Getting Started
 ===============
 
 To get started using LumiSpy, especially if you are unfamiliar with Python, we
 recommend using `Jupyter notebooks <https://jupyter.org/>`_. Having installed
-LumiSpy as above, a Jupyter notebook can be opened using the following commands
+LumiSpy as above, a Jupyter notebook can be installed and opened using the following commands
 entered into an anaconda prompt (from scratch):
 
 .. code-block:: bash
 
     (base) conda activate lumispy
-    (lumispy) pip install jupyterlab
+    (lumispy) conda install -c conda-forge jupyterlab -y
     (lumispy) jupyter lab
+
+[Tutorials and exemplary workflows](https://github.com/lumispy/lumispy-demos)
+have been curated as a series of Jupyter notebooks that you can work through 
+and modify to perform many common analyses.
