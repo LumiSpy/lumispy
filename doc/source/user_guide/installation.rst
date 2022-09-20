@@ -55,6 +55,11 @@ Required dependencies will be installed automatically.
 
 Installation is completed! To start using it, check the next section.
 
+.. Note::
+
+   If you run into trouble, check the more detailed documentation in the `HyperSpy user guide
+   <https://hyperspy.org/hyperspy-doc/current/user_guide/install.html#installation-using-conda>`_.
+
 
 3. Getting Started
 ------------------
