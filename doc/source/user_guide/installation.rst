@@ -50,5 +50,9 @@ entered into an anaconda prompt (from scratch):
 .. code-block:: bash
 
     (base) conda activate lumispy
-    (lumispy) conda install -c conda-forge jupyterlab
+    (lumispy) conda install -c conda-forge jupyterlab -y
     (lumispy) jupyter lab
+
+[Tutorials and exemplary workflows](https://github.com/lumispy/lumispy-demos)
+have been curated as a series of Jupyter notebooks that you can work through 
+and modify to perform many common analyses.
