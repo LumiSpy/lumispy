@@ -10,12 +10,13 @@ UNRELEASED
 ==========
 Added
 -----
-- Improved documentation.
-- Use [lgtm.com](https://lgtm.com/projects/g/LumiSpy/lumispy/) to check code integrity.
+- Improved documentation
+- Use `lgtm.com <https://lgtm.com/projects/g/LumiSpy/lumispy/>`_ to check code integrity
 
 Changed
 -------
-- `s.remove_negative` now defaults to `inplace=False` (previously `True`)
+- Fix conversion to Raman shift (relative wavenumber) and make ``jacobian=False`` default; ``fix inplace=False`` for axis conversions
+- ``s.remove_negative`` now defaults to ``inplace=False`` (previously ``True``)
 
 2022-04-29 - version 0.2
 ========================
@@ -28,18 +29,18 @@ Added
 Changed
 -------
 - Account for the general availability of non-uniform axes with the HyperSpy v1.7 release
-- Make `LumiTransient` 1D and add 2D `LumiTransientSpectrum` class
-- Add python 3.10 build. Remove python 3.6.
-- Fix error in background dimensions that allows compatibility for updated `map` in HyperSpy (failing integration tests)
+- Make ``LumiTransient`` 1D and add 2D ``LumiTransientSpectrum`` class
+- Add python 3.10 build, remove python 3.6
+- Fix error in background dimensions that allows compatibility for updated ``map`` in HyperSpy (failing integration tests)
 - Fix for links in PyPi
-- Deprecate `exposure` argument of `s.scale_by_exposure` in favor of `integration_time` in line with metadata convention
-- Add deprecation warning to `remove_background_from_file`
+- Deprecate ``exposure`` argument of ``s.scale_by_exposure`` in favor of ``integration_time`` in line with metadata convention
+- Add deprecation warning to ``remove_background_from_file``
 
 2021-11-23 - version 0.1.3
 ==========================
 Changed
 -------
-- Mentions of the now deleted `non_uniform_axes` branch in HyperSpy updated to `RELEASE_next_minor`
+- Mentions of the now deleted ``non_uniform_axes`` branch in HyperSpy updated to `RELEASE_next_minor`
 - Change 'master' to 'main' branch
 - Updated/corrected badges and other things in README.md and other documentation files
 

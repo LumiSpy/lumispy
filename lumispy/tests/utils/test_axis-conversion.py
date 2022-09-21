@@ -1,4 +1,4 @@
-# -*- co`ding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright 2019-2022 The LumiSpy developers
 #
 # This file is part of LumiSpy.
