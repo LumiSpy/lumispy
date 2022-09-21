@@ -516,7 +516,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     "remove it again, set the "
                     "s.metadata.Signal.background_subtracted to False."
                 )
-        elif background is None:
+        elif background is None:  # pragma: no cover
             warn(
                 "Using the Hyperspy specfic `remove_background` function. "
                 "Use `s.remove_background()` instead.",
@@ -544,7 +544,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                         raise AttributeError(
                             "The length of the x and y axis must match."
                         )
-                except IndexError:
+                except IndexError:  # pragma: no cover
                     raise AttributeError(
                         "Please provide a background file containing both the x and y axis."
                     )
