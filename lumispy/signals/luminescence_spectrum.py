@@ -95,8 +95,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
     def to_eV(self, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear energy axis (eV)
-        using wavelength dependent permittivity of air. Assumes wavelength in
-        units of nm unless the axis units are specifically set to µm.
+        using wavelength dependent refractive index of air. Assumes wavelength
+        in units of nm unless the axis units are specifically set to µm.
 
         The intensity is converted from counts/nm (counts/µm) to counts/meV by
         doing a Jacobian transformation, see e.g. Mooney and Kambhampati, J.
