@@ -188,14 +188,16 @@ class LumiSpectrum(Signal1D, CommonLumi):
         else:
             # create new data array
             if jacobian:
-                s2data = data2eV(
-                    self.isig[::-1].data,
-                    factor,
-                    self.axes_manager.signal_axes[0],
-                    evaxis.axis,
+                s2data = np.copy(
+                    data2eV(
+                        self.isig[::-1].data,
+                        factor,
+                        self.axes_manager.signal_axes[0],
+                        evaxis.axis,
+                    )
                 )
             else:
-                s2data = self.isig[::-1].data
+                s2data = np.copy(self.isig[::-1].data)
 
             # create new signal object with correct data, axes, metadata
             s2 = self._deepcopy_with_new_data(
@@ -340,13 +342,15 @@ class LumiSpectrum(Signal1D, CommonLumi):
         else:
             # create new data array
             if jacobian:
-                s2data = data2invcm(
-                    self.isig[::-1].data,
-                    factor,
-                    invcmaxis.axis,
+                s2data = np.copy(
+                    data2invcm(
+                        self.isig[::-1].data,
+                        factor,
+                        invcmaxis.axis,
+                    )
                 )
             else:
-                s2data = self.isig[::-1].data
+                s2data = np.copy(self.isig[::-1].data)
 
             # create new signal object with correct data, axes, metadata
             s2 = self._deepcopy_with_new_data(

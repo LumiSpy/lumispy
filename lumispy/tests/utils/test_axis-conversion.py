@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- co`ding: utf-8 -*-
 # Copyright 2019-2022 The LumiSpy developers
 #
 # This file is part of LumiSpy.
@@ -96,6 +96,7 @@ def test_var2eV():
 def test_to_eV(jacobian, variance):
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
+    data[0] += 1
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
     if variance:
         if variance == "constant":
@@ -105,13 +106,21 @@ def test_to_eV(jacobian, variance):
     S2 = S1.to_eV(inplace=False, jacobian=jacobian)
     S1.axes_manager[0].units = "µm"
     S1.axes_manager[0].axis = axis.axis / 1000
-    S1.data *= 1000
+    if jacobian:
+        S1.data *= 1000
     S1.to_eV(jacobian=jacobian)
     assert S1.axes_manager[0].units == "eV"
     assert S2.axes_manager[0].name == "Energy"
     assert S2.axes_manager[0].size == 20
     assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
     assert_allclose(S1.data, S2.data, 5e-4)
+    if not jacobian:
+        S1.data *= 10  # check that deepcopy worked
+        assert S2.data[-1] == 2
+        assert S1.data[-1] == 20
+    else:
+        S1.data *= 10
+        assert_allclose(S2.data[-1], 0.06454526)
     nav = UniformDataAxis(size=4)
     # navigation dimension 1
     L1 = LumiSpectrum(
@@ -276,6 +285,7 @@ def test_var2invcm():
 def test_to_invcm(jacobian, variance):
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
+    data[0] += 1
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
     if variance:
         if variance == "constant":
@@ -285,13 +295,21 @@ def test_to_invcm(jacobian, variance):
     S2 = S1.to_invcm(inplace=False, jacobian=jacobian)
     S1.axes_manager[0].units = "µm"
     S1.axes_manager[0].axis = axis.axis / 1000
-    S1.data *= 1000
+    if jacobian:
+        S1.data *= 1000
     S1.to_invcm(jacobian=jacobian)
     assert S1.axes_manager[0].units == r"cm$^{-1}$"
     assert S2.axes_manager[0].name == "Wavenumber"
     assert S2.axes_manager[0].size == 20
     assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
     assert_allclose(S1.data, S2.data, 5e-4)
+    if not jacobian:
+        S1.data *= 10  # check that deepcopy worked
+        assert S2.data[-1] == 2
+        assert S1.data[-1] == 20
+    else:
+        S1.data *= 10
+        assert S2.data[-1] == 0.008
     nav = UniformDataAxis(size=4)
     # navigation dimension 1
     L1 = LumiSpectrum(
@@ -404,6 +422,7 @@ def test_reset_variance_linear_model_invcm(jacobian):
 def test_to_invcm_relative(jacobian, variance):
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
+    data[0] += 1
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
     if variance:
         if variance == "constant":
@@ -413,10 +432,11 @@ def test_to_invcm_relative(jacobian, variance):
     S2 = S1.to_invcm_relative(laser=244, inplace=False, jacobian=jacobian)
     S1.axes_manager[0].units = "µm"
     S1.axes_manager[0].axis = axis.axis / 1000
-    S1.data *= 1000
+    if jacobian:
+        S1.data *= 1000
     S1.to_invcm_relative(laser=0.244, jacobian=jacobian)
     assert S1.axes_manager[0].units == r"cm$^{-1}$"
-    assert S2.axes_manager[0].name == "Wavenumber"
+    assert S2.axes_manager[0].name == "Raman Shift"
     assert S2.axes_manager[0].size == 20
     assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
     assert_allclose(S1.data, S2.data, 5e-4)
@@ -433,7 +453,7 @@ def test_to_invcm_relative(jacobian, variance):
     L2 = L1.to_invcm_relative(laser=244, inplace=False, jacobian=jacobian)
     L1.to_invcm_relative(laser=244, jacobian=jacobian)
     assert L1.axes_manager.signal_axes[0].units == r"cm$^{-1}$"
-    assert L2.axes_manager.signal_axes[0].name == "Wavenumber"
+    assert L2.axes_manager.signal_axes[0].name == "Raman Shift"
     assert L2.axes_manager.signal_axes[0].size == 20
     assert (
         L1.axes_manager.signal_axes[0].axis[0] == L2.axes_manager.signal_axes[0].axis[0]
@@ -456,7 +476,7 @@ def test_to_invcm_relative(jacobian, variance):
     M2 = M1.to_invcm_relative(laser=244, inplace=False, jacobian=jacobian)
     M1.to_invcm_relative(laser=244, jacobian=jacobian)
     assert M1.axes_manager.signal_axes[0].units == r"cm$^{-1}$"
-    assert M2.axes_manager.signal_axes[0].name == "Wavenumber"
+    assert M2.axes_manager.signal_axes[0].name == "Raman Shift"
     assert M2.axes_manager.signal_axes[0].size == 20
     assert (
         M1.axes_manager.signal_axes[0].axis[0] == M2.axes_manager.signal_axes[0].axis[0]
@@ -492,17 +512,26 @@ def test_to_invcm_relative(jacobian, variance):
 def test_to_raman_shift(jacobian):
     axis = UniformDataAxis(size=20, offset=200, scale=10)
     data = ones(20)
+    data[0] += 1
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
     S2 = S1.to_raman_shift(laser=244, inplace=False, jacobian=jacobian)
     S1.axes_manager[0].units = "µm"
     S1.axes_manager[0].axis = axis.axis / 1000
-    S1.data *= 1000
+    if jacobian:
+        S1.data *= 1000
     S1.to_raman_shift(laser=0.244, jacobian=jacobian)
     assert S1.axes_manager[0].units == r"cm$^{-1}$"
-    assert S2.axes_manager[0].name == "Wavenumber"
+    assert S2.axes_manager[0].name == "Raman Shift"
     assert S2.axes_manager[0].size == 20
     assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
     assert_allclose(S1.data, S2.data, 5e-4)
+    if not jacobian:
+        S1.data *= 10  # check that deepcopy worked
+        assert S2.data[0] == 2
+        assert S1.data[0] == 20
+    else:
+        S1.data *= 10
+        assert S2.data[0] == 0.008
 
 
 def test_to_raman_shift_laser():
@@ -517,13 +546,12 @@ def test_to_raman_shift_laser():
     S2 = S1.to_raman_shift(inplace=False)
     S1.axes_manager[0].units = "µm"
     S1.axes_manager[0].axis = axis.axis / 1000
-    S1.data *= 1000
     with raises(AttributeError, match="Laser wavelength units"):
         S1.to_raman_shift(laser=244)
     S1.metadata.set_item("Acquisition_instrument.Laser.wavelength", 0.244)
     S1.to_raman_shift()
     assert S1.axes_manager[0].units == r"cm$^{-1}$"
-    assert S2.axes_manager[0].name == "Wavenumber"
+    assert S2.axes_manager[0].name == "Raman Shift"
     assert S2.axes_manager[0].size == 20
     assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
     assert_allclose(S1.data, S2.data, 5e-4)
