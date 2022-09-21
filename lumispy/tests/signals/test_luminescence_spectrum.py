@@ -99,9 +99,9 @@ class TestLumiSpectrum:
 
         assert_allclose(s_copy.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1)
         assert_allclose(
-            s_copy.axes_manager.signal_axes[0].axis[0].axis[-1], 768.249, atol=0.1
+            s_copy.axes_manager.signal_axes[0].axis[-1], 768.249, atol=0.1
         )
         assert_allclose(s.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1)
         assert_allclose(
-            s.axes_manager.signal_axes[0].axis[0].axis[-1], 768.249, atol=0.1
+            s.axes_manager.signal_axes[0].axis[-1], 768.249, atol=0.1
         )
