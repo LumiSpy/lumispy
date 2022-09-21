@@ -95,8 +95,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
     def to_eV(self, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear energy axis (eV)
-        using wavelength dependent permittivity of air. Assumes wavelength in
-        units of nm unless the axis units are specifically set to µm.
+        using wavelength dependent refractive index of air. Assumes wavelength
+        in units of nm unless the axis units are specifically set to µm.
 
         The intensity is converted from counts/nm (counts/µm) to counts/meV by
         doing a Jacobian transformation, see e.g. Mooney and Kambhampati, J.
@@ -529,7 +529,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     "remove it again, set the "
                     "s.metadata.Signal.background_subtracted to False."
                 )
-        elif background is None:
+        elif background is None:  # pragma: no cover
             warn(
                 "Using the Hyperspy specfic `remove_background` function. "
                 "Use `s.remove_background()` instead.",
@@ -557,7 +557,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                         raise AttributeError(
                             "The length of the x and y axis must match."
                         )
-                except IndexError:
+                except IndexError:  # pragma: no cover
                     raise AttributeError(
                         "Please provide a background file containing both the x and y axis."
                     )

@@ -105,7 +105,8 @@ units commonly used for the signal axis. Namely,
 - :py:func:`~.utils.axes.nm2invcm`
 - :py:func:`~.utils.axes.invcm2nm`
 
-For the energy axis, the conversion uses the correct permittivity of air.
+For the energy axis, the conversion uses the wavelength-dependent refractive
+index of air.
 
 
 .. _grating_equation-label:
