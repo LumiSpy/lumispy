@@ -17,6 +17,10 @@ Changed
 -------
 - `s.remove_negative` now defaults to `inplace=False` (previously `True`)
 
+Maintenance
+-----------
+- Use ``softprops/action-gh-release`` action instead of deprecated ``create-release`` . Pin action to a commit SHA.
+
 2022-04-29 - version 0.2
 ========================
 Added
