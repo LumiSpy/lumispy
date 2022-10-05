@@ -60,6 +60,35 @@ analysis (therefore the default is ``inplace=False``).
     >>> s.normalize(pos=450)
 
 
+.. _analysis_label:
+
+Analysis
+========
+
+The :py:mod:`~.utils.analysis` module provides helpful tools for analysing luminescence data.
+
+:py:func:`~.utils.analysis.plot_span_map` is a function that allows you to clearly identify regions of a hyperspectral map where particular peaks are brightest.
+
+This is done through the use of interactive spans (see :external:py:class:`hyperspy.roi.SpanROI`). 
+
+Up to three spans can be used to select different spectral ranges to map out. Accompanying maps corresponding to each range are plotted and automatically updated.
+
+.. code-block:: python
+
+    >>> import hyperpsy.api as hs
+    >>> from lumispy.utils.analysis import plot_span_map
+    >>> sig = hs.load('mydata.sur')
+    >>> plot_span_map(sig, nspans=2)
+
+
+.. image:: images/plot_span_map_demo.gif
+  :width: 100%
+  :alt: Demo of plot_span_map functionality.
+
+The lefthand plot is an integrated spectra over all positions of the hyperspectra.
+
+The two righthand plots correpond to the spectral ranges dictated by the spans on the left.
+
 .. _remove_negative-label:
 
 Replacing negative data values

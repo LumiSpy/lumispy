@@ -28,8 +28,6 @@ from lumispy.utils.analysis import plot_span_map
 
 @pytest.fixture
 def test_signal():
-    np.random.seed(0)
-
     test_data = np.zeros((64, 64, 1024))
     test_data[32:, :, 300:] = 1
     test_data[48:, :, 500:] = 2
