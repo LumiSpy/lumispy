@@ -50,9 +50,9 @@ The LumiSpy documentation consists of three elements:
   <https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard>`_
   that document the functionality of individual methods on `GitHub
   <https://github.com/LumiSpy/lumispy/tree/main/lumispy/>`_.
-- The `documentation <https://lumispy.org>`_ written using `Sphinx
+- The `documentation <https://docs.lumispy.org>`_ written using `Sphinx
   <https://www.sphinx-doc.org/en/master/>`_ and hosted on `Read the Docs
-  <https://lumispy.readthedocs.io/>`_. The source is part of the `GitHub repository
+  <https://docs.lumispy.org>`_. The source is part of the `GitHub repository
   <https://github.com/LumiSpy/lumispy/tree/main/doc/source>`_.
 - A set of curated Jupyter notebooks in the `LumiSpy demos repository
   <https://github.com/lumispy/lumispy-demos>`_ on GitHub that provide tutorials and example

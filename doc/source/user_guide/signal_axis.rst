@@ -29,16 +29,16 @@ The energy axis
 ===============
 
 The transformation from wavelength :math:`\lambda` to energy :math:`E` is
-defined as :math:`E = h c/ \lambda`. Taking into account the permittivity of
+defined as :math:`E = h c/ \lambda`. Taking into account the refractive index of
 air and doing a conversion from nm to eV, we get:
 
 .. math::
 
-    E = \frac{10^9 h c}{e \epsilon_r \lambda},
+    E[eV] = \frac{10^9}{e}\frac{h c}{n_{air} \lambda[nm]},
 
 where :math:`h` is the Planck constant, :math:`c` is the speed of light,
-:math:`e` is the elementary charge and :math:`\epsilon_r` is the relative
-permittivity of air.
+:math:`e` is the elementary charge and :math:`n_{air}` is the refractive
+index of air, see also [Pfueller]_.
 
 .. code-block:: python
 
@@ -47,11 +47,11 @@ permittivity of air.
 
 .. Note::
 
-    The relative permittivity of air :math:`\epsilon_r` is wavelength
+    The refractive index of air :math:`n_{air}` is wavelength
     dependent. This dependence is taken into account by LumiSpy based on the
     analytical formula given by [Peck]_ valid from 185-1700 nm
-    (outside of this range, the permittivity values at the edges of the range
-    are used and a warning is raised).
+    (outside of this range, the values of the refractive index at the edges of
+    the range are used and a warning is raised).
 
 
 .. _wavenumber_axis-label:
@@ -90,7 +90,7 @@ rescaled (Jacobian transformation), unless the ``jacobian=False`` option is
 given. Only converting the signal axis, and leaving the signal intensity
 unchanged, implies that the integral of the signal over the same interval would
 lead to different results depending on the quantity on the axis (see e.g.
-[Mooney]_.).
+[Mooney]_ and [Wang]_).
 
 For the energy axis as example, if we require :math:`I(E)dE = I(\lambda)d\lambda`,
 then :math:`E=hc/\lambda` implies
@@ -144,9 +144,15 @@ the noise properties
 
 .. rubric:: References
 
+.. [Pfueller] C. Pfüller, Dissertation, HU Berlin, p. 28 (2011). 
+    `doi:10.18452/16360 <https://doi.org/10.18452/16360>`_
+
 .. [Peck] E.R. Peck and K. Reeder, J. Opt. Soc. Am. **62**, 958
     (1972). `doi:10.1364/JOSA.62.000958 <https://doi.org/10.1364/JOSA.62.000958>`_
 
 .. [Mooney] J. Mooney and P. Kambhampati, The Journal of
     Physical Chemistry Letters **4**, 3316 (2013).
     `doi:10.1021/jz401508t <https://doi.org/10.1021/jz401508t>`_
+
+.. [Wang] Y. Wang and P. D. Townsend, J. Luminesc. **142**, 202
+    (2013). `doi:10.1016/j.jlumin.2013.03.052 <https://doi.org/10.1016/j.jlumin.2013.03.052>`_
