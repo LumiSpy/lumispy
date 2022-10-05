@@ -534,11 +534,7 @@ def test_solve_grating_equation():
         axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
         solve_grating_equation(axis, 3, -20, 300, 25, 600, 150)
 
-    axis1 = UniformDataAxis(
-        size=10,
-        offset=200,
-        scale=10,
-    )
+    axis1 = UniformDataAxis(size=10, offset=200, scale=10,)
     axis2 = UniformDataAxis(size=10, offset=200, scale=10, units="px")
 
     nm_axis1 = solve_grating_equation(axis1, 3, -20, 300, 25, 600, 150)

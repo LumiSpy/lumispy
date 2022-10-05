@@ -33,31 +33,38 @@ def test_signal():
     test_data = np.zeros((64, 64, 1024))
     test_data[32:, :, 300:] = 1
     test_data[48:, :, 500:] = 2
-    sig = hs.signals.Signal1D(test_data, axes=[
-        {'name': 'x', 'size': 64, 'offset': 0, 'scale': 1, 'units': 'um'},
-        {'name': 'y', 'size': 64, 'offset': 0, 'scale': 1, 'units': 'um'},
-        {'name': 'Wavelength', 'size': 1024, 'offset': 0, 'scale': 1, 'units': 'nm'}
-    ])
+    sig = hs.signals.Signal1D(
+        test_data,
+        axes=[
+            {"name": "x", "size": 64, "offset": 0, "scale": 1, "units": "um"},
+            {"name": "y", "size": 64, "offset": 0, "scale": 1, "units": "um"},
+            {
+                "name": "Wavelength",
+                "size": 1024,
+                "offset": 0,
+                "scale": 1,
+                "units": "nm",
+            },
+        ],
+    )
 
-    sig.set_signal_type('CLSEM')
+    sig.set_signal_type("CLSEM")
     return sig
 
 
-def sig_mpl_compare(type: set(['sig', 'nav'])):
-
+def sig_mpl_compare(type: set(["sig", "nav"])):
     def wrapper(f):
-
-        @pytest.mark.mpl_image_compare(baseline_dir='plot_span_map')
+        @pytest.mark.mpl_image_compare(baseline_dir="plot_span_map")
         @wraps(f)
-        def wrapped(*args, **kwargs):            
+        def wrapped(*args, **kwargs):
             sig = f(*args, **kwargs)
-            if type == 'sig':
+            if type == "sig":
                 fig = sig._plot.signal_plot.figure
-            elif type == 'nav':
+            elif type == "nav":
                 fig = sig._plot.navigation_plot.figure
-            
+
             return fig
-        
+
         return wrapped
 
     return wrapper
@@ -66,19 +73,23 @@ def sig_mpl_compare(type: set(['sig', 'nav'])):
 def test_plot_span_map_args(test_signal):
     with pytest.raises(ValueError):
         plot_span_map(test_signal, 4)
-    
+
     line_spectra = test_signal.inav[0, :]
 
-    with pytest.raises(ValueError, match=
-        "This method is designed for data with 1 signal and 2 navigation dimensions, not 1 and 1 respectively"):
+    with pytest.raises(
+        ValueError,
+        match="This method is designed for data with 1 signal and 2 navigation dimensions, not 1 and 1 respectively",
+    ):
         plot_span_map(line_spectra)
 
     single_spectra = line_spectra.inav[0]
 
-    with pytest.raises(ValueError, match=
-        "This method is designed for data with 1 signal and 2 navigation dimensions, not 1 and 0 respectively"):
+    with pytest.raises(
+        ValueError,
+        match="This method is designed for data with 1 signal and 2 navigation dimensions, not 1 and 0 respectively",
+    ):
         plot_span_map(single_spectra)
-    
+
 
 def test_span_positioning(test_signal):
     _, spans, *_ = plot_span_map(test_signal, 1)
@@ -95,12 +106,12 @@ def test_span_positioning(test_signal):
     assert spans[0].right == pytest.approx(1023 / 4)
     assert spans[1].left == pytest.approx(1023 / 4)
     assert spans[1].right == pytest.approx(1023 / 2)
-    
+
     # no overlap
     assert spans[0].right <= spans[1].left
 
     _, spans, *_ = plot_span_map(test_signal, 3)
-    
+
     assert len(spans) == 3
     assert spans[0].left == pytest.approx(0)
     assert spans[0].right == pytest.approx(1023 / 6)
@@ -112,8 +123,9 @@ def test_span_positioning(test_signal):
     # no overlap
     assert spans[0].right <= spans[1].left and spans[1].right <= spans[2].left
 
-@sig_mpl_compare('sig')
-@pytest.mark.parametrize('nspans', [1, 2, 3])
+
+@sig_mpl_compare("sig")
+@pytest.mark.parametrize("nspans", [1, 2, 3])
 def test_navigator(test_signal, nspans):
     all_sums, spans, span_sigs, span_sums = plot_span_map(test_signal, nspans)
 
@@ -122,9 +134,9 @@ def test_navigator(test_signal, nspans):
     return all_sums
 
 
-@sig_mpl_compare('sig')
-@pytest.mark.parametrize('nspans', [1, 2, 3])
-@pytest.mark.parametrize('span_out', [1, 2, 3])
+@sig_mpl_compare("sig")
+@pytest.mark.parametrize("nspans", [1, 2, 3])
+@pytest.mark.parametrize("span_out", [1, 2, 3])
 def test_span_sums(test_signal, nspans, span_out):
     all_sums, spans, span_sigs, span_sums = plot_span_map(test_signal, nspans)
 
@@ -134,21 +146,15 @@ def test_span_sums(test_signal, nspans, span_out):
     return span_sums[span_out - 1]
 
 
-@sig_mpl_compare('sig')
-@pytest.mark.parametrize('which_plot', ['all_sums', 'span_sums'])
+@sig_mpl_compare("sig")
+@pytest.mark.parametrize("which_plot", ["all_sums", "span_sums"])
 def test_interaction(test_signal, which_plot):
     all_sums, spans, span_sigs, span_sums = plot_span_map(test_signal, 1)
 
     spans[0].left = 200
     spans[0].right = 1000
 
-    if which_plot == 'all_sums':
+    if which_plot == "all_sums":
         return all_sums
-    elif which_plot == 'span_sums':
+    elif which_plot == "span_sums":
         return span_sums[0]
-
-
-
-
-
-

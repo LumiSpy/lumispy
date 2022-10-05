@@ -160,12 +160,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                         )
                         var = self.get_noise_variance()
                     svar = self._deepcopy_with_new_data(
-                        var2eV(
-                            var.isig[::-1].data,
-                            factor,
-                            oldaxis,
-                            evaxis.axis,
-                        ),
+                        var2eV(var.isig[::-1].data, factor, oldaxis, evaxis.axis,),
                         copy_variance=False,
                         copy_learning_results=False,
                     )
@@ -286,11 +281,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         if inplace:
             # convert data
             if jacobian:
-                self.data = data2invcm(
-                    self.isig[::-1].data,
-                    factor,
-                    invcmaxis.axis,
-                )
+                self.data = data2invcm(self.isig[::-1].data, factor, invcmaxis.axis,)
             else:
                 self.data = self.isig[::-1].data
             # convert axis
@@ -313,11 +304,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                         var = self.get_noise_variance()
                     # convert
                     svar = self._deepcopy_with_new_data(
-                        var2invcm(
-                            var.isig[::-1].data,
-                            factor,
-                            invcmaxis.axis,
-                        ),
+                        var2invcm(var.isig[::-1].data, factor, invcmaxis.axis,),
                         copy_variance=False,
                         copy_learning_results=False,
                     )
@@ -340,11 +327,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         else:
             # create new data array
             if jacobian:
-                s2data = data2invcm(
-                    self.isig[::-1].data,
-                    factor,
-                    invcmaxis.axis,
-                )
+                s2data = data2invcm(self.isig[::-1].data, factor, invcmaxis.axis,)
             else:
                 s2data = self.isig[::-1].data
 
@@ -367,11 +350,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
                             copy_learning_results=False,
                         )
                     s2var = s2._deepcopy_with_new_data(
-                        var2invcm(
-                            var.isig[::-1].data,
-                            factor,
-                            invcmaxis.axis,
-                        ),
+                        var2invcm(var.isig[::-1].data, factor, invcmaxis.axis,),
                         copy_variance=False,
                         copy_learning_results=False,
                     )

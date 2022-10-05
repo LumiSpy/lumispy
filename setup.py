@@ -59,9 +59,7 @@ setup(
         "coverage": ["pytest-cov", "codecov"],
         "build-doc": ["sphinx>=1.7", "sphinx_rtd_theme", "sphinx-toggleprompt"],
     },
-    package_data={
-        "lumispy": ["*.py", "hyperspy_extension.yaml"],
-    },
+    package_data={"lumispy": ["*.py", "hyperspy_extension.yaml"],},
     entry_points={"hyperspy.extensions": ["lumispy = lumispy"]},
     project_urls={  # Optional
         "Bug Reports": "https://github.com/lumispy/lumispy/issues",
