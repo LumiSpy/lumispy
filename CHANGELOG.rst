@@ -12,6 +12,7 @@ Added
 -----
 - Improved documentation
 - Use `lgtm.com <https://lgtm.com/projects/g/LumiSpy/lumispy/>`_ to check code integrity
+- Added ``lumispy.utils.analysis.plot_span_map`` for interactively viewing how different peaks vary spatially in a hyperspectra.
 
 Changed
 -------
