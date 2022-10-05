@@ -32,7 +32,7 @@ from hyperspy.axes import DataAxis, UniformDataAxis
 
 
 def _n_air(x):
-    """Relative permittivity of air as a function of WL in nm.
+    """Refractive index of air as a function of WL in nm.
     This analytical function is correct for the range 185-1700 nm.
     According to `E.R. Peck and K. Reeder. Dispersion of air,
     J. Opt. Soc. Am. 62, 958-962 (1972).`
@@ -65,22 +65,22 @@ def _n_air(x):
 
 def nm2eV(x):
     """Converts wavelength (nm) to energy (eV) using wavelength-dependent
-    permittivity of air.
+    refractive index of air.
     """
     return 1e9 * c.h * c.c / (c.e * _n_air(x) * x)
 
 
 def eV2nm(x):
     """Converts energy (eV) to wavelength (nm) using wavelength-dependent
-    permittivity of air.
+    refractive index of air.
     """
-    wl = 1239.5 / x  # approximate WL to obtain permittivity
+    wl = 1239.5 / x  # approximate WL to obtain refractive index
     return 1e9 * c.h * c.c / (c.e * _n_air(wl) * x)
 
 
 def axis2eV(ax0):
     """Converts given signal axis to energy scale (eV) using wavelength
-    dependent permittivity of air. Assumes wavelength in units of nm unless the
+    dependent refractive index of air. Assumes wavelength in units of nm unless the
     axis units are specifically set to µm.
     """
     if ax0.units == "eV":
