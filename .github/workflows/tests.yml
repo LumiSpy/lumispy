@@ -23,7 +23,7 @@ jobs:
             PYTEST_ARGS_COVERAGE: --cov=lumispy --cov-report=xml
             LABEL: /coverage
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.1.0
 
       - uses: actions/setup-python@v4
         name: Install Python
