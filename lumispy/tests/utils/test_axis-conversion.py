@@ -189,6 +189,12 @@ def test_to_eV(jacobian, variance):
         assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
 
 
+def test_eV_slicing():
+    S = LumiSpectrum(arange(100), axes=[{"axis": arange(100) + 300}])
+    S.to_eV(inplace=True)
+    S.isig[3.251:4.052]
+
+
 @mark.parametrize(("jacobian"), (True, False))
 def test_reset_variance_linear_model_eV(jacobian):
     axis = UniformDataAxis(size=20, offset=200, scale=10)
@@ -378,6 +384,12 @@ def test_to_invcm(jacobian, variance):
         assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
 
 
+def test_invcm_slicing():
+    S = LumiSpectrum(arange(100), axes=[{"axis": arange(100) + 300}])
+    S.to_invcm(inplace=True)
+    S.isig[26000.0:30000.0]
+
+
 @mark.parametrize(("jacobian"), (True, False))
 def test_reset_variance_linear_model_invcm(jacobian):
     axis = UniformDataAxis(size=20, offset=200, scale=10)
@@ -555,6 +567,12 @@ def test_to_raman_shift_laser():
     assert S2.axes_manager[0].size == 20
     assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
     assert_allclose(S1.data, S2.data, 5e-4)
+
+
+def test_ramanshift_slicing():
+    S = LumiSpectrum(arange(100), axes=[{"axis": arange(100) + 300}])
+    S.to_raman_shift(inplace=True, laser=295)
+    S.isig[3000.0:8000.0]
 
 
 def test_solve_grating_equation():
