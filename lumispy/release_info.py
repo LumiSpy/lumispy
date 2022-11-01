@@ -1,10 +1,10 @@
 name = "lumispy"
-version = "0.2.1dev"
+version = "0.2.1"
 description = "Analysis of luminescence spectroscopy data with HyperSpy."
 author = "The LumiSpy developers"
 copyright = "Copyright 2019-2022, LumiSpy developers"
 credits = ["The LumiSpy developers"]
-url = "http://lumispy.org"
+url = "https://lumispy.org"
 license = "GPLv3"
 platforms = ["Linux", "Mac OSX", "Windows XP/2000/NT", "Windows 95/98/ME"]
 maintainer = "Jordi Ferrer Orri, Jonas Lähnemann, Duncan Johnstone, Eric Prestat"
