@@ -16,6 +16,7 @@ Added
 Changed
 -------
 - Fix conversion to Raman shift (relative wavenumber) and make ``jacobian=False`` default; ``fix inplace=False`` for axis conversions
+- Fix ``to_eV`` and ``to_invcm``, as slicing with `.isig[]` was failing on converted signals
 - ``s.remove_negative`` now defaults to ``inplace=False`` (previously ``True``)
 
 Maintenance

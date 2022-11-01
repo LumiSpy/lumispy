@@ -87,10 +87,10 @@ def axis2eV(ax0):
         raise AttributeError("Signal unit is already eV.")
     # transform axis, invert direction
     if ax0.units == "µm":
-        evaxis = nm2eV(1000 * ax0.axis)[::-1]
+        evaxis = nm2eV(1000 * ax0.axis)[::-1].astype("float")
         factor = 1e3  # correction factor for intensity
     else:
-        evaxis = nm2eV(ax0.axis)[::-1]
+        evaxis = nm2eV(ax0.axis)[::-1].astype("float")
         factor = 1e6
     axis = DataAxis(axis=evaxis, name="Energy", units="eV", navigate=False)
     return axis, factor
@@ -149,10 +149,10 @@ def axis2invcm(ax0):
         raise AttributeError(r"Signal unit is already cm$^{-1}$.")
     # transform axis, invert direction
     if ax0.units == "µm":
-        invcmaxis = nm2invcm(1000 * ax0.axis)[::-1]
+        invcmaxis = nm2invcm(1000 * ax0.axis)[::-1].astype("float")
         factor = 1e4  # correction factor for intensity
     else:
-        invcmaxis = nm2invcm(ax0.axis)[::-1]
+        invcmaxis = nm2invcm(ax0.axis)[::-1].astype("float")
         factor = 1e7
     axis = DataAxis(
         axis=invcmaxis, name="Wavenumber", units=r"cm$^{-1}$", navigate=False

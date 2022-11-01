@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 30
     env:
       MPLBACKEND: agg
-      PIP_ARGS: --upgrade --use-feature=2020-resolver -e
+      PIP_ARGS: --upgrade -e
       PYTEST_ARGS: --pyargs lumispy
       PYTEST_ARGS_COVERAGE: 
     strategy:
