@@ -35,12 +35,6 @@ backgrounds = [
     (LumiSpectrum(np.ones(50)), [np.zeros(50, dtype="float64")]),
 ]
 
-error_backgrounds = [
-    ([np.linspace(0, 49, num=10, dtype="float64"), np.ones(50)], AttributeError),
-    ([[1, 1], [1, 1], [1, 1]], AttributeError),
-    # ([np.linspace(0, 48, num=10, dtype="float64"), np.ones(50)], AttributeError),
-]
-
 
 class TestLumiSpectrum:
     def test_remove_background_from_file(self):
@@ -55,9 +49,9 @@ class TestLumiSpectrum:
 
     def test_errors_raise(self):
         s = LumiSpectrum(np.ones(50))
-        for bkg, error in error_backgrounds:
-            with pytest.raises(error):
-                s.remove_background_from_file(bkg)
+        with pytest.raises(AttributeError):
+            bkg = np.array([[1, 1], [1, 1], [1, 1]])
+            s.remove_background_from_file(bkg)
         # Test that a GUI is opened if s.remove_background_from_file is passed without a background
         # s.remove_background_from_file()
         # Test double background removal

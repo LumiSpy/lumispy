@@ -247,7 +247,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
         by doing a Jacobian transformation, see e.g. Mooney and Kambhampati,
         J. Phys. Chem. Lett. 4, 3316 (2013), doi:10.1021/jz401508t, which
-        ensures that integrated signals are correct also in the wavenumber 
+        ensures that integrated signals are correct also in the wavenumber
         domain. If the variance of the signal is known, i.e.
         `metadata.Signal.Noise_properties.variance` is a signal representing the
         variance, a squared renormalization of the variance is performed.
@@ -557,10 +557,6 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 try:
                     bkg_x = background_xy[0]
                     bkg_y = background_xy[1]
-                    if len(bkg_x) is not len(bkg_y):
-                        raise AttributeError(
-                            "The length of the x and y axis must match."
-                        )
                 except IndexError:  # pragma: no cover
                     raise AttributeError(
                         "Please provide a background file containing both the x and y axis."
