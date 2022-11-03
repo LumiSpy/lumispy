@@ -8,6 +8,10 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 
 UNRELEASED
 ==========
+
+
+2022-11-02 - version 0.2.1
+==========================
 Added
 -----
 - Improved documentation
@@ -21,7 +25,7 @@ Changed
 
 Maintenance
 -----------
-- Use ``softprops/action-gh-release`` action instead of deprecated ``create-release`` . Pin action to a commit SHA.
+- Use ``softprops/action-gh-release`` action instead of deprecated ``create-release``, pin action to a commit SHA
 
 2022-04-29 - version 0.2
 ========================
