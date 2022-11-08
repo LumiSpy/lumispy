@@ -11,7 +11,7 @@ Welcome to LumiSpy's documentation!
 .. |Codecov_status| image:: https://codecov.io/gh/lumispy/lumispy/branch/main/graph/badge.svg?token=8ZFX8X4Z1I
 .. _Codecov_status: https://codecov.io/gh/lumispy/lumispy
 .. |CodeQL_status| image:: https://github.com/lumispy/lumispy/actions/workflows/codeql.yml/badge.svg
-.. _CodeQL_status: https://github.com/lumispy/lumispy/actions
+.. _CodeQL_status: https://github.com/LumiSpy/lumispy/security/code-scanning
 .. |Documentation_status| image:: https://readthedocs.org/projects/lumispy/badge/?version=latest
 .. _Documentation_status: https://lumispy.readthedocs.io/en/latest/?badge=latest
 
