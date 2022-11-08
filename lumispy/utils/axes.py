@@ -46,8 +46,8 @@ def _n_air(x):
             if wl > 1700:
                 wl = 1700
         else:
-            wl[wl < 185] = 185  # lgtm [py/modification-of-default-value]
-            wl[wl > 1700] = 1700  # lgtm [py/modification-of-default-value]
+            wl[wl < 185] = 185
+            wl[wl > 1700] = 1700
         warn(
             "The wavelength range exceeds the interval of 185 to 1700 nm for "
             "which the exact refractive index of air is used. Beyond this "

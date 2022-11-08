@@ -1,9 +1,8 @@
 Welcome to LumiSpy's documentation!
 ***********************************
 
-|Build_status|_ |Tests|_ |Codecov_status|_ |Language_grade|_ |Total_alerts|_ 
-|Python_version|_ |PyPI_version|_ |Anaconda_version|_ |License|_ |DOI|_
-|Documentation_status|_
+|Build_status|_ |Tests|_ |Codecov_status|_ |CodeQL_status|_ |Python_version|_
+|PyPI_version|_ |Anaconda_version|_ |License|_ |DOI|_ |Documentation_status|_
 
 .. |Build_status| image:: https://dev.azure.com/Lumispy/lumispy/_apis/build/status/LumiSpy.lumispy?branchName=main
 .. _Build_status: https://dev.azure.com/Lumispy/lumispy/_build/latest?definitionId=3&branchName=main
@@ -11,10 +10,8 @@ Welcome to LumiSpy's documentation!
 .. _Tests: https://github.com/lumispy/lumispy/actions
 .. |Codecov_status| image:: https://codecov.io/gh/lumispy/lumispy/branch/main/graph/badge.svg?token=8ZFX8X4Z1I
 .. _Codecov_status: https://codecov.io/gh/lumispy/lumispy
-.. |Language_grade| image:: https://img.shields.io/lgtm/grade/python/g/LumiSpy/lumispy.svg?logo=lgtm&logoWidth=18
-.. _Language_grade: https://lgtm.com/projects/g/LumiSpy/lumispy/context:python
-.. |Total_alerts| image:: https://img.shields.io/lgtm/alerts/g/LumiSpy/lumispy.svg?logo=lgtm&logoWidth=18
-.. _Total_alerts: https://lgtm.com/projects/g/LumiSpy/lumispy/alerts/
+.. |CodeQL_status| image:: https://github.com/lumispy/lumispy/actions/workflows/codeql.yml/badge.svg
+.. _CodeQL_status: https://github.com/LumiSpy/lumispy/security/code-scanning
 .. |Documentation_status| image:: https://readthedocs.org/projects/lumispy/badge/?version=latest
 .. _Documentation_status: https://lumispy.readthedocs.io/en/latest/?badge=latest
 

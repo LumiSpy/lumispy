@@ -8,14 +8,19 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 
 UNRELEASED
 ==========
-
+Changed
+-------
+- Use `GitHub code scanning (CodeQL)
+  <https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql>`_
+  for integrity check as `it replaces LGTM
+  <https://github.blog/2022-08-15-the-next-step-for-lgtm-com-github-code-scanning/>`_
 
 2022-11-02 - version 0.2.1
 ==========================
 Added
 -----
 - Improved documentation
-- Use `lgtm.com <https://lgtm.com/projects/g/LumiSpy/lumispy/>`_ to check code integrity
+- Use lgtm.com to check code integrity
 
 Changed
 -------
