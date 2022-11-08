@@ -8,14 +8,13 @@ sys.path.append("../../")
 
 
 # -- Project information
-exec(open("../../lumispy/release_info.py").read())  # grab version info
+from lumispy import release_info
 
 project = "LumiSpy"
-copyright = copyright
-author = author
-
-release = version
-version = version
+version = release_info.version
+release = release_info.version
+author = release_info.author
+copyright = release_info.copyright
 
 # -- General configuration
 

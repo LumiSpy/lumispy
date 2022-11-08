@@ -112,7 +112,7 @@ class CLSpectrum(LumiSpectrum):
             )
 
         if inplace:
-            return
+            return None
         else:
             return signal
 

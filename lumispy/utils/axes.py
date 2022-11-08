@@ -340,8 +340,6 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
             if hasattr(axis, "_expression") or axis.is_uniform:
                 axis.convert_to_non_uniform_axis()
             # 2nd axis does not need to be converted, because it contains axis vector
-            # if hasattr(axis2,'_expression'):
-            #    axis2.convert_to_non_uniform_axis()
             # join axis vectors
             axis.axis = np.hstack((axis.axis[: ind1 + 1], axis2.axis[ind2:]))
             axis.size = axis.axis.size
