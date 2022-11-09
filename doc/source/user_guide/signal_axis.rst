@@ -1,4 +1,4 @@
-.. _signal_axis-label:
+.. _signal_axis:
 
 Non-uniform signal axes
 ***********************
@@ -20,10 +20,10 @@ either nm or µm.
 Accepted parameters are ``inplace=True/False`` (default is True), which
 determines whether the current signal object is modified or a new one is
 created, and ``jacobian=True/False`` (default is True, see
-:ref:`jacobian-label`).
+:ref:`jacobian`).
 
 
-.. _energy_axis-label:
+.. _energy_axis:
 
 The energy axis
 ===============
@@ -54,7 +54,7 @@ index of air, see also [Pfueller]_.
     the range are used and a warning is raised).
 
 
-.. _wavenumber_axis-label:
+.. _wavenumber_axis:
 
 The wavenumber axis/Raman shifts
 ================================
@@ -80,7 +80,7 @@ TODO: Automatically read laser wavelength from metadata if given there.
     >>> s.to_raman_shift(laser=325)
 
 
-.. _jacobian-label:
+.. _jacobian:
 
 Jacobian transformation
 =======================
@@ -112,7 +112,7 @@ figure illustrates the effect of the Jacobian transformation:
   :alt: Illustration of the Jacobian transformation from wavelength (nm) to energy (eV).
 
 
-.. _jacobian_variance-label:
+.. _jacobian_variance:
 
 Transformation of the variance
 ------------------------------
@@ -127,7 +127,7 @@ if the ``metadata.Signal.Noise_properties.variance`` attribute is a constant,
 it is converted into a :external:py:class:`hyperspy.signal.BaseSignal` object
 before the transformation.
 
-See :ref:`fitting_variance-label` for more general information on data variance
+See :ref:`fitting_variance` for more general information on data variance
 in the context of model fitting and the HyperSpy documentation on `setting
 the noise properties
 <https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html?highlight=variance_linear_model#setting-the-noise-properties>`_.

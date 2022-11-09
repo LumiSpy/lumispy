@@ -31,7 +31,7 @@ data analysis provided by the `HyperSpy <https://hyperspy.org/>`_ library. It is
 aimed at helping with the analysis of luminescence spectroscopy data
 (cathodoluminescence, photoluminescence, electroluminescence, Raman, SNOM).
 
-Check out the :ref:`installation-label` section for further information, including
+Check out the :ref:`installation` section for further information, including
 how to start using this project.
 
 Complementing this documentation, the `LumiSpy Demos <https://github.com/LumiSpy/lumispy-demos>`_
