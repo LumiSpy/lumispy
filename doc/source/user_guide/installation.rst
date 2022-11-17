@@ -1,4 +1,4 @@
-.. _installation-label:
+.. _installation:
 
 Installation
 ************
@@ -8,15 +8,15 @@ To install LumiSpy, you have the following options (independent of the operating
 1. LumiSpy is included in the `HyperSpy Bundle <https://hyperspy.org/hyperspy-bundle/>`_,
    a standalone program that includes a python distribution and all relevant libraries 
    (recommended if you do not use *python* for anything else).
-2. :ref:`conda-label` (recommended if you are also working with other *python* packages).
-3. :ref:`pip-label`.
+2. :ref:`conda` (recommended if you are also working with other *python* packages).
+3. :ref:`pip`.
 4. Installing the development version from `GitHub <https://github.com/LumiSpy/lumispy/>`_, 
    refer to the appropriate section in the `HyperSpy user guide
    <https://hyperspy.org/hyperspy-doc/current/user_guide/install.html#install-development-version>`_
    (replacing ``hyperspy`` by ``lumispy``).
 
 
-.. _conda-label:
+.. _conda:
 
 Installation using conda
 ========================
@@ -58,7 +58,7 @@ Installation is completed! To start using it, check the next section.
 .. Note::
 
    If you run into trouble, check the more detailed documentation in the `HyperSpy user guide
-   <https://hyperspy.org/hyperspy-doc/current/user_guide/install.html#installation-using-conda>`_.
+   <https://hyperspy.org/hyperspy-doc/current/user_guide/install.html#installation-using-conda>`__.
 
 
 3. Getting Started
@@ -80,7 +80,7 @@ have been curated as a series of Jupyter notebooks that you can work through
 and modify to perform many common analyses.
 
 
-.. _pip-label:
+.. _pip:
 
 Installation using pip
 ========================

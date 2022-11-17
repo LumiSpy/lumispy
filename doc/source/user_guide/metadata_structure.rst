@@ -163,7 +163,7 @@ magnification
     Magnification of the microscope objective used to focus the beam to the
     sample.
 
-.. _filter_label:
+.. _filter:
 
 Filter
 -------
@@ -266,7 +266,7 @@ Filter
 
 Information about additional filters entered into the lightpath after the
 sample. In case multiple filters are used, they should be numbered
-`Filter_1`, etc. See :ref:`filter-label` above for details on items that
+`Filter_1`, etc. See :ref:`filter` above for details on items that
 may potentially be included.
 
 Detector
