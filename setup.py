@@ -18,19 +18,22 @@
 
 from setuptools import setup, find_packages
 
-exec(open("lumispy/release_info.py").read())  # grab version info
+release_info = {}  # grab release info
+with open("lumispy/release_info.py") as f:
+    exec(f.read(), release_info)
 
+with open("README.md") as f:  # grab readme
+    long_description = f.read()
 
 setup(
     name="lumispy",
-    version=version,
-    description=description,
-    author=author,
-    # author_email=email,
-    license=license,
-    platforms=platforms,
-    url=url,
-    long_description=open("README.md").read(),
+    version=release_info["version"],
+    description=release_info["description"],
+    author=release_info["author"],
+    license=release_info["license"],
+    platforms=release_info["platforms"],
+    url=release_info["url"],
+    long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -46,7 +49,7 @@ setup(
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Physics",
     ],
-    keywords=keywords,
+    keywords=release_info["keywords"],
     packages=find_packages(),
     # adjust the tabbing
     install_requires=[
