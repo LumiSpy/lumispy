@@ -96,7 +96,7 @@ def axis2eV(ax0):
     return axis, factor
 
 
-def data2eV(data, factor, ax0, evaxis):
+def data2eV(data, factor, evaxis, ax0):
     """The intensity is converted from counts/nm (counts/µm) to counts/meV by
     doing a Jacobian transformation, see e.g. Mooney and Kambhampati, J. Phys.
     Chem. Lett. 4, 3316 (2013). Ensures that integrated signals are still
@@ -114,7 +114,7 @@ def data2eV(data, factor, ax0, evaxis):
         return data * factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)
 
 
-def var2eV(variance, factor, ax0, evaxis):
+def var2eV(variance, factor, evaxis, ax0):
     """The variance is converted doing a squared Jacobian renormalization to
     match with the transformation of the data.
     """
@@ -160,7 +160,7 @@ def axis2invcm(ax0):
     return axis, factor
 
 
-def data2invcm(data, factor, invcmaxis):
+def data2invcm(data, factor, invcmaxis, ax0=None):
     r"""The intensity is converted from counts/nm (counts/µm) to
     counts/cm$^{-1}$ by doing a Jacobian transformation, see e.g. Mooney and
     Kambhampati, J. Phys. Chem. Lett. 4, 3316 (2013). Ensures that integrated
@@ -169,7 +169,7 @@ def data2invcm(data, factor, invcmaxis):
     return data * factor / (invcmaxis**2)
 
 
-def var2invcm(variance, factor, invcmaxis):
+def var2invcm(variance, factor, invcmaxis, ax0=None):
     r"""The variance is converted doing a squared Jacobian renormalization to
     match with the transformation of the data.
     """
