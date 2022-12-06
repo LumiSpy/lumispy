@@ -75,11 +75,11 @@ def test_data2eV():
     data = 100 * ones(20)
     ax0 = DataAxis(axis=arange(200, 400, 10), units="nm")
     evaxis, factor = axis2eV(ax0)
-    evdata = data2eV(data, factor, ax0, evaxis.axis)
+    evdata = data2eV(data, factor, evaxis.axis, ax0)
     assert_allclose(evdata[0], 12.271168)
     ax0 = DataAxis(axis=arange(0.2, 0.4, 0.01), units="µm")
     evaxis, factor = axis2eV(ax0)
-    evdata = data2eV(data, factor, ax0, evaxis.axis)
+    evdata = data2eV(data, factor, evaxis.axis, ax0)
     assert_allclose(evdata[0], 12.271168e-3)
 
 
@@ -87,7 +87,7 @@ def test_var2eV():
     data = 100 * ones(20)
     ax0 = DataAxis(axis=arange(200, 400, 10), units="nm")
     evaxis, factor = axis2eV(ax0)
-    evvar = var2eV(data, factor, ax0, evaxis.axis)
+    evvar = var2eV(data, factor, evaxis.axis, ax0)
     assert_allclose(evvar[0], 1.5058156)
 
 
