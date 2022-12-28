@@ -28,6 +28,7 @@ from hyperspy.axes import DataAxis
 from lumispy.signals.common_luminescence import CommonLumi
 from lumispy import nm2invcm, to_array, savetxt
 from lumispy.utils.axes import GRATING_EQUATION_DOCSTRING_PARAMETERS
+from lumispy.utils.signals import com
 from lumispy.utils import (
     axis2eV,
     data2eV,
@@ -81,8 +82,12 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 != 1
             )
         ):
-            self.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor = 1
-            self.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset = 0
+            self.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor = (
+                1
+            )
+            self.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset = (
+                0
+            )
             self.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor = (
                 1
             )
@@ -93,7 +98,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 UserWarning,
             )
 
-    def _convert_data(self, newaxis, factor, inplace, jacobian, data2, var2):
+    def _convert_data(
+        self, newaxis, factor, inplace, jacobian, data2, var2
+    ):
         """Utility function to perform the data and variance conversion for
         signal unit transformations.
         """
@@ -117,12 +124,15 @@ class LumiSpectrum(Signal1D, CommonLumi):
         # create new signal object with correct data, axes, metadata
         else:
             s2 = self._deepcopy_with_new_data(
-                s2data, copy_variance=(not jacobian), copy_learning_results=False
+                s2data,
+                copy_variance=(not jacobian),
+                copy_learning_results=False,
             )
         # convert axis
         oldaxis = self.axes_manager.signal_axes[0]
         s2.axes_manager.set_axis(
-            newaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
+            newaxis,
+            self.axes_manager.signal_axes[0].index_in_axes_manager,
         )
         # convert variance
         if self.metadata.has_item("Signal.Noise_properties.variance"):
@@ -200,7 +210,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         evaxis, factor = axis2eV(self.axes_manager.signal_axes[0])
 
-        return self._convert_data(evaxis, factor, inplace, jacobian, data2eV, var2eV)
+        return self._convert_data(
+            evaxis, factor, inplace, jacobian, data2eV, var2eV
+        )
 
     TO_INVCM_DOCSTRING = """
         The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
@@ -258,7 +270,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
         >>> S1.to_invcm(laser=325)
     """
 
-    def to_invcm_relative(self, laser=None, inplace=True, jacobian=False):
+    def to_invcm_relative(
+        self, laser=None, inplace=True, jacobian=False
+    ):
         """Converts signal axis of 1D signal to non-linear wavenumber axis
         (cm^-1) relative to the exciting laser wavelength (Raman/Stokes
         shift). Assumes wavelength in units of nm unless the axis units are
@@ -277,7 +291,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         # check if laser wavelength is available
         if laser is None:
-            if not self.metadata.has_item("Acquisition_instrument.Laser.wavelength"):
+            if not self.metadata.has_item(
+                "Acquisition_instrument.Laser.wavelength"
+            ):
                 raise AttributeError(
                     "Laser wavelength is neither given in the metadata nor passed"
                     " to the function."
@@ -287,8 +303,12 @@ class LumiSpectrum(Signal1D, CommonLumi):
                     "Acquisition_instrument.Laser.wavelength"
                 )
         # check if laser units make sense in respect to signal units
-        if (self.axes_manager.signal_axes[0].units == "µm" and laser > 10) or (
-            self.axes_manager.signal_axes[0].units == "nm" and laser < 100
+        if (
+            self.axes_manager.signal_axes[0].units == "µm"
+            and laser > 10
+        ) or (
+            self.axes_manager.signal_axes[0].units == "nm"
+            and laser < 100
         ):
             raise AttributeError(
                 "Laser wavelength units do not seem to match the signal units."
@@ -314,28 +334,37 @@ class LumiSpectrum(Signal1D, CommonLumi):
             s2 = self.to_invcm(inplace=inplace, jacobian=jacobian)
         # replace axis
         s2.axes_manager.set_axis(
-            invcmaxis, self.axes_manager.signal_axes[0].index_in_axes_manager
+            invcmaxis,
+            self.axes_manager.signal_axes[0].index_in_axes_manager,
         )
         s2.data = s2.isig[::-1].data
         # replace variance axis
-        if s2.metadata.has_item("Signal.Noise_properties.variance") and not isinstance(
-            s2.get_noise_variance(), (float, int)
-        ):
+        if s2.metadata.has_item(
+            "Signal.Noise_properties.variance"
+        ) and not isinstance(s2.get_noise_variance(), (float, int)):
             s2.metadata.Signal.Noise_properties.variance.axes_manager.set_axis(
-                invcmaxis, s2.axes_manager.signal_axes[0].index_in_axes_manager
+                invcmaxis,
+                s2.axes_manager.signal_axes[0].index_in_axes_manager,
             )
             s2.metadata.Signal.Noise_properties.variance.data = (
-                s2.metadata.Signal.Noise_properties.variance.isig[::-1].data
+                s2.metadata.Signal.Noise_properties.variance.isig[
+                    ::-1
+                ].data
             )
         if not inplace:
             return s2
 
-    to_invcm_relative.__doc__ %= (TO_INVCM_DOCSTRING, TO_INVCMREL_EXAMPLE)
+    to_invcm_relative.__doc__ %= (
+        TO_INVCM_DOCSTRING,
+        TO_INVCMREL_EXAMPLE,
+    )
 
     # Alias Method Name
     to_raman_shift = to_invcm_relative
 
-    def remove_background_from_file(self, background=None, inplace=False, **kwargs):
+    def remove_background_from_file(
+        self, background=None, inplace=False, **kwargs
+    ):
         """Subtract the background to the signal in all navigation axes. If no
         background file is passed as argument, the `remove_background()` from
         HyperSpy is called with the GUI.
@@ -385,7 +414,9 @@ class LumiSpectrum(Signal1D, CommonLumi):
         else:
             signal_x = self.axes_manager.signal_axes[0].axis
 
-            if hasattr(background, "axes_manager"):  # Check if Hyperspy-like object
+            if hasattr(
+                background, "axes_manager"
+            ):  # Check if Hyperspy-like object
                 x = background.axes_manager.signal_axes[0].axis
                 y = background.data
                 background = [x, y]
@@ -416,13 +447,21 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 self_subtracted = self.map(
                     lambda s, bkg: s - bkg, bkg=bkg_y, inplace=False
                 )
-                self_subtracted.metadata.set_item("Signal.background_subtracted", True)
-                self_subtracted.metadata.set_item("Signal.background", bkg_y)
+                self_subtracted.metadata.set_item(
+                    "Signal.background_subtracted", True
+                )
+                self_subtracted.metadata.set_item(
+                    "Signal.background", bkg_y
+                )
                 return self_subtracted
             else:
-                self.metadata.set_item("Signal.background_subtracted", True)
+                self.metadata.set_item(
+                    "Signal.background_subtracted", True
+                )
                 self.metadata.set_item("Signal.background", bkg_y)
-                return self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True)
+                return self.map(
+                    lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True
+                )
 
     SAVETXT_EXAMPLE = """
     Examples
@@ -451,16 +490,28 @@ class LumiSpectrum(Signal1D, CommonLumi):
     """
 
     def savetxt(
-        self, filename, fmt="%.5f", delimiter="\t", axes=True, transpose=False, **kwargs
+        self,
+        filename,
+        fmt="%.5f",
+        delimiter="\t",
+        axes=True,
+        transpose=False,
+        **kwargs,
     ):
         """Writes luminescence spectrum object to simple text file.
         %s
         %s
         %s
         """
-        savetxt(self, filename, fmt, delimiter, axes, transpose, **kwargs)
+        savetxt(
+            self, filename, fmt, delimiter, axes, transpose, **kwargs
+        )
 
-    savetxt.__doc__ %= (SAVETXT_DOCSTRING, SAVETXT_PARAMETERS, SAVETXT_EXAMPLE)
+    savetxt.__doc__ %= (
+        SAVETXT_DOCSTRING,
+        SAVETXT_PARAMETERS,
+        SAVETXT_EXAMPLE,
+    )
 
     TOARRAY_EXAMPLE = """
     Notes
@@ -502,7 +553,11 @@ class LumiSpectrum(Signal1D, CommonLumi):
         """
         return to_array(self, axes, transpose)
 
-    to_array.__doc__ %= (TOARRAY_DOCSTRING, TOARRAY_PARAMETERS, TOARRAY_EXAMPLE)
+    to_array.__doc__ %= (
+        TOARRAY_DOCSTRING,
+        TOARRAY_PARAMETERS,
+        TOARRAY_EXAMPLE,
+    )
 
     def px_to_nm_grating_solver(
         self,
@@ -553,14 +608,62 @@ class LumiSpectrum(Signal1D, CommonLumi):
             s = self.deepcopy()
 
         s.axes_manager.set_axis(
-            nm_axis, self.axes_manager.signal_axes[0].index_in_axes_manager
+            nm_axis,
+            self.axes_manager.signal_axes[0].index_in_axes_manager,
         )
 
         return s
 
-    px_to_nm_grating_solver.__doc__ %= GRATING_EQUATION_DOCSTRING_PARAMETERS.replace(
-        "\n", "\n\t"
+    px_to_nm_grating_solver.__doc__ %= (
+        GRATING_EQUATION_DOCSTRING_PARAMETERS.replace("\n", "\n\t")
     )
+
+    def centroid(self, slice=None, npeaks=1):
+        """
+        Finds the centroid (center of mass) of a peak in the spectrum from the wavelength (or pixel number) and the intensity at each pixel value. It basically represents a "weighted average" of the peak.
+        NOTE: This function only works for a single peak. If you have multiple peaks, slice the signal beforehand or use the slice parameter.
+        TODO: Implement this function for multiple peaks (npeaks = 2) by finding the top 2 peaks from mean spectrum and then returning a signal with 2 com.
+
+        Parameters
+        ----------
+        slice : tuple (2)
+            An tuple representing the indices of the wavelength (start index, end index) where the peak is located. If the tuple contains int, it slices on index. Ig the tuple contains float, it slices on signal units (defualt hyperspy s.inav[:] functionality).
+
+        Returns
+        -------
+        signal : Signal1D
+            A signal containing the center of mass for each navigation pixel.
+        """
+        if slice:
+            if type(slice) != tuple:
+                raise TypeError(
+                    "The `slice` parameter must be a tuple of length 2."
+                )
+            if len(slice) != 2:
+                raise ValueError(
+                    f"The `slice` parameter must be a tuple of length 2. You passed a tuple of length {len(slice)}"
+                )
+
+            s = self.isig[slice[0] : slice[1]]
+
+        else:
+            s = self
+
+        if npeaks > 1 & npeaks < 1:
+            raise NotImplementedError(
+                "Centroid only works for one peak."
+            )
+
+        wavelengths = s.axes_manager.signal_axes[0].axis
+        center_of_mass = s.map(
+            com, wavelengths=wavelengths, inplace=False
+        )
+
+        # Transfer axes metadata
+        ax = center_of_mass.axes_manager.signal_axes[0]
+        ax.units = s.axes_manager.signal_axes[0].units
+        ax.name = s.axes_manager.signal_axes[0].name
+        return center_of_mass
 
 
 class LazyLumiSpectrum(LazySignal, LumiSpectrum):

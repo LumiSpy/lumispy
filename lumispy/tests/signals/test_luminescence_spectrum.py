@@ -63,7 +63,9 @@ class TestLumiSpectrum:
         pytest.importorskip("hyperspy_gui_ipywidgets")
         s = LumiSpectrum(np.ones(50))
         with pytest.warns(SyntaxWarning, match="Using the Hyperspy"):
-            s.remove_background_from_file(background=None, display=False)
+            s.remove_background_from_file(
+                background=None, display=False
+            )
 
     def test_deprecation_warning(self):
         s = LumiSpectrum(np.ones(50))
@@ -84,14 +86,64 @@ class TestLumiSpectrum:
             600,
             150,
         )
-        s.px_to_nm_grating_solver(3, -20, 300, 25, 600, 150, inplace=True)
+        s.px_to_nm_grating_solver(
+            3, -20, 300, 25, 600, 150, inplace=True
+        )
 
         assert s_copy.axes_manager.signal_axes[0].name == "Wavelength"
         assert s_copy.axes_manager.signal_axes[0].units == "nm"
         assert s.axes_manager.signal_axes[0].name == "Wavelength"
         assert s.axes_manager.signal_axes[0].units == "nm"
 
-        assert_allclose(s_copy.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1)
-        assert_allclose(s_copy.axes_manager.signal_axes[0].axis[-1], 768.249, atol=0.1)
-        assert_allclose(s.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1)
-        assert_allclose(s.axes_manager.signal_axes[0].axis[-1], 768.249, atol=0.1)
+        assert_allclose(
+            s_copy.axes_manager.signal_axes[0].axis[0],
+            368.614,
+            atol=0.1,
+        )
+        assert_allclose(
+            s_copy.axes_manager.signal_axes[0].axis[-1],
+            768.249,
+            atol=0.1,
+        )
+        assert_allclose(
+            s.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1
+        )
+        assert_allclose(
+            s.axes_manager.signal_axes[0].axis[-1], 768.249, atol=0.1
+        )
+
+    def test_center_of_mass(self):
+        s = LumiSpectrum([1, 2, 3, 2, 1, 0])
+        ax = s.axes_manager.signal_axes[0]
+        ax.offset = 200
+        ax.scale = 100
+        ax.units = "nm"
+
+        com = s.centroid()
+        assert_allclose(com.data, 400.0, atol=0.1)
+        assert (
+            s.axes_manager.signal_axes[0].units
+            == com.axes_manager.signal_axes[0].units
+        )
+
+    def test_center_of_mass_slice(self):
+        s = LumiSpectrum([100, 100, 1, 2, 3, 2, 1, 0, 100, 100])
+        ax = s.axes_manager.signal_axes[0]
+        ax.offset = 0
+        ax.scale = 100
+
+        com = s.centroid(slice=(2, -2))
+        assert_allclose(com.data, 400.0, atol=0.1)
+        com = s.centroid(slice=(200.0, 800.0))
+        assert_allclose(com.data, 400.0, atol=0.1)
+        with pytest.raises(TypeError):
+            s.centroid(slice=(1))
+        with pytest.raises(TypeError):
+            s.centroid(slice="string")
+        with pytest.raises(ValueError):
+            s.centroid(slice=(1, 2, 3))
+
+    def test_centre_of_mass_notimplemented(self):
+        s = LumiSpectrum(np.ones(5))
+        with pytest.raises(NotImplementedError):
+            s.centroid(npeaks=2)

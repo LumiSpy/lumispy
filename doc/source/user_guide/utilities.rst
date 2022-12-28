@@ -119,3 +119,28 @@ Solving the grating equation
 The function :py:func:`~.utils.axes.solve_grating_equation` follows the
 conventions described in the tutorial from 
 `Horiba Scientific <https://horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position>`_.
+
+
+.. _centroid:
+
+Calculating the centroid of a spectrum (centre of mass)
+============================
+
+
+The function :py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.centroid` (based on the utility function :py:func:`~.utils.signals.com`) is an alternative to finding the max intensity of a peak.
+It finds the centroid (center of mass) of a peak in the spectrum from the wavelength (or pixel number) and the intensity at each pixel value. It basically represents a "weighted average" of the peak as such:
+
+.. math::
+
+    com = \frac{\sum{x_i I_i}}{\sum{I_i}},
+
+where :math:`x_i` is the Planck constant, :math:`c` is the speed of light,
+:math:`e` is the wavelength (or pixel number) at which the intensity (photon counts) :math:`I_i` is measured in the spectrum.
+
+.. Note::
+
+    This function only works for a single peak. If you have multiple peaks, slice the signal beforehand or use the slice parameter (which follows the ``s.inav[:]`` convention).
+
+.. Note::
+
+    This function is good at identifying non-symmetric peaks with shoulders. Such changes would not be reflected in the peak maximum.
