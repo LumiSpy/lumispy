@@ -22,7 +22,7 @@ def com(spectrum_intensities, wavelengths):
     >>> intensities = [1, 2, 3, 2, 1, 0]
 
     >>> center_of_mass = com(wavelengths, intensities)
-    >>> print(center_of_mass)  # Outputs: 400.0
+    >>> print(center_of_mass)  # Outputs: [400.0]
     """
     if len(spectrum_intensities) != len(wavelengths):
         raise ValueError(
@@ -31,7 +31,5 @@ def com(spectrum_intensities, wavelengths):
 
     wavelengths = np.array(wavelengths)
     intensities = np.array(spectrum_intensities)
-    center_of_mass = np.sum(wavelengths * intensities) / np.sum(
-        intensities
-    )
+    center_of_mass = np.sum(wavelengths * intensities) / np.sum(intensities)
     return [center_of_mass]

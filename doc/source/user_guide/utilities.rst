@@ -9,7 +9,7 @@ This section summarizes various useful functions implemented in LumiSpy.
 .. _join_spectra:
 
 Join spectra
-============
+==============================
 
 In case several spectra (or spectral images) where subsequently recorded for
 different, but overlapping spectral windows, LumiSpy provides a utility
@@ -30,7 +30,7 @@ signals in the range of +/- 50 pixels around the centre of the overlapping regio
 .. _scale_normalize:
 
 Scaling and normalizing signal data
-===================================
+==============================
 
 For comparative plotting or a detailed analysis, the intensity of spectra may
 need to be either scaled by the respective integration times or
@@ -79,7 +79,7 @@ The default operational mode is ``inplace=False`` (a new signal object is return
 .. _spectral_map_utils:
 
 Utilities for spectral maps
-===========================
+==============================
 
 The function :py:meth:`~.signals.common_luminescence.CommonLumi.crop_edges`
 removes the specified number of pixels from all four edges of a spectral map.
@@ -96,7 +96,7 @@ It is a convenience wrapper for the ``inav`` `method in HyperSpy
 .. _unit_conversion:
 
 Unit conversion
-===============
+==============================
 
 For convenience, LumiSpy provides functions that convert between different
 units commonly used for the signal axis. Namely,
@@ -113,7 +113,7 @@ index of air.
 .. _grating_equation:
 
 Solving the grating equation
-============================
+==============================
 
 
 The function :py:func:`~.utils.axes.solve_grating_equation` follows the
@@ -124,7 +124,7 @@ conventions described in the tutorial from
 .. _centroid:
 
 Calculating the centroid of a spectrum (centre of mass)
-============================
+==============================
 
 
 The function :py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.centroid` (based on the utility function :py:func:`~.utils.signals.com`) is an alternative to finding the max intensity of a peak.
@@ -134,12 +134,27 @@ It finds the centroid (center of mass) of a peak in the spectrum from the wavele
 
     com = \frac{\sum{x_i I_i}}{\sum{I_i}},
 
-where :math:`x_i` is the Planck constant, :math:`c` is the speed of light,
-:math:`e` is the wavelength (or pixel number) at which the intensity (photon counts) :math:`I_i` is measured in the spectrum.
+where :math:`x_i` is the wavelength (or pixel number) at which the intensity of the spectrum :math:`I_i` is measured.
+
+.. code-block:: python
+
+    >>> s = lum.signals.LumiSpectrum([[[1, 2, 3, 2, 1, 0]]*2]*3)
+    >>> s
+    LumiSpectrum <2,3|5>
+
+    >>> ax = s.axes_manager.signal_axes[0]
+    >>> ax.offset = 200
+    >>> ax.scale = 100
+
+    >>> com = s.centroid()
+    >>> com
+    LumiSpectrum <2,3|1>
+    >>> com.data[0,0] 
+    400.
 
 .. Note::
 
-    This function only works for a single peak. If you have multiple peaks, slice the signal beforehand or use the slice parameter (which follows the ``s.inav[:]`` convention).
+    This function only works for a single peak. If you have multiple peaks, slice the signal beforehand or use the slice parameter (which follows the ``s.isig[:]`` convention).
 
 .. Note::
 

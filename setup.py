@@ -53,14 +53,18 @@ setup(
     packages=find_packages(),
     # adjust the tabbing
     install_requires=[
-        "numpy",
+        "numpy < 1.24",
         "scipy",
         "hyperspy >= 1.7",  # earlier versions do not provide non-uniform axes
     ],
     extras_require={
         "tests": ["pytest>=5.0"],
         "coverage": ["pytest-cov", "codecov"],
-        "build-doc": ["sphinx>=1.7", "sphinx_rtd_theme", "sphinx-toggleprompt"],
+        "build-doc": [
+            "sphinx>=1.7",
+            "sphinx_rtd_theme",
+            "sphinx-toggleprompt",
+        ],
     },
     package_data={
         "lumispy": ["*.py", "hyperspy_extension.yaml"],

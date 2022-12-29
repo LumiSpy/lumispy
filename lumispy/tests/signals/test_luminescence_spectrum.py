@@ -63,9 +63,7 @@ class TestLumiSpectrum:
         pytest.importorskip("hyperspy_gui_ipywidgets")
         s = LumiSpectrum(np.ones(50))
         with pytest.warns(SyntaxWarning, match="Using the Hyperspy"):
-            s.remove_background_from_file(
-                background=None, display=False
-            )
+            s.remove_background_from_file(background=None, display=False)
 
     def test_deprecation_warning(self):
         s = LumiSpectrum(np.ones(50))
@@ -86,9 +84,7 @@ class TestLumiSpectrum:
             600,
             150,
         )
-        s.px_to_nm_grating_solver(
-            3, -20, 300, 25, 600, 150, inplace=True
-        )
+        s.px_to_nm_grating_solver(3, -20, 300, 25, 600, 150, inplace=True)
 
         assert s_copy.axes_manager.signal_axes[0].name == "Wavelength"
         assert s_copy.axes_manager.signal_axes[0].units == "nm"
@@ -105,12 +101,8 @@ class TestLumiSpectrum:
             768.249,
             atol=0.1,
         )
-        assert_allclose(
-            s.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1
-        )
-        assert_allclose(
-            s.axes_manager.signal_axes[0].axis[-1], 768.249, atol=0.1
-        )
+        assert_allclose(s.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1)
+        assert_allclose(s.axes_manager.signal_axes[0].axis[-1], 768.249, atol=0.1)
 
     def test_center_of_mass(self):
         s = LumiSpectrum([1, 2, 3, 2, 1, 0])
@@ -122,8 +114,7 @@ class TestLumiSpectrum:
         com = s.centroid()
         assert_allclose(com.data, 400.0, atol=0.1)
         assert (
-            s.axes_manager.signal_axes[0].units
-            == com.axes_manager.signal_axes[0].units
+            s.axes_manager.signal_axes[0].units == com.axes_manager.signal_axes[0].units
         )
 
     def test_center_of_mass_slice(self):
@@ -147,3 +138,8 @@ class TestLumiSpectrum:
         s = LumiSpectrum(np.ones(5))
         with pytest.raises(NotImplementedError):
             s.centroid(npeaks=2)
+
+    def test_centre_of_mass_3d(self):
+        s = LumiSpectrum([[[1, 2, 3, 4, 5]] * 3] * 4)
+        com = s.centroid()
+        assert com.axes_manager.shape == (3, 4, 1)
