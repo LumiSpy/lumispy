@@ -205,17 +205,22 @@ def var2invcm(variance, factor, invcmaxis, ax0=None):
 
 
 def crop_edges(
-    S, crop_range=None, crop_units="pixels", *, crop_px=None
+    S,
+    crop_range=None,
+    crop_units="pixels",
+    rebin_nav=False,
+    *,
+    crop_px=None,
 ):
     """
-    Cropping along the navigation axes of the signal object.
+    Cropping along the navigation axes of the a list of signal objects.
     Crop the amount of pixels from the four edges of the scanning
     region, from the edges inwards. Cropping can happen uniformly on all
-    sides or by specifying the cropping range for each axis or each side.
+    sides or by specifying the cropping range for each axis or each side. If the navigation axes shape is different, all signals will be rebinned to match the shape of the first signal in the list.
 
     Parameters
     ----------
-    S : list of HyperSpy Signal objects with similar navigation axes
+    S : list of HyperSpy Signal objects with the same navigation axes.
     crop_range : int, float, tuple
         Number of pixels or percentage (between 0 and 1) of image width/height to be cropped.
         If a number or a tuple of size 1 is passed, all sides are cropped by the
@@ -228,6 +233,9 @@ def crop_edges(
     crop_units : str
         Select in which units cropping happens. Value can be either ``pixels``/``px`` (default),
         or ``percent``/``%``. All units are rounded downwards.
+
+    rebin_nav : bool
+        If the navigation axes shape is different between signals in the list S, all signals will be rebinned to match the shape of the first signal in the list.
 
     Returns
     -------
@@ -250,6 +258,10 @@ def crop_edges(
     elif crop_range is None:
         crop_range = 0
 
+    # Check that S is a list
+    if type(S) is not list:
+        S = [S]
+
     # Check for units specified
     units_accepted = ("px", "pixel", "pixels", "percent", "%")
     if crop_units.lower() not in units_accepted:
@@ -257,10 +269,31 @@ def crop_edges(
             "The parameter ``crop_units`` only accepts the strings ``pixels``/``px`` or ``percent``/``%`` as values."
         )
 
+    # Check all signals in list are compatible (same range)
+    nav_shape = S[0].axes_manager.navigation_shape
+    for i, s in enumerate(S):
+        if i == 0:
+            continue
+        if len(nav_shape) != len(s.axes_manager.navigation_shape):
+            raise ValueError(
+                "The signal list contains a mix of navigation axes dimensions which cannot be broadcasted."
+            )
+        if nav_shape != s.axes_manager.navigation_shape:
+            if not rebin_nav:
+                warnings.warn(
+                    f"The navivigation axes of the first signal in index = 0 and in index = {i} have different shapes of {nav_shape} and {s.axes_manager.navigation_shape} respectively. This may cause errors during cropping. You can turn `rebin_nav` to True to rebin navigation axes.",
+                    UserWarning,
+                )
+            if rebin_nav:
+                scale = np.array(
+                    s.axes_manager.naviation_shape
+                ) / np.array(nav_shape)
+                signal_dim = len(s.axes_manager.signal_shape)
+                scale = np.append(scale, [1] * signal_dim)
+                S[i] = s.rebin(scale=scale)
+
     # Check for the size of the navigation axis
-    # TODO: Check all signals in list are compatible (same range)
     line_scan = False
-    s = S[0]
     nav_shape = s.axes_manager.navigation_shape
     if len(nav_shape) == 1:
         line_scan = True
@@ -269,10 +302,7 @@ def crop_edges(
             "`crop_edges` is not supported for navigation axes with more than 2 dimensions."
         )
 
-    w = nav_shape[0]
-    h = nav_shape[1] if not line_scan else None
     crop_range_type = type(crop_range)
-
     # Create a list of [top, left, right, bottom] or for line_scan only [left, right]
     n = 2 if line_scan else 4
     if crop_range_type in (int, float):
@@ -298,38 +328,50 @@ def crop_edges(
     else:
         crop_vals = np.array(crop_vals) * [1, -1, -1, 1]
 
-    # Convert percentages to pixel units
-    if crop_units.lower() in units_accepted[-2:]:
-        if any(crop_vals) > 1:
-            crop_vals *= 1 / 100
-
-        crop_vals = crop_vals * np.array([w, h] * (n // 2))
-        crop_vals = crop_vals.astype(int)
-
-    # Remove 0 for None
-    crop_ids = [x if x != 0 else None for x in crop_vals]
-
-    # Crop accordingly
-    if line_scan:
-        signal_cropped = s.inav[crop_ids[0] : crop_ids[1]]
-    else:
-        signal_cropped = s.inav[
-            crop_ids[0] : crop_ids[2], crop_ids[3] : crop_ids[1]
-        ]
-
-    # Check if cropping went too far
-    if 0 in signal_cropped.axes_manager.navigation_shape:
-        raise IndexError(
-            "The pixels to be cropped surpassed the width/height of the signal navigation axes."
+    S_cropped = []
+    for s in S:
+        w = s.axes_manager.navigation_shape[0]
+        h = (
+            s.axes_manager.navigation_shape[1]
+            if not line_scan
+            else None
         )
 
-    # Store transformation in metadata (or update the value if already previously transformed)
-    if signal_cropped.metadata.hasitem("Signal.cropped_edges"):
-        signal_cropped.metadata.Signal.cropped_edges += abs(crop_vals)
-    else:
-        signal_cropped.metadata.set_item(
-            "Signal.cropped_edges", abs(crop_vals)
-        )
+        # Convert percentages to pixel units
+        if crop_units.lower() in units_accepted[-2:]:
+            if any(crop_vals) > 1:
+                crop_vals *= 1 / 100
+
+            crop_vals_s = crop_vals * np.array([w, h] * (n // 2))
+            crop_vals_s = crop_vals_s.astype(int)
+
+        # Remove 0 for None
+        crop_ids = [x if x != 0 else None for x in crop_vals_s]
+
+        # Crop accordingly
+        if line_scan:
+            signal_cropped = s.inav[crop_ids[0] : crop_ids[1]]
+        else:
+            signal_cropped = s.inav[
+                crop_ids[0] : crop_ids[2], crop_ids[3] : crop_ids[1]
+            ]
+
+        # Check if cropping went too far
+        if 0 in signal_cropped.axes_manager.navigation_shape:
+            raise IndexError(
+                "The pixels to be cropped surpassed the width/height of the signal navigation axes."
+            )
+
+        # Store transformation in metadata (or update the value if already previously transformed)
+        if signal_cropped.metadata.hasitem("Signal.cropped_edges"):
+            signal_cropped.metadata.Signal.cropped_edges += abs(
+                crop_vals_s
+            )
+        else:
+            signal_cropped.metadata.set_item(
+                "Signal.cropped_edges", abs(crop_vals_s)
+            )
+        S_cropped = S_cropped.append(signal_cropped)
 
     return signal_cropped
 
