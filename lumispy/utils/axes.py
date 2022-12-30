@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
+import warnings
 import numpy as np
 import scipy.constants as c
 from scipy.interpolate import interp1d
@@ -92,7 +93,9 @@ def axis2eV(ax0):
     else:
         evaxis = nm2eV(ax0.axis)[::-1].astype("float")
         factor = 1e6
-    axis = DataAxis(axis=evaxis, name="Energy", units="eV", navigate=False)
+    axis = DataAxis(
+        axis=evaxis, name="Energy", units="eV", navigate=False
+    )
     return axis, factor
 
 
@@ -111,7 +114,13 @@ def data2eV(data, factor, evaxis, ax0):
             / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis**2)
         )
     else:
-        return data * factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)
+        return (
+            data
+            * factor
+            * c.h
+            * c.c
+            / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)
+        )
 
 
 def var2eV(variance, factor, evaxis, ax0):
@@ -121,13 +130,24 @@ def var2eV(variance, factor, evaxis, ax0):
     if ax0.units == "µm":
         return (
             variance
-            * (factor * c.h * c.c / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis**2))
+            * (
+                factor
+                * c.h
+                * c.c
+                / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis**2)
+            )
             ** 2
         )
     else:
         return (
             variance
-            * (factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)) ** 2
+            * (
+                factor
+                * c.h
+                * c.c
+                / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)
+            )
+            ** 2
         )
 
 
@@ -155,7 +175,10 @@ def axis2invcm(ax0):
         invcmaxis = nm2invcm(ax0.axis)[::-1].astype("float")
         factor = 1e7
     axis = DataAxis(
-        axis=invcmaxis, name="Wavenumber", units=r"cm$^{-1}$", navigate=False
+        axis=invcmaxis,
+        name="Wavenumber",
+        units=r"cm$^{-1}$",
+        navigate=False,
     )
     return axis, factor
 
@@ -174,6 +197,122 @@ def var2invcm(variance, factor, invcmaxis, ax0=None):
     match with the transformation of the data.
     """
     return variance * (factor / (invcmaxis**2)) ** 2
+
+
+#
+# navigation axis manipulation
+#
+
+
+def crop_edges(
+    S, crop_range=None, crop_units="pixels", *, crop_px=None
+):
+    """
+    Cropping along the navigation axes of the signal object.
+    Crop the amount of pixels from the four edges of the scanning
+    region, from the edges inwards. Cropping can happen uniformly on all
+    sides or by specifying the cropping range for each axis or each side.
+
+    Parameters
+    ----------
+    S : list of HyperSpy Signal objects with similar navigation axes
+    crop_range : int, float, tuple
+        Number of pixels or percentage (between 0 and 1) of image width/height to be cropped.
+        If a number or a tuple of size 1 is passed, all sides are cropped by the
+        same amount. If a tuple of size 2 is passed (``crop_x``, ``crop_y``), a different
+        amount of pixels/percentage is cropped from the x and y directions,
+        respectively. If a tuple of size 4 is passed (``crop_left``, ``crop_bottom``,
+        ``crop_right``, ``crop_top``), a different amount of pixels/percentage is
+        cropped from each edge individually.
+
+    crop_units : str
+        Select in which units cropping happens. Value can be either ``pixels``/``px`` (default),
+        or ``percent``/``%``. All units are rounded downwards.
+
+    Returns
+    -------
+    S_cropped : list of the respective cropped HyperSpy Signal objects.
+        A list of smaller, cropped Signal objects.
+    """
+    # Depreciation warning (for compatibility with ``crop_px``)
+    if crop_range is not None and crop_px is not None:
+        raise TypeError(
+            "Both ``crop_range`` and the depreciated ``crop_px`` were passed. Use only ``crop_range``."
+        )
+    elif crop_px is not None:
+        warnings.warn(
+            "``crop_px`` is deprecated; use ``crop_range`` instead.",
+            DeprecationWarning,
+            2,
+        )
+        crop_range = crop_px
+        crop_units = "pixels"
+    elif crop_range is None:
+        crop_range = 0
+
+    # Check for units specified
+    units_accepted = ("px", "pixel", "pixels", "percent", "%")
+    if crop_units.lower() not in units_accepted:
+        raise ValueError(
+            "The parameter ``crop_units`` only accepts the strings ``pixels``/``px`` or ``percent``/``%`` as values."
+        )
+
+    # TODO: Check if nav axes are 1d or 2d or 3d...
+    w = self.axes_manager.shape[0]
+    h = self.axes_manager.shape[1]
+    crop_range_type = type(crop_range)
+
+    if crop_range_type in (int, float):
+        crop_vals = [crop_range] * 4
+    elif crop_range_type is tuple:
+        if len(crop_range) == 2:
+            crop_vals = (list(crop_range) * 2,)
+            crop_vals = crop_vals[0]
+        elif len(crop_range) == 4:
+            crop_vals = list(crop_range)
+        else:
+            raise ValueError(
+                f"The ``crop_range`` tuple must be either a 2-tuple (x,y) or a 4-tuple (left, bottom, right, top). You provided a {len(crop_range)}-tuple."
+            )
+    else:
+        raise ValueError(
+            f"The crop_range value must be a number or a tuple, not a {crop_range_type}"
+        )
+
+    # Negative means reverse indexing
+    crop_vals = array(crop_vals) * [1, -1, -1, 1]
+
+    # Convert percentages to pixel units
+    if crop_units.lower() in units_accepted[-2:]:
+        if any(crop_vals) > 1:
+            crop_vals *= 1 / 100
+
+        crop_vals = crop_vals * array([w, h] * 2)
+        crop_vals = crop_vals.astype(int)
+
+    # Remove 0 for None
+    crop_ids = [x if x != 0 else None for x in crop_vals]
+
+    # Crop accordingly
+    signal_cropped = self.inav[
+        crop_ids[0] : crop_ids[2], crop_ids[3] : crop_ids[1]
+    ]
+
+    # Check if cropping went too far
+    if 0 in signal_cropped.axes_manager.navigation_shape:
+        raise IndexError(
+            "The pixels to be cropped surpassed the width/height of the signal navigation axes."
+        )
+
+    # Store transformation in metadata (or update the value if already previously transformed)
+    if signal_cropped.metadata.hasitem("Signal.cropped_edges"):
+        signal_cropped.metadata.Signal.cropped_edges += abs(crop_vals)
+    else:
+        signal_cropped.metadata.set_item(
+            "Signal.cropped_edges", abs(crop_vals)
+        )
+
+    return signal_cropped
 
 
 #
@@ -258,7 +397,8 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
         # Do scaling of following signals
         if scale:
             if (
-                axis.axis[ind1 - r : ind1 + r] == axis2.axis[ind2 - r : ind2 + r]
+                axis.axis[ind1 - r : ind1 + r]
+                == axis2.axis[ind2 - r : ind2 + r]
             ).all():
                 factor = np.nanmean(
                     np.ma.masked_invalid(
@@ -266,7 +406,8 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                             S1.isig[ind1 - r : ind1 + r].data,
                             S2.isig[ind2 - r : ind2 + r].data,
                             out=init,
-                            where=S2.isig[ind2 - r : ind2 + r].data != 0,
+                            where=S2.isig[ind2 - r : ind2 + r].data
+                            != 0,
                         )
                     ),
                     axis=-1,
@@ -285,7 +426,8 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                             S1.isig[ind1 - r : ind1 + r].data,
                             f(axis.axis[ind1 - r : ind1 + r]),
                             out=init,
-                            where=S2.isig[ind2 - r : ind2 + r].data != 0,
+                            where=S2.isig[ind2 - r : ind2 + r].data
+                            != 0,
                         )
                     ),
                     axis=-1,
@@ -296,7 +438,9 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                     " value in the overlapping range. Try to set"
                     " `scale=False` and `average=True`."
                 )
-            S2.data = (S2.data.T * factor).T  # scale 2nd spectrum by factor
+            S2.data = (
+                S2.data.T * factor
+            ).T  # scale 2nd spectrum by factor
         # Make sure the corresponding values are in correct order
         if axis.axis[ind1] >= axis2.axis[ind2]:
             ind2 += 1
@@ -320,18 +464,25 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                 grad = 1 / (length - 1)
                 vect = np.arange(length)
                 f = interp1d(
-                    axis2.axis[ind2r - 1 :], S2.isig[ind2r - 1 :].data, kind=kind
+                    axis2.axis[ind2r - 1 :],
+                    S2.isig[ind2r - 1 :].data,
+                    kind=kind,
                 )
                 S1.data = np.hstack(
                     (
                         S1.isig[: ind1 - r].data,
-                        (1 - grad * vect) * S1.isig[ind1 - r : ind1 + r].data
-                        + grad * vect * f(axis.axis[ind1 - r : ind1 + r]),
+                        (1 - grad * vect)
+                        * S1.isig[ind1 - r : ind1 + r].data
+                        + grad
+                        * vect
+                        * f(axis.axis[ind1 - r : ind1 + r]),
                         f(axis.axis[ind1 + r :]),
                     )
                 )
             else:  # just join at center of overlap
-                f = interp1d(axis2.axis[ind2:], S2.isig[ind2:].data, kind=kind)
+                f = interp1d(
+                    axis2.axis[ind2:], S2.isig[ind2:].data, kind=kind
+                )
                 S1.data = np.hstack(
                     (S1.isig[: ind1 + 1].data, f(axis.axis[ind1 + 1 :]))
                 )
@@ -341,11 +492,15 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                 axis.convert_to_non_uniform_axis()
             # 2nd axis does not need to be converted, because it contains axis vector
             # join axis vectors
-            axis.axis = np.hstack((axis.axis[: ind1 + 1], axis2.axis[ind2:]))
+            axis.axis = np.hstack(
+                (axis.axis[: ind1 + 1], axis2.axis[ind2:])
+            )
             axis.size = axis.axis.size
             if average:  # average over range
                 f1 = interp1d(
-                    S[i - 1].axes_manager.signal_axes[0].axis[ind1 - 1 : ind1 + r + 1],
+                    S[i - 1]
+                    .axes_manager.signal_axes[0]
+                    .axis[ind1 - 1 : ind1 + r + 1],
                     S1.isig[ind1 - 1 : ind1 + r + 1].data,
                     kind=kind,
                 )
@@ -366,15 +521,21 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                 S1.data = np.hstack(
                     (
                         S1.isig[: ind1 - r].data,
-                        (1 - grad1 * vect1) * S1.isig[ind1 - r : ind1 + 1].data
-                        + grad1 * vect1 * f2(axis.axis[ind1 - r : ind1 + 1]),
-                        (1 - grad2 * vect2) * f1(axis2.axis[ind2 : ind2 + r])
+                        (1 - grad1 * vect1)
+                        * S1.isig[ind1 - r : ind1 + 1].data
+                        + grad1
+                        * vect1
+                        * f2(axis.axis[ind1 - r : ind1 + 1]),
+                        (1 - grad2 * vect2)
+                        * f1(axis2.axis[ind2 : ind2 + r])
                         + grad2 * vect2 * S2.isig[ind2 : ind2 + r].data,
                         S2.isig[ind2 + r :].data,
                     )
                 )
             else:  # just join at center of overlap
-                S1.data = np.hstack((S1.isig[: ind1 + 1].data, S2.isig[ind2:].data))
+                S1.data = np.hstack(
+                    (S1.isig[: ind1 + 1].data, S2.isig[ind2:].data)
+                )
     return S1
 
 
@@ -444,9 +605,14 @@ def solve_grating_equation(
     h_blc = focal_length_mm * np.sin(np.deg2rad(gamma_deg))
 
     # alpha = angle of incidence (Eq. 2.1)
-    numerator = 1e-6 * grating_density_gr_mm * grating_central_wavelength_nm
+    numerator = (
+        1e-6 * grating_density_gr_mm * grating_central_wavelength_nm
+    )
     denominator = 2 * np.cos(np.deg2rad(deviation_angle_deg / 2))
-    alpha = np.arcsin(np.deg2rad(numerator / denominator)) - deviation_angle_deg / 2
+    alpha = (
+        np.arcsin(np.deg2rad(numerator / denominator))
+        - deviation_angle_deg / 2
+    )
 
     # beta: angle of diffraction (Eq. 1.2)
     beta = alpha + deviation_angle_deg
@@ -464,8 +630,12 @@ def solve_grating_equation(
     )
 
     # Find lambda max/min given beta (Eq. 5.2)
-    l_min = 1e6 * (np.sin(alpha) + np.sin(beta_min)) / grating_density_gr_mm
-    l_max = 1e6 * (np.sin(alpha) + np.sin(beta_max)) / grating_density_gr_mm
+    l_min = (
+        1e6 * (np.sin(alpha) + np.sin(beta_min)) / grating_density_gr_mm
+    )
+    l_max = (
+        1e6 * (np.sin(alpha) + np.sin(beta_max)) / grating_density_gr_mm
+    )
     l_min = abs(l_min)
     l_max = abs(l_max)
 
