@@ -257,22 +257,35 @@ def crop_edges(
             "The parameter ``crop_units`` only accepts the strings ``pixels``/``px`` or ``percent``/``%`` as values."
         )
 
-    # TODO: Check if nav axes are 1d or 2d or 3d...
-    w = self.axes_manager.shape[0]
-    h = self.axes_manager.shape[1]
+    # Check for the size of the navigation axis
+    # TODO: Check all signals in list are compatible (same range)
+    line_scan = False
+    s = S[0]
+    nav_shape = s.axes_manager.navigation_shape
+    if len(nav_shape) == 1:
+        line_scan = True
+    elif len(nav_shape) > 2:
+        raise NotImplemented(
+            "`crop_edges` is not supported for navigation axes with more than 2 dimensions."
+        )
+
+    w = nav_shape[0]
+    h = nav_shape[1] if not line_scan else None
     crop_range_type = type(crop_range)
 
+    # Create a list of [top, left, right, bottom] or for line_scan only [left, right]
+    n = 2 if line_scan else 4
     if crop_range_type in (int, float):
-        crop_vals = [crop_range] * 4
+        crop_vals = [crop_range] * n
     elif crop_range_type is tuple:
         if len(crop_range) == 2:
-            crop_vals = (list(crop_range) * 2,)
+            crop_vals = (list(crop_range) * (n // 2),)
             crop_vals = crop_vals[0]
-        elif len(crop_range) == 4:
+        elif len(crop_range) == 4 and not line_scan:
             crop_vals = list(crop_range)
         else:
             raise ValueError(
-                f"The ``crop_range`` tuple must be either a 2-tuple (x,y) or a 4-tuple (left, bottom, right, top). You provided a {len(crop_range)}-tuple."
+                f"The ``crop_range`` tuple must be either a 2-tuple (x,y) or a 4-tuple (left, bottom, right, top). You provided a {len(crop_range)}-tuple. For line scans, the tuple must be a 2-tuple (left, right)."
             )
     else:
         raise ValueError(
@@ -280,23 +293,29 @@ def crop_edges(
         )
 
     # Negative means reverse indexing
-    crop_vals = array(crop_vals) * [1, -1, -1, 1]
+    if line_scan:
+        crop_vals = np.array(crop_vals) * [1, -1]
+    else:
+        crop_vals = np.array(crop_vals) * [1, -1, -1, 1]
 
     # Convert percentages to pixel units
     if crop_units.lower() in units_accepted[-2:]:
         if any(crop_vals) > 1:
             crop_vals *= 1 / 100
 
-        crop_vals = crop_vals * array([w, h] * 2)
+        crop_vals = crop_vals * np.array([w, h] * (n // 2))
         crop_vals = crop_vals.astype(int)
 
     # Remove 0 for None
     crop_ids = [x if x != 0 else None for x in crop_vals]
 
     # Crop accordingly
-    signal_cropped = self.inav[
-        crop_ids[0] : crop_ids[2], crop_ids[3] : crop_ids[1]
-    ]
+    if line_scan:
+        signal_cropped = s.inav[crop_ids[0] : crop_ids[1]]
+    else:
+        signal_cropped = s.inav[
+            crop_ids[0] : crop_ids[2], crop_ids[3] : crop_ids[1]
+        ]
 
     # Check if cropping went too far
     if 0 in signal_cropped.axes_manager.navigation_shape:
