@@ -1,4 +1,4 @@
-.. _utilities-label:
+.. _utilities:
 
 Utility functions
 *****************
@@ -6,7 +6,7 @@ Utility functions
 This section summarizes various useful functions implemented in LumiSpy.
 
 
-.. _join_spectra-label:
+.. _join_spectra:
 
 Join spectra
 ============
@@ -27,7 +27,7 @@ signals in the range of +/- 50 pixels around the centre of the overlapping regio
     >>> s = lum.join_spectra((s1,s2))
 
 
-.. _scale_normalize-label:
+.. _scale_normalize:
 
 Scaling and normalizing signal data
 ===================================
@@ -60,7 +60,7 @@ analysis (therefore the default is ``inplace=False``).
     >>> s.normalize(pos=450)
 
 
-.. _remove_negative-label:
+.. _remove_negative:
 
 Replacing negative data values
 ==============================
@@ -76,14 +76,15 @@ The default operational mode is ``inplace=False`` (a new signal object is return
     >>> s.remove_negative(0.1)
 
 
-.. _spectral_map_utils-label:
+.. _spectral_map_utils:
 
 Utilities for spectral maps
 ===========================
 
 The function :py:meth:`~.signals.common_luminescence.CommonLumi.crop_edges`
 removes the specified number of pixels from all four edges of a spectral map.
-It is a convenience wrapper for :external:py:meth:`hyperspy.signal.BaseSignal.inav`.
+It is a convenience wrapper for the ``inav`` `method in HyperSpy
+<https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html#indexing>`_.
 
 .. code-block:: python
 
@@ -92,7 +93,7 @@ It is a convenience wrapper for :external:py:meth:`hyperspy.signal.BaseSignal.in
 *[TODO: add possibility to crop different amounts of pixels on different sides]*
 
 
-.. _unit_conversion-label:
+.. _unit_conversion:
 
 Unit conversion
 ===============
@@ -105,10 +106,11 @@ units commonly used for the signal axis. Namely,
 - :py:func:`~.utils.axes.nm2invcm`
 - :py:func:`~.utils.axes.invcm2nm`
 
-For the energy axis, the conversion uses the correct permittivity of air.
+For the energy axis, the conversion uses the wavelength-dependent refractive
+index of air.
 
 
-.. _grating_equation-label:
+.. _grating_equation:
 
 Solving the grating equation
 ============================

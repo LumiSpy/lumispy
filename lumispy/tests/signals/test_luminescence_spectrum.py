@@ -20,7 +20,7 @@ import numpy as np
 import pytest
 
 from lumispy.signals.luminescence_spectrum import LumiSpectrum
-
+from numpy.testing import assert_allclose
 
 backgrounds = [
     ([np.ones(50)], [np.zeros(50, dtype="float64")]),
@@ -33,12 +33,6 @@ backgrounds = [
         [np.zeros(50, dtype="float64")],
     ),
     (LumiSpectrum(np.ones(50)), [np.zeros(50, dtype="float64")]),
-]
-
-error_backgrounds = [
-    ([np.linspace(0, 49, num=10, dtype="float64"), np.ones(50)], AttributeError),
-    ([[1, 1], [1, 1], [1, 1]], AttributeError),
-    # ([np.linspace(0, 48, num=10, dtype="float64"), np.ones(50)], AttributeError),
 ]
 
 
@@ -55,9 +49,9 @@ class TestLumiSpectrum:
 
     def test_errors_raise(self):
         s = LumiSpectrum(np.ones(50))
-        for bkg, error in error_backgrounds:
-            with pytest.raises(error):
-                s.remove_background_from_file(bkg)
+        with pytest.raises(AttributeError):
+            bkg = np.array([[1, 1], [1, 1], [1, 1]])
+            s.remove_background_from_file(bkg)
         # Test that a GUI is opened if s.remove_background_from_file is passed without a background
         # s.remove_background_from_file()
         # Test double background removal
@@ -75,3 +69,29 @@ class TestLumiSpectrum:
         s = LumiSpectrum(np.ones(50))
         with pytest.warns(DeprecationWarning, match="deprecated"):
             s.remove_background_from_file(background=backgrounds[0][0])
+
+    def test_px_to_nm_grating_solver(self):
+        s = LumiSpectrum(np.ones(10))
+        ax = s.axes_manager.signal_axes[0]
+        ax.offset = 200
+        ax.scale = 10
+
+        s_copy = s.px_to_nm_grating_solver(
+            3,
+            -20,
+            300,
+            25,
+            600,
+            150,
+        )
+        s.px_to_nm_grating_solver(3, -20, 300, 25, 600, 150, inplace=True)
+
+        assert s_copy.axes_manager.signal_axes[0].name == "Wavelength"
+        assert s_copy.axes_manager.signal_axes[0].units == "nm"
+        assert s.axes_manager.signal_axes[0].name == "Wavelength"
+        assert s.axes_manager.signal_axes[0].units == "nm"
+
+        assert_allclose(s_copy.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1)
+        assert_allclose(s_copy.axes_manager.signal_axes[0].axis[-1], 768.249, atol=0.1)
+        assert_allclose(s.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1)
+        assert_allclose(s.axes_manager.signal_axes[0].axis[-1], 768.249, atol=0.1)

@@ -8,15 +8,32 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 
 UNRELEASED
 ==========
+Changed
+-------
+- Use `GitHub code scanning (CodeQL)
+  <https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql>`_
+  for integrity check as `it replaces LGTM
+  <https://github.blog/2022-08-15-the-next-step-for-lgtm-com-github-code-scanning/>`_
+- `s.remove_negative` now defaults to `inplace=False` (previously `True`)
+- `s.crop_edges` now takes 1,2 or 4 values as input (can crop each axis independently) and also accepts percentages.
+
+2022-11-02 - version 0.2.1
+==========================
 Added
 -----
-- Improved documentation.
-- Use [lgtm.com](https://lgtm.com/projects/g/LumiSpy/lumispy/) to check code integrity.
+- Improved documentation
+- Use lgtm.com to check code integrity
 
 Changed
 -------
+- Fix conversion to Raman shift (relative wavenumber) and make ``jacobian=False`` default; ``fix inplace=False`` for axis conversions
+- Fix ``to_eV`` and ``to_invcm``, as slicing with `.isig[]` was failing on converted signals
+- ``s.remove_negative`` now defaults to ``inplace=False`` (previously ``True``)
+
+Maintenance
+-----------
+- Use ``softprops/action-gh-release`` action instead of deprecated ``create-release``, pin action to a commit SHA
 - `s.remove_negative` now defaults to `inplace=False` (previously `True`)
-- `s.crop_edges` now takes 1,2 or 4 values as input (can crop each axis independently) and also accepts percentages.
 
 2022-04-29 - version 0.2
 ========================
@@ -29,18 +46,18 @@ Added
 Changed
 -------
 - Account for the general availability of non-uniform axes with the HyperSpy v1.7 release
-- Make `LumiTransient` 1D and add 2D `LumiTransientSpectrum` class
-- Add python 3.10 build. Remove python 3.6.
-- Fix error in background dimensions that allows compatibility for updated `map` in HyperSpy (failing integration tests)
+- Make ``LumiTransient`` 1D and add 2D ``LumiTransientSpectrum`` class
+- Add python 3.10 build, remove python 3.6
+- Fix error in background dimensions that allows compatibility for updated ``map`` in HyperSpy (failing integration tests)
 - Fix for links in PyPi
-- Deprecate `exposure` argument of `s.scale_by_exposure` in favor of `integration_time` in line with metadata convention
-- Add deprecation warning to `remove_background_from_file`
+- Deprecate ``exposure`` argument of ``s.scale_by_exposure`` in favor of ``integration_time`` in line with metadata convention
+- Add deprecation warning to ``remove_background_from_file``
 
 2021-11-23 - version 0.1.3
 ==========================
 Changed
 -------
-- Mentions of the now deleted `non_uniform_axes` branch in HyperSpy updated to `RELEASE_next_minor`
+- Mentions of the now deleted ``non_uniform_axes`` branch in HyperSpy updated to `RELEASE_next_minor`
 - Change 'master' to 'main' branch
 - Updated/corrected badges and other things in README.md and other documentation files
 

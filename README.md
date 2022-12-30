@@ -1,8 +1,7 @@
 [![Build Status](https://dev.azure.com/Lumispy/lumispy/_apis/build/status/LumiSpy.lumispy?branchName=main)](https://dev.azure.com/Lumispy/lumispy/_build/latest?definitionId=3&branchName=main)
 [![Tests](https://github.com/lumispy/lumispy/workflows/Tests/badge.svg)](https://github.com/lumispy/lumispy/actions)
 [![Codecov Status](https://codecov.io/gh/lumispy/lumispy/branch/main/graph/badge.svg?token=8ZFX8X4Z1I)](https://codecov.io/gh/lumispy/lumispy)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/LumiSpy/lumispy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/LumiSpy/lumispy/context:python)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/LumiSpy/lumispy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/LumiSpy/lumispy/alerts/)
+[![Code quality scan](https://github.com/lumispy/lumispy/actions/workflows/codeql.yml/badge.svg)](https://github.com/LumiSpy/lumispy/security/code-scanning)
 [![Documentation Status](https://readthedocs.org/projects/lumispy/badge/?version=latest)](https://lumispy.readthedocs.io/en/latest/?badge=latest)
 
 
@@ -25,7 +24,7 @@ recognising the code development by citing the project using the
 [Zenodo-DOI](https://doi.org/10.5281/zenodo.4640445).
 
 Go to the documentation for instructions on how to install LumiSpy and start an
-analysis: [Read the docs](https://lumispy.readthedocs.io).
+analysis: [Read the docs](https://docs.lumispy.org).
 
 [Tutorials and exemplary workflows](https://github.com/lumispy/lumispy-demos)
 have been curated as a series of Jupyter notebooks that you can work through 

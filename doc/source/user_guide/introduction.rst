@@ -1,4 +1,4 @@
-.. _introduction-label:
+.. _introduction:
 
 Introduction
 ************
@@ -81,7 +81,7 @@ attribute. Some additional properties are summarized in the table below.
 Depending on the use case, certain functions will only be available for some
 signal types (or inheriting) signal types.
 
-.. _lumispy_subclasses_table-label:
+.. _lumispy_subclasses_table:
 
 .. table:: LumiSpy subclasses and their basic attributes.
 

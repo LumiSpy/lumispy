@@ -32,7 +32,7 @@ from hyperspy.axes import DataAxis, UniformDataAxis
 
 
 def _n_air(x):
-    """Relative permittivity of air as a function of WL in nm.
+    """Refractive index of air as a function of WL in nm.
     This analytical function is correct for the range 185-1700 nm.
     According to `E.R. Peck and K. Reeder. Dispersion of air,
     J. Opt. Soc. Am. 62, 958-962 (1972).`
@@ -46,8 +46,8 @@ def _n_air(x):
             if wl > 1700:
                 wl = 1700
         else:
-            wl[wl < 185] = 185  # lgtm [py/modification-of-default-value]
-            wl[wl > 1700] = 1700  # lgtm [py/modification-of-default-value]
+            wl[wl < 185] = 185
+            wl[wl > 1700] = 1700
         warn(
             "The wavelength range exceeds the interval of 185 to 1700 nm for "
             "which the exact refractive index of air is used. Beyond this "
@@ -65,38 +65,38 @@ def _n_air(x):
 
 def nm2eV(x):
     """Converts wavelength (nm) to energy (eV) using wavelength-dependent
-    permittivity of air.
+    refractive index of air.
     """
     return 1e9 * c.h * c.c / (c.e * _n_air(x) * x)
 
 
 def eV2nm(x):
     """Converts energy (eV) to wavelength (nm) using wavelength-dependent
-    permittivity of air.
+    refractive index of air.
     """
-    wl = 1239.5 / x  # approximate WL to obtain permittivity
+    wl = 1239.5 / x  # approximate WL to obtain refractive index
     return 1e9 * c.h * c.c / (c.e * _n_air(wl) * x)
 
 
 def axis2eV(ax0):
     """Converts given signal axis to energy scale (eV) using wavelength
-    dependent permittivity of air. Assumes wavelength in units of nm unless the
+    dependent refractive index of air. Assumes wavelength in units of nm unless the
     axis units are specifically set to µm.
     """
     if ax0.units == "eV":
         raise AttributeError("Signal unit is already eV.")
     # transform axis, invert direction
     if ax0.units == "µm":
-        evaxis = nm2eV(1000 * ax0.axis)[::-1]
+        evaxis = nm2eV(1000 * ax0.axis)[::-1].astype("float")
         factor = 1e3  # correction factor for intensity
     else:
-        evaxis = nm2eV(ax0.axis)[::-1]
+        evaxis = nm2eV(ax0.axis)[::-1].astype("float")
         factor = 1e6
     axis = DataAxis(axis=evaxis, name="Energy", units="eV", navigate=False)
     return axis, factor
 
 
-def data2eV(data, factor, ax0, evaxis):
+def data2eV(data, factor, evaxis, ax0):
     """The intensity is converted from counts/nm (counts/µm) to counts/meV by
     doing a Jacobian transformation, see e.g. Mooney and Kambhampati, J. Phys.
     Chem. Lett. 4, 3316 (2013). Ensures that integrated signals are still
@@ -114,7 +114,7 @@ def data2eV(data, factor, ax0, evaxis):
         return data * factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)
 
 
-def var2eV(variance, factor, ax0, evaxis):
+def var2eV(variance, factor, evaxis, ax0):
     """The variance is converted doing a squared Jacobian renormalization to
     match with the transformation of the data.
     """
@@ -149,10 +149,10 @@ def axis2invcm(ax0):
         raise AttributeError(r"Signal unit is already cm$^{-1}$.")
     # transform axis, invert direction
     if ax0.units == "µm":
-        invcmaxis = nm2invcm(1000 * ax0.axis)[::-1]
+        invcmaxis = nm2invcm(1000 * ax0.axis)[::-1].astype("float")
         factor = 1e4  # correction factor for intensity
     else:
-        invcmaxis = nm2invcm(ax0.axis)[::-1]
+        invcmaxis = nm2invcm(ax0.axis)[::-1].astype("float")
         factor = 1e7
     axis = DataAxis(
         axis=invcmaxis, name="Wavenumber", units=r"cm$^{-1}$", navigate=False
@@ -160,7 +160,7 @@ def axis2invcm(ax0):
     return axis, factor
 
 
-def data2invcm(data, factor, invcmaxis):
+def data2invcm(data, factor, invcmaxis, ax0=None):
     r"""The intensity is converted from counts/nm (counts/µm) to
     counts/cm$^{-1}$ by doing a Jacobian transformation, see e.g. Mooney and
     Kambhampati, J. Phys. Chem. Lett. 4, 3316 (2013). Ensures that integrated
@@ -169,7 +169,7 @@ def data2invcm(data, factor, invcmaxis):
     return data * factor / (invcmaxis**2)
 
 
-def var2invcm(variance, factor, invcmaxis):
+def var2invcm(variance, factor, invcmaxis, ax0=None):
     r"""The variance is converted doing a squared Jacobian renormalization to
     match with the transformation of the data.
     """
@@ -340,8 +340,6 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
             if hasattr(axis, "_expression") or axis.is_uniform:
                 axis.convert_to_non_uniform_axis()
             # 2nd axis does not need to be converted, because it contains axis vector
-            # if hasattr(axis2,'_expression'):
-            #    axis2.convert_to_non_uniform_axis()
             # join axis vectors
             axis.axis = np.hstack((axis.axis[: ind1 + 1], axis2.axis[ind2:]))
             axis.size = axis.axis.size

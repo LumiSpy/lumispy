@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 30
     env:
       MPLBACKEND: agg
-      PIP_ARGS: --upgrade --use-feature=2020-resolver -e
+      PIP_ARGS: --upgrade -e
       PYTEST_ARGS: --pyargs lumispy
       PYTEST_ARGS_COVERAGE: 
     strategy:
@@ -23,9 +23,9 @@ jobs:
             PYTEST_ARGS_COVERAGE: --cov=lumispy --cov-report=xml
             LABEL: /coverage
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.1.0
 
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
         name: Install Python
         with:
           python-version: ${{ matrix.PYTHON_VERSION }}
@@ -53,4 +53,4 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: ${{ always() }} && ${{ matrix.PYTEST_ARGS_COVERAGE }} 
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
