@@ -241,7 +241,7 @@ def test_crop_edges_metadata():
 def test_crop_edges_too_far():
     s1 = LumiSpectrum(ones((10, 10, 10)))
     with raises(IndexError, match="The pixels to be cropped"):
-        s1 = crop_edges(s1, crop_range=6)
+        crop_edges(s1, crop_range=6)
 
 
 @mark.parametrize(
