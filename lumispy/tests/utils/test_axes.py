@@ -22,7 +22,7 @@ from numpy.testing import assert_allclose
 from pytest import raises, mark, skip, warns
 
 from hyperspy.axes import DataAxis
-from hyperspy.signal import Signal1D, Signal2D
+from hyperspy.signals import Signal1D, Signal2D
 from lumispy import join_spectra, nm2eV, eV2nm, nm2invcm, invcm2nm
 from lumispy.utils.axes import _n_air, crop_edges
 from lumispy.signals import LumiSpectrum
@@ -227,8 +227,8 @@ def test_crop_edges_s(range, output):
 
     else:
         s1 = crop_edges(s1, range)
-        assert s1.axes_manager.navigation_shape[0] == output[0]
-        assert s1.axes_manager.navigation_shape[1] == output[1]
+        assert s1[0].axes_manager.navigation_shape[0] == output[0]
+        assert s1[0].axes_manager.navigation_shape[1] == output[1]
 
 
 def test_crop_percent_and_single_spectrum():
@@ -285,7 +285,7 @@ def test_crop_edges_linescan(range, output):
 
     else:
         s1 = crop_edges(s1, range)
-        assert s1.axes_manager.navigation_shape[0] == output
+        assert s1[0].axes_manager.navigation_shape[0] == output
 
 
 @mark.parametrize("data", [((10,) * 4), ((10,) * 5)])
@@ -311,12 +311,10 @@ def test_crop_edges_multiple_no_rebin():
     s1 = [LumiSpectrum(ones((10, 10, 10)))] * 2
     s2 = crop_edges(s1, crop_range=1, rebin_nav=False)
     for s in s2:
-        print(s)
-        print(s.axes_manager)
         assert s.axes_manager.navigation_shape[0] == 8
         assert s.axes_manager.navigation_shape[1] == 8
     s1 = [
-        LumiSpectrum(ones(10, 10, 10)),
+        LumiSpectrum(ones((10, 10, 10))),
     ] * 3
     s2 = crop_edges(s1, crop_range=1, rebin_nav=False)
     for s in s2:
@@ -324,11 +322,35 @@ def test_crop_edges_multiple_no_rebin():
         assert s.axes_manager.navigation_shape[1] == 8
 
     s1 = [
-        LumiSpectrum(ones(10, 10, 10)),
-        Signal1D(ones(10, 10, 10)),
-        Signal2D(ones(10, 10, 10, 10)),
+        LumiSpectrum(ones((10, 10, 10))),
+        Signal1D(ones((10, 10, 10))),
+        Signal2D(ones((10, 10, 10, 10))),
     ]
     s2 = crop_edges(s1, crop_range=1, rebin_nav=False)
     for s in s2:
         assert s.axes_manager.navigation_shape[0] == 8
         assert s.axes_manager.navigation_shape[1] == 8
+
+    s1 = [
+        LumiSpectrum(ones((10, 10, 10))),
+        LumiSpectrum(ones((20, 5, 10))),
+    ]
+    s2 = crop_edges(s1, crop_range=1, rebin_nav=False)
+    assert s2[0].axes_manager.navigation_shape[0] == 8
+    assert s2[0].axes_manager.navigation_shape[1] == 8
+    assert s2[1].axes_manager.navigation_shape[0] == 3
+    assert s2[1].axes_manager.navigation_shape[1] == 18
+
+def test_crop_edges_multiple_rebin():
+    s1 = [LumiSpectrum(ones((10, 10, 10))),
+    LumiSpectrum(ones((20, 20, 10))),
+    LumiSpectrum(ones((5, 5, 10))),
+    LumiSpectrum(ones((13, 7, 10))),
+    LumiSpectrum(ones((5, 20, 5))),]
+    s2 = crop_edges(s1, crop_range=1, rebin_nav=True)
+    for s in s2:
+        assert s.axes_manager.navigation_shape[0] == 8
+        assert s.axes_manager.navigation_shape[1] == 8
+    # Check signal axis has not been changed
+    assert s2[0].axes_manager.signal_shape[0] == 10
+    assert s2[-1].axes_manager.signal_shape[0] == 5

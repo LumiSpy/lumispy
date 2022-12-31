@@ -219,7 +219,7 @@ def crop_edges(
 
     Parameters
     ----------
-    S : list of HyperSpy Signal objects with the same navigation axes.
+    S : list of HyperSpy Signal objects with the same navigation axes or a single HyperSpy Signal object.
     crop_range : int, float, tuple
         Number of pixels or percentage (between 0 and 1) of image width/height to be cropped.
         If a number or a tuple of size 1 is passed, all sides are cropped by the
@@ -238,7 +238,7 @@ def crop_edges(
 
     Returns
     -------
-    S_cropped : list of the respective cropped HyperSpy Signal objects.
+    S_cropped : list of the respective cropped HyperSpy Signal objects or a cropped single Signal if only one signal object is passed as input.
         A list of smaller, cropped Signal objects.
     """
     # Depreciation warning (for compatibility with ``crop_px``)
@@ -258,7 +258,9 @@ def crop_edges(
         crop_range = 0
 
     # Check that S is a list
+    no_list = False
     if type(S) is not list:
+        no_list = True
         S = [S]
 
     # Check for units specified
@@ -285,7 +287,7 @@ def crop_edges(
                 )
             if rebin_nav:
                 scale = np.array(
-                    s.axes_manager.naviation_shape
+                    s.axes_manager.navigation_shape
                 ) / np.array(nav_shape)
                 signal_dim = len(s.axes_manager.signal_shape)
                 scale = np.append(scale, [1] * signal_dim)
@@ -339,8 +341,8 @@ def crop_edges(
         crop_vals_s = crop_vals
         # Convert percentages to pixel units
         if crop_units.lower() in units_accepted[-2:]:
-            if any(crop_vals) > 1:
-                crop_vals *= 1 / 100
+            if any(np.abs(crop_vals) > 1):
+                crop_vals_s = crop_vals_s / 100
 
             crop_vals_s *= np.array([w, h] * (n // 2))
             crop_vals_s = crop_vals_s.astype(int)
@@ -373,8 +375,9 @@ def crop_edges(
             )
         S_cropped.append(signal_cropped)
 
-    if type(S) is not list:
+    if no_list:
         S_cropped = S_cropped[0]
+
     return S_cropped
 
 
