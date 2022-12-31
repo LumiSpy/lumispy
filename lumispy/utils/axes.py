@@ -247,7 +247,7 @@ def crop_edges(
             "Both ``crop_range`` and the depreciated ``crop_px`` were passed. Use only ``crop_range``."
         )
     elif crop_px is not None:
-        warnings.warn(
+        warn(
             "``crop_px`` is deprecated; use ``crop_range`` instead.",
             DeprecationWarning,
             2,
@@ -336,12 +336,13 @@ def crop_edges(
             else None
         )
 
+        crop_vals_s = crop_vals
         # Convert percentages to pixel units
         if crop_units.lower() in units_accepted[-2:]:
             if any(crop_vals) > 1:
                 crop_vals *= 1 / 100
 
-            crop_vals_s = crop_vals * np.array([w, h] * (n // 2))
+            crop_vals_s *= np.array([w, h] * (n // 2))
             crop_vals_s = crop_vals_s.astype(int)
 
         # Remove 0 for None
@@ -362,7 +363,7 @@ def crop_edges(
             )
 
         # Store transformation in metadata (or update the value if already previously transformed)
-        if signal_cropped.metadata.hasitem("Signal.cropped_edges"):
+        if signal_cropped.metadata.has_item("Signal.cropped_edges"):
             signal_cropped.metadata.Signal.cropped_edges += abs(
                 crop_vals_s
             )
@@ -370,9 +371,11 @@ def crop_edges(
             signal_cropped.metadata.set_item(
                 "Signal.cropped_edges", abs(crop_vals_s)
             )
-        S_cropped = S_cropped.append(signal_cropped)
+        S_cropped.append(signal_cropped)
 
-    return signal_cropped
+    if type(S) is not list:
+        S_cropped = S_cropped[0]
+    return S_cropped
 
 
 #
