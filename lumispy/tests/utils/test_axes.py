@@ -189,13 +189,14 @@ def test_joinspectra_FunctionalDA(average, scale, kind):
         ((1, 2, 3, 4, 5), ()),
         ("s", ()),
         ((1, 0, 0, 3), (9, 7)),
+        ((None), (10, 10)),
     ],
 )
 def test_crop_edges_s(range, output):
     s1 = [LumiSpectrum(ones((10, 10, 10)))]
 
     # Check for bad input range
-    if type(range) not in (int, float, tuple):
+    if type(range) not in (int, float, tuple, None):
         with raises(ValueError, match="value must be a number or a tuple"):
             crop_edges(s1, range)
 
@@ -314,6 +315,15 @@ def test_crop_edges_multiple_no_rebin():
     assert s2[0].axes_manager.navigation_shape[1] == 8
     assert s2[1].axes_manager.navigation_shape[0] == 3
     assert s2[1].axes_manager.navigation_shape[1] == 18
+
+
+def test_crop_edges_multiple_error():
+    s1 = [
+        LumiSpectrum(ones((10, 10, 10))),
+        LumiSpectrum(ones((10, 10))),
+    ]
+    with raises(ValueError, match="mix of navigation axes"):
+        crop_edges(s1, 1)
 
 
 def test_crop_edges_multiple_rebin():
