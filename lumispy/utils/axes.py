@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-import warnings
 import numpy as np
 import scipy.constants as c
 from scipy.interpolate import interp1d
@@ -216,7 +215,7 @@ def crop_edges(
     Cropping along the navigation axes of the a list of signal objects.
     Crop the amount of pixels from the four edges of the scanning
     region, from the edges inwards. Cropping can happen uniformly on all
-    sides or by specifying the cropping range for each axis or each side. If the navigation axes shape is different, all signals will be rebinned to match the shape of the first signal in the list.
+    sides or by specifying the cropping range for each axis or each side. If the navigation axes shape is different, all signals can be rebinned to match the shape of the first signal in the list.
 
     Parameters
     ----------
@@ -280,7 +279,7 @@ def crop_edges(
             )
         if nav_shape != s.axes_manager.navigation_shape:
             if not rebin_nav:
-                warnings.warn(
+                warn(
                     f"The navivigation axes of the first signal in index = 0 and in index = {i} have different shapes of {nav_shape} and {s.axes_manager.navigation_shape} respectively. This may cause errors during cropping. You can turn `rebin_nav` to True to rebin navigation axes.",
                     UserWarning,
                 )
@@ -298,7 +297,7 @@ def crop_edges(
     if len(nav_shape) == 1:
         line_scan = True
     elif len(nav_shape) > 2:
-        raise NotImplemented(
+        raise NotImplementedError(
             "`crop_edges` is not supported for navigation axes with more than 2 dimensions."
         )
 
