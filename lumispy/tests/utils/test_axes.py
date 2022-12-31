@@ -196,7 +196,7 @@ def test_crop_edges_s(range, output):
     s1 = [LumiSpectrum(ones((10, 10, 10)))]
 
     # Check for bad input range
-    if type(range) not in (int, float, tuple, None):
+    if type(range) not in (int, float, tuple, type(None)):
         with raises(ValueError, match="value must be a number or a tuple"):
             crop_edges(s1, range)
 
