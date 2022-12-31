@@ -54,9 +54,7 @@ class CommonLumi:
         if not inplace:
             return s
 
-    def scale_by_exposure(
-        self, integration_time=None, inplace=False, **kwargs
-    ):
+    def scale_by_exposure(self, integration_time=None, inplace=False, **kwargs):
         """Scale data in spectrum by integration time / exposure,
         (e.g. convert counts to counts/s).
 
@@ -82,14 +80,10 @@ class CommonLumi:
         """
         # Check metadata tags that would prevent scaling
         if self.metadata.Signal.get_item("normalized"):
-            raise AttributeError(
-                "Data was normalized and cannot be scaled."
-            )
-        elif self.metadata.Signal.get_item(
-            "scaled"
-        ) or self.metadata.Signal.get_item("quantity") == (
-            "Intensity (counts/s)" or "Intensity (Counts/s)"
-        ):
+            raise AttributeError("Data was normalized and cannot be scaled.")
+        elif self.metadata.Signal.get_item("scaled") or self.metadata.Signal.get_item(
+            "quantity"
+        ) == ("Intensity (counts/s)" or "Intensity (Counts/s)"):
             raise AttributeError("Data was already scaled.")
 
         # Make sure integration_time is given or contained in metadata
@@ -120,23 +114,15 @@ class CommonLumi:
             s = self.deepcopy()
         s.data = s.data / integration_time
         s.metadata.Signal.scaled = True
-        if (
-            s.metadata.get_item("Signal.quantity")
-            == "Intensity (Counts)"
-        ):
+        if s.metadata.get_item("Signal.quantity") == "Intensity (Counts)":
             s.metadata.Signal.quantity = "Intensity (Counts/s)"
             print(s.metadata.Signal.quantity)
-        if (
-            s.metadata.get_item("Signal.quantity")
-            == "Intensity (counts)"
-        ):
+        if s.metadata.get_item("Signal.quantity") == "Intensity (counts)":
             s.metadata.Signal.quantity = "Intensity (counts/s)"
         if not inplace:
             return s
 
-    def normalize(
-        self, pos=float("nan"), element_wise=False, inplace=False
-    ):
+    def normalize(self, pos=float("nan"), element_wise=False, inplace=False):
         """Normalizes data to value at `pos` along signal axis, defaults to
         maximum value.
 

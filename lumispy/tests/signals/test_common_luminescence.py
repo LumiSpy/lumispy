@@ -22,7 +22,6 @@ from lumispy.signals import LumiSpectrum, LumiTransientSpectrum
 
 
 class TestCommonLumi:
-
     def test_remove_negative(self):
         s1 = LumiSpectrum(np.random.random((10, 10, 10))) - 0.3
         s2 = LumiTransientSpectrum(np.random.random((10, 10, 10, 10))) - 0.3

@@ -71,9 +71,7 @@ def test_joinspectra(average, scale, kind):
     s3 = LumiSpectrum(arange(32) + 50)
     s2.axes_manager.signal_axes[0].offset = 25
     s3.axes_manager.signal_axes[0].offset = 50
-    s = join_spectra(
-        [s1, s2, s3], r=2, average=average, scale=scale, kind=kind
-    )
+    s = join_spectra([s1, s2, s3], r=2, average=average, scale=scale, kind=kind)
     assert s.data[-1] == 81
     assert s.axes_manager.signal_axes[0].scale == 1
     assert s.axes_manager.signal_axes[0].size == 82
@@ -95,9 +93,7 @@ def test_joinspectra_length1():
     s2.axes_manager.signal_axes[0].offset = 27
     s = join_spectra([s1, s2], r=1, average=False, scale=True)
     assert s.data[-1] == 58
-    with raises(
-        ValueError, match="Averaging can not be performed for r=1."
-    ):
+    with raises(ValueError, match="Averaging can not be performed for r=1."):
         s = join_spectra([s1, s2], r=1, average=True, scale=True)
     s1.axes_manager[0].convert_to_non_uniform_axis()
     s2.axes_manager[0].convert_to_non_uniform_axis()
@@ -126,9 +122,7 @@ def test_joinspectra_linescan(average, scale, kind):
     s1 = LumiSpectrum(random((4, 64)))
     s2 = LumiSpectrum(random((4, 64)))
     s2.axes_manager.signal_axes[0].offset = 47
-    s = join_spectra(
-        [s1, s2], r=7, average=average, scale=scale, kind=kind
-    )
+    s = join_spectra([s1, s2], r=7, average=average, scale=scale, kind=kind)
     assert s.axes_manager.signal_axes[0].size == 111
     assert s.axes_manager.signal_axes[0].scale == 1
 
@@ -141,21 +135,15 @@ def test_joinspectra_nonuniform(average, scale, kind):
     s2 = LumiSpectrum(arange(32) + 25)
     s2.axes_manager.signal_axes[0].offset = 25
     s1.axes_manager.signal_axes[0].convert_to_non_uniform_axis()
-    s = join_spectra(
-        [s1, s2], r=2, average=average, scale=scale, kind=kind
-    )
+    s = join_spectra([s1, s2], r=2, average=average, scale=scale, kind=kind)
     assert s.axes_manager.signal_axes[0].is_uniform == False
     assert s.axes_manager.signal_axes[0].size == 57
     assert s.axes_manager.signal_axes[0].axis[-1] == 56
     assert s.data.size == 57
     assert s.data[-1] == 56
     s1 = LumiSpectrum(arange(12))
-    s2 = LumiSpectrum(
-        arange(12) + 3.8, axes=[DataAxis(axis=arange(12) + 3.8)]
-    )
-    s = join_spectra(
-        [s1, s2], r=2, average=average, scale=scale, kind=kind
-    )
+    s2 = LumiSpectrum(arange(12) + 3.8, axes=[DataAxis(axis=arange(12) + 3.8)])
+    s = join_spectra([s1, s2], r=2, average=average, scale=scale, kind=kind)
     assert s.axes_manager[0].axis.size == 16
     assert s.data.size == 16
     assert s.data[-1] == 14.8
@@ -172,15 +160,9 @@ def test_joinspectra_FunctionalDA(average, scale, kind):
     s1 = LumiSpectrum(ones(32))
     s2 = LumiSpectrum(ones(32) * 2)
     s2.axes_manager.signal_axes[0].offset = 25
-    s1.axes_manager.signal_axes[0].convert_to_functional_data_axis(
-        expression="x**2"
-    )
-    s2.axes_manager.signal_axes[0].convert_to_functional_data_axis(
-        expression="x**2"
-    )
-    s = join_spectra(
-        [s1, s2], r=2, average=average, scale=scale, kind=kind
-    )
+    s1.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression="x**2")
+    s2.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression="x**2")
+    s = join_spectra([s1, s2], r=2, average=average, scale=scale, kind=kind)
     assert s.axes_manager.signal_axes[0].is_uniform == False
     assert s.axes_manager.signal_axes[0].size == 57
     assert s.axes_manager.signal_axes[0].axis[-1] == 3136
@@ -190,9 +172,7 @@ def test_joinspectra_FunctionalDA(average, scale, kind):
     else:
         assert s.data[-1] == 2
     # test that join_spectra works for r that is float not int
-    s = join_spectra(
-        [s1, s2], r=2.1, average=average, scale=scale, kind=kind
-    )
+    s = join_spectra([s1, s2], r=2.1, average=average, scale=scale, kind=kind)
 
 
 # Test axes utils
@@ -216,9 +196,7 @@ def test_crop_edges_s(range, output):
 
     # Check for bad input range
     if type(range) not in (int, float, tuple):
-        with raises(
-            ValueError, match="value must be a number or a tuple"
-        ):
+        with raises(ValueError, match="value must be a number or a tuple"):
             crop_edges(s1, range)
 
     elif type(range) == tuple and len(range) not in (1, 2, 4):
@@ -241,9 +219,7 @@ def test_crop_percent_and_single_spectrum():
     assert s2.axes_manager.navigation_shape[1] == 8
 
 
-@mark.parametrize(
-    "units", ["pixel", "px", "PIXEL", "percent", "pixels", "%", "nm"]
-)
+@mark.parametrize("units", ["pixel", "px", "PIXEL", "percent", "pixels", "%", "nm"])
 def test_crop_edges_units(units):
     s1 = LumiSpectrum(ones((10, 10, 10)))
 
@@ -291,9 +267,7 @@ def test_crop_edges_linescan(range, output):
 @mark.parametrize("data", [((10,) * 4), ((10,) * 5)])
 def test_crop_edges_multidim(data):
     s1 = [LumiSpectrum(ones((data)))]
-    with raises(
-        NotImplementedError, match="navigation axes with more than 2"
-    ):
+    with raises(NotImplementedError, match="navigation axes with more than 2"):
         crop_edges(s1, 2)
 
 
@@ -341,12 +315,15 @@ def test_crop_edges_multiple_no_rebin():
     assert s2[1].axes_manager.navigation_shape[0] == 3
     assert s2[1].axes_manager.navigation_shape[1] == 18
 
+
 def test_crop_edges_multiple_rebin():
-    s1 = [LumiSpectrum(ones((10, 10, 10))),
-    LumiSpectrum(ones((20, 20, 10))),
-    LumiSpectrum(ones((5, 5, 10))),
-    LumiSpectrum(ones((13, 7, 10))),
-    LumiSpectrum(ones((5, 20, 5))),]
+    s1 = [
+        LumiSpectrum(ones((10, 10, 10))),
+        LumiSpectrum(ones((20, 20, 10))),
+        LumiSpectrum(ones((5, 5, 10))),
+        LumiSpectrum(ones((13, 7, 10))),
+        LumiSpectrum(ones((5, 20, 5))),
+    ]
     s2 = crop_edges(s1, crop_range=1, rebin_nav=True)
     for s in s2:
         assert s.axes_manager.navigation_shape[0] == 8

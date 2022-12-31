@@ -92,9 +92,7 @@ def axis2eV(ax0):
     else:
         evaxis = nm2eV(ax0.axis)[::-1].astype("float")
         factor = 1e6
-    axis = DataAxis(
-        axis=evaxis, name="Energy", units="eV", navigate=False
-    )
+    axis = DataAxis(axis=evaxis, name="Energy", units="eV", navigate=False)
     return axis, factor
 
 
@@ -113,13 +111,7 @@ def data2eV(data, factor, evaxis, ax0):
             / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis**2)
         )
     else:
-        return (
-            data
-            * factor
-            * c.h
-            * c.c
-            / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)
-        )
+        return data * factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)
 
 
 def var2eV(variance, factor, evaxis, ax0):
@@ -129,24 +121,13 @@ def var2eV(variance, factor, evaxis, ax0):
     if ax0.units == "µm":
         return (
             variance
-            * (
-                factor
-                * c.h
-                * c.c
-                / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis**2)
-            )
+            * (factor * c.h * c.c / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis**2))
             ** 2
         )
     else:
         return (
             variance
-            * (
-                factor
-                * c.h
-                * c.c
-                / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)
-            )
-            ** 2
+            * (factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)) ** 2
         )
 
 
@@ -286,9 +267,7 @@ def crop_edges(
                     UserWarning,
                 )
             if rebin_nav:
-                scale = np.array(
-                    s.axes_manager.navigation_shape
-                ) / np.array(nav_shape)
+                scale = np.array(s.axes_manager.navigation_shape) / np.array(nav_shape)
                 signal_dim = len(s.axes_manager.signal_shape)
                 scale = np.append(scale, [1] * signal_dim)
                 S[i] = s.rebin(scale=scale)
@@ -332,11 +311,7 @@ def crop_edges(
     S_cropped = []
     for s in S:
         w = s.axes_manager.navigation_shape[0]
-        h = (
-            s.axes_manager.navigation_shape[1]
-            if not line_scan
-            else None
-        )
+        h = s.axes_manager.navigation_shape[1] if not line_scan else None
 
         crop_vals_s = crop_vals
         # Convert percentages to pixel units
@@ -366,13 +341,9 @@ def crop_edges(
 
         # Store transformation in metadata (or update the value if already previously transformed)
         if signal_cropped.metadata.has_item("Signal.cropped_edges"):
-            signal_cropped.metadata.Signal.cropped_edges += abs(
-                crop_vals_s
-            )
+            signal_cropped.metadata.Signal.cropped_edges += abs(crop_vals_s)
         else:
-            signal_cropped.metadata.set_item(
-                "Signal.cropped_edges", abs(crop_vals_s)
-            )
+            signal_cropped.metadata.set_item("Signal.cropped_edges", abs(crop_vals_s))
         S_cropped.append(signal_cropped)
 
     if no_list:
@@ -463,8 +434,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
         # Do scaling of following signals
         if scale:
             if (
-                axis.axis[ind1 - r : ind1 + r]
-                == axis2.axis[ind2 - r : ind2 + r]
+                axis.axis[ind1 - r : ind1 + r] == axis2.axis[ind2 - r : ind2 + r]
             ).all():
                 factor = np.nanmean(
                     np.ma.masked_invalid(
@@ -472,8 +442,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                             S1.isig[ind1 - r : ind1 + r].data,
                             S2.isig[ind2 - r : ind2 + r].data,
                             out=init,
-                            where=S2.isig[ind2 - r : ind2 + r].data
-                            != 0,
+                            where=S2.isig[ind2 - r : ind2 + r].data != 0,
                         )
                     ),
                     axis=-1,
@@ -492,8 +461,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                             S1.isig[ind1 - r : ind1 + r].data,
                             f(axis.axis[ind1 - r : ind1 + r]),
                             out=init,
-                            where=S2.isig[ind2 - r : ind2 + r].data
-                            != 0,
+                            where=S2.isig[ind2 - r : ind2 + r].data != 0,
                         )
                     ),
                     axis=-1,
@@ -504,9 +472,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                     " value in the overlapping range. Try to set"
                     " `scale=False` and `average=True`."
                 )
-            S2.data = (
-                S2.data.T * factor
-            ).T  # scale 2nd spectrum by factor
+            S2.data = (S2.data.T * factor).T  # scale 2nd spectrum by factor
         # Make sure the corresponding values are in correct order
         if axis.axis[ind1] >= axis2.axis[ind2]:
             ind2 += 1
@@ -537,18 +503,13 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                 S1.data = np.hstack(
                     (
                         S1.isig[: ind1 - r].data,
-                        (1 - grad * vect)
-                        * S1.isig[ind1 - r : ind1 + r].data
-                        + grad
-                        * vect
-                        * f(axis.axis[ind1 - r : ind1 + r]),
+                        (1 - grad * vect) * S1.isig[ind1 - r : ind1 + r].data
+                        + grad * vect * f(axis.axis[ind1 - r : ind1 + r]),
                         f(axis.axis[ind1 + r :]),
                     )
                 )
             else:  # just join at center of overlap
-                f = interp1d(
-                    axis2.axis[ind2:], S2.isig[ind2:].data, kind=kind
-                )
+                f = interp1d(axis2.axis[ind2:], S2.isig[ind2:].data, kind=kind)
                 S1.data = np.hstack(
                     (S1.isig[: ind1 + 1].data, f(axis.axis[ind1 + 1 :]))
                 )
@@ -558,15 +519,11 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                 axis.convert_to_non_uniform_axis()
             # 2nd axis does not need to be converted, because it contains axis vector
             # join axis vectors
-            axis.axis = np.hstack(
-                (axis.axis[: ind1 + 1], axis2.axis[ind2:])
-            )
+            axis.axis = np.hstack((axis.axis[: ind1 + 1], axis2.axis[ind2:]))
             axis.size = axis.axis.size
             if average:  # average over range
                 f1 = interp1d(
-                    S[i - 1]
-                    .axes_manager.signal_axes[0]
-                    .axis[ind1 - 1 : ind1 + r + 1],
+                    S[i - 1].axes_manager.signal_axes[0].axis[ind1 - 1 : ind1 + r + 1],
                     S1.isig[ind1 - 1 : ind1 + r + 1].data,
                     kind=kind,
                 )
@@ -587,21 +544,15 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                 S1.data = np.hstack(
                     (
                         S1.isig[: ind1 - r].data,
-                        (1 - grad1 * vect1)
-                        * S1.isig[ind1 - r : ind1 + 1].data
-                        + grad1
-                        * vect1
-                        * f2(axis.axis[ind1 - r : ind1 + 1]),
-                        (1 - grad2 * vect2)
-                        * f1(axis2.axis[ind2 : ind2 + r])
+                        (1 - grad1 * vect1) * S1.isig[ind1 - r : ind1 + 1].data
+                        + grad1 * vect1 * f2(axis.axis[ind1 - r : ind1 + 1]),
+                        (1 - grad2 * vect2) * f1(axis2.axis[ind2 : ind2 + r])
                         + grad2 * vect2 * S2.isig[ind2 : ind2 + r].data,
                         S2.isig[ind2 + r :].data,
                     )
                 )
             else:  # just join at center of overlap
-                S1.data = np.hstack(
-                    (S1.isig[: ind1 + 1].data, S2.isig[ind2:].data)
-                )
+                S1.data = np.hstack((S1.isig[: ind1 + 1].data, S2.isig[ind2:].data))
     return S1
 
 
@@ -671,14 +622,9 @@ def solve_grating_equation(
     h_blc = focal_length_mm * np.sin(np.deg2rad(gamma_deg))
 
     # alpha = angle of incidence (Eq. 2.1)
-    numerator = (
-        1e-6 * grating_density_gr_mm * grating_central_wavelength_nm
-    )
+    numerator = 1e-6 * grating_density_gr_mm * grating_central_wavelength_nm
     denominator = 2 * np.cos(np.deg2rad(deviation_angle_deg / 2))
-    alpha = (
-        np.arcsin(np.deg2rad(numerator / denominator))
-        - deviation_angle_deg / 2
-    )
+    alpha = np.arcsin(np.deg2rad(numerator / denominator)) - deviation_angle_deg / 2
 
     # beta: angle of diffraction (Eq. 1.2)
     beta = alpha + deviation_angle_deg
@@ -696,12 +642,8 @@ def solve_grating_equation(
     )
 
     # Find lambda max/min given beta (Eq. 5.2)
-    l_min = (
-        1e6 * (np.sin(alpha) + np.sin(beta_min)) / grating_density_gr_mm
-    )
-    l_max = (
-        1e6 * (np.sin(alpha) + np.sin(beta_max)) / grating_density_gr_mm
-    )
+    l_min = 1e6 * (np.sin(alpha) + np.sin(beta_min)) / grating_density_gr_mm
+    l_max = 1e6 * (np.sin(alpha) + np.sin(beta_max)) / grating_density_gr_mm
     l_min = abs(l_min)
     l_max = abs(l_max)
 
