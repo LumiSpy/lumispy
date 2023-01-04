@@ -136,6 +136,8 @@ It finds the centroid (center of mass) of a peak in the spectrum from the wavele
 
 where :math:`x_i` is the wavelength (or pixel number) at which the intensity of the spectrum :math:`I_i` is measured.
 
+This function also works for non-linear axes. For the :external:py:class:`hyperspy.axes.FunctionalDataAxis`, the centroid is extrapolated based on the function used to create the non-uniform axis. For :external:py:class:`hyperspy.axes.DataAxis`, a linear interpolation between the axes points at the center of mass is assumed, but this behaviour can be changed with the `kwargs` of :external:py:meth:`scipy.interpolate.interp1d` function.
+
 .. code-block:: python
 
     >>> s = lum.signals.LumiSpectrum([[[1, 2, 3, 2, 1, 0]]*2]*3)
@@ -148,7 +150,7 @@ where :math:`x_i` is the wavelength (or pixel number) at which the intensity of 
 
     >>> com = s.centroid()
     >>> com
-    LumiSpectrum <2,3|1>
+    BaseSignal <2,3|>
     >>> com.data[0,0] 
     400.
 

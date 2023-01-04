@@ -110,11 +110,12 @@ class TestLumiSpectrum:
         ax.offset = 200
         ax.scale = 100
         ax.units = "nm"
+        ax.name = "Wavelength"
 
         com = s.centroid()
         assert_allclose(com.data, 400.0, atol=0.1)
         assert (
-            s.axes_manager.signal_axes[0].units == com.axes_manager.signal_axes[0].units
+            com.metadata.General.title == f"Centroid map of {ax.name} ({ax.units}) for "
         )
 
     def test_center_of_mass_slice(self):
@@ -134,12 +135,10 @@ class TestLumiSpectrum:
         with pytest.raises(ValueError):
             s.centroid(slice=(1, 2, 3))
 
-    def test_centre_of_mass_notimplemented(self):
-        s = LumiSpectrum(np.ones(5))
-        with pytest.raises(NotImplementedError):
-            s.centroid(npeaks=2)
-
     def test_centre_of_mass_3d(self):
         s = LumiSpectrum([[[1, 2, 3, 4, 5]] * 3] * 4)
         com = s.centroid()
-        assert com.axes_manager.shape == (3, 4, 1)
+        assert com.axes_manager.shape == (
+            3,
+            4,
+        )

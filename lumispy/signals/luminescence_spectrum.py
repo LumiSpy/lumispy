@@ -586,7 +586,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         "\n", "\n\t"
     )
 
-    def centroid(self, slice=None, npeaks=1):
+    def centroid(self, slice=None, **kwargs):
         """
         Finds the centroid (center of mass) of a peak in the spectrum from the wavelength (or pixel number) and the intensity at each pixel value. It basically represents a "weighted average" of the peak.
 
@@ -594,19 +594,20 @@ class LumiSpectrum(Signal1D, CommonLumi):
         -------
         This function only works for a single peak. If you have multiple peaks, slice the signal beforehand or use the slice parameter.
 
-        TODO
-        -------
-        Implement this function for multiple peaks (npeaks = 2) by finding the top 2 peaks from mean spectrum and then returning a signal with 2 com.
+        TODO: Implement this function for multiple peaks (with the npeaks parameter) by finding the top 2 peaks from mean spectrum and then returning a signal with 2 com.
 
         Parameters
         -------
         slice : tuple (2)
             An tuple representing the indices of the wavelength (start index, end index) where the peak is located. If the tuple contains int, it slices on index. Ig the tuple contains float, it slices on signal units (defualt hyperspy s.inav[:] functionality).
 
+        kwargs : dictionary
+            For the scipy.interpolate.interp1d function.
+
         Returns
         -------
-        signal : Signal1D
-            A signal containing the center of mass for each navigation pixel.
+        signal : BaseSignal
+            A BaseSignal with signal dimension of 0, where at each navigation index there is a scalar value containing the center of mass for each navigation pixel.
         """
         if slice:
             if type(slice) != tuple:
@@ -621,16 +622,11 @@ class LumiSpectrum(Signal1D, CommonLumi):
         else:
             s = self
 
-        if npeaks > 1 or npeaks < 1:
-            raise NotImplementedError("Centroid only works for one peak.")
+        signal_axis = s.axes_manager.signal_axes[0]
+        center_of_mass = s.map(com, signal_axis=signal_axis, inplace=False)
 
-        wavelengths = s.axes_manager.signal_axes[0].axis
-        center_of_mass = s.map(com, wavelengths=wavelengths, inplace=False)
-
-        # Transfer axes metadata
-        ax = center_of_mass.axes_manager.signal_axes[0]
-        ax.units = s.axes_manager.signal_axes[0].units
-        ax.name = s.axes_manager.signal_axes[0].name
+        # Transfer axes metadata to title
+        center_of_mass.metadata.General.title = f"Centroid map of {signal_axis.name} ({signal_axis.units}) for {center_of_mass.metadata.General.title}"
         return center_of_mass
 
 
