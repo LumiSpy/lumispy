@@ -50,7 +50,7 @@ steps:
 - bash: |
     source activate $ENV_NAME
     # Install package using pip
-    conda install .
+    pip install . --no-deps
     conda list
   displayName: Install package
 
