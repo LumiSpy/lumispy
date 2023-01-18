@@ -15,6 +15,10 @@ Changed
   for integrity check as `it replaces LGTM
   <https://github.blog/2022-08-15-the-next-step-for-lgtm-com-github-code-scanning/>`_
 
+Maintenance
+-----------
+- Replace `sphinx.ext.imgmath` by `sphinx.ext.mathjax` to fix the math rendering in the ReadTheDocs build
+
 2022-11-02 - version 0.2.1
 ==========================
 Added
