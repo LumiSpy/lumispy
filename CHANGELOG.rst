@@ -17,7 +17,7 @@ Changed
 
 Maintenance
 -----------
-- Replace `sphinx.ext.imgmath` by `sphinx.ext.mathjax` to fix the math rendering in the ReadTheDocs build
+- Replace ``sphinx.ext.imgmath`` by ``sphinx.ext.mathjax`` to fix the math rendering in the *ReadTheDocs* build
 
 2022-11-02 - version 0.2.1
 ==========================
