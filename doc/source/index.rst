@@ -53,6 +53,7 @@ Contents
    user_guide/installation.rst
    user_guide/introduction.rst
    user_guide/signal_axis.rst
+   user_guide/signal_tools.rst
    user_guide/fitting_luminescence.rst
    user_guide/utilities.rst
    user_guide/metadata_structure.rst

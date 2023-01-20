@@ -21,7 +21,7 @@ To install LumiSpy, you have the following options (independent of the operating
 Installation using conda
 ========================
 
-Follow these 3 steps to install LumiSpy using **conda**.
+Follow these 3 steps to install LumiSpy using **conda** and start using it.
 
 1. Creating a conda environment
 -------------------------------
@@ -30,8 +30,8 @@ LumiSpy requires Python 3 and ``conda`` -- we suggest using the Python 3 version
 of `Miniconda <https://conda.io/miniconda.html/>`_.
 
 We recommend creating a new environment for the LumiSpy package (or installing
-it in the `HyperSpy <https://hyperspy.org>`_ environment, if you have one already).
-To create a new environment:
+it in the `HyperSpy <https://hyperspy.org/hyperspy-doc/current/user_guide/install.html#installation-using-conda>`_ 
+environment, if you have one already). To create a new environment:
 
 1. Load the anaconda prompt.
 2. Run the following command:
