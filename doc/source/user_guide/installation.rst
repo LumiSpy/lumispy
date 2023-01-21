@@ -10,10 +10,9 @@ To install LumiSpy, you have the following options (independent of the operating
    (recommended if you do not use *python* for anything else).
 2. :ref:`conda` (recommended if you are also working with other *python* packages).
 3. :ref:`pip`.
-4. Installing the development version from `GitHub <https://github.com/LumiSpy/lumispy/>`_, 
-   refer to the appropriate section in the `HyperSpy user guide
-   <https://hyperspy.org/hyperspy-doc/current/user_guide/install.html#install-development-version>`_
-   (replacing ``hyperspy`` by ``lumispy``).
+4. Installing the development version from `GitHub <https://github.com/LumiSpy/lumispy/>`_.
+   Refer to the appropriate section in the :external+hyperspy:ref:`HyperSpy user guide
+   <install-dev>` (replacing ``hyperspy`` by ``lumispy``).
 
 
 .. _conda:
@@ -30,7 +29,7 @@ LumiSpy requires Python 3 and ``conda`` -- we suggest using the Python 3 version
 of `Miniconda <https://conda.io/miniconda.html/>`_.
 
 We recommend creating a new environment for the LumiSpy package (or installing
-it in the `HyperSpy <https://hyperspy.org/hyperspy-doc/current/user_guide/install.html#installation-using-conda>`_ 
+it in the :external+hyperspy:ref:`HyperSpy <anaconda-install>` 
 environment, if you have one already). To create a new environment:
 
 1. Load the anaconda prompt.
@@ -57,8 +56,8 @@ Installation is completed! To start using it, check the next section.
 
 .. Note::
 
-   If you run into trouble, check the more detailed documentation in the `HyperSpy user guide
-   <https://hyperspy.org/hyperspy-doc/current/user_guide/install.html#installation-using-conda>`__.
+   If you run into trouble, check the more detailed documentation in the
+   :external+hyperspy:ref:`HyperSpy user guide <anaconda-install>`.
 
 
 3. Getting Started

@@ -26,14 +26,14 @@ that can be described as multidimensional arrays of a given signal.
 
 Notable features that **HyperSpy** provides are:
 
-- `base signal classes <https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html>`_
+- :external+hyperspy:ref:`base signal classes <user_guide/signal>`
   for the handling of (multidimensional) spectral data,
 - the necessary tools for loading :external+hyperspy:ref:`various data file formats
   <io>`,
-- `analytical tools <https://hyperspy.org/hyperspy-doc/current/user_guide/signal1d.html>`_
+- :external+hyperspy:ref:`analytical tools <user_guide/signal1d >`
   that exploit the multidimensionality of datasets,
-- a user-friendly and powerful framework for `model fitting
-  <https://hyperspy.org/hyperspy-doc/current/user_guide/model.html>`_ that
+- a user-friendly and powerful framework for :external+hyperspy:ref:`model fitting
+  <model-label>` that
   provides many standard functions and can be easily extended to custom ones,
 - :external+hyperspy:ref:`machine learning <ml-label>`
   algorithms that can be useful, e.g. for denoising data,
@@ -45,8 +45,8 @@ Notable features that **HyperSpy** provides are:
   :external+hyperspy:ref:`regions of interest <roi-label>` and a powerful
   numpy-style :external+hyperspy:ref:`indexing mechanism <signal.indexing>`,
 - handling of :external+hyperspy:ref:`non-uniform data axes <Axes_types>`
-  (introduced in the `v1.7 release 
-  <https://hyperspy.org/hyperspy-doc/current/user_guide/changes.html#hyperspy-1-7-0-2022-04-26>`_).
+  (introduced in the :external+hyperspy:ref:`v1.7 release 
+  <changes_1.7.0>`).
 
 **LumiSpy** provides in particular:
 

@@ -34,8 +34,8 @@ Utilities for spectral maps
 
 The function :py:meth:`~.signals.common_luminescence.CommonLumi.crop_edges`
 removes the specified number of pixels from all four edges of a spectral map.
-It is a convenience wrapper for the ``inav`` `method in HyperSpy
-<https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html#indexing>`_.
+It is a convenience wrapper for the ``inav`` :external+hyperspy:ref:`method in
+HyperSpy <signal.indexing>`.
 
 .. code-block:: python
 

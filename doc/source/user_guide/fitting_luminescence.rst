@@ -3,12 +3,12 @@
 Fitting luminescence data
 *************************
 
-LumiSpy is compatible with `HyperSpy model fitting 
-<https://hyperspy.org/hyperspy-doc/current/user_guide/model.html>`_.
+LumiSpy is compatible with :external+hyperspy:ref:`HyperSpy model fitting 
+<user_guide/model>`.
 It can fit using both `uniform and and non-uniform axes
 <https://hyperspy.org/hyperspy-doc/current/user_guide/axes.html#types-of-data-axes>`_ 
-(e.g. energy scale). A general introduction can be found in the `HyperSpy user guide
-<https://hyperspy.org/hyperspy-doc/current/user_guide/model.html>`_.
+(e.g. energy scale). A general introduction can be found in the
+:external+hyperspy:ref:`HyperSpy user guide <user_guide/model>`.
 
 TODO: Note on advantages of fitting signals in the ``eV`` axis (not restricted
 to Gaussians). See e.g. [Wang]__
