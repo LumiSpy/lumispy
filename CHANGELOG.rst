@@ -17,6 +17,10 @@ Changed
 - `s.remove_negative` now defaults to `inplace=False` (previously `True`)
 - `s.crop_edges` now takes 1,2 or 4 values as input (can crop each axis independently) and also accepts percentages.
 
+Maintenance
+-----------
+- Replace ``sphinx.ext.imgmath`` by ``sphinx.ext.mathjax`` to fix the math rendering in the *ReadTheDocs* build
+
 2022-11-02 - version 0.2.1
 ==========================
 Added
