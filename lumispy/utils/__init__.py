@@ -30,6 +30,12 @@ from .axes import (
     solve_grating_equation,
 )
 
+import numpy as np
+from scipy.interpolate import interp1d
+from inspect import getfullargspec
+from warnings import warn
+from hyperspy.axes import DataAxis
+
 #
 # navigation axis manipulation
 #

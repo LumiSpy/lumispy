@@ -18,11 +18,8 @@
 
 import numpy as np
 import scipy.constants as c
-from scipy.interpolate import interp1d
-from inspect import getfullargspec
 from copy import deepcopy
 from warnings import warn
-
 from hyperspy.axes import DataAxis, UniformDataAxis
 
 
