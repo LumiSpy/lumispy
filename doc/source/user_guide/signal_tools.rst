@@ -97,6 +97,63 @@ default value ``factor=0.5`` returns the full width at half maximum (FWHM).
     >>> width = s.estimate_peak_width(factor=0.3)
 
 
+.. _centroid:
+
+Calculating the centroid of a spectrum (centre of mass)
+-------------------------------------------------------
+
+
+The function :py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.centroid`
+(based on the utility function :py:func:`~.utils.signals.com`) is an alternative to
+finding the position of the maximum intensity of a peak, useful in particular for
+non-symmetric peaks with pronounced shoulders.
+It finds the centroid (center of mass) of a peak in the spectrum from the signal axis
+units (or pixel number) and the intensity at each pixel value. It basically represents a
+"weighted average" of the peak as such:
+
+.. math::
+
+    com = \frac{\sum{x_i I_i}}{\sum{I_i}},
+
+where :math:`x_i` is the wavelength (or pixel number) at which the
+intensity of the spectrum :math:`I_i` is measured.
+
+This function also works for non-linear axes. For the
+:external:py:class:`hyperspy.axes.FunctionalDataAxis`, the centroid is extrapolated
+based on the function used to create the non-uniform axis. For
+:external:py:class:`hyperspy.axes.DataAxis`, a linear interpolation between the
+axes points at the center of mass is assumed, but this behaviour can be changed
+with the `kwargs` of :external:py:meth:`scipy.interpolate.interp1d` function.
+
+.. code-block:: python
+
+    >>> s = lum.signals.LumiSpectrum([[[1, 2, 3, 2, 1, 0]]*2]*3)
+    >>> s
+    LumiSpectrum <2,3|5>
+
+    >>> ax = s.axes_manager.signal_axes[0]
+    >>> ax.offset = 200
+    >>> ax.scale = 100
+
+    >>> com = s.centroid()
+    >>> com
+    BaseSignal <2,3|>
+    >>> com.data[0,0] 
+    400.
+
+.. Note::
+
+    This function only works for a single peak. If you have multiple peaks,
+    slice the signal beforehand or use the slice parameter (which follows the
+    ``s.isig[:]`` convention).
+
+.. Note::
+
+    The :ref:`jacobian` may affect the shape, in particular of broader peaks.
+    It is therefore highly recommended to convert luminescence spectra from
+    wavelength to the :ref:`energy axis <energy_axis>` prior to determining
+    the centroid to determine the true emission energy.
+    See e.g. [Wang]_ and [Mooney]_.
 
 Signal statistics and analytical operations
 ===========================================

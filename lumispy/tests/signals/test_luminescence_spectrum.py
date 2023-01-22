@@ -91,7 +91,54 @@ class TestLumiSpectrum:
         assert s.axes_manager.signal_axes[0].name == "Wavelength"
         assert s.axes_manager.signal_axes[0].units == "nm"
 
-        assert_allclose(s_copy.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1)
-        assert_allclose(s_copy.axes_manager.signal_axes[0].axis[-1], 768.249, atol=0.1)
+        assert_allclose(
+            s_copy.axes_manager.signal_axes[0].axis[0],
+            368.614,
+            atol=0.1,
+        )
+        assert_allclose(
+            s_copy.axes_manager.signal_axes[0].axis[-1],
+            768.249,
+            atol=0.1,
+        )
         assert_allclose(s.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1)
         assert_allclose(s.axes_manager.signal_axes[0].axis[-1], 768.249, atol=0.1)
+
+    def test_center_of_mass(self):
+        s = LumiSpectrum([1, 2, 3, 2, 1, 0])
+        ax = s.axes_manager.signal_axes[0]
+        ax.offset = 200
+        ax.scale = 100
+        ax.units = "nm"
+        ax.name = "Wavelength"
+
+        com = s.centroid()
+        assert_allclose(com.data, 400.0, atol=0.1)
+        assert (
+            com.metadata.General.title == f"Centroid map of {ax.name} ({ax.units}) for "
+        )
+
+    def test_center_of_mass_signalrange(self):
+        s = LumiSpectrum([100, 100, 1, 2, 3, 2, 1, 0, 100, 100])
+        ax = s.axes_manager.signal_axes[0]
+        ax.offset = 0
+        ax.scale = 100
+
+        com = s.centroid(signal_range=(2, -2))
+        assert_allclose(com.data, 400.0, atol=0.1)
+        com = s.centroid(signal_range=(200.0, 800.0))
+        assert_allclose(com.data, 400.0, atol=0.1)
+        with pytest.raises(TypeError):
+            s.centroid(signal_range=(1))
+        with pytest.raises(TypeError):
+            s.centroid(signal_range="string")
+        with pytest.raises(ValueError):
+            s.centroid(signal_range=(1, 2, 3))
+
+    def test_centre_of_mass_3d(self):
+        s = LumiSpectrum([[[1, 2, 3, 4, 5]] * 3] * 4)
+        com = s.centroid()
+        assert com.axes_manager.shape == (
+            3,
+            4,
+        )

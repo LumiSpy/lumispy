@@ -16,6 +16,7 @@ Changed
   <https://github.blog/2022-08-15-the-next-step-for-lgtm-com-github-code-scanning/>`_
 - `s.remove_negative` now defaults to `inplace=False` (previously `True`)
 - `s.crop_edges` now takes 1,2 or 4 values as input (can crop each axis independently) and also accepts percentages.
+- Added a centroid/center of mass functionality to analyse peak position of a spectrum (both in `utils`` and in `LumiSpectrum``)
 
 Maintenance
 -----------
