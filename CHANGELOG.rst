@@ -16,6 +16,10 @@ Changed
   <https://github.blog/2022-08-15-the-next-step-for-lgtm-com-github-code-scanning/>`_
 - Added a centroid/center of mass functionality to analyse peak position of a spectrum (both in `utils`` and in `LumiSpectrum``)
 
+Maintenance
+-----------
+- Replace ``sphinx.ext.imgmath`` by ``sphinx.ext.mathjax`` to fix the math rendering in the *ReadTheDocs* build
+
 2022-11-02 - version 0.2.1
 ==========================
 Added

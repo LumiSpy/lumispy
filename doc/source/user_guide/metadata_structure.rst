@@ -3,11 +3,10 @@
 LumiSpy metadata structure
 **************************
 
-LumiSpy extends the `HyperSpy metadata structure
-<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html>`_
+LumiSpy extends the :external+hyperspy:ref:`HyperSpy metadata structure
+<metadata_structure>`
 with conventions for metadata specific to its signal types. Refer to the
-`HyperSpy metadata documentation
-<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html>`_
+:external+hyperspy:ref:`HyperSpy metadata documentation <user_guide/metadata_structure>`
 for general metadata fields.
 
 The metadata of any **signal objects** is stored in the `metadata` attribute,
@@ -16,11 +15,11 @@ the ones for leaves are not capitalized. When a leaf contains a quantity that
 is not dimensionless, the units can be given in an extra leaf with the same
 label followed by the ``_units`` suffix.
 
-Besides directly accesing the metadata tree structure, e.g.
+Besides directly accessing the metadata tree structure, e.g.
 ``s.metadata.Signal.signal_type``, the HyperSpy methods
-:external:py:meth:`hyperspy.misc.utils.DictionaryTreeBrowser.set_item`,
-:external:py:meth:`hyperspy.misc.utils.DictionaryTreeBrowser.has_item` and
-:external:py:meth:`hyperspy.misc.utils.DictionaryTreeBrowser.get_item`
+:external:py:meth:`set_item() <hyperspy.misc.utils.DictionaryTreeBrowser.set_item>`,
+:external:py:meth:`has_item() <hyperspy.misc.utils.DictionaryTreeBrowser.has_item>` and
+:external:py:meth:`get_item() <hyperspy.misc.utils.DictionaryTreeBrowser.get_item>`
 can be used to add to, search for and read from items in the metadata tree,
 respectively.
 
@@ -119,7 +118,7 @@ quantity
     required, for example 'Intensity (counts/s)'.
 
 See `HyperSpy-Metadata-Signal
-<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#sample>`_
+<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#sample>`__
 for additional fields.
 
 Acquisition Instrument
