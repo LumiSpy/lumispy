@@ -10,8 +10,12 @@ It can fit using both `uniform and and non-uniform axes
 (e.g. energy scale). A general introduction can be found in the
 :external+hyperspy:ref:`HyperSpy user guide <user_guide/model>`.
 
-TODO: Note on advantages of fitting signals in the ``eV`` axis (not restricted
-to Gaussians). See e.g. [Wang]__
+.. Note::
+    The :ref:`jacobian` may affect the shape, in particular of broader peaks.
+    It is therefore highly recommended to convert luminescence spectra from
+    wavelength to the :ref:`energy axis <energy_axis>` prior to any fitting
+    to obtain the true emission energy.
+    See e.g. [Wang]_ and [Mooney]_.
 
 TODO: Show how to extract the *modeled signal* with all/one component.
 
@@ -24,10 +28,7 @@ Signal variance (noise)
 =======================
 
 TODO: Documentation on variance handling in the context of fitting,
-in particular using :external:py:meth:`hyperspy.signal.BaseSignal.estimate_poissonian_noise_variance()`
-
-.. rubric:: References
-
-.. [Wang]_ Y. Wang and P. D. Townsend, J. Luminesc. **142**, 202
-    (2013). `doi:10.1016/j.jlumin.2013.03.052 <https://doi.org/10.1016/j.jlumin.2013.03.052>`_
-
+in particular using :external:py:meth:`estimate_poissonian_noise_variance()
+<hyperspy.signal.BaseSignal.estimate_poissonian_noise_variance>`
+ 
+See [Tappy]_
