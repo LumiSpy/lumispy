@@ -47,19 +47,21 @@ Contents
 ========
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: User Guide
 
    user_guide/installation.rst
    user_guide/introduction.rst
    user_guide/signal_axis.rst
+   user_guide/signal_tools.rst
    user_guide/fitting_luminescence.rst
    user_guide/utilities.rst
    user_guide/metadata_structure.rst
+   user_guide/bibliography.rst
 
 .. toctree::
    :maxdepth: 2
-   :caption: API References
+   :caption: API reference
 
    api/modules.rst
 
