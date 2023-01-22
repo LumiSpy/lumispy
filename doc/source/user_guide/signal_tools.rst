@@ -50,22 +50,28 @@ Peak positions and properties
 Peak identification
 -------------------
 
-HyperSpy provides functions to finde the positions of maxima or minima in a
+HyperSpy provides functions to find the positions of maxima or minima in a
 dataset:
 
-- ``indexmax()`` - return the index of the maximum value along a given axis.
-- ``indexmin()`` - return the index of the minimum value along a given axis.
-- ``valuemax()`` - return the position of the maximum value along a given axis in
+- :external+hyperspy:meth:`indexmax() <hyperspy.signal.BaseSignal.indexmax>` - 
+  return the index of the maximum value along a given axis.
+- :external+hyperspy:meth:`indexmin() <hyperspy.signal.BaseSignal.indexmin>` - 
+  return the index of the minimum value along a given axis.
+- :external+hyperspy:meth:`valuemax() <hyperspy.signal.BaseSignal.valuemax>` - 
+  return the position/coordinates of the maximum value along a given axis in
   calibrated units.
-- ``valuemin()`` - return the position of the minimum value along a given axis in
+- :external+hyperspy:meth:`valuemin() <hyperspy.signal.BaseSignal.valuemin>` - 
+  return the position/coordinates of the minimum value along a given axis in
   calibrated units.
 
-These functions take the `axis` keyword to define along which axis to perform the
-operation.
+These functions take the ``axis`` keyword to define along which axis to perform
+the operation and return a new signal containing the result.
 
-A much more powerful method to identify peaks is using the peak finding routine
+A much more powerful method to identify peaks is using the **peak finding routine**
 based on the downward zero-crossings of the first derivative of a signal:
-:external+hyperspy:meth:`find_peaks1D_ohaver <hyperspy._signals.signal1d.Signal1D.find_peaks1D_ohaver>`.
+:external+hyperspy:meth:`find_peaks1D_ohaver() <hyperspy._signals.signal1d.Signal1D.find_peaks1D_ohaver>`.
+This function can find multiple peaks in a dataset and has a number of parameters
+for fine-tuning the sensitivity, etc.
 
 All of these functions can be performed for a subset of the dataset:
 
@@ -79,27 +85,48 @@ All of these functions can be performed for a subset of the dataset:
 Peak Width
 ----------
 
-For asymmetric peaks, `fitted functions <fitting_luminescence>` may not provide
+For asymmetric peaks, :ref:`fitted functions <fitting_luminescence>` may not provide
 an accurate description of the peak, in particular the peak width. The function
-:external+hyperspy:meth:`estimate_peak_width <hyperspy._signals.signal1d.Signal1D.estimate_peak_width>`
-determines the width of a peak at a certain fraction of its maximum value.
+:external+hyperspy:meth:`estimate_peak_width() <hyperspy._signals.signal1d.Signal1D.estimate_peak_width>`
+determines the **width of a peak** at a certain fraction of its maximum value. The
+default value ``factor=0.5`` returns the full width at half maximum (FWHM).
+
+.. code-block:: python
+
+    >>> s.remove_background()
+    >>> width = s.estimate_peak_width(factor=0.3)
+
 
 
 Signal statistics and analytical operations
 ===========================================
 
-Standard statistical operations can be performed on the data or a subset of the
-data, notably these include ``max``, ``min``, ``sum``, ``mean``, ``std``, ``var``.
+**Standard statistical operations** can be performed on the data or a subset of the
+data, notably these include 
+:external+hyperspy:meth:`max() <hyperspy.signal.BaseSignal.max>`,
+:external+hyperspy:meth:`min() <hyperspy.signal.BaseSignal.min>`,
+:external+hyperspy:meth:`sum() <hyperspy.signal.BaseSignal.sum>`,
+:external+hyperspy:meth:`mean() <hyperspy.signal.BaseSignal.mean>`,
+:external+hyperspy:meth:`std() <hyperspy.signal.BaseSignal.std>`, and
+:external+hyperspy:meth:`var() <hyperspy.signal.BaseSignal.var>`. Variations of
+all these functions exist that ignore missing values (NaN) if present, e.g.
+:external+hyperspy:meth:`nanmax() <hyperspy.signal.BaseSignal.mnanax>`.
 
-Integration along a specified signal axis is performed using the function 
-``integrate1D()``.
+**Integration** along a specified signal axis is performed using the function 
+:external+hyperspy:meth:`integrate1D() <hyperspy.signal.BaseSignal.integrate1D()>`.
 
-These functions take the ``axis`` keyword to define along which axis to perform the
-operation.
+The numerical **derivative** of a signal can be calculated using the function
+:external+hyperspy:meth:`derivative() <hyperspy.signal.BaseSignal.derivative()>`,
+while the *n*-th order **discrete difference** can be calculated using
+:external+hyperspy:meth:`diff() <hyperspy.signal.BaseSignal.diff()>`.
+
+These functions take the ``axis`` keyword to define along which axis to perform
+the operation and return a new signal containing the result:
 
 .. code-block:: python
 
     >>> area = s.integrate1D(axis=0)
+
 
 .. _remove_negative:
 

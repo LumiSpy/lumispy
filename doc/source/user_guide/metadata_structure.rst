@@ -15,11 +15,11 @@ the ones for leaves are not capitalized. When a leaf contains a quantity that
 is not dimensionless, the units can be given in an extra leaf with the same
 label followed by the ``_units`` suffix.
 
-Besides directly accesing the metadata tree structure, e.g.
+Besides directly accessing the metadata tree structure, e.g.
 ``s.metadata.Signal.signal_type``, the HyperSpy methods
-:external:py:meth:`hyperspy.misc.utils.DictionaryTreeBrowser.set_item`,
-:external:py:meth:`hyperspy.misc.utils.DictionaryTreeBrowser.has_item` and
-:external:py:meth:`hyperspy.misc.utils.DictionaryTreeBrowser.get_item`
+:external:py:meth:`set_item() <hyperspy.misc.utils.DictionaryTreeBrowser.set_item>`,
+:external:py:meth:`has_item() <hyperspy.misc.utils.DictionaryTreeBrowser.has_item>` and
+:external:py:meth:`get_item() <hyperspy.misc.utils.DictionaryTreeBrowser.get_item>`
 can be used to add to, search for and read from items in the metadata tree,
 respectively.
 
