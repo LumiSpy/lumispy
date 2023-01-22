@@ -9,7 +9,7 @@ This section summarizes various useful functions implemented in LumiSpy.
 .. _join_spectra:
 
 Join spectra
-==============================
+==========
 
 In case several spectra (or spectral images) where subsequently recorded for
 different, but overlapping spectral windows, LumiSpy provides a utility
@@ -30,7 +30,7 @@ signals in the range of +/- 50 pixels around the centre of the overlapping regio
 .. _spectral_map_utils:
 
 Utilities for spectral maps
-==============================
+===========================
 
 The function :py:meth:`~.signals.common_luminescence.CommonLumi.crop_edges`
 removes the specified number of pixels from all four edges of a spectral map.
@@ -47,7 +47,7 @@ HyperSpy <signal.indexing>`.
 .. _unit_conversion:
 
 Unit conversion
-==============================
+===============
 
 For convenience, LumiSpy provides functions that convert between different
 units commonly used for the signal axis. Namely,

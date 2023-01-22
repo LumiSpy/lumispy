@@ -7,6 +7,7 @@ from scipy.interpolate import interp1d
 def com(spectrum_intensities, signal_axis, **kwargs):
     """Finds the centroid (center of mass) of a peak in the spectrum based
     from the intensity at each pixel value and its respective signal axis.
+
     Parameters
     ----------
     spectrum_intensities : array
@@ -16,6 +17,7 @@ def com(spectrum_intensities, signal_axis, **kwargs):
         energy for each intensity/signal value.
     kwargs : dictionary
         For the scipy.interpolate.interp1d function.
+
     Returns
     -------
     center_of_mass : float
@@ -68,7 +70,8 @@ def com(spectrum_intensities, signal_axis, **kwargs):
         # Check for dimensionality
         if len(spectrum_intensities) != len(signal_axis):
             raise ValueError(
-                f"The length of the spectrum array {len(spectrum_intensities)} must match the length of the wavelength array {len(signal_axis)}."
+                f"The length of the spectrum array {len(spectrum_intensities)} must match "
+                "the length of the wavelength array {len(signal_axis)}."
             )
         # Calculate value interpolating between index_com 0 and 1
         com_val = _interpolate_signal(np.array(signal_axis), index_com)

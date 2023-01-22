@@ -53,6 +53,8 @@ setup(
     packages=find_packages(),
     # adjust the tabbing
     install_requires=[
+        "numpy",
+        "scipy",
         "hyperspy >= 1.7",  # earlier versions do not provide non-uniform axes
     ],
     extras_require={

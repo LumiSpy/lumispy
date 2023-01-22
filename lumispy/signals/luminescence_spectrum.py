@@ -593,7 +593,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         value. It basically represents a "weighted average" of the peak.
 
         Notes
-        -------
+        -----
         This function only works for a single peak. If you have multiple
         peaks, slice the signal beforehand or use the signal_range parameter.
 
@@ -602,7 +602,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         returning a signal with 2 com.
 
         Parameters
-        -------
+        ----------
         signal_range : tuple of ints or floats, optional
             A tuple representing the indices of the signal axis (start index,
             end index) where the peak is located. If the tuple contains int,
@@ -626,7 +626,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 )
             if len(signal_range) != 2:
                 raise ValueError(
-                    f"The `signal_range` parameter must be a tuple of length 2. You passed a tuple of length {len(signal_range)}"
+                    f"The `signal_range` parameter must be a tuple of length 2. "
+                    "You passed a tuple of length {len(signal_range)}."
                 )
 
             s = self.isig[signal_range[0] : signal_range[1]]
