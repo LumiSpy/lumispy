@@ -5,13 +5,15 @@ from scipy.interpolate import interp1d
 
 
 def com(spectrum_intensities, signal_axis, **kwargs):
-    """Finds the centroid (center of mass) of a peak in the spectrum based from the intensity at each pixel value and a its respective signal axis.
+    """Finds the centroid (center of mass) of a peak in the spectrum based
+    from the intensity at each pixel value and its respective signal axis.
     Parameters
     ----------
     spectrum_intensities : array
         An array with the intensities of the spectrum.
     signal_axis: hyperspy.axes.BaseDataAxis subclass
-        A HyperSpy signal axis class containing an array with the wavelength/energy for each intensity/signal value.
+        A HyperSpy signal axis class containing an array with the wavelength/
+        energy for each intensity/signal value.
     kwargs : dictionary
         For the scipy.interpolate.interp1d function.
     Returns
@@ -33,7 +35,9 @@ def com(spectrum_intensities, signal_axis, **kwargs):
 
     def _interpolate_signal(axis_array, index, **kwargs):
         """
-        Wrapper for `hs.axes.index2value` that linearly interpolates between values should the index passed not be a integer. Using the kwargs, the interpolation method can be changed.
+        Wrapper for `hs.axes.index2value` that linearly interpolates between
+        values should the index passed not be a integer. Using the kwargs, the
+        interpolation method can be changed.
         """
         rem = index % 1
         index = int(index // 1)

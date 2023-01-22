@@ -586,20 +586,28 @@ class LumiSpectrum(Signal1D, CommonLumi):
         "\n", "\n\t"
     )
 
-    def centroid(self, slice=None, **kwargs):
+    def centroid(self, signal_range=None, **kwargs):
         """
-        Finds the centroid (center of mass) of a peak in the spectrum from the wavelength (or pixel number) and the intensity at each pixel value. It basically represents a "weighted average" of the peak.
+        Finds the centroid (center of mass) of a peak in the spectrum from
+        the wavelength (or pixel number) and the intensity at each pixel
+        value. It basically represents a "weighted average" of the peak.
 
         Notes
         -------
-        This function only works for a single peak. If you have multiple peaks, slice the signal beforehand or use the slice parameter.
+        This function only works for a single peak. If you have multiple
+        peaks, slice the signal beforehand or use the signal_range parameter.
 
-        TODO: Implement this function for multiple peaks (with the npeaks parameter) by finding the top 2 peaks from mean spectrum and then returning a signal with 2 com.
+        TODO: Implement this function for multiple peaks (with the npeaks
+        parameter) by finding the top 2 peaks from mean spectrum and then
+        returning a signal with 2 com.
 
         Parameters
         -------
-        slice : tuple (2)
-            An tuple representing the indices of the wavelength (start index, end index) where the peak is located. If the tuple contains int, it slices on index. Ig the tuple contains float, it slices on signal units (defualt hyperspy s.inav[:] functionality).
+        signal_range : tuple of ints or floats, optional
+            A tuple representing the indices of the signal axis (start index,
+            end index) where the peak is located. If the tuple contains int,
+            it slices on index. If the tuple contains float, it slices on
+            signal units (default HyperSpy s.inav[:] functionality).
 
         kwargs : dictionary
             For the scipy.interpolate.interp1d function.
@@ -607,17 +615,19 @@ class LumiSpectrum(Signal1D, CommonLumi):
         Returns
         -------
         signal : BaseSignal
-            A BaseSignal with signal dimension of 0, where at each navigation index there is a scalar value containing the center of mass for each navigation pixel.
+            A BaseSignal with signal dimension of 0, where at each navigation
+            index there is a scalar value containing the center of mass for
+            each navigation pixel.
         """
-        if slice:
-            if type(slice) != tuple:
-                raise TypeError("The `slice` parameter must be a tuple of length 2.")
-            if len(slice) != 2:
+        if signal_range:
+            if type(signal_range) != tuple:
+                raise TypeError("The `signal_range` parameter must be a tuple of length 2.")
+            if len(signal_range) != 2:
                 raise ValueError(
-                    f"The `slice` parameter must be a tuple of length 2. You passed a tuple of length {len(slice)}"
+                    f"The `signal_range` parameter must be a tuple of length 2. You passed a tuple of length {len(slice)}"
                 )
 
-            s = self.isig[slice[0] : slice[1]]
+            s = self.isig[signal_range[0] : signal_range[1]]
 
         else:
             s = self
