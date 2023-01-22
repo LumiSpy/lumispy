@@ -14,6 +14,7 @@ Changed
   <https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql>`_
   for integrity check as `it replaces LGTM
   <https://github.blog/2022-08-15-the-next-step-for-lgtm-com-github-code-scanning/>`_
+- Added a centroid/center of mass functionality to analyse peak position of a spectrum (both in `utils`` and in `LumiSpectrum``)
 
 Maintenance
 -----------
