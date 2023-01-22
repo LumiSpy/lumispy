@@ -53,14 +53,14 @@ Peak identification
 HyperSpy provides functions to find the positions of maxima or minima in a
 dataset:
 
-- :external+hyperspy:meth:`indexmax() <hyperspy.signal.BaseSignal.indexmax>` - 
+* :external+hyperspy:meth:`indexmax() <hyperspy.signal.BaseSignal.indexmax>` - 
   return the index of the maximum value along a given axis.
-- :external+hyperspy:meth:`indexmin() <hyperspy.signal.BaseSignal.indexmin>` - 
+* :external+hyperspy:meth:`indexmin() <hyperspy.signal.BaseSignal.indexmin>` - 
   return the index of the minimum value along a given axis.
-- :external+hyperspy:meth:`valuemax() <hyperspy.signal.BaseSignal.valuemax>` - 
+* :external+hyperspy:meth:`valuemax() <hyperspy.signal.BaseSignal.valuemax>` - 
   return the position/coordinates of the maximum value along a given axis in
   calibrated units.
-- :external+hyperspy:meth:`valuemin() <hyperspy.signal.BaseSignal.valuemin>` - 
+* :external+hyperspy:meth:`valuemin() <hyperspy.signal.BaseSignal.valuemin>` - 
   return the position/coordinates of the minimum value along a given axis in
   calibrated units.
 
