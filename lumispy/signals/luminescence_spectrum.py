@@ -621,10 +621,12 @@ class LumiSpectrum(Signal1D, CommonLumi):
         """
         if signal_range:
             if type(signal_range) != tuple:
-                raise TypeError("The `signal_range` parameter must be a tuple of length 2.")
+                raise TypeError(
+                    "The `signal_range` parameter must be a tuple of length 2."
+                )
             if len(signal_range) != 2:
                 raise ValueError(
-                    f"The `signal_range` parameter must be a tuple of length 2. You passed a tuple of length {len(slice)}"
+                    f"The `signal_range` parameter must be a tuple of length 2. You passed a tuple of length {len(signal_range)}"
                 )
 
             s = self.isig[signal_range[0] : signal_range[1]]
