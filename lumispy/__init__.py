@@ -21,6 +21,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+from lumispy.utils import join_spectra, crop_edges
 from lumispy.utils.axes import nm2eV, eV2nm, nm2invcm, invcm2nm
 from lumispy.utils.io import to_array, savetxt
 

@@ -24,7 +24,7 @@ signals in the range of +/- 50 pixels around the centre of the overlapping regio
 .. code-block:: python
 
     >>> import lumispy as lum
-    >>> s = lum.join_spectra((s1,s2))
+    >>> s = lum.utils.join_spectra((s1,s2))
 
 
 .. _spectral_map_utils:
@@ -46,7 +46,7 @@ It is a convenience wrapper for the ``inav`` `method in HyperSpy
     >>> signals = [cl_map, sem_image]
     >>> signals
     [CLSpectrum <256,256|1024>, Signal2D <128,128|1>]
-    >>> signals_cropped = lum.utils.axes.crop_edges(signals, crop_range=5, crop_units="%", rebin_nav=True)
+    >>> signals_cropped = lum.utils.crop_edges(signals, crop_range=5, crop_units="%", rebin_nav=True)
     >>> signals_cropped
     [CLSpectrum <243,243|1024>, Signal2D <243,243|1>]
 
@@ -59,29 +59,3 @@ It is a convenience wrapper for the ``inav`` `method in HyperSpy
 .. Note::
 
     Before version `0.2.2` this function belonged to the class `CommonLumi` as :py:meth:`~.signals.common_luminescence.CommonLumi.crop_edges`. This use is now deprecated.
-
-.. _unit_conversion:
-
-Unit conversion
-===============
-
-For convenience, LumiSpy provides functions that convert between different
-units commonly used for the signal axis. Namely,
-
-- :py:func:`~.utils.axes.nm2eV`
-- :py:func:`~.utils.axes.eV2nm`
-- :py:func:`~.utils.axes.nm2invcm`
-- :py:func:`~.utils.axes.invcm2nm`
-
-For the energy axis, the conversion uses the wavelength-dependent refractive
-index of air.
-
-
-.. _grating_equation:
-
-Solving the grating equation
-============================
-
-The function :py:func:`~.utils.axes.solve_grating_equation` follows the
-conventions described in the tutorial from 
-`Horiba Scientific <https://horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position>`_.

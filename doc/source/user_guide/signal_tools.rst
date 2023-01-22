@@ -143,3 +143,29 @@ The default operational mode is ``inplace=False`` (a new signal object is return
 
     >>> s.remove_negative(0.1)
 
+
+.. _unit_conversion:
+
+Unit conversion
+===============
+
+For convenience, LumiSpy provides functions that convert between different
+units commonly used for the signal axis. Namely,
+
+- :py:func:`~.utils.axes.nm2eV`
+- :py:func:`~.utils.axes.eV2nm`
+- :py:func:`~.utils.axes.nm2invcm`
+- :py:func:`~.utils.axes.invcm2nm`
+
+For the energy axis, the conversion uses the wavelength-dependent refractive
+index of air.
+
+
+.. _grating_equation:
+
+Solving the grating equation
+============================
+
+The function :py:func:`~.utils.axes.solve_grating_equation` follows the
+conventions described in the tutorial from 
+`Horiba Scientific <https://horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position>`_.
