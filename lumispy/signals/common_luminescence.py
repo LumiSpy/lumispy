@@ -23,47 +23,15 @@ Signal class for luminescence data (BaseSignal class)
 
 from numpy import isnan
 from warnings import warn
+from lumispy.utils.signals import crop_edges
 
 
 class CommonLumi:
     """**General luminescence signal class (dimensionless)**"""
 
     def crop_edges(self, crop_px):
-        """Crop the amount of pixels from the four edges of the scanning
-        region, from out the edges inwards.
-
-        Parameters
-        ----------
-        crop_px : int
-            Amount of pixels to be cropped on each side individually.
-
-        Returns
-        -------
-        signal_cropped : CommonLuminescence
-            A smaller cropped CL signal object. If inplace is True, the original
-            object is modified and no LumiSpectrum is returned.
-        """
-
-        width = self.axes_manager.shape[0]
-        height = self.axes_manager.shape[1]
-
-        if crop_px * 2 > width or crop_px * 2 > height:
-            raise ValueError(
-                "The pixels to be cropped cannot be larger than half the width or the length!"
-            )
-        else:
-            signal_cropped = self.inav[
-                crop_px + 1 : width - crop_px + 1, crop_px + 1 : height - crop_px + 1
-            ]
-
-        # Store transformation in metadata (or update the value if already previously transformed)
-
-        try:
-            signal_cropped.metadata.Signal.cropped_edges += crop_px
-        except AttributeError:
-            signal_cropped.metadata.set_item("Signal.cropped_edges", crop_px)
-
-        return signal_cropped
+        warn("This function is deprecated and will be deleted in v1.0. Please use ``sc = lum.utils.crop_edges(s)`` instead with the ``crop_range`` parameter instead.", DeprecationWarning)
+        return crop_edges(self, crop_px=crop_px)
 
     def remove_negative(self, basevalue=1, inplace=False):
         """Sets all negative values to 'basevalue', e.g. for logarithmic scale

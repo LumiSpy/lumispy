@@ -30,3 +30,8 @@ from .axes import (
     join_spectra,
     solve_grating_equation,
 )
+
+from .signals import (
+    com,
+    crop_edges,
+)
