@@ -25,7 +25,6 @@ from hyperspy.signals import Signal1D, Signal2D
 from lumispy.signals import LumiSpectrum
 
 
-
 @mark.parametrize(
     "axis, output",
     [
@@ -83,19 +82,21 @@ def test_com_inputs():
     ):
         com(ones(3), "string")
 
+
 #
 # Test navigation axis utils
 #
+
 
 @mark.parametrize(
     "range, output",
     [
         (2, (6, 6)),
-        (2., (6, 6)),
+        (2.0, (6, 6)),
         ((2, 4), (6, 2)),
-        ((2., 4.), (6, 2)),
+        ((2.0, 4.0), (6, 2)),
         ((1, 2, 3, 4), (6, 4)),
-        ((1., 2., 3., 4.), (6, 4)),
+        ((1.0, 2.0, 3.0, 4.0), (6, 4)),
         ((1, 2, 3), ()),
         ((1, 2, 3, 4, 5), ()),
         (True, ()),
@@ -120,6 +121,7 @@ def test_crop_edges_s(range, output):
         assert s1[0].axes_manager.navigation_shape[0] == output[0]
         assert s1[0].axes_manager.navigation_shape[1] == output[1]
 
+
 @mark.parametrize(
     "range, output",
     [
@@ -135,8 +137,8 @@ def test_crop_edges_s(range, output):
 )
 def test_crop_edges_fancy_str(range, output):
     s1 = [LumiSpectrum(ones((10, 10, 10)))]
-    s1[0].axes_manager.navigation_axes[0].units = 'nm'
-    s1[0].axes_manager.navigation_axes[1].units = 'nm'
+    s1[0].axes_manager.navigation_axes[0].units = "nm"
+    s1[0].axes_manager.navigation_axes[1].units = "nm"
 
     # Check for bad input range
     if ("rel" not in range) or ("nm" not in range):
@@ -148,12 +150,19 @@ def test_crop_edges_fancy_str(range, output):
         assert s1[0].axes_manager.navigation_shape[0] == output[0]
         assert s1[0].axes_manager.navigation_shape[1] == output[1]
 
+
 def test_crop_single_spectrum():
     s1 = LumiSpectrum(ones((10, 10, 10)))
-    s2 = crop_edges(s1, crop_range=1.,)
+    s2 = crop_edges(
+        s1,
+        crop_range=1.0,
+    )
     assert s2.axes_manager.navigation_shape[0] == 8
     assert s2.axes_manager.navigation_shape[1] == 8
-    s2 = crop_edges(s1, crop_range=1,)
+    s2 = crop_edges(
+        s1,
+        crop_range=1,
+    )
     assert s2.axes_manager.navigation_shape[0] == 8
     assert s2.axes_manager.navigation_shape[1] == 8
 
@@ -163,7 +172,10 @@ def test_crop_edges_metadata():
     s1 = crop_edges(s1, crop_range=2)
     assert s1.metadata.Signal.cropped_edges == array([2, 2, 2, 2])
     s1 = crop_edges(s1, crop_range="rel0.1")
-    assert s1.metadata.Signal.cropped_edges == array(["rel0.1","rel0.9","rel0.9","rel0.1"])
+    assert s1.metadata.Signal.cropped_edges == array(
+        ["rel0.1", "rel0.9", "rel0.9", "rel0.1"]
+    )
+
 
 def test_crop_edges_too_far():
     s1 = LumiSpectrum(ones((10, 10, 10)))

@@ -99,9 +99,11 @@ def com(spectrum_intensities, signal_axis, **kwargs):
 
     return com_val
 
+
 #
 # navigation axis manipulation
 #
+
 
 def crop_edges(
     S,
@@ -130,31 +132,32 @@ def crop_edges(
     S_cropped : Signal or list of Signals
         A list of smaller, cropped Signal objects or a cropped single Signal if only one signal object is passed as input.
     """
+
     def str_formatting(str_list):
         if len(str_list) == 2:
-            px = S[0].inav[:str_list[0]].axes_manager.navigation_shape[0]
+            px = S[0].inav[: str_list[0]].axes_manager.navigation_shape[0]
             px_list = [px, -px]
         elif len(str_list) == 4:
             # Pairwaise formatting with [top, left, right, bottom]
-            px_x = S[0].inav[:str_list[0],:].axes_manager.navigation_shape[0]
-            px_y = S[0].inav[:,:str_list[0]].axes_manager.navigation_shape[1]
-            px_list = [px_x,-px_y,-px_x,px_y]
+            px_x = S[0].inav[: str_list[0], :].axes_manager.navigation_shape[0]
+            px_y = S[0].inav[:, : str_list[0]].axes_manager.navigation_shape[1]
+            px_list = [px_x, -px_y, -px_x, px_y]
         return np.array(px_list, dtype=int)
 
     # Deprecation warning (for compatibility with ``crop_px``)
-    if 'crop_px' in kwargs and crop_range is not None:
+    if "crop_px" in kwargs and crop_range is not None:
         warn(
             "Both ``crop_range`` and the deprecated ``crop_px`` were passed. Only ``crop_range`` is being used.",
             DeprecationWarning,
             2,
         )
-    elif 'crop_px' in kwargs:
+    elif "crop_px" in kwargs:
         warn(
             "``crop_px`` is deprecated; use ``crop_range`` instead.",
             DeprecationWarning,
             2,
         )
-        crop_range = int(kwargs['crop_px'])
+        crop_range = int(kwargs["crop_px"])
     elif crop_range is None:
         crop_range = 0
 
@@ -224,7 +227,7 @@ def crop_edges(
     else:
         # Check if input was already fine or if str need to be reformatted
         if (len(crop_range) == 4) or (len(crop_range) == 2 and line_scan):
-            pass 
+            pass
         else:
             crop_vals = str_formatting(crop_vals)
 
@@ -250,7 +253,9 @@ def crop_edges(
 
         # Store transformation in metadata (or update the value if already previously transformed)
         if signal_cropped.metadata.has_item("Signal.cropped_edges"):
-            signal_cropped.metadata.Signal.cropped_edges = np.vstack((signal_cropped.metadata.Signal.cropped_edges, crop_vals))
+            signal_cropped.metadata.Signal.cropped_edges = np.vstack(
+                (signal_cropped.metadata.Signal.cropped_edges, crop_vals)
+            )
         else:
             signal_cropped.metadata.set_item("Signal.cropped_edges", crop_vals)
         S_cropped.append(signal_cropped)

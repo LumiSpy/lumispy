@@ -30,7 +30,10 @@ class CommonLumi:
     """**General luminescence signal class (dimensionless)**"""
 
     def crop_edges(self, crop_px):
-        warn("This function is deprecated and will be deleted in v1.0. Please use ``sc = lum.utils.crop_edges(s)`` instead with the ``crop_range`` parameter instead.", DeprecationWarning)
+        warn(
+            "This function is deprecated and will be deleted in v1.0. Please use ``sc = lum.utils.crop_edges(s)`` instead with the ``crop_range`` parameter instead.",
+            DeprecationWarning,
+        )
         return crop_edges(self, crop_px=crop_px)
 
     def remove_negative(self, basevalue=1, inplace=False):
