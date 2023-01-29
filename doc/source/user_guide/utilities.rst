@@ -29,19 +29,34 @@ signals in the range of +/- 50 pixels around the centre of the overlapping regio
 
 .. _spectral_map_utils:
 
-Utilities for spectral maps
-===========================
+Cropping multiple signals in the navigation axis 
+================================================
 
-The function :py:meth:`~.signals.common_luminescence.CommonLumi.crop_edges`
-removes the specified number of pixels from all four edges of a spectral map.
-It is a convenience wrapper for the ``inav`` :external+hyperspy:ref:`method in
-HyperSpy <signal.indexing>`.
+The function :py:meth:`~.utils.axes.crop_edges`
+removes the specified number of pixels or % from the four edges of a spectral map,
+from the edges inwards. It takes a list of `Signals` and cropping can happen
+uniformly on all sides or by specifying the cropping range for each axis or each
+side. If the navigation axes shape across the list of signals is different, all
+signals can be rebinned to match the shape of the first signal in the list.
+It is a convenience wrapper for the ``inav`` `method in HyperSpy
+<https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html#indexing>`_.
 
 .. code-block:: python
+    >>> signals = [cl_map, sem_image]
+    >>> signals
+    [CLSpectrum <256,256|1024>, Signal2D <128,128|1>]
+    >>> signals_cropped = lum.utils.crop_edges(signals, crop_range=5, crop_units="%", rebin_nav=True)
+    >>> signals_cropped
+    [CLSpectrum <243,243|1024>, Signal2D <243,243|1>]
+.. Note::
 
-    >>> s.crop_edges(crop_px=2)
+    Many scanning luminescence techniques result in edge defects at the edges of the scanned region.
+    This function enables the same cropping of the navigation axis for a list of signals in the same
+    region to correct for such defect.
 
-*[TODO: add possibility to crop different amounts of pixels on different sides]*
+.. Note::
+
+    Before version `0.2.2` this function belonged to the class `CommonLumi` as :py:meth:`~.signals.common_luminescence.CommonLumi.crop_edges`. This use is now deprecated.
 
 
 .. _unit_conversion:
