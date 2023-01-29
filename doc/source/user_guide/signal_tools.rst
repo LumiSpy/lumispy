@@ -102,7 +102,6 @@ default value ``factor=0.5`` returns the full width at half maximum (FWHM).
 Calculating the centroid of a spectrum (centre of mass)
 -------------------------------------------------------
 
-
 The function :py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.centroid`
 (based on the utility function :py:func:`~.utils.signals.com`) is an alternative to
 finding the position of the maximum intensity of a peak, useful in particular for

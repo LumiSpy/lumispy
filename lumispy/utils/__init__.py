@@ -44,10 +44,8 @@ from hyperspy.axes import DataAxis
 def crop_edges(
     S,
     crop_range=None,
-    crop_units="pixels",
     rebin_nav=False,
-    *,
-    crop_px=None,
+    **kwargs,
 ):
     """
     Cropping along the navigation axes of a list of signal objects.
@@ -57,41 +55,46 @@ def crop_edges(
 
     Parameters
     ----------
-    S : list of HyperSpy Signal objects with the same navigation axes or a single HyperSpy Signal object.
-    crop_range : int, float, tuple
-        Number of pixels or percentage (between 0 and 1) of image width/height to be cropped.
-        If a number or a tuple of size 1 is passed, all sides are cropped by the
-        same amount. If a tuple of size 2 is passed (``crop_x``, ``crop_y``), a different
-        amount of pixels/percentage is cropped from the x and y directions,
-        respectively. If a tuple of size 4 is passed (``crop_left``, ``crop_bottom``,
-        ``crop_right``, ``crop_top``), a different amount of pixels/percentage is
-        cropped from each edge individually.
-    crop_units : str
-        Select in which units cropping happens. Value can be either ``pixels``/``px`` (default),
-        or ``percent``/``%``. All values are rounded downwards.
+    S : list of HyperSpy Signal objects or a single HyperSpy Signal object.
+    crop_range : {int | float | str} or tuple of {ints | floats | strs}
+        If int the values are taken as indices. If float the values are converted to indices. If str HyperSpy fancy indexing is used (e.g. ``rel0.1`` will crop 10% on each side, or ``100 nm`` will crop 100 nm on each side).
+        If a number or a tuple of size 1 is passed, all sides are cropped by the same amount. If a tuple of size 2 is passed (``crop_x``, ``crop_y``), a different
+        amount is cropped from the x and y directions, respectively. If a tuple of size 4 is passed (``crop_left``, ``crop_bottom``, ``crop_right``, ``crop_top``), a different amount is cropped from each edge individually.
     rebin_nav : bool
-        If the navigation axes shape is different between signals in the list S, all signals will be rebinned to match the shape of the first signal in the list.
+        If the navigation axes shape is different between signals in the list S, all signals will be rebinned to match the shape of the first signal in the list. Note this does not take into account the calibration values of the navigation axes.
+    kwrgs
+        To account for the deprecated ``crop_px`` parameter.
 
     Returns
     -------
     S_cropped : Signal or list of Signals
         A list of smaller, cropped Signal objects or a cropped single Signal if only one signal object is passed as input.
     """
+    def str_formatting(str_list):
+        if len(str_list) == 2:
+            px = S[0].inav[:str_list[0]].axes_manager.navigation_shape[0]
+            px_list = [px, -px]
+        elif len(str_list) == 4:
+            # Pairwaise formatting with [top, left, right, bottom]
+            px_x = S[0].inav[:str_list[0],:].axes_manager.navigation_shape[0]
+            px_y = S[0].inav[:,:str_list[0]].axes_manager.navigation_shape[1]
+            px_list = [px_x,-px_y,-px_x,px_y]
+        return np.array(px_list, dtype=int)
+    
     # Deprecation warning (for compatibility with ``crop_px``)
-    if crop_range is not None and crop_px is not None:
+    if 'crop_px' in kwargs and crop_range is not None:
         warn(
             "Both ``crop_range`` and the deprecated ``crop_px`` were passed. Only ``crop_range`` is being used.",
             DeprecationWarning,
             2,
         )
-    elif crop_px is not None:
+    elif 'crop_px' in kwargs:
         warn(
             "``crop_px`` is deprecated; use ``crop_range`` instead.",
             DeprecationWarning,
             2,
         )
-        crop_range = crop_px
-        crop_units = "pixels"
+        crop_range = int(kwargs['crop_px'])
     elif crop_range is None:
         crop_range = 0
 
@@ -101,14 +104,7 @@ def crop_edges(
         no_list = True
         S = [S]
 
-    # Check for units specified
-    units_accepted = ("px", "pixel", "pixels", "percent", "%")
-    if crop_units.lower() not in units_accepted:
-        raise ValueError(
-            "The parameter ``crop_units`` only accepts the strings ``pixels``/``px`` or ``percent``/``%`` as values."
-        )
-
-    # Check all signals in list are compatible (same range)
+    # Check all signals in list are compatible (same range) and rebin
     nav_shape = S[0].axes_manager.navigation_shape
     for i, s in enumerate(S):
         if i == 0:
@@ -142,7 +138,7 @@ def crop_edges(
     crop_range_type = type(crop_range)
     # Create a list of [top, left, right, bottom] or for line_scan only [left, right]
     n = 2 if line_scan else 4
-    if crop_range_type in (int, float):
+    if crop_range_type in (int, float, str):
         crop_vals = [crop_range] * n
     elif crop_range_type is tuple:
         if len(crop_range) == 2:
@@ -156,31 +152,27 @@ def crop_edges(
             )
     else:
         raise ValueError(
-            f"The crop_range value must be a number or a tuple, not a {crop_range_type}"
+            f"The crop_range value must be a number, a string, or a tuple, not a {crop_range_type}"
         )
 
     # Negative means reverse indexing
-    if line_scan:
-        crop_vals = np.array(crop_vals) * [1, -1]
+    if type(crop_vals[0]) is not str:
+        if line_scan:
+            crop_vals = np.array(crop_vals) * [1, -1]
+        else:
+            crop_vals = np.array(crop_vals) * [1, -1, -1, 1]
     else:
-        crop_vals = np.array(crop_vals) * [1, -1, -1, 1]
-
+        # Check if input was already fine or if str need to be reformatted
+        if (len(crop_range) == 4) or (len(crop_range) == 2 and line_scan):
+            pass 
+        else:
+            crop_vals = str_formatting(crop_vals)
+            
     S_cropped = []
     for s in S:
-        w = s.axes_manager.navigation_shape[0]
-        h = s.axes_manager.navigation_shape[1] if not line_scan else None
-
-        crop_vals_s = crop_vals
-        # Convert percentages to pixel units
-        if crop_units.lower() in units_accepted[-2:]:
-            if any(np.abs(crop_vals) > 1):
-                crop_vals_s = crop_vals_s / 100
-
-            crop_vals_s *= np.array([w, h] * (n // 2))
-            crop_vals_s = crop_vals_s.astype(int)
 
         # Remove 0 for None
-        crop_ids = [x if x != 0 else None for x in crop_vals_s]
+        crop_ids = [x if x != 0 else None for x in crop_vals]
 
         # Crop accordingly
         if line_scan:
@@ -198,9 +190,9 @@ def crop_edges(
 
         # Store transformation in metadata (or update the value if already previously transformed)
         if signal_cropped.metadata.has_item("Signal.cropped_edges"):
-            signal_cropped.metadata.Signal.cropped_edges += abs(crop_vals_s)
+            signal_cropped.metadata.Signal.cropped_edges = np.vstack((signal_cropped.metadata.Signal.cropped_edges, crop_vals))
         else:
-            signal_cropped.metadata.set_item("Signal.cropped_edges", abs(crop_vals_s))
+            signal_cropped.metadata.set_item("Signal.cropped_edges", crop_vals)
         S_cropped.append(signal_cropped)
 
     if no_list:

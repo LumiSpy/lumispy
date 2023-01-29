@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-from numpy import ones, arange, all
+from numpy import ones, arange, all, array
 from numpy.random import random
 from pytest import raises, mark, skip, warns
 
@@ -33,11 +33,14 @@ from lumispy.signals import LumiSpectrum
     "range, output",
     [
         (2, (6, 6)),
+        (2., (6, 6)),
         ((2, 4), (6, 2)),
+        ((2., 4.), (6, 2)),
         ((1, 2, 3, 4), (6, 4)),
+        ((1., 2., 3., 4.), (6, 4)),
         ((1, 2, 3), ()),
         ((1, 2, 3, 4, 5), ()),
-        ("s", ()),
+        (True, ()),
         ((1, 0, 0, 3), (9, 7)),
         ((None), (10, 10)),
     ],
@@ -46,8 +49,8 @@ def test_crop_edges_s(range, output):
     s1 = [LumiSpectrum(ones((10, 10, 10)))]
 
     # Check for bad input range
-    if type(range) not in (int, float, tuple, type(None)):
-        with raises(ValueError, match="value must be a number or a tuple"):
+    if type(range) not in (int, float, tuple, str, type(None)):
+        with raises(ValueError, match="value must be a number,"):
             crop_edges(s1, range)
 
     elif type(range) == tuple and len(range) not in (1, 2, 4):
@@ -59,35 +62,51 @@ def test_crop_edges_s(range, output):
         assert s1[0].axes_manager.navigation_shape[0] == output[0]
         assert s1[0].axes_manager.navigation_shape[1] == output[1]
 
+@mark.parametrize(
+    "range, output",
+    [
+        ("1nm", (8, 8)),
+        ("rel0.1", (8, 8)),
+        (("rel0.2", "rel0.4"), (6, 2)),
+        (("2nm", "4nm"), (6, 2)),
+        (("rel0.1", "rel0.8", "rel0.3", "rel0.2"), (2, 5)),
+        (("1nm", "2nm", "3nm", "4nm"), (6, 4)),
+        ("a", ()),
+        ("11", ()),
+    ],
+)
+def test_crop_edges_fancy_str(range, output):
+    s1 = [LumiSpectrum(ones((10, 10, 10)))]
+    s1[0].axes_manager.navigation_axes[0].units = 'nm'
+    s1[0].axes_manager.navigation_axes[1].units = 'nm'
 
-def test_crop_percent_and_single_spectrum():
+    # Check for bad input range
+    if ("rel" not in range) or ("nm" not in range):
+        with raises(ValueError, match="not a suitable string for slicing,"):
+            crop_edges(s1, range)
+
+    else:
+        s1 = crop_edges(s1, range)
+        assert s1[0].axes_manager.navigation_shape[0] == output[0]
+        assert s1[0].axes_manager.navigation_shape[1] == output[1]
+
+def test_crop_single_spectrum():
     s1 = LumiSpectrum(ones((10, 10, 10)))
-    s2 = crop_edges(s1, crop_range=0.1, crop_units="percent")
+    s2 = crop_edges(s1, crop_range=1.,)
     assert s2.axes_manager.navigation_shape[0] == 8
     assert s2.axes_manager.navigation_shape[1] == 8
-    s2 = crop_edges(s1, crop_range=10, crop_units="%")
+    s2 = crop_edges(s1, crop_range=1,)
     assert s2.axes_manager.navigation_shape[0] == 8
     assert s2.axes_manager.navigation_shape[1] == 8
-
-
-@mark.parametrize("units", ["pixel", "px", "PIXEL", "percent", "pixels", "%", "nm"])
-def test_crop_edges_units(units):
-    s1 = LumiSpectrum(ones((10, 10, 10)))
-
-    # Check for bad units
-    if units.lower() not in ("px", "pixel", "pixels", "percent", "%"):
-        with raises(ValueError, match="only accepts the strings"):
-            crop_edges(s1, crop_range=1, crop_units=units)
 
 
 def test_crop_edges_metadata():
     s1 = LumiSpectrum(ones((10, 10, 10)))
     s1 = crop_edges(s1, crop_range=2)
-    assert all(s1.metadata.Signal.cropped_edges == 2)
-    s1 = crop_edges(s1, crop_range=2)
-    assert all(s1.metadata.Signal.cropped_edges == 4)
-
-
+    assert s1.metadata.Signal.cropped_edges == array([2, 2, 2, 2])
+    s1 = crop_edges(s1, crop_range="rel0.1")
+    assert s1.metadata.Signal.cropped_edges == array(["rel0.1","rel0.9","rel0.9","rel0.1"])
+                                                         
 def test_crop_edges_too_far():
     s1 = LumiSpectrum(ones((10, 10, 10)))
     with raises(IndexError, match="The pixels to be cropped"):
@@ -230,7 +249,7 @@ def test_joinspectra_length1():
     s = join_spectra([s1, s2], r=1, average=False, scale=True)
     assert s.data[-1] == 58
     with raises(ValueError, match="Averaging can not be performed for r=1."):
-        s = join_spectra([s1, s2], r=1, average=True, scale=True)
+        join_spectra([s1, s2], r=1, average=True, scale=True)
     s1.axes_manager[0].convert_to_non_uniform_axis()
     s2.axes_manager[0].convert_to_non_uniform_axis()
     s = join_spectra([s1, s2], r=1, average=True, scale=True)
@@ -308,5 +327,4 @@ def test_joinspectra_FunctionalDA(average, scale, kind):
     else:
         assert s.data[-1] == 2
     # test that join_spectra works for r that is float not int
-    s = join_spectra([s1, s2], r=2.1, average=average, scale=scale, kind=kind)
-
+    join_spectra([s1, s2], r=2.1, average=average, scale=scale, kind=kind)
