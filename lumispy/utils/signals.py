@@ -133,14 +133,14 @@ def crop_edges(
         A list of smaller, cropped Signal objects or a cropped single Signal if only one signal object is passed as input.
     """
 
-    def str_formatting(str_list):
+    def range_formatting(str_list):
         if len(str_list) == 2:
             px = S[0].inav[: str_list[0]].axes_manager.navigation_shape[0]
             px_list = [px, -px]
-        elif len(str_list) == 4:
-            # Pairwaise formatting with [top, left, right, bottom]
+        else:
+            # Pairwaise formatting with [top, left, right, bottom] when len(str_list) == 4
             px_x = S[0].inav[: str_list[0], :].axes_manager.navigation_shape[0]
-            px_y = S[0].inav[:, : str_list[0]].axes_manager.navigation_shape[1]
+            px_y = S[0].inav[:, : str_list[1]].axes_manager.navigation_shape[1]
             px_list = [px_x, -px_y, -px_x, px_y]
         return np.array(px_list, dtype=int)
 
@@ -203,6 +203,7 @@ def crop_edges(
     n = 2 if line_scan else 4
     if crop_range_type in (int, float, str):
         crop_vals = [crop_range] * n
+        crop_range = [crop_range]
     elif crop_range_type is tuple:
         if len(crop_range) == 2:
             crop_vals = (list(crop_range) * (n // 2),)
@@ -219,17 +220,19 @@ def crop_edges(
         )
 
     # Negative means reverse indexing
-    if type(crop_vals[0]) is not str:
+    if type(crop_vals[0]) is int:
         if line_scan:
             crop_vals = np.array(crop_vals) * [1, -1]
         else:
             crop_vals = np.array(crop_vals) * [1, -1, -1, 1]
     else:
-        # Check if input was already fine or if str need to be reformatted
+        # Check if input was already fine or if str/float needs to be reformatted
         if (len(crop_range) == 4) or (len(crop_range) == 2 and line_scan):
+            # Shuffle order from [left, bottom, right, top] to [top, left, right, bottom]
+            # crop_vals = [crop_vals[3], crop_vals[0], crop_vals[2], crop_vals[1]]
             pass
         else:
-            crop_vals = str_formatting(crop_vals)
+            crop_vals = range_formatting(crop_vals)
 
     S_cropped = []
     for s in S:

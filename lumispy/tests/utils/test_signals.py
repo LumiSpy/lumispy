@@ -96,7 +96,7 @@ def test_com_inputs():
         ((2, 4), (6, 2)),
         ((2.0, 4.0), (6, 2)),
         ((1, 2, 3, 4), (6, 4)),
-        ((1.0, 2.0, 3.0, 4.0), (6, 4)),
+        ((1.0, 8.0, 7.0, 4.0), (6, 4)),
         ((1, 2, 3), ()),
         ((1, 2, 3, 4, 5), ()),
         (True, ()),
@@ -123,26 +123,26 @@ def test_crop_edges_s(range, output):
 
 
 @mark.parametrize(
-    "range, output",
+    "error, range, output",
     [
-        ("1nm", (8, 8)),
-        ("rel0.1", (8, 8)),
-        (("rel0.2", "rel0.4"), (6, 2)),
-        (("2nm", "4nm"), (6, 2)),
-        (("rel0.1", "rel0.8", "rel0.3", "rel0.2"), (2, 5)),
-        (("1nm", "2nm", "3nm", "4nm"), (6, 4)),
-        ("a", ()),
-        ("11", ()),
+        (False, "1nm", (8, 8)),
+        (False, "rel0.1", (8, 8)),
+        (False, ("rel0.2", "rel0.4"), (6, 2)),
+        (False, ("2nm", "4nm"), (6, 2)),
+        (False, ("rel0.1", "rel0.8", "rel0.3", "rel0.2"), (2, 5)),
+        (False, ("1nm", "8nm", "7nm", "4nm"), (6, 4)),
+        (True, "a", ()),
+        (True, "11", ()),
     ],
 )
-def test_crop_edges_fancy_str(range, output):
+def test_crop_edges_fancy_str(error, range, output):
     s1 = [LumiSpectrum(ones((10, 10, 10)))]
     s1[0].axes_manager.navigation_axes[0].units = "nm"
     s1[0].axes_manager.navigation_axes[1].units = "nm"
 
     # Check for bad input range
-    if ("rel" not in range) or ("nm" not in range):
-        with raises(ValueError, match="not a suitable string for slicing,"):
+    if error:
+        with raises(ValueError):
             crop_edges(s1, range)
 
     else:
@@ -169,12 +169,14 @@ def test_crop_single_spectrum():
 
 def test_crop_edges_metadata():
     s1 = LumiSpectrum(ones((10, 10, 10)))
-    s1 = crop_edges(s1, crop_range=2)
-    assert s1.metadata.Signal.cropped_edges == array([2, 2, 2, 2])
-    s1 = crop_edges(s1, crop_range="rel0.1")
-    assert s1.metadata.Signal.cropped_edges == array(
-        ["rel0.1", "rel0.9", "rel0.9", "rel0.1"]
-    )
+    s2 = crop_edges(s1, crop_range=2)
+    assert (s2.metadata.Signal.cropped_edges == array([2, -2, -2, 2])).all()
+    s2 = crop_edges(s1, crop_range="rel0.1")
+    assert (s2.metadata.Signal.cropped_edges == array([1, -1, -1, 1])).all()
+    s3 = crop_edges(s2, crop_range=1)
+    assert (
+        s3.metadata.Signal.cropped_edges == array([[1, -1, -1, 1], [1, -1, -1, 1]])
+    ).all()
 
 
 def test_crop_edges_too_far():
@@ -190,10 +192,13 @@ def test_crop_edges_too_far():
         ((2, 4), (4)),
         ((1, 2, 3, 4), ()),
         ((1, 2, 3), ()),
+        ("2nm", (6)),
+        (("2nm", "4nm"), (2)),
     ],
 )
 def test_crop_edges_linescan(range, output):
     s1 = [LumiSpectrum(ones((10, 10)))]
+    s1[0].axes_manager.navigation_axes[0].units = "nm"
 
     if type(range) == tuple and len(range) not in (1, 2):
         with raises(ValueError, match="tuple must be either a"):
