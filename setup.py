@@ -61,7 +61,7 @@ setup(
         "tests": ["pytest>=5.0"],
         "coverage": ["pytest-cov", "codecov"],
         "build-doc": [
-            "sphinx>=>=4.3.0",
+            "sphinx>=4.3.0",
             "sphinx_rtd_theme>=0.5.1",
             "sphinx-toggleprompt",
         ],
