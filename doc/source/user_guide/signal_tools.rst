@@ -167,7 +167,7 @@ data, notably these include
 :external+hyperspy:meth:`std() <hyperspy.signal.BaseSignal.std>`, and
 :external+hyperspy:meth:`var() <hyperspy.signal.BaseSignal.var>`. Variations of
 all these functions exist that ignore missing values (NaN) if present, e.g.
-:external+hyperspy:meth:`nanmax() <hyperspy.signal.BaseSignal.mnanax>`.
+:external+hyperspy:meth:`nanmax() <hyperspy.signal.BaseSignal.nanmax>`.
 
 **Integration** along a specified signal axis is performed using the function 
 :external+hyperspy:meth:`integrate1D() <hyperspy.signal.BaseSignal.integrate1D()>`.
