@@ -9,7 +9,7 @@ This section summarizes various useful functions implemented in LumiSpy.
 .. _join_spectra:
 
 Join spectra
-==========
+============
 
 In case several spectra (or spectral images) where subsequently recorded for
 different, but overlapping spectral windows, LumiSpy provides a utility

@@ -34,10 +34,11 @@ intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
     "sphinx": ("https://www.sphinx-doc.org/en/master/", None),
     "hyperspyweb": ("https://hyperspy.org/", None),
-    "matplotlib": ("https://matplotlib.org", None),
-    "numpy": ("https://docs.scipy.org/doc/numpy", None),
-    "scipy": ("https://docs.scipy.org/doc/scipy/reference/", None),
+    "matplotlib": ("https://matplotlib.org/stable/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
     "hyperspy": ("https://hyperspy.org/hyperspy-doc/current/", None),
+    "kikuchipy": ("https://kikuchipy.org/en/latest/", None),
 }
 intersphinx_disabled_domains = ["std"]
 

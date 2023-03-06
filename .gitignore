@@ -4,3 +4,5 @@
 dist/*
 build/*
 .vscode/*
+doc/build
+doc/source/api
