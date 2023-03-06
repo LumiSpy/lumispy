@@ -30,9 +30,9 @@ Please refer to the
 `HyperSpy developer guide <http://hyperspy.org/hyperspy-doc/current/dev_guide/intro.html>`_
 in order to get started and for detailed contributing guidelines.
 
-The `kikuchypy contributors guide <https://kikuchipy.org/en/stable/contributing.html>`_,
-another HyperSpy extension, also is a valuable resource that can get you
-started and provides useful guidelines.
+The :doc:`kikuchipy contributors guide <kikuchipy:dev/index>`, another HyperSpy
+extension, also is a valuable resource that can get you started and provides useful
+guidelines.
 
 Reviewing
 ---------
