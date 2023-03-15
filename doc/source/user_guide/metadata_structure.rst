@@ -6,7 +6,7 @@ LumiSpy metadata structure
 LumiSpy extends the :external+hyperspy:ref:`HyperSpy metadata structure
 <metadata_structure>`
 with conventions for metadata specific to its signal types. Refer to the
-:external+hyperspy:ref:`HyperSpy metadata documentation <user_guide/metadata_structure>`
+:external+hyperspy:doc:`HyperSpy metadata documentation <user_guide/metadata_structure>`
 for general metadata fields.
 
 The metadata of any **signal objects** is stored in the `metadata` attribute,
