@@ -79,7 +79,6 @@ class CLSpectrum(LumiSpectrum):
         interactive=False,
         **kwargs
     ):
-
         if luminescence_roi is not None and signal_mask is not None:
             raise AttributeError(
                 "Only either `luminescence_roi` or the `signal_mask` can be an input."
