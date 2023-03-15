@@ -5,8 +5,8 @@ Fitting luminescence data
 
 LumiSpy is compatible with :external+hyperspy:ref:`HyperSpy model fitting 
 <user_guide/model>`.
-It can fit using both `uniform and and non-uniform axes
-<https://hyperspy.org/hyperspy-doc/current/user_guide/axes.html#types-of-data-axes>`_ 
+It can fit using both :external+hyperspy:ref:`uniform and and non-uniform axes
+<Axes_types>`_ 
 (e.g. energy scale). A general introduction can be found in the
 :external+hyperspy:ref:`HyperSpy user guide <user_guide/model>`.
 

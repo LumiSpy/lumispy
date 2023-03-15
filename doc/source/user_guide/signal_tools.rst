@@ -123,7 +123,7 @@ This function also works for non-linear axes. For the
 based on the function used to create the non-uniform axis. For
 :external:py:class:`hyperspy.axes.DataAxis`, a linear interpolation between the
 axes points at the center of mass is assumed, but this behaviour can be changed
-with the `kwargs` of :external:py:meth:`scipy.interpolate.interp1d` function.
+with the `kwargs` of :external:py:class:`scipy.interpolate.interp1d` function.
 
 .. code-block:: python
 

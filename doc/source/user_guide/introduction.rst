@@ -26,11 +26,11 @@ that can be described as multidimensional arrays of a given signal.
 
 Notable features that **HyperSpy** provides are:
 
-- :external+hyperspy:ref:`base signal classes <user_guide/signal>`
+- :external+hyperspy:doc:`base signal classes <user_guide/signal>`
   for the handling of (multidimensional) spectral data,
 - the necessary tools for loading :external+hyperspy:ref:`various data file formats
   <io>`,
-- :external+hyperspy:ref:`analytical tools <user_guide/signal1d >`
+- :external+hyperspy:doc:`analytical tools <user_guide/signal1d>`
   that exploit the multidimensionality of datasets,
 - a user-friendly and powerful framework for :external+hyperspy:ref:`model fitting
   <model-label>` that
@@ -137,7 +137,7 @@ but also bug reports and feature requests from any other users. Don't hesitate
 to join the discussions!
 
 Currrently, we have implemented the base functionality that extends 
-`HyperSpy's capabilities <https://hyperspy.org/hyperspy-doc/current/index.html>`_
+:external+hyperspy:ref:`HyperSpy's capabilities <user_guide-label>`
 to additional signal classes. In the near future, the following functions
 should be developed:
 
