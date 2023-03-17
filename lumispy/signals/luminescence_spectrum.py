@@ -24,6 +24,7 @@ from warnings import warn
 from hyperspy.signals import Signal1D
 from hyperspy._signals.lazy import LazySignal
 from hyperspy.axes import DataAxis
+from traits.api import Undefined
 
 from lumispy.signals.common_luminescence import CommonLumi
 from lumispy import nm2invcm, to_array, savetxt
@@ -614,10 +615,10 @@ class LumiSpectrum(Signal1D, CommonLumi):
 
         Returns
         -------
-        signal : BaseSignal
-            A BaseSignal with signal dimension of 0, where at each navigation
-            index there is a scalar value containing the center of mass for
-            each navigation pixel.
+        signal : Signal2D, BaseSignal
+            Signal object containing the center of mass for every pixel. Depending
+            on the dimensionality the type is Signal2D or a BaseSignal (for single
+            spectrum).
         """
         if signal_range:
             if type(signal_range) != tuple:
@@ -639,7 +640,15 @@ class LumiSpectrum(Signal1D, CommonLumi):
         center_of_mass = s.map(com, signal_axis=signal_axis, inplace=False)
 
         # Transfer axes metadata to title
-        center_of_mass.metadata.General.title = f"Centroid map of {signal_axis.name} ({signal_axis.units}) for {center_of_mass.metadata.General.title}"
+        center_of_mass.metadata.General.title = f"Centroid map"
+        if signal_axis.name not in (Undefined, ""):
+            center_of_mass.metadata.General.title += f" of {signal_axis.name}"
+        if signal_axis.units not in (Undefined, ""):
+            center_of_mass.metadata.General.title += f" ({signal_axis.units})"
+        if s.metadata.General.title not in (Undefined, ""):
+            center_of_mass.metadata.General.title += f" for {s.metadata.General.title}"
+        if center_of_mass.axes_manager.navigation_size > 0:
+            center_of_mass = center_of_mass.transpose()
         return center_of_mass
 
 

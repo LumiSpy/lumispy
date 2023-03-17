@@ -102,7 +102,6 @@ default value ``factor=0.5`` returns the full width at half maximum (FWHM).
 Calculating the centroid of a spectrum (centre of mass)
 -------------------------------------------------------
 
-
 The function :py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.centroid`
 (based on the utility function :py:func:`~.utils.signals.com`) is an alternative to
 finding the position of the maximum intensity of a peak, useful in particular for
@@ -129,7 +128,7 @@ with the `kwargs` of :external:py:class:`scipy.interpolate.interp1d` function.
 
     >>> s = lum.signals.LumiSpectrum([[[1, 2, 3, 2, 1, 0]]*2]*3)
     >>> s
-    LumiSpectrum <2,3|5>
+    <LumiSpectrum, title: , dimensions: (2, 3|6)>
 
     >>> ax = s.axes_manager.signal_axes[0]
     >>> ax.offset = 200
@@ -137,9 +136,9 @@ with the `kwargs` of :external:py:class:`scipy.interpolate.interp1d` function.
 
     >>> com = s.centroid()
     >>> com
-    BaseSignal <2,3|>
+    <Signal2D, title: Centroid map, dimensions: (|2, 3)>
     >>> com.data[0,0] 
-    400.
+    400.0
 
 .. Note::
 
