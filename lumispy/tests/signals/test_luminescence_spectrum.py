@@ -20,6 +20,7 @@ import numpy as np
 import pytest
 
 from lumispy.signals.luminescence_spectrum import LumiSpectrum
+from hyperspy._signals.signal2d import Signal2D
 from numpy.testing import assert_allclose
 
 backgrounds = [
@@ -111,11 +112,13 @@ class TestLumiSpectrum:
         ax.scale = 100
         ax.units = "nm"
         ax.name = "Wavelength"
+        s.metadata.General.title = "test_signal"
 
         com = s.centroid()
         assert_allclose(com.data, 400.0, atol=0.1)
         assert (
-            com.metadata.General.title == f"Centroid map of {ax.name} ({ax.units}) for "
+            com.metadata.General.title
+            == f"Centroid map of {ax.name} ({ax.units}) for test_signal"
         )
 
     def test_center_of_mass_signalrange(self):
@@ -123,11 +126,14 @@ class TestLumiSpectrum:
         ax = s.axes_manager.signal_axes[0]
         ax.offset = 0
         ax.scale = 100
+        ax.units = "nm"
+        ax.name = "Wavelength"
 
         com = s.centroid(signal_range=(2, -2))
         assert_allclose(com.data, 400.0, atol=0.1)
         com = s.centroid(signal_range=(200.0, 800.0))
         assert_allclose(com.data, 400.0, atol=0.1)
+        assert com.metadata.General.title == f"Centroid map of {ax.name} ({ax.units})"
         with pytest.raises(TypeError):
             s.centroid(signal_range=(1))
         with pytest.raises(TypeError):
@@ -142,3 +148,5 @@ class TestLumiSpectrum:
             3,
             4,
         )
+        assert com.metadata.General.title == f"Centroid map"
+        assert type(com) == Signal2D
