@@ -48,7 +48,6 @@ class TestCLSpectrum:
 
     def test_remove_spikes(self):
         s = CLSpectrum(np.ones((2, 3, 30)))
-        np.random.seed(np.random.randint(666666))
         s.add_gaussian_noise(1e-5)
         # Add three spikes
         s.data[1, 0, 1] += 2
