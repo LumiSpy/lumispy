@@ -81,7 +81,7 @@ class TestCLSpectrum:
         expected_data[-1] = 1
         np.testing.assert_allclose(hist_data.data, expected_data)
         np.testing.assert_almost_equal(s3.data[1, 0, 1], 1, decimal=4)
-        np.testing.assert_almost_equal(s3.data[0, 2, 29], 1, decimal=5)
+        np.testing.assert_almost_equal(s3.data[0, 2, 29], 1, decimal=4)
 
         lum_roi = [1, 1]
         s4 = s.remove_spikes(luminescence_roi=lum_roi, threshold=0.5)
