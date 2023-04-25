@@ -48,11 +48,10 @@ class TestCLSpectrum:
 
     def test_remove_spikes(self):
         s = CLSpectrum(np.ones((2, 3, 30)))
-        np.random.seed(1)
         s.add_gaussian_noise(1e-5)
         # Add three spikes
         s.data[1, 0, 1] += 2
-        s.data[0, 2, 29] += 1
+        s.data[0, 2, 29] += 1.001
 
         if not "threshold" in getfullargspec(s.spikes_removal_tool)[0]:
             try:
@@ -67,7 +66,7 @@ class TestCLSpectrum:
             s1 = s.remove_spikes()
 
         np.testing.assert_almost_equal(s1.data[1, 0, 1], 1, decimal=4)
-        # np.testing.assert_almost_equal(s1.data[0, 2, 29], 1, decimal=4)
+        np.testing.assert_almost_equal(s1.data[0, 2, 29], 1, decimal=4)
 
         s3 = s.remove_spikes(show_diagnosis_histogram=True)
         hist_data = s._spikes_diagnosis(
@@ -82,7 +81,7 @@ class TestCLSpectrum:
         expected_data[-1] = 1
         np.testing.assert_allclose(hist_data.data, expected_data)
         np.testing.assert_almost_equal(s3.data[1, 0, 1], 1, decimal=4)
-        # np.testing.assert_almost_equal(s3.data[0, 2, 29], 1, decimal=5)
+        np.testing.assert_almost_equal(s3.data[0, 2, 29], 1, decimal=4)
 
         lum_roi = [1, 1]
         s4 = s.remove_spikes(luminescence_roi=lum_roi, threshold=0.5)
