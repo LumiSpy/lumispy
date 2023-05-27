@@ -18,9 +18,13 @@ To publish a new LumiSpy release do the following steps:
 - Create a tag e.g. `git tag -a v0.1.1 -m "LumiSpy version 0.1.1"`
 - Push tag to user fork for a test run `git push origin v0.1.1`. Will run the release
   workflow without uploading to PyPi
-- Push tag to LumiSpy repository to trigger release `git push upstream v0.1.1`
-  (this triggers the GitHub action to create the sdist and wheel and upload to
-  PyPi automatically). :warning: this is a point of no return :warning:
+- Push tag to LumiSpy repository to trigger release `git push upstream v0.1.1`. 
+  :warning: this is a point of no return :warning:
+  - triggers the GitHub action to create the sdist and wheel and upload them to
+  PyPi automatically
+  - creates a Github Release
+  - creates a zenodo record and corresponding DOI (triggered by a new release)
+  _updates the current version on readthedocs to this release [we would need to set it to stable instead of latest]
   
 ## Post-release action
  
