@@ -9,23 +9,23 @@ jobs:
     timeout-minutes: 30
     env:
       MPLBACKEND: agg
-      PIP_ARGS: --upgrade --use-feature=2020-resolver -e
+      PIP_ARGS: --upgrade -e
       PYTEST_ARGS: --pyargs lumispy
       PYTEST_ARGS_COVERAGE: 
     strategy:
       fail-fast: false
       matrix:
-        PYTHON_VERSION: [3.6, 3.7]
+        PYTHON_VERSION: ['3.7', '3.9', '3.10']
         PIP_SELECTOR: ['[tests]']
         include:
-          - PYTHON_VERSION: 3.8
+          - PYTHON_VERSION: '3.8'
             PIP_SELECTOR: '[tests, coverage]'
-            PYTEST_ARGS_COVERAGE: --cov=lumispy
+            PYTEST_ARGS_COVERAGE: --cov=lumispy --cov-report=xml
             LABEL: /coverage
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3.4.0
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         name: Install Python
         with:
           python-version: ${{ matrix.PYTHON_VERSION }}
@@ -41,16 +41,16 @@ jobs:
           pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
 
       - name: Install (HyperSpy dev)
-        # Test against the hyperspy `non_uniform_axes` branch
+        # Test against the hyperspy `RELEASE_next_minor` branch
         if: ${{ matrix.PYTEST_ARGS_COVERAGE }} 
         shell: bash
         run: |
-          pip install https://github.com/hyperspy/hyperspy/archive/non_uniform_axes.zip
+          pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
 
       - name: Run test suite
         run: |
           pytest ${{ env.PYTEST_ARGS }} ${{ matrix.PYTEST_ARGS_COVERAGE }}
 
-      - name: Coveralls
+      - name: Upload coverage to Codecov
         if: ${{ always() }} && ${{ matrix.PYTEST_ARGS_COVERAGE }} 
-        uses: AndreMiras/coveralls-python-action@develop
+        uses: codecov/codecov-action@v3

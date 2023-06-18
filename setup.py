@@ -1,40 +1,46 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019 The LumiSpy developers
+# Copyright 2019-2023 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
 # LumiSpy is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
+# the Free Software Foundation, either version 3 of the license, or
 # (at your option) any later version.
 #
 # LumiSpy is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with LumiSpy.  If not, see <http://www.gnu.org/licenses/>.
+# along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 from setuptools import setup, find_packages
 
-exec(open('lumispy/release_info.py').read())  # grab version info
+release_info = {}  # grab release info
+with open("lumispy/release_info.py") as f:
+    exec(f.read(), release_info)
 
+with open("README.md") as f:  # grab readme
+    long_description = f.read()
 
 setup(
-    name='lumispy',
-    version='0.1.0',
-    description='Luminescence spectroscopy data analysis with HyperSpy.',
-    author='The LumiSpy Developers',
-    #author_email=email,
-    license=license,
-    url="https://github.com/lumispy/lumispy",
-    long_description=open('README.rst').read(),
+    name="lumispy",
+    version=release_info["version"],
+    description=release_info["description"],
+    author=release_info["author"],
+    license=release_info["license"],
+    platforms=release_info["platforms"],
+    url=release_info["url"],
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -43,23 +49,29 @@ setup(
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Physics",
     ],
-
+    keywords=release_info["keywords"],
     packages=find_packages(),
     # adjust the tabbing
     install_requires=[
-        'numpy',
-        'scipy',
-        'hyperspy >= 1.5.2',        # earlier versions incompatible with numpy >= 1.17.0
+        "numpy",
+        "scipy",
+        "hyperspy >= 1.7",  # earlier versions do not provide non-uniform axes
     ],
-    extras_require={"tests": ["pytest>=5.0"],
-                    "coverage": ["pytest-cov>=2.8.1", "coveralls>=1.10", "coverage>=5.0"]},
+    extras_require={
+        "tests": ["pytest>=5.0"],
+        "coverage": ["pytest-cov", "codecov"],
+        "build-doc": [
+            "sphinx>=4.3.0",
+            "sphinx_rtd_theme>=0.5.1",
+            "sphinx-toggleprompt",
+        ],
+    },
     package_data={
-        "": ["LICENSE", "README.rst"],
         "lumispy": ["*.py", "hyperspy_extension.yaml"],
     },
-    entry_points={'hyperspy.extensions': ['lumispy = lumispy']},
+    entry_points={"hyperspy.extensions": ["lumispy = lumispy"]},
     project_urls={  # Optional
-        'Bug Reports': 'https://github.com/lumispy/lumispy/issues',
-        'Source': 'https://github.com/lumispy/lumispy',
+        "Bug Reports": "https://github.com/lumispy/lumispy/issues",
+        "Source": "https://github.com/lumispy/lumispy",
     },
-    )
+)

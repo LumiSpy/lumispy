@@ -15,42 +15,35 @@ trigger:
 
 resources:
   repositories:
-  - repository: templates
-    type: github
-    name: hyperspy/ci-scripts
-    # For more details on service connection endpoint, see
-    # https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints
-    endpoint: jordiferrero # Azure DevOps service connection
+    - repository: templates
+      type: github
+      name: hyperspy/ci-scripts
+      # For more details on service connection endpoint, see
+      # https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints
+      endpoint: jordiferrero # Azure DevOps service connection
+      ref: use_mamba
 
 strategy:
   matrix:
     Linux_Python38:
       vmImage: 'ubuntu-latest'
       PYTHON_VERSION: '3.8'
-#    Linux_Python37:
-#      vmImage: 'ubuntu-latest'
-#      PYTHON_VERSION: '3.7'
-#    Linux_Python36:
-#      vmImage: 'ubuntu-latest'
-#      PYTHON_VERSION: '3.6'
+      MAMBAFORGE_PATH: $(Agent.BuildDirectory)/mambaforge
     MacOS_Python38:
       vmImage: 'macOS-latest'
       PYTHON_VERSION: '3.8'
-#    MacOS_Python36:
-#      vmImage: 'macOS-latest'
-#      PYTHON_VERSION: '3.6'
+      MAMBAFORGE_PATH: $(Agent.BuildDirectory)/mambaforge
     Windows_Python38:
       vmImage: 'windows-latest'
       PYTHON_VERSION: '3.8'
-#    Windows_Python36:
-#      vmImage: 'windows-latest'
-#      PYTHON_VERSION: '3.6'
+      MAMBAFORGE_PATH: $(Agent.BuildDirectory)\mambaforge
 
 pool:
   vmImage: '$(vmImage)'
 
 steps:
 - template: azure_pipelines/clone_ci-scripts_repo.yml@templates
+- template: azure_pipelines/install_mambaforge.yml@templates
 - template: azure_pipelines/activate_conda.yml@templates
 - template: azure_pipelines/setup_anaconda_packages.yml@templates
 
@@ -63,7 +56,7 @@ steps:
 
 - bash: |
     source activate $ENV_NAME
-    pytest --cov=lumispy
+    pytest
     python -c 'import lumispy as lum'
   displayName: Run test suite
 

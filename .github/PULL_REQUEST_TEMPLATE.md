@@ -1,5 +1,5 @@
 ### Requirements
-* Read the [contributing guidelines](https://github.com/lumispy/lumispy/blob/master/.github/CONTRIBUTING.md).
+* Read the [contributing guidelines](https://github.com/lumispy/lumispy/blob/main/.github/CONTRIBUTING.md).
 * Fill out the template; it helps the review process and it is useful to summarise the PR.
 * This template can be updated during the progression of the PR to summarise its status. 
 
@@ -13,8 +13,10 @@ A few sentences and/or a bulleted list to describe and motivate the change:
 
 ### Progress of the PR
 - [ ] Change implemented (can be split into several points),
-- [ ] update docstring (if appropriate),
-- [ ] add tests,
+- [ ] docstring updated (if appropriate),
+- [ ] update user guide (if appropriate),
+- [ ] added tests,
+- [ ] added line to CHANGELOG.md,
 - [ ] ready for review.
 
 ### Minimal example of the bug fix or the new feature
