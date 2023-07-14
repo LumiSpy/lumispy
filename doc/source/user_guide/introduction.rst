@@ -10,11 +10,11 @@ What is LumiSpy
 ===============
 
 **LumiSpy** is an open-source python library aimed at helping with the analysis
-of luminescence spectroscopy data -- the development started mainly with
+of luminescence spectroscopy data. The development started mainly with
 photoluminescence (PL), cathodoluminescence (CL), electroluminescence (EL) and
 Raman spectroscopy in mind. Besides the standard continuous-excitation spectral
 data, the idea is to provide tools also for the analysis of time-resolved
-(transient) measurements. However, it may prove useful also for other optical
+(transient) measurements. However, LumiSpy may prove useful also for other optical
 measurements, such as absorption or transmission spectroscopy, scanning optical
 near field miscroscopy (SNOM), as well as fourier-transform infrared
 spectroscopy (FTIR).
@@ -22,7 +22,17 @@ spectroscopy (FTIR).
 **LumiSpy** is an extension to the python package |HyperSpy|_
 that facilitates hyperspectral data analysis, i.e. maps or linescans where a
 spectrum is collected at each pixel. Or more general, multidimensional datasets
-that can be described as multidimensional arrays of a given signal.
+that can be described as multidimensional arrays of a given signal, as illustrated
+by the following figure:
+
+.. image:: images/hyperspy-datacube.svg
+  :width: 700
+  :alt: Illustration of hyperspectral datasets in different dimensionalities.
+
+To facilitate working with these datasets, HyperSpy distinguishes between
+:external+hyperspy:doc:`...navigation and signal dimensions` that can be
+addressed separately and thus, for example, operations on a single spectrum can
+be easily mapped to a whole dataset.
 
 Notable features that **HyperSpy** provides are:
 
@@ -133,7 +143,7 @@ Where are we heading?
 
 LumiSpy is under active development, and as a user-driven project, we welcome
 contributions (see :ref:`contributing_label`) to the code and documentation,
-but also bug reports and feature requests from any other users. Don't hesitate
+but also bug reports and feature requests from any users. Don't hesitate
 to join the discussions!
 
 Currrently, we have implemented the base functionality that extends 
@@ -142,6 +152,6 @@ to additional signal classes. In the near future, the following functions
 should be developed:
 
 - handling of transient (time-resolved) data,
-- reading of common PL data formats,
+- reading of common PL data formats (see :external+rsciio:`...`),
 - more dedicated analysis functionalities,
 - ...

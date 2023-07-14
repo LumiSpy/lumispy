@@ -24,7 +24,7 @@ signals in the range of +/- 50 pixels around the centre of the overlapping regio
 .. code-block:: python
 
     >>> import lumispy as lum
-    >>> s = lum.join_spectra((s1,s2))
+    >>> s = lum.join_spectra([s1,s2])
 
 
 .. _spectral_map_utils:
