@@ -199,3 +199,19 @@ The default operational mode is ``inplace=False`` (a new signal object is return
 
     >>> s.remove_negative(0.1)
 
+
+.. _crop_edges:
+
+Crop edges
+==========
+
+The function :py:meth:`~.signals.common_luminescence.CommonLumi.crop_edges`
+removes the specified number of pixels from all four edges of a spectral map.
+It is a convenience wrapper for the ``inav`` :external+hyperspy:ref:`method in
+HyperSpy <signal.indexing>`.
+
+.. code-block:: python
+
+    >>> s.crop_edges(crop_px=2)
+
+*[TODO: add possibility to crop different amounts of pixels on different sides]*
