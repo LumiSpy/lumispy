@@ -30,9 +30,12 @@ by the following figure:
   :alt: Illustration of hyperspectral datasets in different dimensionalities.
 
 To facilitate working with these datasets, HyperSpy distinguishes between
-:external+hyperspy:doc:`...navigation and signal dimensions` that can be
-addressed separately and thus, for example, operations on a single spectrum can
-be easily mapped to a whole dataset.
+`navigation and signal dimensions <https://hyperspy.org/hyperspy-doc/current/user_guide/getting_started.html#the-navigation-and-signal-dimensions>`_
+that can be addressed separately and thus, for example, operations on a single
+spectrum can be easily mapped to a whole dataset.
+
+..
+    Eith HyperSpy 2.0 update link above to :external+hyperspy:doc:`navigation and signal dimensions <navigation-signal-dimensions>`
 
 Notable features that **HyperSpy** provides are:
 
@@ -152,6 +155,6 @@ to additional signal classes. In the near future, the following functions
 should be developed:
 
 - handling of transient (time-resolved) data,
-- reading of common PL data formats (see :external+rsciio:`...`),
+- reading of common PL data formats (see :external+rsciio:ref:`supported-formats` of RosettaSciIO),
 - more dedicated analysis functionalities,
 - ...
