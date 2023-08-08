@@ -41,7 +41,7 @@ workflows.
 .. note::
 
    This project is under active development. Everyone is welcome to contribute.
-   Please read our (see :ref:`contributing_label`) guidelines and get started!
+   Please read our:ref:`contributing_label` guidelines and get started!
 
 Contents
 ========

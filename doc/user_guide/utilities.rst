@@ -23,7 +23,7 @@ signals in the range of +/- 50 pixels around the centre of the overlapping regio
 .. code-block:: python
 
     >>> import lumispy as lum
-    >>> s = lum.join_spectra((s1,s2))
+    >>> s = lum.join_spectra([s1,s2])
 
 
 .. _exporting_text_files:
@@ -95,3 +95,4 @@ The function :py:func:`~.utils.axes.solve_grating_equation` (relationship betwee
 wavelength and pixel position in the detector plane) follows the conventions
 described in the tutorial from  `Horiba Scientific
 <https://horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position>`_.
+
