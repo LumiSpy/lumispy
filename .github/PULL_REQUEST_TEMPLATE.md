@@ -16,7 +16,7 @@ A few sentences and/or a bulleted list to describe and motivate the change:
 - [ ] docstring updated (if appropriate),
 - [ ] update user guide (if appropriate),
 - [ ] added tests,
-- [ ] added line to CHANGELOG.md,
+- [ ] added line to CHANGELOG.rst,
 - [ ] ready for review.
 
 ### Minimal example of the bug fix or the new feature
