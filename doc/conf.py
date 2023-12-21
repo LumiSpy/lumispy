@@ -31,10 +31,11 @@ extensions = [
 ]
 
 intersphinx_mapping = {
-    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
+    "exspy": ("https://hyperspy.org/exspy/", None),
     "hyperspy": ("https://hyperspy.org/hyperspy-doc/current/", None),
-    "rsciio": ("https://hyperspy.org/rosettasciio/", None),
     "kikuchipy": ("https://kikuchipy.org/en/latest/", None),
+    "rsciio": ("https://hyperspy.org/rosettasciio/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 intersphinx_disabled_domains = ["std"]
 

@@ -93,14 +93,12 @@ while parallel acquisition with a CCD is characterized by the
 General
 =======
 
-See `HyperSpy-Metadata-General
-<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#general>`_.
+See :external+hyperspy:doc:`HyperSpy-Metadata-General <general-metadata>`
 
 Sample
 ======
 
-See `HyperSpy-Metadata-Sample
-<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#sample>`_.
+See :external+hyperspy:doc:`HyperSpy-Metadata-Sample <sample-metadata>`.
 
 Signal
 ======
@@ -117,8 +115,7 @@ quantity
     The name of the quantity of the “intensity axis” with the units in round brackets if
     required, for example 'Intensity (counts/s)'.
 
-See `HyperSpy-Metadata-Signal
-<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#sample>`__
+See :external+hyperspy:doc:`HyperSpy-Metadata-Signal <signal-metadata>`
 for additional fields.
 
 Acquisition Instrument
@@ -127,10 +124,8 @@ Acquisition Instrument
 Laser / SEM / TEM
 =================
 
-For **SEM** or **TEM** see `HyperSpy-Metadata-SEM
-<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#sem>`_
-or `HyperSpy-Metadata-TEM
-<https://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html#tem>`_.
+For **SEM** or **TEM** see :external+exspy:doc:`ExSpy-Metadata-SEM/TEM
+<source-metadata>`.
 
 
 Laser

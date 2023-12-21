@@ -3,8 +3,7 @@
 Non-uniform signal axes
 ***********************
 
-LumiSpy facilitates the use of `non-uniform axes 
-<https://hyperspy.org/hyperspy-doc/current/user_guide/axes.html#non-uniform-data-axis>`_,
+LumiSpy facilitates the use of :external+hyperspy:ref:`non-uniform axes <data-axis>`,
 where the points of the axis vector are not uniformly spaced. This situation
 occurs in particular when converting a wavelength scale to energy (eV) or
 wavenumbers (e.g. for Raman shifts).
@@ -128,9 +127,8 @@ it is converted into a :external:py:class:`hyperspy.signal.BaseSignal` object
 before the transformation.
 
 See :ref:`fitting_variance` for more general information on data variance
-in the context of model fitting and the HyperSpy documentation on `setting
-the noise properties
-<https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html?highlight=variance_linear_model#setting-the-noise-properties>`_.
+in the context of model fitting and the HyperSpy documentation on `
+:external+hyperspy:ref:`setting the noise properties <signal.noise_properties>`.
 
 .. Note::
 
