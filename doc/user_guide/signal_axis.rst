@@ -9,10 +9,10 @@ occurs in particular when converting a wavelength scale to energy (eV) or
 wavenumbers (e.g. for Raman shifts).
 
 The conversion of the signal axis can be performed using the functions 
-:py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_eV`,
-:py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_invcm` and
-:py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_raman_shift`
-(alias for :py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_invcm_relative`).
+:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_eV`,
+:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_invcm` and
+:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_raman_shift`
+(alias for :meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_invcm_relative`).
 If the unit of the signal axis is set, the functions can handle wavelengths in
 either nm or µm.
 
@@ -123,7 +123,7 @@ renormalization is automatically performed by LumiSpy if ``jacobian=True``.
 In particular, homoscedastic (constant) noise will consequently become
 heteroscedastic (changing as a function of the signal axis vector). Therefore,
 if the ``metadata.Signal.Noise_properties.variance`` attribute is a constant,
-it is converted into a :external:py:class:`hyperspy.signal.BaseSignal` object
+it is converted into a :external:class:`hyperspy.api.signals.BaseSignal` object
 before the transformation.
 
 See :ref:`fitting_variance` for more general information on data variance
@@ -136,6 +136,6 @@ in the context of model fitting and the HyperSpy documentation on `
     ``metadata.Signal.Noise_properties.Variance_linear_model`` are reset to
     their default values (``gain_factor=1``, ``gain_offset=0`` and ``correlation_factor=1``).
     Should these values deviate from the defaults, make sure to run
-    :external:py:meth:`hyperspy.signal.BaseSignal.estimate_poissonian_noise_variance`
+    :external:meth:`hyperspy.api.signals.BaseSignal.estimate_poissonian_noise_variance`
     prior to the transformation.
 

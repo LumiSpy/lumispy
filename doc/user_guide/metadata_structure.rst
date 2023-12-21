@@ -6,7 +6,7 @@ LumiSpy metadata structure
 LumiSpy extends the :external+hyperspy:ref:`HyperSpy metadata structure
 <metadata_structure>`
 with conventions for metadata specific to its signal types. Refer to the
-:external+hyperspy:doc:`HyperSpy metadata documentation <user_guide/metadata_structure>`
+:external+hyperspy:ref:`HyperSpy metadata documentation <metadata_structure>`
 for general metadata fields.
 
 The metadata of any **signal objects** is stored in the `metadata` attribute,
@@ -17,9 +17,9 @@ label followed by the ``_units`` suffix.
 
 Besides directly accessing the metadata tree structure, e.g.
 ``s.metadata.Signal.signal_type``, the HyperSpy methods
-:external:py:meth:`set_item() <hyperspy.misc.utils.DictionaryTreeBrowser.set_item>`,
-:external:py:meth:`has_item() <hyperspy.misc.utils.DictionaryTreeBrowser.has_item>` and
-:external:py:meth:`get_item() <hyperspy.misc.utils.DictionaryTreeBrowser.get_item>`
+:external:meth:`set_item() <hyperspy.misc.utils.DictionaryTreeBrowser.set_item>`,
+:external:meth:`has_item() <hyperspy.misc.utils.DictionaryTreeBrowser.has_item>` and
+:external:meth:`get_item() <hyperspy.misc.utils.DictionaryTreeBrowser.get_item>`
 can be used to add to, search for and read from items in the metadata tree,
 respectively.
 
@@ -93,12 +93,12 @@ while parallel acquisition with a CCD is characterized by the
 General
 =======
 
-See :external+hyperspy:doc:`HyperSpy-Metadata-General <general-metadata>`
+See :external+hyperspy:ref:`HyperSpy-Metadata-General <general-metadata>`
 
 Sample
 ======
 
-See :external+hyperspy:doc:`HyperSpy-Metadata-Sample <sample-metadata>`.
+See :external+hyperspy:ref:`HyperSpy-Metadata-Sample <sample-metadata>`.
 
 Signal
 ======
@@ -115,7 +115,7 @@ quantity
     The name of the quantity of the “intensity axis” with the units in round brackets if
     required, for example 'Intensity (counts/s)'.
 
-See :external+hyperspy:doc:`HyperSpy-Metadata-Signal <signal-metadata>`
+See :external+hyperspy:ref:`HyperSpy-Metadata-Signal <signal-metadata>`
 for additional fields.
 
 Acquisition Instrument
@@ -124,7 +124,7 @@ Acquisition Instrument
 Laser / SEM / TEM
 =================
 
-For **SEM** or **TEM** see :external+exspy:doc:`ExSpy-Metadata-SEM/TEM
+For **SEM** or **TEM** see :external+exspy:ref:`ExSpy-Metadata-SEM/TEM
 <source-metadata>`.
 
 
