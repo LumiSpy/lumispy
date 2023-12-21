@@ -39,6 +39,11 @@ intersphinx_mapping = {
 }
 intersphinx_disabled_domains = ["std"]
 
+linkcheck_ignore = [
+    "https://doi.org/10.1021/jz401508t",  # 403 Client Error: Forbidden for url
+    "https://github.com/LumiSpy/lumispy/security/code-scanning",  # 404 Client Error: Not Found for url (even though page exists)
+]
+
 # imgmath: Sphinx allows use of LaTeX in the html documentation, but not directly. It is first rendered to an image.
 # You can add here whatever preamble you are used to adding to your LaTeX document.
 imgmath_latex_preamble = r"""
