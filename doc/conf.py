@@ -27,7 +27,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.graphviz",
     "sphinx.ext.autosummary",
-    "sphinx_toggleprompt",
+    "sphinx_copybutton",
 ]
 
 intersphinx_mapping = {

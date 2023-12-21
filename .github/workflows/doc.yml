@@ -1,0 +1,43 @@
+name: Documentation
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    # This build is to make PR comments for the sphinx warning and check if
+    # web links are not broken 
+    name: Check links and make PR comments
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        name: Install Python
+        with:
+          python-version: '3.11'
+
+      - name: Install build docs
+        shell: bash -l {0}
+        run: |
+          pip install .[build-doc]
+
+      # Add sphinx warnings as PR comments
+      - uses: sphinx-doc/sphinx-problem-matcher@master
+      - name: Build documentation
+        shell: bash -l {0}
+        run: |
+          cd doc
+          make SPHINXOPTS="-W --keep-going" html
+
+      - uses: actions/upload-artifact@v4
+        with:
+          path: doc/_build/html/
+          name: doc_html
+
+      - name: Check links
+        shell: bash -l {0}
+        run: |
+          cd doc
+          make linkcheck

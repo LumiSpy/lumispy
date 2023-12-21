@@ -63,7 +63,7 @@ setup(
         "build-doc": [
             "sphinx>=4.3.0",
             "sphinx_rtd_theme>=0.5.1",
-            "sphinx-toggleprompt",
+            "sphinx-copybutton",
         ],
     },
     package_data={
