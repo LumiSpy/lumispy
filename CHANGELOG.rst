@@ -11,6 +11,10 @@ UNRELEASED
 Changed
 -------
 
+Maintenance
+-----------
+- Fix intersphinx links to documentation of HyperSpy 2.0 and add linkchecker workflow
+- Align supported python versions (3.8-3.12) to HyperSpy 2.0 
 
 .. _changes_0.2.2:
 
