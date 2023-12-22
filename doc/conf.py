@@ -27,16 +27,22 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.graphviz",
     "sphinx.ext.autosummary",
-    "sphinx_toggleprompt",
+    "sphinx_copybutton",
 ]
 
 intersphinx_mapping = {
-    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
+    "exspy": ("https://hyperspy.org/exspy/", None),
     "hyperspy": ("https://hyperspy.org/hyperspy-doc/current/", None),
-    "rsciio": ("https://hyperspy.org/rosettasciio/", None),
     "kikuchipy": ("https://kikuchipy.org/en/latest/", None),
+    "rsciio": ("https://hyperspy.org/rosettasciio/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 intersphinx_disabled_domains = ["std"]
+
+linkcheck_ignore = [
+    "https://doi.org/10.1021/jz401508t",  # 403 Client Error: Forbidden for url
+    "https://github.com/LumiSpy/lumispy/security/code-scanning",  # 404 Client Error: Not Found for url (even though page exists)
+]
 
 # imgmath: Sphinx allows use of LaTeX in the html documentation, but not directly. It is first rendered to an image.
 # You can add here whatever preamble you are used to adding to your LaTeX document.

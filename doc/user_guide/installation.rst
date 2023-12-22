@@ -26,7 +26,7 @@ Follow these 3 steps to install LumiSpy using **conda** and start using it.
 -------------------------------
 
 LumiSpy requires Python 3 and ``conda`` -- we suggest using the Python 3 version
-of `Miniconda <https://conda.io/miniconda.html/>`_.
+of `Miniconda <https://conda.io/miniconda.html>`_.
 
 We recommend creating a new environment for the LumiSpy package (or installing
 it in the :external+hyperspy:ref:`HyperSpy <anaconda-install>` 
@@ -84,8 +84,8 @@ and modify to perform many common analyses.
 Installation using pip
 ========================
 
-Alternatively, you can also find LumiSpy in the `Python Package Index (PyPI) <pypi.org>`_
-and install it using (requires ``pip``):
+Alternatively, you can also find LumiSpy in the `Python Package Index (PyPI)
+<https://pypi.org/search/?q=lumispy>`_ and install it using (requires ``pip``):
 
 .. code-block:: bash
 

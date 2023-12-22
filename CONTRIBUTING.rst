@@ -52,7 +52,7 @@ The LumiSpy documentation consists of three elements:
 - The `documentation <https://docs.lumispy.org>`_ written using `Sphinx
   <https://www.sphinx-doc.org/en/master/>`_ and hosted on `Read the Docs
   <https://docs.lumispy.org>`_. The source is part of the `GitHub repository
-  <https://github.com/LumiSpy/lumispy/tree/main/doc/source>`_.
+  <https://github.com/LumiSpy/lumispy/tree/main/doc>`_.
 - A set of curated Jupyter notebooks in the `LumiSpy demos repository
   <https://github.com/lumispy/lumispy-demos>`_ on GitHub that provide tutorials and example
   workflows.

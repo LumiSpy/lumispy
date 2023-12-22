@@ -3,17 +3,16 @@
 Non-uniform signal axes
 ***********************
 
-LumiSpy facilitates the use of `non-uniform axes 
-<https://hyperspy.org/hyperspy-doc/current/user_guide/axes.html#non-uniform-data-axis>`_,
+LumiSpy facilitates the use of :external+hyperspy:ref:`non-uniform axes <data-axis>`,
 where the points of the axis vector are not uniformly spaced. This situation
 occurs in particular when converting a wavelength scale to energy (eV) or
 wavenumbers (e.g. for Raman shifts).
 
 The conversion of the signal axis can be performed using the functions 
-:py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_eV`,
-:py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_invcm` and
-:py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_raman_shift`
-(alias for :py:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_invcm_relative`).
+:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_eV`,
+:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_invcm` and
+:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_raman_shift`
+(alias for :meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_invcm_relative`).
 If the unit of the signal axis is set, the functions can handle wavelengths in
 either nm or µm.
 
@@ -88,8 +87,8 @@ Jacobian transformation
 When transforming the signal axis, the signal intensity is automatically
 rescaled (Jacobian transformation), unless the ``jacobian=False`` option is
 given. Only converting the signal axis, and leaving the signal intensity
-unchanged, implies that the integral of the signal over the same interval would
-lead to different results depending on the quantity on the axis (see e.g.
+unchanged, would implie that the integral of the signal over the same interval
+leads to different results depending on the quantity on the axis (see e.g.
 [Mooney]_ and [Wang]_).
 
 For the energy axis as example, if we require :math:`I(E)dE = I(\lambda)d\lambda`,
@@ -124,13 +123,12 @@ renormalization is automatically performed by LumiSpy if ``jacobian=True``.
 In particular, homoscedastic (constant) noise will consequently become
 heteroscedastic (changing as a function of the signal axis vector). Therefore,
 if the ``metadata.Signal.Noise_properties.variance`` attribute is a constant,
-it is converted into a :external:py:class:`hyperspy.signal.BaseSignal` object
+it is converted into a :external:class:`hyperspy.api.signals.BaseSignal` object
 before the transformation.
 
-See :ref:`fitting_variance` for more general information on data variance
-in the context of model fitting and the HyperSpy documentation on `setting
-the noise properties
-<https://hyperspy.org/hyperspy-doc/current/user_guide/signal.html?highlight=variance_linear_model#setting-the-noise-properties>`_.
+See the section on :ref:`fitting_variance` for more general information on data variance
+in the context of model fitting and the HyperSpy documentation on `
+:external+hyperspy:ref:`setting the noise properties <signal.noise_properties>`.
 
 .. Note::
 
@@ -138,6 +136,6 @@ the noise properties
     ``metadata.Signal.Noise_properties.Variance_linear_model`` are reset to
     their default values (``gain_factor=1``, ``gain_offset=0`` and ``correlation_factor=1``).
     Should these values deviate from the defaults, make sure to run
-    :external:py:meth:`hyperspy.signal.BaseSignal.estimate_poissonian_noise_variance`
+    :external:meth:`hyperspy.api.signals.BaseSignal.estimate_poissonian_noise_variance`
     prior to the transformation.
 

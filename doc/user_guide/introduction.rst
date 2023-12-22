@@ -30,24 +30,23 @@ by the following figure:
   :alt: Illustration of hyperspectral datasets in different dimensionalities.
 
 To facilitate working with these datasets, HyperSpy distinguishes between
-`navigation and signal dimensions <https://hyperspy.org/hyperspy-doc/current/user_guide/getting_started.html#the-navigation-and-signal-dimensions>`_
+:external+hyperspy:ref:`navigation and signal dimensions <navigation-signal-dimensions>`
 that can be addressed separately and thus, for example, operations on a single
 spectrum can be easily mapped to a whole dataset.
 
-..
-    Eith HyperSpy 2.0 update link above to :external+hyperspy:doc:`navigation and signal dimensions <navigation-signal-dimensions>`
-
 Notable features that **HyperSpy** provides are:
 
-- :external+hyperspy:doc:`base signal classes <user_guide/signal>`
+- :external+hyperspy:ref:`base signal classes <signal-label>`
   for the handling of (multidimensional) spectral data,
-- the necessary tools for loading :external+hyperspy:ref:`various data file formats
-  <io>`,
-- :external+hyperspy:doc:`analytical tools <user_guide/signal1d>`
+- the necessary tools for  :external+hyperspy:ref:`loading <io>`
+  :external+rsciio:ref:`various data file formats <supported-formats>` using the
+  library `RosettaSciIO <https://hyperspy.org/rosettasciio>`_,
+- :external+hyperspy:ref:`analytical tools <signal1D-label>`
   that exploit the multidimensionality of datasets,
 - a user-friendly and powerful framework for :external+hyperspy:ref:`model fitting
-  <model-label>` that
-  provides many standard functions and can be easily extended to custom ones,
+  <model-label>` that provides many :external+hyperspy:ref:`standard functions
+  <model_components-label>` and can be easily extended to
+  :external+hyperspy:ref:`custom ones <expression_component-label>`,
 - :external+hyperspy:ref:`machine learning <ml-label>`
   algorithms that can be useful, e.g. for denoising data,
 - efficient handling of :external+hyperspy:ref:`big datasets <big-data-label>`,
@@ -58,7 +57,7 @@ Notable features that **HyperSpy** provides are:
   :external+hyperspy:ref:`regions of interest <roi-label>` and a powerful
   numpy-style :external+hyperspy:ref:`indexing mechanism <signal.indexing>`,
 - handling of :external+hyperspy:ref:`non-uniform data axes <Axes_types>`
-  (introduced in the :external+hyperspy:ref:`v1.7 release 
+  (introduced in the :external+hyperspy:ref:`1.7.0 release 
   <changes_1.7.0>`).
 
 **LumiSpy** provides in particular:
@@ -85,8 +84,8 @@ As an extension to HyperSpy, LumiSpy provides several signal types extending the
 :external+hyperspy:ref:`base classes available in HyperSpy
 <signal_subclasses_table-label>`. When the LumiSpy library is installed, these
 additional signal types are directly available to HyperSpy. To print all available
-specialised :external:py:class:`hyperspy.signal.BaseSignal` subclasses installed
-in your system call the :external:py:func:`hyperspy.utils.print_known_signal_types`
+specialised :external:class:`hyperspy.signal.BaseSignal` subclasses installed
+in your system call the :external:func:`hyperspy.api.print_known_signal_types`
 function:
 
 .. code-block:: python
@@ -103,40 +102,40 @@ signal types (or inheriting) signal types.
 
 .. table:: LumiSpy subclasses and their basic attributes.
 
-    +-------------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
-    |  BaseSignal subclass                                                    | signal_dimension |  signal_type  |  dtype  |  aliases                                                                  |
-    +=========================================================================+==================+===============+=========+===========================================================================+
-    |  :py:class:`~.signals.luminescence_spectrum.LumiSpectrum`               |        1         |  Luminescence |  real   | LumiSpectrum, LuminescenceSpectrum                                        |
-    +-------------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
-    |  :py:class:`~.signals.cl_spectrum.CLSpectrum`                           |        1         |       CL      |  real   | CLSpectrum, cathodoluminescence                                           |
-    +-------------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
-    |  :py:class:`~.signals.cl_spectrum.CLSEMSpectrum`                        |        1         |     CL_SEM    |  real   | CLSEM, cathodoluminescence SEM                                            |
-    +-------------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
-    |  :py:class:`~.signals.cl_spectrum.CLSTEMSpectrum`                       |        1         |    CL_STEM    |  real   | CLSTEM, cathodoluminescence STEM                                          |
-    +-------------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
-    |  :py:class:`~.signals.el_spectrum.ELSpectrum`                           |        1         |       EL      |  real   | ELSpectrum, electroluminescence                                           |
-    +-------------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
-    |  :py:class:`~.signals.pl_spectrum.PLSpectrum`                           |        1         |       PL      |  real   | PLSpectrum, photoluminescence                                             |
-    +-------------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
-    |  :py:class:`~.signals.luminescence_transient.LumiTransient`             |        1         |   Transient   |  real   | TRLumi, TR luminescence, time-resolved luminescence                       |
-    +-------------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
-    |  :py:class:`~.signals.luminescence_transientspec.LumiTransientSpectrum` |        2         | TransientSpec |  real   | TRLumiSpec, TR luminescence spectrum, time-resolved luminescence spectrum |
-    +-------------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
+    +----------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
+    |  BaseSignal subclass                                                 | signal_dimension |  signal_type  |  dtype  |  aliases                                                                  |
+    +======================================================================+==================+===============+=========+===========================================================================+
+    |  :class:`~.signals.luminescence_spectrum.LumiSpectrum`               |        1         |  Luminescence |  real   | LumiSpectrum, LuminescenceSpectrum                                        |
+    +----------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
+    |  :class:`~.signals.cl_spectrum.CLSpectrum`                           |        1         |       CL      |  real   | CLSpectrum, cathodoluminescence                                           |
+    +----------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
+    |  :class:`~.signals.cl_spectrum.CLSEMSpectrum`                        |        1         |     CL_SEM    |  real   | CLSEM, cathodoluminescence SEM                                            |
+    +----------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
+    |  :class:`~.signals.cl_spectrum.CLSTEMSpectrum`                       |        1         |    CL_STEM    |  real   | CLSTEM, cathodoluminescence STEM                                          |
+    +----------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
+    |  :class:`~.signals.el_spectrum.ELSpectrum`                           |        1         |       EL      |  real   | ELSpectrum, electroluminescence                                           |
+    +----------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
+    |  :class:`~.signals.pl_spectrum.PLSpectrum`                           |        1         |       PL      |  real   | PLSpectrum, photoluminescence                                             |
+    +----------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
+    |  :class:`~.signals.luminescence_transient.LumiTransient`             |        1         |   Transient   |  real   | TRLumi, TR luminescence, time-resolved luminescence                       |
+    +----------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
+    |  :class:`~.signals.luminescence_transientspec.LumiTransientSpectrum` |        2         | TransientSpec |  real   | TRLumiSpec, TR luminescence spectrum, time-resolved luminescence spectrum |
+    +----------------------------------------------------------------------+------------------+---------------+---------+---------------------------------------------------------------------------+
 
 The hierarchy of the LumiSpy signal types and their inheritance from HyperSpy
 is summarized in the following diagram:
 
-|   └── :external:py:class:`hyperspy.signal.BaseSignal`
-|       ├── :external:py:class:`hyperspy._signals.signal1d.Signal1D`
-|       │   └── :py:class:`~.signals.luminescence_spectrum.LumiSpectrum`
-|       │   │   ├── :py:class:`~.signals.cl_spectrum.CLSpectrum`
-|       │   │   │   ├── :py:class:`~.signals.cl_spectrum.CLSEMSpectrum` 
-|       │   │   │   └── :py:class:`~.signals.cl_spectrum.CLSTEMSpectrum` 
-|       │   │   ├── :py:class:`~.signals.el_spectrum.ELSpectrum`
-|       │   │   └── :py:class:`~.signals.pl_spectrum.PLSpectrum`
-|       │   └── :py:class:`~.signals.luminescence_transient.LumiTransient`
-|       └── :py:class:`hyperspy.signal.Signal2D`
-|           └── :py:class:`~.signals.luminescence_transientspec.LumiTransientSpectrum`
+|   └── :external:class:`hyperspy.signal.BaseSignal`
+|           ├── :external:class:`hyperspy._signals.signal1d.Signal1D`
+|           │       └── :class:`~.signals.luminescence_spectrum.LumiSpectrum`
+|           │       │       ├── :class:`~.signals.cl_spectrum.CLSpectrum`
+|           │       │       │       ├── :class:`~.signals.cl_spectrum.CLSEMSpectrum` 
+|           │       │       │       └── :class:`~.signals.cl_spectrum.CLSTEMSpectrum` 
+|           │       │       ├── :class:`~.signals.el_spectrum.ELSpectsrum`
+|           │       │       └── :class:`~.signals.pl_spectrum.PLSpectrum`
+|           │       └── :class:`~.signals.luminescence_transient.LumiTransient`
+|           └── :class:`hyperspy.signal.Signal2D`
+|                   └── :class:`~.signals.luminescence_transientspec.LumiTransientSpectrum`
 |
 |
 
@@ -145,16 +144,17 @@ Where are we heading?
 =====================
 
 LumiSpy is under active development, and as a user-driven project, we welcome
-contributions (see :ref:`contributing_label`) to the code and documentation,
-but also bug reports and feature requests from any users. Don't hesitate
+:ref:`contributions <contributing_label>` to the code and documentation,
+but also bug reports and feature requests from any user. Don't hesitate
 to join the discussions!
 
 Currrently, we have implemented the base functionality that extends 
-:external+hyperspy:ref:`HyperSpy's capabilities <user_guide-label>`
+:external+hyperspy:ref:`HyperSpy's capabilities <user_guide>`
 to additional signal classes. In the near future, the following functions
 should be developed:
 
-- handling of transient (time-resolved) data,
-- reading of common PL data formats (see :external+rsciio:ref:`supported-formats` of RosettaSciIO),
+- handling of transient (time-resolved) data with dedicated models,
+- extend the capabilities for reading relevant data formats
+  (see :external+rsciio:ref:`supported-formats` of RosettaSciIO),
 - more dedicated analysis functionalities,
 - ...
