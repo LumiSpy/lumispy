@@ -108,7 +108,7 @@ finding the position of the maximum intensity of a peak, useful in particular fo
 non-symmetric peaks with pronounced shoulders.
 It finds the centroid (center of mass) of a peak in the spectrum from the signal axis
 units (or pixel number) and the intensity at each pixel value. It basically represents a
-"weighted average" of the peak as such:
+"weighted average" of the peak defined as:
 
 .. math::
 
@@ -144,7 +144,7 @@ with the `kwargs` of :external:class:`scipy.interpolate.interp1d` function.
 
     This function only works for a single peak. If you have multiple peaks,
     slice the signal beforehand or use the slice parameter (which follows the
-    ``s.isig[:]`` convention).
+    ``s.isig[:]`` convention).s
 
 .. Note::
 
@@ -197,7 +197,7 @@ The default operational mode is ``inplace=False`` (a new signal object is return
 
 .. code-block:: python
 
-    >>> s.remove_negative(0.1)
+    >>> s2 = s.remove_negative(0.1)
 
 
 .. _crop_edges:

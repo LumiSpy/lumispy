@@ -87,8 +87,8 @@ Jacobian transformation
 When transforming the signal axis, the signal intensity is automatically
 rescaled (Jacobian transformation), unless the ``jacobian=False`` option is
 given. Only converting the signal axis, and leaving the signal intensity
-unchanged, implies that the integral of the signal over the same interval would
-lead to different results depending on the quantity on the axis (see e.g.
+unchanged, would implie that the integral of the signal over the same interval
+leads to different results depending on the quantity on the axis (see e.g.
 [Mooney]_ and [Wang]_).
 
 For the energy axis as example, if we require :math:`I(E)dE = I(\lambda)d\lambda`,
@@ -126,7 +126,7 @@ if the ``metadata.Signal.Noise_properties.variance`` attribute is a constant,
 it is converted into a :external:class:`hyperspy.api.signals.BaseSignal` object
 before the transformation.
 
-See :ref:`fitting_variance` for more general information on data variance
+See the section on :ref:`fitting_variance` for more general information on data variance
 in the context of model fitting and the HyperSpy documentation on `
 :external+hyperspy:ref:`setting the noise properties <signal.noise_properties>`.
 

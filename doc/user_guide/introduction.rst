@@ -38,13 +38,15 @@ Notable features that **HyperSpy** provides are:
 
 - :external+hyperspy:ref:`base signal classes <signal-label>`
   for the handling of (multidimensional) spectral data,
-- the necessary tools for loading :external+hyperspy:ref:`various data file formats
-  <io>`,
+- the necessary tools for  :external+hyperspy:ref:`loading <io>`
+  :external+rsciio:ref:`various data file formats <supported-formats>` using the
+  library `RosettaSciIO <https://hyperspy.org/rosettasciio>`_,
 - :external+hyperspy:ref:`analytical tools <signal1D-label>`
   that exploit the multidimensionality of datasets,
 - a user-friendly and powerful framework for :external+hyperspy:ref:`model fitting
-  <model-label>` that
-  provides many standard functions and can be easily extended to custom ones,
+  <model-label>` that provides many :external+hyperspy:ref:`standard functions
+  <model_components-label>` and can be easily extended to
+  :external+hyperspy:ref:`custom ones <expression_component-label>`,
 - :external+hyperspy:ref:`machine learning <ml-label>`
   algorithms that can be useful, e.g. for denoising data,
 - efficient handling of :external+hyperspy:ref:`big datasets <big-data-label>`,
@@ -55,7 +57,7 @@ Notable features that **HyperSpy** provides are:
   :external+hyperspy:ref:`regions of interest <roi-label>` and a powerful
   numpy-style :external+hyperspy:ref:`indexing mechanism <signal.indexing>`,
 - handling of :external+hyperspy:ref:`non-uniform data axes <Axes_types>`
-  (introduced in the :external+hyperspy:ref:`v1.7 release 
+  (introduced in the :external+hyperspy:ref:`1.7.0 release 
   <changes_1.7.0>`).
 
 **LumiSpy** provides in particular:
@@ -124,16 +126,16 @@ The hierarchy of the LumiSpy signal types and their inheritance from HyperSpy
 is summarized in the following diagram:
 
 |   └── :external:class:`hyperspy.signal.BaseSignal`
-|       ├── :external:class:`hyperspy._signals.signal1d.Signal1D`
-|       │   └── :class:`~.signals.luminescence_spectrum.LumiSpectrum`
-|       │   │   ├── :class:`~.signals.cl_spectrum.CLSpectrum`
-|       │   │   │   ├── :class:`~.signals.cl_spectrum.CLSEMSpectrum` 
-|       │   │   │   └── :class:`~.signals.cl_spectrum.CLSTEMSpectrum` 
-|       │   │   ├── :class:`~.signals.el_spectrum.ELSpectrum`
-|       │   │   └── :class:`~.signals.pl_spectrum.PLSpectrum`
-|       │   └── :class:`~.signals.luminescence_transient.LumiTransient`
-|       └── :class:`hyperspy.signal.Signal2D`
-|           └── :class:`~.signals.luminescence_transientspec.LumiTransientSpectrum`
+|           ├── :external:class:`hyperspy._signals.signal1d.Signal1D`
+|           │       └── :class:`~.signals.luminescence_spectrum.LumiSpectrum`
+|           │       │       ├── :class:`~.signals.cl_spectrum.CLSpectrum`
+|           │       │       │       ├── :class:`~.signals.cl_spectrum.CLSEMSpectrum` 
+|           │       │       │       └── :class:`~.signals.cl_spectrum.CLSTEMSpectrum` 
+|           │       │       ├── :class:`~.signals.el_spectrum.ELSpectsrum`
+|           │       │       └── :class:`~.signals.pl_spectrum.PLSpectrum`
+|           │       └── :class:`~.signals.luminescence_transient.LumiTransient`
+|           └── :class:`hyperspy.signal.Signal2D`
+|                   └── :class:`~.signals.luminescence_transientspec.LumiTransientSpectrum`
 |
 |
 
@@ -142,8 +144,8 @@ Where are we heading?
 =====================
 
 LumiSpy is under active development, and as a user-driven project, we welcome
-contributions (see :ref:`contributing_label`) to the code and documentation,
-but also bug reports and feature requests from any users. Don't hesitate
+:ref:`contributions <contributing_label>` to the code and documentation,
+but also bug reports and feature requests from any user. Don't hesitate
 to join the discussions!
 
 Currrently, we have implemented the base functionality that extends 
@@ -151,7 +153,8 @@ Currrently, we have implemented the base functionality that extends
 to additional signal classes. In the near future, the following functions
 should be developed:
 
-- handling of transient (time-resolved) data,
-- reading of common PL data formats (see :external+rsciio:ref:`supported-formats` of RosettaSciIO),
+- handling of transient (time-resolved) data with dedicated models,
+- extend the capabilities for reading relevant data formats
+  (see :external+rsciio:ref:`supported-formats` of RosettaSciIO),
 - more dedicated analysis functionalities,
 - ...
