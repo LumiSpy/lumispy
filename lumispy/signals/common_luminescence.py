@@ -34,6 +34,7 @@ from lumispy.utils import (
     var2invcm,
 )
 
+
 class CommonLumi:
     """**General luminescence signal class (dimensionless)**"""
 
@@ -224,7 +225,6 @@ class CommonLumi:
         if not inplace:
             return s
 
-
     def _reset_variance_linear_model(self):
         """Resets the variance linear model parameters to their default values,
         as they are not applicable any longer after a Jacobian transformation.
@@ -294,10 +294,11 @@ class CommonLumi:
             )
         # convert axis
         oldaxis = self.axes_manager.signal_axes[0]
-        s2.axes_manager.set_axis(
-            newaxis,
-            self.axes_manager.signal_axes[0].index_in_axes_manager,
-        )
+        axind = self.axes_manager.signal_axes[0].index_in_axes_manager
+        # workaround for bug in set_axis that changes wrong axis
+        if self.axes_manager.signal_dimension == 2:
+            axind += 1
+        s2.axes_manager.set_axis(newaxis, axind)
         # convert variance
         if self.metadata.has_item("Signal.Noise_properties.variance"):
             var = self.get_noise_variance()
@@ -487,18 +488,23 @@ class CommonLumi:
         else:
             s2 = self.to_invcm(inplace=inplace, jacobian=jacobian)
         # replace axis
-        s2.axes_manager.set_axis(
-            invcmaxis,
-            self.axes_manager.signal_axes[0].index_in_axes_manager,
-        )
+        axind = self.axes_manager.signal_axes[0].index_in_axes_manager
+        # workaround for bug in set_axis that changes wrong axis
+        if self.axes_manager.signal_dimension == 2:
+            axind += 1
+        s2.axes_manager.set_axis(invcmaxis, axind)
         s2.data = s2.isig[::-1].data
         # replace variance axis
         if s2.metadata.has_item("Signal.Noise_properties.variance") and not isinstance(
             s2.get_noise_variance(), (float, int)
         ):
+            axind = self.axes_manager.signal_axes[0].index_in_axes_manager
+            # workaround for bug in set_axis that changes wrong axis
+            if self.axes_manager.signal_dimension == 2:
+                axind += 1
             s2.metadata.Signal.Noise_properties.variance.axes_manager.set_axis(
                 invcmaxis,
-                s2.axes_manager.signal_axes[0].index_in_axes_manager,
+                axind,
             )
             s2.metadata.Signal.Noise_properties.variance.data = (
                 s2.metadata.Signal.Noise_properties.variance.isig[::-1].data
