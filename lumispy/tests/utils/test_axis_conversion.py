@@ -194,15 +194,17 @@ def test_eV_slicing():
     S.to_eV(inplace=True)
     S.isig[3.251:4.052]
 
+
 def test_to_eV_2D():
-    axis1 = UniformDataAxis(size=10, offset=200, scale=10, units='nm')
-    axis2 = UniformDataAxis(size=8, offset=0, scale=0.1, units='ns')
-    data = arange(80).reshape(8,10)
+    axis1 = UniformDataAxis(size=10, offset=200, scale=10, units="nm")
+    axis2 = UniformDataAxis(size=8, offset=0, scale=0.1, units="ns")
+    data = arange(80).reshape(8, 10)
     S1 = LumiTransientSpectrum(data, axes=[axis2, axis1])
     S2 = S1.to_eV(inplace=True, jacobian=False)
     assert S1.axes_manager[0].units == "eV"
     assert S1.axes_manager[0].axis[-1] == nm2eV(axis1.axis[0])
-    assert S1.data[0,0] == data[0,-1]
+    assert S1.data[0, 0] == data[0, -1]
+
 
 @mark.parametrize(("jacobian"), (True, False))
 def test_reset_variance_linear_model_eV(jacobian):

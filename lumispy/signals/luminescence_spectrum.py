@@ -26,6 +26,7 @@ from hyperspy._signals.lazy import LazySignal
 from traits.api import Undefined
 
 from lumispy.signals.common_luminescence import CommonLumi
+from lumispy.signals.luminescence_transient import LumiTransient
 from lumispy import to_array, savetxt
 from lumispy.utils import solve_grating_equation
 from lumispy.utils.axes import GRATING_EQUATION_DOCSTRING_PARAMETERS
@@ -41,11 +42,24 @@ from lumispy.utils.io import (
 class LumiSpectrum(Signal1D, CommonLumi):
     """**General 1D luminescence signal class.**"""
 
-    _signal_type = "Luminescence"
     _signal_dimension = 1
+    _signal_type = "Luminescence"
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        if hasattr(self, "axes_manager") and self.axes_manager[-1].units in [
+            "fs",
+            "ps",
+            "ns",
+            "µs",
+            "mus",
+            "ms",
+            "s",
+        ]:
+            self.metadata.Signal.signal_type = "Transient"
+            self.__class__ = LumiTransient
+            self.__init__(*args, **kwargs)
+        else:
+            super().__init__(*args, **kwargs)
 
     def remove_background_from_file(self, background=None, inplace=False, **kwargs):
         """Subtract the background to the signal in all navigation axes. If no

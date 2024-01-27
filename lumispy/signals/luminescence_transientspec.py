@@ -31,7 +31,7 @@ from lumispy.signals.common_transient import CommonTransient
 class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
     """**General 2D luminescence signal class (transient/time resolved)**"""
 
-    _signal_type = "TransientSpec"
+    _signal_type = "Luminescence"
     _signal_dimension = 2
 
 

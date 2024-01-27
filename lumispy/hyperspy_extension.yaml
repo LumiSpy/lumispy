@@ -151,7 +151,7 @@ signals:
     module: lumispy.signals.luminescence_transient
 
   LumiTransientSpectrum:
-    signal_type: TransientSpec
+    signal_type: Luminescence
     signal_type_aliases:
       - TRLumiSpec
       - TR luminescence spectrum
@@ -161,8 +161,9 @@ signals:
     lazy: False
     module: lumispy.signals.luminescence_transientspec
   LazyLumiTransientSpectrum:
-    signal_type: TransientSpec
+    signal_type: Luminescence
     signal_type_aliases:
+      - TransientSpec
       - TRLumiSpec
       - TR luminescence spectrum
       - time-resolved luminescence spectrum
