@@ -21,21 +21,47 @@ Signal class for luminescence transient data (2D)
 -------------------------------------------------
 """
 
-from hyperspy.signals import Signal2D
+from hyperspy.signals import Signal1D, Signal2D
 from hyperspy._signals.lazy import LazySignal
 
+from lumispy.signals import LumiSpectrum, LumiTransient
 from lumispy.signals.common_luminescence import CommonLumi
 from lumispy.signals.common_transient import CommonTransient
 
 
-class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
-    """**General 2D luminescence signal class (transient/time resolved)**"""
+class TransientSpectrumCasting(Signal1D, CommonLumi, CommonTransient):
+    """**1D signal class for casting reduced LumiTransientSpectrum to either Luminescence or Transient**"""
 
-    _signal_type = "Luminescence"
+    _signal_type = "TransientSpec"
+    _signal_dimension = 1
+
+    def __init__(self, *args, **kwargs):
+        if hasattr(self, "axes_manager") and self.axes_manager[-1].units in [
+            "fs",
+            "ps",
+            "ns",
+            "µs",
+            "mus",
+            "ms",
+            "s",
+        ]:
+            self.metadata.Signal.signal_type = "Transient"
+            self.__class__ = LumiTransient
+            self.__init__(*args, **kwargs)
+        else:
+            self.metadata.Signal.signal_type = "Luminescence"
+            self.__class__ = LumiSpectrum
+            self.__init__(*args, **kwargs)
+
+
+class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
+    """**2D luminescence signal class (spectrum+transient/time resolved dimensions)**"""
+
+    _signal_type = "TransientSpec"
     _signal_dimension = 2
 
 
 class LazyLumiTransientSpectrum(LazySignal, LumiTransientSpectrum):
-    """**General lazy 2D luminescence signal class (transient/time resolved)**"""
+    """**Lazy 2D luminescence signal class (spectral+transient/time resolved dimensions)**"""
 
     _lazy = True
