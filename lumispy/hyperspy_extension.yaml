@@ -159,6 +159,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: False
+    hidden: True
     module: lumispy.signals.luminescence_transientspec
   LumiTransientSpectrum:
     signal_type: TransientSpec
