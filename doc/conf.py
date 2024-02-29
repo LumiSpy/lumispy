@@ -88,9 +88,9 @@ def run_apidoc(_):
     # https://www.sphinx-doc.org/es/1.2/ext/autodoc.html
     import os
 
-    os.environ[
-        "SPHINX_APIDOC_OPTIONS"
-    ] = "members,private-members,no-undoc-members,show-inheritance,ignore-module-all"
+    os.environ["SPHINX_APIDOC_OPTIONS"] = (
+        "members,private-members,no-undoc-members,show-inheritance,ignore-module-all"
+    )
 
     from sphinx.ext.apidoc import main
 
