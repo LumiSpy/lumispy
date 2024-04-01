@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Create Release
         id: create_release
-        uses: softprops/action-gh-release@3198ee18f814cdf787321b4a32a26ddbf37acc52
+        uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
         with:
