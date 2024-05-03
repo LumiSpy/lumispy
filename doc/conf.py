@@ -34,6 +34,7 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.graphviz",
     "sphinx.ext.autosummary",
+    "sphinxcontrib.towncrier",
     "sphinx_copybutton",
 ]
 
@@ -116,3 +117,11 @@ def setup(app):
     app.connect("builder-inited", run_apidoc)
     app.add_css_file("css/dark.css")
     app.add_css_file("css/light.css")
+
+
+# -- Options for towncrier_draft extension -----------------------------------
+
+# Options: draft/sphinx-version/sphinx-release
+towncrier_draft_autoversion_mode = "draft"
+towncrier_draft_include_empty = False
+towncrier_draft_working_directory = ".."

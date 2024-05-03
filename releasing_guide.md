@@ -5,17 +5,19 @@ To publish a new LumiSpy release do the following steps:
 ## Preparation
 
 - Create a new PR to the 'main' branch for the release process, e.g. `release_v0.1.1`
-- Make sure to have the code ready, including changelog
-- Set the correct version number in `lumispy/release_info.py` (increase the third 
-  digit for a patch release, the second digit for a regular minor release, the
-  first digit for a major release)
+- In a pull request, prepare the release by running the `prepare_release.py` python script
+  (e.g. `python prepare_release.py 0.1.1`), which will do the following:
+  - update the release notes in `CHANGES.rst` by running `towncrier`,
+  - update the `setuptools_scm` fallback version in `pyproject.toml` (for a patch release, this will stay the same).
+- Check release notes
 - Let that PR collect comments for a day to ensure that other maintainers are comfortable 
   with releasing
 - Set correct date and version number in `CHANGELOG.rst`
   
 ## Tag and Release
 
-- Create a tag e.g. `git tag -a v0.1.1 -m "LumiSpy version 0.1.1"`
+- Create a tag e.g. `git tag -a v0.1.1 -m "LumiSpy version 0.1.1"`. The lumispy version will
+  be set at build time from the tag by `setuptools_scm`.
 - Push tag to user fork for a test run `git push origin v0.1.1`. Will run the release
   workflow without uploading to PyPi
 - Push tag to LumiSpy repository to trigger release `git push upstream v0.1.1`
@@ -24,8 +26,6 @@ To publish a new LumiSpy release do the following steps:
   
 ## Post-release action
  
-- Increment the version and set it back to dev: `vx.y.zdev0`
-- Update version in other branches if necessary
 - Prepare `CHANGELOG.rst` for development by adding `UNRELEASED` headline
 - Merge the PR
 
