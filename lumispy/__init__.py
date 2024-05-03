@@ -17,16 +17,12 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 
-import logging
-
 from importlib.metadata import version
 from pathlib import Path
 
 from lumispy.utils.axes import nm2eV, eV2nm, nm2invcm, invcm2nm, join_spectra
 from lumispy.utils.io import to_array, savetxt
 from lumispy import signals, components, utils
-
-_logger = logging.getLogger(__name__)
 
 __version__ = version("lumispy")
 
@@ -61,5 +57,5 @@ __all__ = [
 ]
 
 
-#def __dir__():
-#    return sorted(__all__)
+def __dir__():
+    return sorted(__all__)

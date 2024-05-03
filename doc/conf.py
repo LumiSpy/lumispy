@@ -3,18 +3,25 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here.
 import sys
+from datetime import datetime
+from importlib.metadata import version as get_version
 
 sys.path.append("../")
 
 
 # -- Project information
-from lumispy import release_info
-
 project = "LumiSpy"
-version = release_info.version
-release = release_info.version
-author = release_info.author
-copyright = release_info.copyright
+copyright = f"2019-{datetime.today().year}, The LumiSpy developers"
+author = "The LumiSpy developers"
+
+# The version info for the project you're documenting, acts as replacement for
+# |version| and |release|, also used in various other places throughout the
+# built documents.
+#
+# The full version, including alpha/beta/rc tags.
+release = get_version("lumispy")
+# The short X.Y version.
+version = ".".join(release.split(".")[:2])
 
 # -- General configuration
 
