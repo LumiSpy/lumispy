@@ -1,5 +1,6 @@
 name: Release
-# Reusable workflows are not supported with external organizations
+# Reusable workflows are not supported with trusted publisher
+# https://github.com/pypa/gh-action-pypi-publish/issues/166
 # copy and paste "jobs" from
 # https://github.com/hyperspy/.github/blob/main/.github/workflows/release_pure_python.yml
 
@@ -18,11 +19,14 @@ jobs:
   package_and_test:
     name: Package and Test
     # Use the "reusable workflow" from the hyperspy organisation
-    uses: ./.github/workflows/package_and_test.yml
+    uses: hyperspy/.github/.github/workflows/package_and_test.yml@main
+    with:
+      ORGANISATION: lumispy
 
   upload_to_pypi:
     needs: [package_and_test]
     runs-on: ubuntu-latest
+    environment: release
     name: Upload to pypi
     permissions:
       # IMPORTANT: this permission is mandatory for trusted publishing
@@ -41,7 +45,7 @@ jobs:
       # See https://docs.pypi.org/trusted-publishers/using-a-publisher/
 
   create_github_release:
-    # If zenodo is setup to create a DOI automatically on a GitHub release,
+    # If zenodo is set up to create a DOI automatically on a GitHub release,
     # this step will trigger the mining of the DOI
     needs: upload_to_pypi
     permissions:
