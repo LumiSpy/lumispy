@@ -135,8 +135,8 @@ fallback_version = "0.3.dev0"
 
 [tool.towncrier]
 directory = "upcoming_changes/"
-filename = "CHANGES.rst"
-issue_format = "`#{issue} <https://github.com/hyperspy/lumispy/issues/{issue}>`_"
+filename = "CHANGELOG.rst"
+issue_format = "`#{issue} <https://github.com/lumispy/lumispy/issues/{issue}>`_"
 title_format = "{version} ({project_date})"
 package_dir = "lumispy"
 type = [
