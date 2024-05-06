@@ -21,7 +21,7 @@ jobs:
       - name: Install build docs
         shell: bash -l {0}
         run: |
-          pip install .[build-doc]
+          pip install .[doc]
 
       # Add sphinx warnings as PR comments
       - uses: sphinx-doc/sphinx-problem-matcher@master

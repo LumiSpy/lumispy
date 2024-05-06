@@ -1,4 +1,9 @@
 name: Release
+# Reusable workflows are not supported with trusted publisher
+# https://github.com/pypa/gh-action-pypi-publish/issues/166
+# copy and paste "jobs" from
+# https://github.com/hyperspy/.github/blob/main/.github/workflows/release_pure_python.yml
+
 # This workflow builds the wheels "on tag".
 # If run from the lumispy/lumispy repository, the wheels will be uploaded to pypi ;
 # otherwise, the wheels will be available as a github artefact.
@@ -11,82 +16,45 @@ on:
     - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
-  create_release:
+  package_and_test:
+    name: Package and Test
+    # Use the "reusable workflow" from the hyperspy organisation
+    uses: hyperspy/.github/.github/workflows/package_and_test.yml@main
+    with:
+      ORGANISATION: lumispy
+
+  upload_to_pypi:
+    needs: [package_and_test]
+    runs-on: ubuntu-latest
+    environment: release
+    name: Upload to pypi
+    permissions:
+      # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write
+    steps:
+    - name: Download dist
+      uses: actions/download-artifact@v4
+
+    - name: Display downloaded files
+      run: |
+        ls -shR
+      working-directory: dist
+
+    - uses: pypa/gh-action-pypi-publish@release/v1
+      if: ${{ startsWith(github.ref, 'refs/tags/') && github.repository_owner == 'lumispy' }}
+      # See https://docs.pypi.org/trusted-publishers/using-a-publisher/
+
+  create_github_release:
+    # If zenodo is set up to create a DOI automatically on a GitHub release,
+    # this step will trigger the mining of the DOI
+    needs: upload_to_pypi
     permissions:
       contents: write
-    name: Create Release
+    name: Create GitHub Release
     runs-on: ubuntu-latest
-    outputs: 
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-      VERSION: ${{ env.VERSION }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@3198ee18f814cdf787321b4a32a26ddbf37acc52
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
-        with:
-          draft: false
-          prerelease: false
-      - name: Get version (on tag)
-        id: get_version
-        if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          echo "VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
-          echo "SETUP_VERSION=$(python setup.py --version)" >> $GITHUB_ENV
-      - name: Check version
-        if: ${{env.VERSION != env.SETUP_VERSION}}
-        run: |
-            echo "Version mismatch between pushed tag ($VERSION) and `release_info.py` ($SETUP_VERSION)"
-            exit 1
-
-  build_wheels_linux:
-    name: Wheels on ubuntu-latest
-    needs: create_release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.11
-
-      - name: Install release dependencies
-        run: |
-          python -m pip install twine wheel
-
-      - name: Build source distribution
-        run: |
-          python setup.py sdist bdist_wheel
-
-      - name: Display content dist folder
-        run: |
-          ls dist/
-
-      - name: Install and test distribution
-        env:
-          MPLBACKEND: agg
-        run: |
-          pip install --pre --find-links dist lumispy[tests]
-          pytest --pyargs lumispy
-
-      - uses: actions/upload-artifact@v4
-        with:
-          path: |
-            ./dist/*.whl
-            ./sdist/*.tar.gz
-
-      - name: Publish wheels to PyPI
-        if: github.repository_owner == 'lumispy'
-        env:
-          # Github secret set in the lumispy/lumispy repository
-          # Not available from fork or pull request
-          # Secrets are not passed to workflows that are triggered by a pull request from a fork
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          twine upload dist/*.whl --verbose 
-          twine upload dist/*.tar.gz --verbose 
+        if: ${{ startsWith(github.ref, 'refs/tags/') && github.repository_owner == 'lumispy' }}
+        uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564

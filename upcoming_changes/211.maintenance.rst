@@ -1,0 +1,5 @@
+Streamline project files and release workflow to match HyperSpy ecosystem:
+
+- Migrate to ``pyproject.toml`` from ``setup.py``
+- Use ``setuptools-scm`` to set version at build time
+- Adapt release workflow, e.g. mine doi only after successful upload
