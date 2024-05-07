@@ -150,6 +150,17 @@ signals:
     lazy: True
     module: lumispy.signals.luminescence_transient
 
+  TransientSpectrumCasting:
+    signal_type: TransientSpec
+    signal_type_aliases:
+      - TRLumiSpec
+      - TR luminescence spectrum
+      - time-resolved luminescence spectrum
+    signal_dimension: 1
+    dtype: real
+    lazy: False
+    hidden: True
+    module: lumispy.signals.luminescence_transientspec
   LumiTransientSpectrum:
     signal_type: TransientSpec
     signal_type_aliases:
