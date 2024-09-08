@@ -79,8 +79,9 @@ doc = [
   "sphinx>=4.3.0",
   "sphinx_rtd_theme>=0.5.1",
   "sphinx-copybutton",
-  "sphinxcontrib-towncrier",
-  "towncrier",
+  "sphinxcontrib-towncrier>=0.3.0a0",
+  # unpin when sphinxcontrib-towncrier support more recent version to towncrier
+  "towncrier<24",
 ]
 dev = [
   "black",
@@ -137,8 +138,8 @@ fallback_version = "0.3.dev0"
 directory = "upcoming_changes/"
 filename = "CHANGELOG.rst"
 issue_format = "`#{issue} <https://github.com/lumispy/lumispy/issues/{issue}>`_"
+package = "lumispy"
 title_format = "{version} ({project_date})"
-package_dir = "lumispy"
 type = [
     { directory = "new", name = "New features", showcontent = true },
     { directory = "enhancements", name = "Enhancements", showcontent = true },
