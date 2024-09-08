@@ -16,7 +16,8 @@ A few sentences and/or a bulleted list to describe and motivate the change:
 - [ ] docstring updated (if appropriate),
 - [ ] update user guide (if appropriate),
 - [ ] added tests,
-- [ ] added line to CHANGELOG.md,
+- [ ] add a changelog entry in the `upcoming_changes` folder (see [`upcoming_changes/README.rst`](https://github.com/lumispy/lumispy/blob/main/upcoming_changes/README.rst)),
+- [ ] Check formatting of the changelog entry (and eventual user guide changes) in the `docs/readthedocs.org:lumispy` build of this PR (link in github checks),
 - [ ] ready for review.
 
 ### Minimal example of the bug fix or the new feature

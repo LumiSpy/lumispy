@@ -3,9 +3,9 @@
 Contributing
 ************
 
-LumiSpy is meant to be a community maintained project. We welcome contributions
+LumiSpy is a community-maintained project. We welcome contributions
 in the form of bug reports, documentation, code, feature requests, and more.
-In the following we refer to some resources to help you make useful contributions.
+In the following, we summarize some resources to help you make useful contributions.
 
 Issues
 ======
@@ -21,18 +21,17 @@ Pull Requests
 =============
 
 If you want to contribute to the LumiSpy source code, you can send us a
-`pull request <https://github.com/lumispy/lumispy/pulls>`_. Small bug fixes are
+`pull request <https://github.com/lumispy/lumispy/pulls>`_. Small bug fixes or
 corrections to the user guide are typically a good starting point. But don't
 hesitate also for significant code contributions - if needed, we'll help you
 to get the code ready to common standards.
 
-Please refer to the 
-`HyperSpy developer guide <http://hyperspy.org/hyperspy-doc/current/dev_guide/intro.html>`_
+Being an extension to HyperSpy, please refer to the `HyperSpy
+developer guide <http://hyperspy.org/hyperspy-doc/current/dev_guide/intro.html>`_
 in order to get started and for detailed contributing guidelines.
 
 The :doc:`kikuchipy contributors guide <kikuchipy:dev/index>`, another HyperSpy
-extension, also is a valuable resource that can get you started and provides useful
-guidelines.
+extension, also is a valuable resource that provides useful guidelines.
 
 Reviewing
 ---------
@@ -53,7 +52,7 @@ The LumiSpy documentation consists of three elements:
 - The `documentation <https://docs.lumispy.org>`_ written using `Sphinx
   <https://www.sphinx-doc.org/en/master/>`_ and hosted on `Read the Docs
   <https://docs.lumispy.org>`_. The source is part of the `GitHub repository
-  <https://github.com/LumiSpy/lumispy/tree/main/doc/source>`_.
+  <https://github.com/LumiSpy/lumispy/tree/main/doc>`_.
 - A set of curated Jupyter notebooks in the `LumiSpy demos repository
   <https://github.com/lumispy/lumispy-demos>`_ on GitHub that provide tutorials and example
   workflows.
@@ -64,7 +63,7 @@ functionality. You can contribute through pull requests to the respective reposi
 Code style
 ==========
 
-LumiSpy follows `Style Guide for Python Code <https://www.python.org/dev/peps/pep-0008/>`_
+LumiSpy follows the `Style Guide for Python Code <https://www.python.org/dev/peps/pep-0008/>`_
 with `The Black Code style
 <https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html>`_.
 

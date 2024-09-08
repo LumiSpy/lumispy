@@ -15,7 +15,7 @@ from hyperspy.axes import FunctionalDataAxis, DataAxis, UniformDataAxis
                     "a": 1,
                     "b": 0,
                 },
-                size=2
+                size=2,
             ),
             0.5,
         ),

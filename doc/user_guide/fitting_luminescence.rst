@@ -3,12 +3,12 @@
 Fitting luminescence data
 *************************
 
-LumiSpy is compatible with :external+hyperspy:doc:`HyperSpy model fitting 
-<user_guide/model>`.
+LumiSpy is compatible with :external+hyperspy:ref:`HyperSpy model fitting 
+<model-label>`.
 It can fit using both :external+hyperspy:ref:`uniform and and non-uniform axes
 <Axes_types>` 
 (e.g. energy scale). A general introduction can be found in the
-:external+hyperspy:doc:`HyperSpy user guide <user_guide/model>`.
+:external+hyperspy:ref:`HyperSpy user guide <model-label>`.
 
 A detailed example is given in the ``Fitting_tutorial`` in the 
 `HyperSpy demos repository <https://github.com/hyperspy/hyperspy-demos>`_.
@@ -32,7 +32,7 @@ Signal variance (noise)
 =======================
 
 TODO: Documentation on variance handling in the context of fitting,
-in particular using :external:py:meth:`estimate_poissonian_noise_variance()
-<hyperspy.signal.BaseSignal.estimate_poissonian_noise_variance>`
+in particular using :external:meth:`estimate_poissonian_noise_variance()
+<hyperspy.api.signals.BaseSignal.estimate_poissonian_noise_variance>`
  
 For a detailed discussion, see [Tappy]_

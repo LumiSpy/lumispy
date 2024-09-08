@@ -6,11 +6,16 @@ All notable changes to this project will be documented in this file.
 The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.0.0/>`_,
 and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
-UNRELEASED
-==========
-Changed
--------
+Changelog entries for the development version are available at
+https://lumispy.readthedocs.io/en/latest/changelog.html
 
+
+.. towncrier-draft-entries:: |release| [UNRELEASED]
+
+.. towncrier release notes start
+
+- Fix intersphinx links to documentation of HyperSpy 2.0 and add linkchecker workflow
+- Align supported python versions (3.8-3.12) to HyperSpy 2.0 
 
 .. _changes_0.2.2:
 

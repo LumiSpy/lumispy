@@ -77,7 +77,7 @@ class CLSpectrum(LumiSpectrum):
         add_noise=False,
         navigation_mask=None,
         interactive=False,
-        **kwargs
+        **kwargs,
     ):
         if luminescence_roi is not None and signal_mask is not None:
             raise AttributeError(
@@ -102,7 +102,7 @@ class CLSpectrum(LumiSpectrum):
             threshold=threshold,
             interactive=interactive,
             add_noise=add_noise,
-            **kwargs
+            **kwargs,
         )
 
         if threshold == "auto":

@@ -4,8 +4,8 @@ on: [push, pull_request]
 
 jobs:
   run_test_suite:
-    name: py${{ matrix.PYTHON_VERSION }}${{ matrix.LABEL }}
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }}-py${{ matrix.PYTHON_VERSION }}${{ matrix.LABEL }}
+    runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 30
     env:
       MPLBACKEND: agg
@@ -15,17 +15,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        PYTHON_VERSION: ['3.7', '3.9', '3.10']
-        PIP_SELECTOR: ['[tests]']
+        os: [ubuntu, windows, macos]
+        PYTHON_VERSION: ['3.8', '3.12']
+        PIP_SELECTOR: ['[tests]',]
         include:
-          - PYTHON_VERSION: '3.8'
+          - os: ubuntu
+            PYTHON_VERSION: '3.9'
+            PIP_SELECTOR: '[tests]'
+          - os: ubuntu
+            PYTHON_VERSION: '3.10'
+            PIP_SELECTOR: '[tests]'
+          - os: ubuntu
+            PYTHON_VERSION: '3.11'
             PIP_SELECTOR: '[tests, coverage]'
             PYTEST_ARGS_COVERAGE: --cov=lumispy --cov-report=xml
-            LABEL: /coverage
+            LABEL: '/coverage'
     steps:
-      - uses: actions/checkout@v3.4.0
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         name: Install Python
         with:
           python-version: ${{ matrix.PYTHON_VERSION }}
@@ -36,9 +44,13 @@ jobs:
           pip --version
 
       - name: Install
-        shell: bash
+        shell: bash # needed for pip-selector under windows
         run: |
           pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
+
+      - name: Pip list
+        run: |
+          pip list
 
       - name: Install (HyperSpy dev)
         # Test against the hyperspy `RELEASE_next_minor` branch
@@ -53,4 +65,4 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: ${{ always() }} && ${{ matrix.PYTEST_ARGS_COVERAGE }} 
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
