@@ -17,16 +17,11 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 from .axes import (
-    nm2eV,
-    eV2nm,
     axis2eV,
     data2eV,
     var2eV,
-    nm2invcm,
-    invcm2nm,
     axis2invcm,
     data2invcm,
     var2invcm,
-    join_spectra,
     solve_grating_equation,
 )

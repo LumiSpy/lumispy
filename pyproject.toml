@@ -1,0 +1,150 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm>=8", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lumispy"
+authors = [{name = "The LumiSpy developers"}]
+description = "Analysis of luminescence spectroscopy data with HyperSpy."
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "hyperspy >= 1.7",  # earlier versions do not provide non-uniform axes
+    "numpy",
+    "scipy",
+]
+keywords = [
+    "CL",
+    "PL",
+    "EL",
+    "TRCL",
+    "TRPL",
+    "SEM",
+    "STEM",
+    "TEM",
+    "cathodoluminescence",
+    "photoluminescence",
+    "electroluminescence",
+    "Raman",
+    "curve fitting",
+    "data analysis",
+    "electron microscopy",
+    "hyperspectral",
+    "hyperspectrum",
+    "hyperspy",
+    "luminescence spectroscopy",
+    "lumispy",
+    "machine learning",
+    "model",
+    "multidimensional",
+    "numpy",
+    "python",
+    "scipy",
+    "spectroscopy",
+    "spectrum image",
+    "time-resolved",
+]
+dynamic = ["version"]
+readme = "README.md"
+requires-python = ">=3.8"
+
+[project.entry-points."hyperspy.extensions"]
+lumispy = "lumispy"
+
+[project.license]
+file = "LICENSE"
+
+[project.optional-dependencies]
+tests = [
+  "codecov",
+  "pytest>=5.0",
+  "pytest-cov",
+  "setuptools-scm",
+]
+doc = [
+  "sphinx>=4.3.0",
+  "sphinx_rtd_theme>=0.5.1",
+  "sphinx-copybutton",
+  "sphinxcontrib-towncrier",
+  "towncrier",
+]
+dev = [
+  "black",
+  "lumispy[doc]",
+  "lumispy[tests]"
+]
+
+[project.urls]
+"Bug Reports" = "https://github.com/lumispy/lumispy/issues"
+"Conda-forge" = "https://anaconda.org/conda-forge/lumispy"
+"Documentation" = "https://docs.lumispy.org"
+"Homepage" = "https://lumispy.org"
+"Source" = "https://github.com/lumispy/lumispy"
+
+[tool.coverage.report]
+precision = 2
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "lumispy/tests/*",
+    "prepare_release.py",
+]
+source = ["lumispy"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+minversion = "5.0"
+testpaths = ["lumispy/tests"]
+norecursedirs = [
+    "doc/_build/*"
+]
+xfail_strict = false
+doctest_optionflags = [
+    "IGNORE_EXCEPTION_DETAIL",
+    "NORMALIZE_WHITESPACE",
+    "ELLIPSIS",
+]
+
+[tool.setuptools.package-data]
+"*" = [
+    "*.yaml",
+]
+
+[tool.setuptools.packages.find]
+include = ["lumispy*"]
+
+[tool.setuptools_scm]
+# Presence enables setuptools_scm, the version will be determined at build time from git
+# The version will be updated by the `prepare_release.py` script
+fallback_version = "0.3.dev0"
+
+[tool.towncrier]
+directory = "upcoming_changes/"
+filename = "CHANGELOG.rst"
+issue_format = "`#{issue} <https://github.com/lumispy/lumispy/issues/{issue}>`_"
+title_format = "{version} ({project_date})"
+package_dir = "lumispy"
+type = [
+    { directory = "new", name = "New features", showcontent = true },
+    { directory = "enhancements", name = "Enhancements", showcontent = true },
+    { directory = "bugfix", name = "Bug Fixes", showcontent = true },
+    { directory = "api", name = "API changes", showcontent = true },
+    { directory = "deprecation", name = "Deprecations", showcontent = true },
+    { directory = "doc", name = "Improved Documentation", showcontent = true },
+    { directory = "maintenance", name = "Maintenance", showcontent = true },
+]
