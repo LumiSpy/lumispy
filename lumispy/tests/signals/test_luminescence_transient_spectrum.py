@@ -17,11 +17,8 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 import numpy as np
-import pytest
 
 from lumispy.signals import LumiSpectrum, LumiTransient, LumiTransientSpectrum
-from hyperspy._signals.signal2d import Signal2D
-from numpy.testing import assert_allclose
 
 
 class TestLumiTransientSpectrum0D:

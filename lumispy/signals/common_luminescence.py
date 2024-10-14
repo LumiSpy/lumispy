@@ -511,6 +511,8 @@ class CommonLumi:
             )
         if not inplace:
             return s2
+        else:
+            return None
 
     to_invcm_relative.__doc__ %= (
         TO_INVCM_DOCSTRING,
