@@ -26,6 +26,7 @@ dependencies = [
     "hyperspy >= 1.7",  # earlier versions do not provide non-uniform axes
     "numpy",
     "scipy",
+    "pint>=0.10",
 ]
 keywords = [
     "CL",

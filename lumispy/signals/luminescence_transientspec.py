@@ -21,6 +21,8 @@ Signal class for luminescence transient data (2D)
 -------------------------------------------------
 """
 
+import pint
+
 from hyperspy.signals import Signal1D, Signal2D
 from hyperspy._signals.lazy import LazySignal
 
@@ -30,34 +32,41 @@ from lumispy.signals.common_transient import CommonTransient
 
 
 class TransientSpectrumCasting(Signal1D, CommonLumi, CommonTransient):
-    """**1D signal class for casting reduced LumiTransientSpectrum to either Luminescence or Transient**"""
+    """**Hidden signal class**
+    1D version of ``TransientSpectrum`` signal class for casting
+    ``LumiTransientSpectrum` to either ``Luminescence`` or ``Transient``
+    when the signal dimensionality is reduced.
 
-    _signal_type = "TransientSpec"
+    Example:
+    --------
+
+    >>> s = LumiTransientSpectrum(np.random.random((10, 10, 10, 10))) * 2
+    >>> s.axes_manager.signal_axes[-1].units = 'ps'
+    >>> s.axes_manager.signal_axes[0].units = 'nm'
+    >>> s.sum(axis=-1)
+    >>> s
+    <LumiSpectrum, title: , dimensions: (10, 10|10)>
+    """
+
+    _signal_type = "TransientSpectrum"
     _signal_dimension = 1
 
     def __init__(self, *args, **kwargs):
-        if hasattr(self, "axes_manager") and self.axes_manager[-1].units in [
-            "fs",
-            "ps",
-            "ns",
-            "µs",
-            "mus",
-            "ms",
-            "s",
-        ]:
-            self.metadata.Signal.signal_type = "Transient"
-            self.__class__ = LumiTransient
-            self.__init__(*args, **kwargs)
+        ureg = pint.UnitRegistry()
+        if (
+            hasattr(self, "axes_manager")
+            and ureg(self.axes_manager.signal_axes[-1].units).dimensionality
+            == ureg("s").dimensionality
+        ):
+            self.set_signal_type("Transient")
         else:
-            self.metadata.Signal.signal_type = "Luminescence"
-            self.__class__ = LumiSpectrum
-            self.__init__(*args, **kwargs)
+            self.set_signal_type("Luminescence")
 
 
 class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
     """**2D luminescence signal class (spectrum+transient/time resolved dimensions)**"""
 
-    _signal_type = "TransientSpec"
+    _signal_type = "TransientSpectrum"
     _signal_dimension = 2
 
 
