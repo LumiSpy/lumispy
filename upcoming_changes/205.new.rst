@@ -1,1 +1,1 @@
-Implement correct casting of :class:`LumiTransientSpectrum` to either :class:`Luminescence` or :class:`Transient` when the signal dimension is reduced
+Implement correct casting of :class:`~.signals.luminescence_transientspec.LumiTransientSpectrum` to either :class:`~.signals.luminescence_spectrum.LumiSpectrum` or :class:`~.signals.luminescence_transient.LumiTransient` when the signal dimension is reduced
