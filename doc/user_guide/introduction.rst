@@ -125,8 +125,8 @@ signal types (or inheriting) signal types.
 The hierarchy of the LumiSpy signal types and their inheritance from HyperSpy
 is summarized in the following diagram:
 
-|   └── :external:class:`hyperspy.signal.BaseSignal`
-|           ├── :external:class:`hyperspy._signals.signal1d.Signal1D`
+|   └── :external:class:`hyperspy.api.signals.BaseSignal`
+|           ├── :external:class:`hyperspy.api.signals.Signal1D`
 |           │       └── :class:`~.signals.luminescence_spectrum.LumiSpectrum`
 |           │       │       ├── :class:`~.signals.cl_spectrum.CLSpectrum`
 |           │       │       │       ├── :class:`~.signals.cl_spectrum.CLSEMSpectrum` 
@@ -134,11 +134,17 @@ is summarized in the following diagram:
 |           │       │       ├── :class:`~.signals.el_spectrum.ELSpectsrum`
 |           │       │       └── :class:`~.signals.pl_spectrum.PLSpectrum`
 |           │       └── :class:`~.signals.luminescence_transient.LumiTransient`
-|           └── :class:`hyperspy.signal.Signal2D`
+|           └── :class:`hyperspy.api.signals.Signal2D`
 |                   └── :class:`~.signals.luminescence_transientspec.LumiTransientSpectrum`
 |
 |
 
+A special case is the :class:`~.signals.luminescence_transientspec.LumiTransientSpectrum`
+for :ref:`streak camera data <streak_images>`, where the two signal axes have different
+units. If the signal dimensionality of this ``signal_type`` is reduced, LumiSpy
+casts the signal to either the :class:`~.signals.luminescence_spectrum.LumiSpectrum`
+or :class:`~.signals.luminescence_transient.LumiTransient` depending on the axes
+units of the one-dimensional signal.
 
 Where are we heading?
 =====================

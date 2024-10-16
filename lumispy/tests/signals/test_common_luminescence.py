@@ -57,6 +57,8 @@ class TestCommonLumi:
     def test_scale_by_exposure(self):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
         s2 = LumiTransientSpectrum(np.ones((10, 10, 10, 10)))
+        s2.axes_manager.signal_axes[-1].units = "ns"
+        s2.axes_manager.signal_axes[0].units = "nm"
         s4 = LumiSpectrum(np.ones((10)))
         s2.metadata.set_item("Acquisition_instrument.Detector.integration_time", 2)
         s2.metadata.set_item("Signal.quantity", "Intensity (Counts)")
@@ -98,6 +100,8 @@ class TestCommonLumi:
     def test_normalize(self):
         s1 = LumiSpectrum(np.random.random((10, 10, 10))) * 2
         s2 = LumiTransientSpectrum(np.random.random((10, 10, 10, 10))) * 2
+        s2.axes_manager.signal_axes[-1].units = "ps"
+        s2.axes_manager.signal_axes[0].units = "nm"
         s3 = LumiSpectrum(np.random.random((10, 10))) * 2
         s4 = LumiSpectrum(np.random.random((10))) * 2
         s4.metadata.set_item("Signal.quantity", "Intensity (counts)")

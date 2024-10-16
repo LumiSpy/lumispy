@@ -33,6 +33,9 @@ class LumiTransient(Signal1D, CommonTransient):
     _signal_type = "Transient"
     _signal_dimension = 1
 
+    def __init(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
 
 class LazyLumiTransient(LazySignal, LumiTransient):
     """**General lazy 1D luminescence signal class (transient/time resolved)**"""
