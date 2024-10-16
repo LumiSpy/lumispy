@@ -75,6 +75,7 @@ tests = [
   "pytest>=5.0",
   "pytest-cov",
   "setuptools-scm",
+  "numba",
 ]
 doc = [
   "sphinx>=4.3.0",
@@ -83,6 +84,7 @@ doc = [
   "sphinxcontrib-towncrier>=0.3.0a0",
   # unpin when sphinxcontrib-towncrier support more recent version to towncrier
   "towncrier<24",
+  "numba",
 ]
 dev = [
   "black",
