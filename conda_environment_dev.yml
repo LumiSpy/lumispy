@@ -7,6 +7,6 @@ dependencies:
 - pytest-cov
 - pytest-faulthandler
 - pytest-xdist
-- hyperspy[speed]
+- hyperspy-base
 - setuptools-scm
 

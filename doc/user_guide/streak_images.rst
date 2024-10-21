@@ -12,8 +12,8 @@ wavelength axis can be transformed to e.g. a :ref:`energy_axis`.
 
 .. Note::
 
-    For streak images, not all tools available for :class:`Signal2D
-    <hyperspy.api.signals.Signal2D>` will work. However, in particular
+    For streak images, not all tools available for :class:`hyperspy.api.signals.Signal2D`
+    will work. However, in particular
     :external+hyperspy:ref:`peak_finding-label`
     can be helpful to identify local maxima in the images.
 
@@ -27,14 +27,24 @@ assign the correct 1D signal class: Either :class:`~.signals.luminescence_spectr
 :class:`~.signals.luminescence_transient.LumiTransient`. Such a reduction of the signal dimensionality
 can be done for example by slicing the signal with
 :external+hyperspy:ref:`numpy-style indexing <signal.indexing>` or by using
-functions such as :external:meth:`sum() <hyperspy.api.signals.BaseSignal.sum>`
-and :external:meth:`integrate1D() <hyperspy.api.signals.BaseSignal.integrate1D>`
+functions such as :external:meth:`~hyperspy.api.signals.BaseSignal.sum`
+and :external:meth:`~hyperspy.api.signals.BaseSignal.integrate1D`
 
 In the following image, the spectrum summed over all times is obtained from the
 streak image by:
 
 .. code-block:: python
 
+    >>> import lumispy as lum
+    >>> import numpy as np
+    ...
+    >>> data = np.arange(10*20).reshape(10, 20)
+    ...
+    >>> s = lum.signals.LumiTransientSpectrum(data)
+    >>> s.axes_manager[-1].name = "Time"
+    >>> s.axes_manager[-1].units = "ns"
+    >>> s.axes_manager[-2].name = "Wavelength"
+    >>> s.axes_manager[-2].units = "nm"
     >>> s.sum(axis='Time')
     >>> # Or alternatively:
     >>> s.sum(axis=-1)

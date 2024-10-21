@@ -53,14 +53,14 @@ Peak identification
 HyperSpy provides functions to find the positions of maxima or minima in a
 dataset:
 
-- :external:meth:`indexmax() <hyperspy.api.signals.BaseSignal.indexmax>` - 
+- :external:meth:`~hyperspy.api.signals.BaseSignal.indexmax` - 
   return the index of the maximum value along a given axis.
-- :external:meth:`indexmin() <hyperspy.api.signals.BaseSignal.indexmin>` - 
+- :external:meth:`~hyperspy.api.signals.BaseSignal.indexmin` - 
   return the index of the minimum value along a given axis.
-- :external:meth:`valuemax() <hyperspy.api.signals.BaseSignal.valuemax>` - 
+- :external:meth:`~hyperspy.api.signals.BaseSignal.valuemax` - 
   return the position/coordinates of the maximum value along a given axis in
   calibrated units.
-- :external:meth:`valuemin() <hyperspy.api.signals.BaseSignal.valuemin>` - 
+- :external:meth:`~hyperspy.api.signals.BaseSignal.valuemin` - 
   return the position/coordinates of the minimum value along a given axis in
   calibrated units.
 
@@ -69,7 +69,7 @@ the operation and return a new signal containing the result.
 
 A much more powerful method to identify peaks is using the **peak finding routine**
 based on the downward zero-crossings of the first derivative of a signal:
-:external:meth:`find_peaks1D_ohaver() <hyperspy.api.signals.Signal1D.find_peaks1D_ohaver>`.
+:external:meth:`~hyperspy.api.signals.Signal1D.find_peaks1D_ohaver`.
 This function can find multiple peaks in a dataset and has a number of parameters
 for fine-tuning the sensitivity, etc.
 
@@ -87,7 +87,7 @@ Peak Width
 
 For asymmetric peaks, :ref:`fitted functions <fitting_luminescence>` may not provide
 an accurate description of the peak, in particular the peak width. The function
-:external:meth:`estimate_peak_width() <hyperspy.api.signals.Signal1D.estimate_peak_width>`
+:external:meth:`~hyperspy.api.signals.Signal1D.estimate_peak_width`
 determines the **width of a peak** at a certain fraction of its maximum value. The
 default value ``factor=0.5`` returns the full width at half maximum (FWHM).
 
@@ -158,23 +158,23 @@ Signal statistics and analytical operations
 ===========================================
 
 **Standard statistical operations** can be performed on the data or a subset of the
-data, notably these include 
-:external:meth:`max() <hyperspy.api.signals.BaseSignal.max>`,
-:external:meth:`min() <hyperspy.api.signals.BaseSignal.min>`,
-:external:meth:`sum() <hyperspy.api.signals.BaseSignal.sum>`,
-:external:meth:`mean() <hyperspy.api.signals.BaseSignal.mean>`,
-:external:meth:`std() <hyperspy.api.signals.BaseSignal.std>`, and
-:external:meth:`var() <hyperspy.api.signals.BaseSignal.var>`. Variations of
+data using HyperSpy methods, notably these include 
+:external:meth:`~hyperspy.api.signals.BaseSignal.max`,
+:external:meth:`~hyperspy.api.signals.BaseSignal.min`,
+:external:meth:`~hyperspy.api.signals.BaseSignal.sum`,
+:external:meth:`~hyperspy.api.signals.BaseSignal.mean`,
+:external:meth:`~hyperspy.api.signals.BaseSignal.std`, and
+:external:meth:`~hyperspy.api.signals.BaseSignal.var`. Variations of
 all these functions exist that ignore missing values (NaN) if present, e.g.
-:external:meth:`nanmax() <hyperspy.api.signals.BaseSignal.nanmax>`.
+:external:meth:`~hyperspy.api.signals.BaseSignal.nanmax`.
 
 **Integration** along a specified signal axis is performed using the function 
-:external:meth:`integrate1D() <hyperspy.api.signals.BaseSignal.integrate1D()>`.
+:external:meth:`~hyperspy.api.signals.BaseSignal.integrate1D()`.
 
 The numerical **derivative** of a signal can be calculated using the function
-:external:meth:`derivative() <hyperspy.api.signals.BaseSignal.derivative()>`,
+:external:meth:`~hyperspy.api.signals.BaseSignal.derivative()`,
 while the *n*-th order **discrete difference** can be calculated using
-:external:meth:`diff() <hyperspy.api.signals.BaseSignal.diff()>`.
+:external:meth:`~hyperspy.api.signals.BaseSignal.diff()`.
 
 These functions take the ``axis`` keyword to define along which axis to perform
 the operation and return a new signal containing the result:
