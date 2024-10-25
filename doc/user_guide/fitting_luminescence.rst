@@ -32,7 +32,6 @@ Signal variance (noise)
 =======================
 
 TODO: Documentation on variance handling in the context of fitting,
-in particular using :external:meth:`estimate_poissonian_noise_variance()
-<hyperspy.api.signals.BaseSignal.estimate_poissonian_noise_variance>`
+in particular using :external:meth:`~hyperspy.api.signals.BaseSignal.estimate_poissonian_noise_variance`
  
 For a detailed discussion, see [Tappy]_

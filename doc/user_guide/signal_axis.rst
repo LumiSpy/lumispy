@@ -9,10 +9,10 @@ occurs in particular when converting a wavelength scale to energy (eV) or
 wavenumbers (e.g. for Raman shifts).
 
 The conversion of the signal axis can be performed using the functions 
-:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_eV`,
-:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_invcm` and
-:meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_raman_shift`
-(alias for :meth:`~.signals.luminescence_spectrum.LumiSpectrum.to_invcm_relative`).
+:meth:`~.signals.common_luminescence.CommonLumi.to_eV`,
+:meth:`~.signals.common_luminescence.CommonLumi.to_invcm` and
+:meth:`~.signals.common_luminescence.CommonLumi.to_raman_shift`
+(alias for :meth:`~.signals.common_luminescence.CommonLumi.to_invcm_relative`).
 If the unit of the signal axis is set, the functions can handle wavelengths in
 either nm or µm.
 
@@ -123,8 +123,8 @@ renormalization is automatically performed by LumiSpy if ``jacobian=True``.
 In particular, homoscedastic (constant) noise will consequently become
 heteroscedastic (changing as a function of the signal axis vector). Therefore,
 if the ``metadata.Signal.Noise_properties.variance`` attribute is a constant,
-it is converted into a :external:class:`hyperspy.api.signals.BaseSignal` object
-before the transformation.
+it is converted into a :external:class:`hyperspy.api.signals.BaseSignal`
+object before the transformation.
 
 See the section on :ref:`fitting_variance` for more general information on data variance
 in the context of model fitting and the HyperSpy documentation on `
@@ -136,6 +136,25 @@ in the context of model fitting and the HyperSpy documentation on `
     ``metadata.Signal.Noise_properties.Variance_linear_model`` are reset to
     their default values (``gain_factor=1``, ``gain_offset=0`` and ``correlation_factor=1``).
     Should these values deviate from the defaults, make sure to run
-    :external:meth:`hyperspy.api.signals.BaseSignal.estimate_poissonian_noise_variance`
+    :external:meth:`~hyperspy.api.signals.BaseSignal.estimate_poissonian_noise_variance`
     prior to the transformation.
 
+
+.. _interpolate_to_uniform_axes:
+
+Interpolation to uniform axes
+=============================
+
+As a number of HyperSpy tools are not supporting non-uniform axes, e.g. the
+:meth:`~hyperspy.api.signals.BaseSignal.rebin` function, the HyperSpy function
+:meth:`~hyperspy.api.signals.BaseSignal.interpolate_on_axis`
+provides a possibility to convert a signal with a non-uniform axis to one with
+a uniform axis. This function takes the argument ``"uniform"``, which will create
+a signal with the same number of data points, but a uniform axes spacing and
+interpolated data at these points (the second argument in the example below is the
+``axis`` number on which to operate, ``-1`` referring to the signal axis being the
+last one in the ``axes_manager``):
+
+.. code-block:: python
+
+    >>> s.interpolate_on_axis("uniform", -1, inplace=False)
