@@ -119,6 +119,12 @@ def setup(app):
     app.add_css_file("css/light.css")
 
 
+# CopyButton configuration
+copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
+copybutton_prompt_is_regexp = True
+copybutton_line_continuation_character = "\\"
+
+
 # -- Options for towncrier_draft extension -----------------------------------
 
 # Options: draft/sphinx-version/sphinx-release
