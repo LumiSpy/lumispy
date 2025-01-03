@@ -78,7 +78,7 @@ class provides the functions :meth:`~.signals.luminescence_transientspec.LumiTra
 and :meth:`~.signals.luminescence_transientspec.LumiTransientSpectrum.time2nav`
 to convert streak images to the :class:`~.signals.luminescence_transient.LumiTransient`
 and :class:`~.signals.luminescence_spectrum.LumiSpectrum` classes, respectively.
-Both functions return a new signal. By default, the methods ensure that the data
+Both functions return a new signal. By default (``optimize=True``), the methods ensure that the data
 is stored optimally, hence often making a copy of the data.
 
 .. code-block:: python

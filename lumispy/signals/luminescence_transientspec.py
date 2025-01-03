@@ -91,12 +91,10 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
         lumispy.signals.LumiTransientSpectrum.time2nav
         hyperspy.api.signals.BaseSignal.transpose
         """
-        s = self.transpose(signal_axes=[-1],optimize=optimize)
+        s = self.transpose(signal_axes=[-1], optimize=optimize)
         return s
 
-    spec2nav.__doc__ %= (
-        OPTIMIZE_ARG.replace("False", "True"),
-    )
+    spec2nav.__doc__ %= (OPTIMIZE_ARG,)
 
     def time2nav(self, optimize=True):
         """Return the streak image as signal with the time axis as navigation
@@ -119,14 +117,11 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
         lumispy.signals.LumiTransientSpectrum.time2nav
         hyperspy.api.signals.BaseSignal.transpose
         """
-        s = self.transpose(signal_axes=[-2],optimize=optimize)
+        s = self.transpose(signal_axes=[-2], optimize=optimize)
         return s
-        #self.axes_manager.signal_axes[-1].navigate = True
-        #self.set_signal_type("LumiSpectrum")
 
-    time2nav.__doc__ %= (
-        OPTIMIZE_ARG.replace("False", "True"),
-    )
+    time2nav.__doc__ %= (OPTIMIZE_ARG,)
+
 
 class LazyLumiTransientSpectrum(LazySignal, LumiTransientSpectrum):
     """**Lazy 2D luminescence signal class (spectral+transient/time resolved dimensions)**"""
