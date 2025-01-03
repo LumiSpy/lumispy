@@ -69,6 +69,18 @@ class TestLumiTransientSpectrum0D:
         assert s2.axes_manager[-1].units == "nm"
         assert type(s2) == LumiSpectrum
 
+    def test_spec2nav(self):
+        s2 = self.s.spec2nav()
+        assert s2.axes_manager[0].units == "nm"
+        assert s2.axes_manager[-1].units == "ps"
+        assert type(s2) == LumiTransient
+
+    def test_time2nav(self):
+        s2 = self.s.time2nav()
+        assert s2.axes_manager[0].units == "ps"
+        assert s2.axes_manager[-1].units == "nm"
+        assert type(s2) == LumiSpectrum
+
 
 class TestLumiTransientSpectrum2D:
     def setup_method(self, method):
@@ -118,5 +130,17 @@ class TestLumiTransientSpectrum2D:
 
     def test_max_t(self):
         s2 = self.s.max(axis="Time")
+        assert s2.axes_manager[-1].units == "nm"
+        assert type(s2) == LumiSpectrum
+
+    def test_spec2nav(self):
+        s2 = self.s.spec2nav()
+        assert s2.axes_manager[0].units == "nm"
+        assert s2.axes_manager[-1].units == "ps"
+        assert type(s2) == LumiTransient
+
+    def test_time2nav(self):
+        s2 = self.s.time2nav()
+        assert s2.axes_manager[0].units == "ps"
         assert s2.axes_manager[-1].units == "nm"
         assert type(s2) == LumiSpectrum
