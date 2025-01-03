@@ -61,3 +61,8 @@ Similarly, the transient summed over all wavelengths is obtained by:
   :width: 700
   :alt: Plot of a streak camera image and its one-dimensional representations
         obtained by summing over either the wavelength or time dimensions.
+
+
+Iteration over the spectral or time dimension
+=============================================
+
