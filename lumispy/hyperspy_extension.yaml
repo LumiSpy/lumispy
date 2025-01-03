@@ -21,6 +21,7 @@ signals:
     signal_type: Luminescence
     signal_type_aliases:
       - LuminescenceSpectrum
+      - LumiSpectrum
     signal_dimension: 1
     dtype: real
     lazy: False
@@ -29,6 +30,7 @@ signals:
     signal_type: Luminescence
     signal_type_aliases:
       - LuminescenceSpectrum
+      - LumiSpectrum
     signal_dimension: 1
     dtype: real
     lazy: True
@@ -132,9 +134,9 @@ signals:
   LumiTransient:
     signal_type: Transient
     signal_type_aliases:
+      - LumiTransient
       - TRLumi
       - TR luminescence
-      - time-resolved luminescence
     signal_dimension: 1
     dtype: real
     lazy: False
@@ -142,9 +144,9 @@ signals:
   LazyLumiTransient:
     signal_type: Transient
     signal_type_aliases:
+      - LumiTransient
       - TRLumi
       - TR luminescence
-      - time-resolved luminescence
     signal_dimension: 1
     dtype: real
     lazy: True
@@ -153,10 +155,10 @@ signals:
   TransientSpectrumCasting: # allows casting to either Luminescence or Transient when dimensionality is reduced
     signal_type: TransientSpectrum
     signal_type_aliases:
+      - LumiTransientSpectrum
       - TransientSpec
       - TRLumiSpec
       - TR luminescence spectrum
-      - time-resolved luminescence spectrum
     signal_dimension: 1
     dtype: real
     lazy: False
@@ -165,10 +167,10 @@ signals:
   LumiTransientSpectrum:
     signal_type: TransientSpectrum
     signal_type_aliases:
+      - LumiTransientSpectrum
       - TransientSpec
       - TRLumiSpec
       - TR luminescence spectrum
-      - time-resolved luminescence spectrum
     signal_dimension: 2
     dtype: real
     lazy: False
@@ -176,10 +178,10 @@ signals:
   LazyLumiTransientSpectrum:
     signal_type: TransientSpectrum
     signal_type_aliases:
+      - LumiTransientSpectrum
       - TransientSpec
       - TRLumiSpec
       - TR luminescence spectrum
-      - time-resolved luminescence spectrum
     signal_dimension: 2
     dtype: real
     lazy: True
