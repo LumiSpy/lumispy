@@ -74,12 +74,17 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
         """Return the streak image as signal with the spectral axis as navigation
         axis and the time axis as signal axis. For efficient iteration over
         transients as a function of the spectral positions (e.g. for fitting
-        transients). By default, the method ensures the data is stored optimally,
+        transients). By default, the method ensures that the data is stored optimally,
         hence often making a copy of the data.
 
         Parameters
         ----------
         %s
+
+        Returns
+        -------
+        signal : LumiSpectrum
+            A signal of type ``LumiTransient``.
 
         See Also
         --------
@@ -97,12 +102,17 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
         """Return the streak image as signal with the time axis as navigation
         axis and the spectral axis as signal axis. For efficient iteration over
         spectra as a function of time (e.g. for fitting spectra). By default, the
-        method ensures the data is stored optimally, hence often making a copy
+        method ensures that the data is stored optimally, hence often making a copy
         of the data.
 
         Parameters
         ----------
         %s
+
+        Returns
+        -------
+        signal : LumiSpectrum
+            A signal of type ``LumiSpectrum``.
 
         See Also
         --------
