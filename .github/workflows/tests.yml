@@ -11,25 +11,38 @@ jobs:
       MPLBACKEND: agg
       PIP_ARGS: --upgrade -e
       PYTEST_ARGS: --pyargs lumispy
-      PYTEST_ARGS_COVERAGE: 
+      PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu, windows, macos]
-        PYTHON_VERSION: ['3.8', '3.12']
+        PYTHON_VERSION: ['3.10', '3.12']
         PIP_SELECTOR: ['[tests]',]
         include:
           - os: ubuntu
+            PYTHON_VERSION: '3.11'
+            PIP_SELECTOR: '[tests]'
+          - os: ubuntu
+            PYTHON_VERSION: '3.13'
+            PIP_SELECTOR: '[tests]'
+          # dev
+          - os: ubuntu
+            PYTHON_VERSION: '3.12'
+            PIP_SELECTOR: '[tests]'
+            LABEL: '-dev'
+          # minimum
+          - os: ubuntu
             PYTHON_VERSION: '3.9'
             PIP_SELECTOR: '[tests]'
-          - os: ubuntu
-            PYTHON_VERSION: '3.10'
+            LABEL: '-minimum'
+          # oldest
+          - os: ubuntu 
+            PYTHON_VERSION: '3.9'
             PIP_SELECTOR: '[tests]'
-          - os: ubuntu
-            PYTHON_VERSION: '3.11'
-            PIP_SELECTOR: '[tests, coverage]'
-            PYTEST_ARGS_COVERAGE: --cov=lumispy --cov-report=xml
-            LABEL: '/coverage'
+            LABEL: -release-oldest
+            # Matching pyproject.toml
+            DEPENDENCIES: hyperspy==1.7.3
+
     steps:
       - uses: actions/checkout@v4
 
@@ -48,16 +61,21 @@ jobs:
         run: |
           pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
 
-      - name: Pip list
-        run: |
-          pip list
-
       - name: Install (HyperSpy dev)
         # Test against the hyperspy `RELEASE_next_minor` branch
         if: ${{ matrix.PYTEST_ARGS_COVERAGE }} 
         shell: bash
         run: |
           pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
+
+      - name: Install oldest supported version
+        if: contains( matrix.LABEL, 'oldest')
+        run: |
+          pip install ${{ matrix.DEPENDENCIES }}
+
+      - name: Pip list
+        run: |
+          pip list
 
       - name: Run test suite
         run: |
