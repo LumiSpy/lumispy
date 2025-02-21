@@ -25,6 +25,8 @@ jobs:
           - os: ubuntu
             PYTHON_VERSION: '3.13'
             PIP_SELECTOR: '[tests]'
+            # test for dev as long as HyperSpy 3.13 support is not released
+            LABEL: '-dev'
           # dev
           - os: ubuntu
             PYTHON_VERSION: '3.12'
