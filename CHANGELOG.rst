@@ -14,6 +14,38 @@ https://lumispy.readthedocs.io/en/latest/changelog.html
 
 .. towncrier release notes start
 
+0.3.0 (2025-02-21)
+==================
+
+New features
+------------
+
+- Implement correct casting of :class:`~.signals.luminescence_transientspec.LumiTransientSpectrum` to either :class:`~.signals.luminescence_spectrum.LumiSpectrum` or :class:`~.signals.luminescence_transient.LumiTransient` when the signal dimension is reduced - previously, a :class:`~hyperspy.api.signals.Signal1D` object was returned. (`#205 <https://github.com/lumispy/lumispy/issues/205>`_)
+- Add functions :meth:`~.signals.luminescence_transientspec.LumiTransientSpectrum.spec2nav` and :meth:`~.signals.luminescence_transientspec.LumiTransientSpectrum.time2nav` to convert either `signal` dimension to a `navigation` dimension for efficient iteration over the respective axes. (`#223 <https://github.com/lumispy/lumispy/issues/223>`_)
+
+
+Enhancements
+------------
+
+- Fix axis conversion for two signal dimensions (e.g. streak camera maps) (`#205 <https://github.com/lumispy/lumispy/issues/205>`_)
+
+
+Improved Documentation
+----------------------
+
+- Use ``towncrier`` to manage changelog (`#211 <https://github.com/lumispy/lumispy/issues/211>`_)
+
+
+Maintenance
+-----------
+
+- Streamline project files and release workflow to match HyperSpy ecosystem:
+
+  - Migrate to ``pyproject.toml`` from ``setup.py``
+  - Use ``setuptools-scm`` to set version at build time
+  - Adapt release workflow, e.g. mine doi only after successful upload (`#211 <https://github.com/lumispy/lumispy/issues/211>`_)
+
+- Add support for python 3.13 and drop support for python 3.8 (`#225 <https://github.com/lumispy/lumispy/issues/225>`_)
 - Fix intersphinx links to documentation of HyperSpy 2.0 and add linkchecker workflow
 - Align supported python versions (3.8-3.12) to HyperSpy 2.0 
 
