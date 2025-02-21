@@ -13,17 +13,17 @@ classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Physics",
     "Topic :: Software Development :: Libraries",
 ]
 dependencies = [
-    "hyperspy >= 1.7",  # earlier versions do not provide non-uniform axes
+    "hyperspy >= 1.7.3",  # earlier versions fail on pint dependency
     "numpy",
     "scipy",
     "pint>=0.10",
@@ -61,7 +61,7 @@ keywords = [
 ]
 dynamic = ["version"]
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 
 [project.entry-points."hyperspy.extensions"]
 lumispy = "lumispy"
