@@ -14,6 +14,8 @@ https://lumispy.readthedocs.io/en/latest/changelog.html
 
 .. towncrier release notes start
 
+.. _changes_0.3.0:
+
 0.3.0 (2025-02-21)
 ==================
 
@@ -23,31 +25,31 @@ New features
 - Implement correct casting of :class:`~.signals.luminescence_transientspec.LumiTransientSpectrum` to either :class:`~.signals.luminescence_spectrum.LumiSpectrum` or :class:`~.signals.luminescence_transient.LumiTransient` when the signal dimension is reduced - previously, a :class:`~hyperspy.api.signals.Signal1D` object was returned. (`#205 <https://github.com/lumispy/lumispy/issues/205>`_)
 - Add functions :meth:`~.signals.luminescence_transientspec.LumiTransientSpectrum.spec2nav` and :meth:`~.signals.luminescence_transientspec.LumiTransientSpectrum.time2nav` to convert either `signal` dimension to a `navigation` dimension for efficient iteration over the respective axes. (`#223 <https://github.com/lumispy/lumispy/issues/223>`_)
 
-
 Enhancements
 ------------
 
 - Fix axis conversion for two signal dimensions (e.g. streak camera maps) (`#205 <https://github.com/lumispy/lumispy/issues/205>`_)
 
-
 Improved Documentation
 ----------------------
 
+- Various updates and improvements of the documentation (`#188 <https://github.com/lumispy/lumispy/issues/188>`_, `#193 <https://github.com/lumispy/lumispy/issues/193>`_, `#196 <https://github.com/lumispy/lumispy/issues/196>`_, `#206 <https://github.com/lumispy/lumispy/issues/206>`_, `#213 <https://github.com/lumispy/lumispy/issues/213>`_ , `#218 <https://github.com/lumispy/lumispy/issues/218>`_, `#224 <https://github.com/lumispy/lumispy/issues/224>`_)
 - Use ``towncrier`` to manage changelog (`#211 <https://github.com/lumispy/lumispy/issues/211>`_)
-
 
 Maintenance
 -----------
 
+- Align supported python versions (3.8-3.12) to HyperSpy 2.0 (`#202 <https://github.com/lumispy/lumispy/issues/202>`_)
+- Fix intersphinx links to documentation of HyperSpy 2.0 and add linkchecker workflow (`#203 <https://github.com/lumispy/lumispy/issues/203>`_)
+- CI, lint, test fixes ( `#187 <https://github.com/lumispy/lumispy/issues/187>`_, `#209 <https://github.com/lumispy/lumispy/issues/209>`_, `#216 <https://github.com/lumispy/lumispy/issues/216>`_)
 - Streamline project files and release workflow to match HyperSpy ecosystem:
 
   - Migrate to ``pyproject.toml`` from ``setup.py``
   - Use ``setuptools-scm`` to set version at build time
   - Adapt release workflow, e.g. mine doi only after successful upload (`#211 <https://github.com/lumispy/lumispy/issues/211>`_)
 
-- Add support for python 3.13 and drop support for python 3.8 (`#225 <https://github.com/lumispy/lumispy/issues/225>`_)
-- Fix intersphinx links to documentation of HyperSpy 2.0 and add linkchecker workflow
-- Align supported python versions (3.8-3.12) to HyperSpy 2.0 
+- Add support for python 3.13 and drop support for python 3.8, update tests workflows (`#225 <https://github.com/lumispy/lumispy/issues/225>`_)
+
 
 .. _changes_0.2.2:
 
@@ -67,6 +69,7 @@ Maintenance
 - Replace ``sphinx.ext.imgmath`` by ``sphinx.ext.mathjax`` to fix the math rendering in the *ReadTheDocs* build
 - fix external references in the documentation
 
+
 .. _changes_0.2.1:
 
 2022-11-02 - version 0.2.1
@@ -85,6 +88,7 @@ Changed
 Maintenance
 -----------
 - Use ``softprops/action-gh-release`` action instead of deprecated ``create-release``, pin action to a commit SHA
+
 
 .. _changes_0.2.0:
 
@@ -106,6 +110,7 @@ Changed
 - Deprecate ``exposure`` argument of ``s.scale_by_exposure`` in favor of ``integration_time`` in line with metadata convention
 - Add deprecation warning to ``remove_background_from_file``
 
+
 .. _changes_0.1.3:
 
 2021-11-23 - version 0.1.3
@@ -115,6 +120,7 @@ Changed
 - Mentions of the now deleted ``non_uniform_axes`` branch in HyperSpy updated to `RELEASE_next_minor`
 - Change 'master' to 'main' branch
 - Updated/corrected badges and other things in README.md and other documentation files
+
 
 .. _changes_0.1.2:
 
@@ -132,6 +138,7 @@ Changed
 - Consistent black-formatting
 - fixed join_spectra
 - fixed tests
+
 
 .. _changes_0.1.0:
 
