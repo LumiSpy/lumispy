@@ -12,7 +12,7 @@ To publish a new LumiSpy release do the following steps:
 - Check release notes
 - Let that PR collect comments for a day to ensure that other maintainers are comfortable 
   with releasing
-- Set correct date and version number in `CHANGELOG.rst`
+- Verify that correct date and version number ist set in `CHANGELOG.rst`
   
 ## Tag and Release
 

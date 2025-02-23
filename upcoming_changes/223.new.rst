@@ -1,1 +1,0 @@
-Add functions :meth:`~.signals.luminescence_transientspec.LumiTransientSpectrum.spec2nav` and :meth:`~.signals.luminescence_transientspec.LumiTransientSpectrum.time2nav` to convert either `signal` dimension to a `navigation` dimension for efficient iteration over the respective axes.
