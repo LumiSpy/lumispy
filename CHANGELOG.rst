@@ -9,6 +9,8 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 Changelog entries for the development version are available at
 https://lumispy.readthedocs.io/en/latest/changelog.html
 
+UNRELEASED
+==========
 
 .. towncrier-draft-entries:: |release| [UNRELEASED]
 
