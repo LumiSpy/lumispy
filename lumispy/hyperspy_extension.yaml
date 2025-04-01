@@ -186,3 +186,8 @@ signals:
     dtype: real
     lazy: True
     module: lumispy.signals.luminescence_transientspec
+
+components1D:
+  DoublePowerLaw:
+    module: lumispy.components.decay_gaussian_exponential
+    class: ConvGaussianExponential
