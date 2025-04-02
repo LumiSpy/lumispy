@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019-2023 The LumiSpy developers
+# Copyright 2019-2025 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -16,16 +16,14 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-import math
-
 import numpy as np
+
 import hyperspy.api as hs
 
-sqrt2pi = math.sqrt(2 * math.pi)
-sigma2fwhm = 2 * math.sqrt(2 * math.log(2))
+sigma2fwhm = 2 * np.sqrt(2 * np.log(2))
 
 
-class ConvGaussianExponential(hs.model.components1D.Expression):
+class ConvGaussExp(hs.model.components1D.Expression):
     r"""Analytical convolution of Gaussian instrument response function and
     exponential decay function.
 
@@ -55,7 +53,7 @@ class ConvGaussianExponential(hs.model.components1D.Expression):
         Decay parameter (lifetime) of the exponential function.
     **kwargs
         Extra keyword arguments are passed to the
-        :py:class:`~._components.expression.Expression` component.
+        :py:class:`hyperspy._components.expression.Expression` component.
 
     Attributes
     ----------
@@ -68,26 +66,24 @@ class ConvGaussianExponential(hs.model.components1D.Expression):
 
     def __init__(
         self,
-        height=1,
+        height=1.0,
         t0=0.0,
-        sigma=20,
-        tau=100,
+        sigma=10.0,
+        tau=100.0,
         module=["numpy", "scipy"],
-        compute_gradients=False,
         **kwargs,
     ):
         super().__init__(
             expression="1/2*height*exp(-((x-t0) - sigma**2/(2*tau))/tau)*\
                         (1 + erf(((x-t0) - sigma**2/tau)/(sqrt(2)*sigma)))",
-            name="ConvGaussianExponential",
+            name="ConvGaussExp",
             height=height,
             t0=t0,
             sigma=sigma,
             tau=tau,
             position="t0",
-            autodoc=False,
             module=module,
-            compute_gradients=compute_gradients,
+            autodoc=False,
             **kwargs,
         )
 
@@ -95,7 +91,7 @@ class ConvGaussianExponential(hs.model.components1D.Expression):
         self.height.bmin = 0.0
         self.height.bmax = None
 
-        self.sigma.bmin = 1.0
+        self.sigma.bmin = 0.1
         self.sigma.bmax = None
 
         self.tau.bmin = 1.0
@@ -111,11 +107,3 @@ class ConvGaussianExponential(hs.model.components1D.Expression):
     @fwhm.setter
     def fwhm(self, value):
         self.sigma.value = value / sigma2fwhm
-
-    @property
-    def A(self):
-        return self.height.value * self.sigma * sqrt2pi
-
-    @A.setter
-    def A(self, value):
-        self.height.value = value / (self.sigma * sqrt2pi)

@@ -188,6 +188,6 @@ signals:
     module: lumispy.signals.luminescence_transientspec
 
 components1D:
-  DoublePowerLaw:
-    module: lumispy.components.decay_gaussian_exponential
-    class: ConvGaussianExponential
+  ConvGaussExp:
+    module: lumispy.components.convolved_gaussian_exponential
+    class: ConvGaussExp

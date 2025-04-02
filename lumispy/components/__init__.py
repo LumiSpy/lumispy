@@ -18,10 +18,10 @@
 
 """Components"""
 
-from .decay_gaussian_exponential import ConvGaussianExponential
+from .convolved_gaussian_exponential import ConvGaussExp
 
 __all__ = [
-    "ConvGaussianExponential",
+    "ConvGaussExp",
 ]
 
 
