@@ -104,7 +104,6 @@ class ConvGaussianExponential(hs.model.components1D.Expression):
         self.isbackground = False
         self.convolved = True
 
-    
     @property
     def fwhm(self):
         return self.sigma.value * sigma2fwhm
