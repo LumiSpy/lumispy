@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019-2023 The LumiSpy developers
+# Copyright 2019-2025 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -17,7 +17,7 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 """
-Signal class for Photoluminescence spectral data
+Signal class for photoluminescence spectral data
 ------------------------------------------------
 """
 
