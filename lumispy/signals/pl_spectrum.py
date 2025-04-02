@@ -17,7 +17,7 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 """
-Signal class for Photoluminescence spectral data
+Signal class for photoluminescence spectral data
 ------------------------------------------------
 """
 

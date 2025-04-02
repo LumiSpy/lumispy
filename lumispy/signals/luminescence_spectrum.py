@@ -16,8 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-"""Signal class for Luminescence spectral data (1D).
 """
+Signal class for luminescence spectral data (1D).
+-------------------------------------------------
+"""
+
 import numpy as np
 from warnings import warn
 
