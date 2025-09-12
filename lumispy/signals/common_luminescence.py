@@ -28,7 +28,8 @@ from lumispy.utils.signals import crop_edges
 
 class CommonLumi:
     """**General luminescence signal class (dimensionless)**"""
-
+    
+    # Deprecated, to be removed for v1.0 release
     def crop_edges(self, crop_px):
         warn(
             "This function is deprecated and will be deleted in v1.0. Please use ``sc = lum.utils.crop_edges(s)`` instead with the ``crop_range`` parameter instead.",

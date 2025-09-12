@@ -113,12 +113,20 @@ def crop_edges(
 ):
     """
     Cropping along the navigation axes of a list of signal objects.
+
     Crop the amount of pixels from the four edges of the scanning
-    region, from the edges inwards. Cropping can happen uniformly on all
-    sides or by specifying the cropping range for each axis or each side. If the navigation axes shape is different, all signals can be rebinned to match the shape of the first signal in the list.
+    region, from the edges inwards.
+
+    Cropping can happen uniformly on all sides or by specifying the
+    cropping range for each axis or each side.
+
+    If the navigation axes shape is different, all signals can be
+    rebinned to match the shape of the first signal in the list.
+
     Parameters
     ----------
-    S : list of HyperSpy Signal objects or a single HyperSpy Signal object.
+    S : Signal or list of Signals
+    HyperSpy signal object(s) that should be cropped.
     crop_range : {int | float | str} or tuple of {ints | floats | strs}
         If int the values are taken as indices. If float the values are converted to indices. If str HyperSpy fancy indexing is used (e.g. ``rel0.1`` will crop 10% on each side, or ``100 nm`` will crop 100 nm on each side).
         If a number or a tuple of size 1 is passed, all sides are cropped by the same amount. If a tuple of size 2 is passed (``crop_x``, ``crop_y``), a different
@@ -127,7 +135,8 @@ def crop_edges(
         If the navigation axes shape is different between signals in the list S, all signals will be rebinned to match the shape of the first signal in the list. Note this does not take into account the calibration values of the navigation axes.
     kwrgs
         To account for the deprecated ``crop_px`` parameter.
-    Returns
+    
+        Returns
     -------
     S_cropped : Signal or list of Signals
         A list of smaller, cropped Signal objects or a cropped single Signal if only one signal object is passed as input.

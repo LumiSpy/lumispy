@@ -48,6 +48,7 @@ It is a convenience wrapper for the ``inav`` `method in HyperSpy
     >>> signals_cropped = lum.utils.crop_edges(signals, crop_range=5, crop_units="%", rebin_nav=True)
     >>> signals_cropped
     [CLSpectrum <243,243|1024>, Signal2D <243,243|1>]
+    
 .. Note::
 
     Many scanning luminescence techniques result in edge defects at the edges of the scanned region.

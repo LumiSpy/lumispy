@@ -23,6 +23,8 @@ from lumispy.signals import LumiSpectrum, LumiTransientSpectrum
 
 
 class TestCommonLumi:
+    
+    # Deprecated, to be removed for v1.0 release
     def test_crop_edges_deprecated(self):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
         with pytest.warns(DeprecationWarning, match="This function is deprecated"):
