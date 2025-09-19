@@ -25,3 +25,8 @@ from .axes import (
     var2invcm,
     solve_grating_equation,
 )
+
+from .signals import (
+    com,
+    crop_edges,
+)
