@@ -38,14 +38,26 @@ from lumispy.utils import (
 
 class CommonLumi:
     """**General luminescence signal class (dimensionless)**"""
-    
-    # Deprecated, to be removed for v1.0 release
-    def crop_edges(self, crop_px):
-        warn(
-            "This function is deprecated and will be deleted in v1.0. Please use ``sc = lum.utils.crop_edges(s)`` instead with the ``crop_range`` parameter instead.",
-            DeprecationWarning,
-        )
-        return crop_edges(self, crop_px=crop_px)
+
+    def crop_edges(self, crop_range=None, crop_px=None, rebin_nav=False, **kwargs):
+        """Wrapper around the new crop_edges function.
+        Parameters
+        ----------
+        crop_range : tuple, optional
+            Preferred new parameter. Defines how many pixels to crop per axis.
+        crop_px : int, optional
+            Deprecated. Number of pixels to crop symmetrically.
+        rebin_nav : bool, default False
+            Whether to rebin the navigation axes after cropping.
+        """
+        if crop_px is not None:
+            warn(
+                "The ``crop_px`` parameter is deprecated; use ``crop_range`` instead.",
+                DeprecationWarning,
+            )
+            return crop_edges(self, crop_px=crop_px)
+
+        return crop_edges(self, crop_range=crop_range, rebin_nav=rebin_nav, **kwargs)
 
     def remove_negative(self, basevalue=1, inplace=False):
         """Sets all negative values to 'basevalue', e.g. for logarithmic scale

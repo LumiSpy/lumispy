@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019-2023 The LumiSpy developers
+# Copyright 2019-2025 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -126,20 +126,37 @@ def crop_edges(
     Parameters
     ----------
     S : Signal or list of Signals
-    HyperSpy signal object(s) that should be cropped.
+        HyperSpy signal object(s) that should be cropped.
+
     crop_range : {int | float | str} or tuple of {ints | floats | strs}
-        If int the values are taken as indices. If float the values are converted to indices. If str HyperSpy fancy indexing is used (e.g. ``rel0.1`` will crop 10% on each side, or ``100 nm`` will crop 100 nm on each side).
-        If a number or a tuple of size 1 is passed, all sides are cropped by the same amount. If a tuple of size 2 is passed (``crop_x``, ``crop_y``), a different
-        amount is cropped from the x and y directions, respectively. If a tuple of size 4 is passed (``crop_left``, ``crop_bottom``, ``crop_right``, ``crop_top``), a different amount is cropped from each edge individually.
+        If int the values are taken as indices.
+        If float the values are converted to indices.
+        If str, HyperSpy fancy indexing is used
+        (e.g. ``rel0.1`` will crop 10% on each side, or ``100 nm``
+        will crop 100 nm on each side).
+
+        If a number or a tuple of size 1 is passed, all sides are cropped
+        by the same amount.
+        If a tuple of size 2 is passed (``crop_x``, ``crop_y``), a different
+        amount is cropped from the x and y directions, respectively.
+        If a tuple of size 4 is passed
+        (``crop_left``, ``crop_bottom``, ``crop_right``, ``crop_top``),
+        a different amount is cropped from each edge individually.
+
     rebin_nav : bool
-        If the navigation axes shape is different between signals in the list S, all signals will be rebinned to match the shape of the first signal in the list. Note this does not take into account the calibration values of the navigation axes.
-    kwrgs
+        If the navigation axes shape is different between signals in the list S,
+        all signals will be rebinned to match the shape of the first signal
+        in the list. Note this does not take into account the calibration
+        values of the navigation axes.
+
+    kwargs
         To account for the deprecated ``crop_px`` parameter.
-    
-        Returns
+
+    Returns
     -------
     S_cropped : Signal or list of Signals
-        A list of smaller, cropped Signal objects or a cropped single Signal if only one signal object is passed as input.
+        A list of smaller, cropped Signal objects or a cropped single Signal
+        if only one signal object is passed as input.
     """
 
     def range_formatting(str_list):

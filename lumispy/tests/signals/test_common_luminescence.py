@@ -23,14 +23,22 @@ from lumispy.signals import LumiSpectrum, LumiTransientSpectrum
 
 
 class TestCommonLumi:
-    
+
     # Deprecated, to be removed for v1.0 release
     def test_crop_edges_deprecated(self):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
-        with pytest.warns(DeprecationWarning, match="This function is deprecated"):
+        with pytest.warns(
+            DeprecationWarning,
+            match="The ``crop_px`` parameter is deprecated; use ``crop_range`` instead.",
+        ):
             s2 = s1.crop_edges(crop_px=1)
         assert s2.axes_manager.navigation_shape[0] == 8
         assert s2.axes_manager.navigation_shape[1] == 8
+
+    def test_crop_edges_with_crop_range_tuple(self):
+        s = LumiSpectrum(np.ones((10, 10, 10)))
+        s_cropped = s.crop_edges(crop_range=(1, 2))
+        assert s_cropped.axes_manager.navigation_shape == (8, 6)
 
     def test_remove_negative(self):
         s1 = LumiSpectrum(np.random.random((10, 10, 10))) - 0.3
