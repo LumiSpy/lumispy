@@ -15,3 +15,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
+
+"""Components"""
+
+from .convolved_gaussian_exponential import ConvGaussExp
+
+__all__ = [
+    "ConvGaussExp",
+]
+
+
+def __dir__():
+    return sorted(__all__)

@@ -186,3 +186,8 @@ signals:
     dtype: real
     lazy: True
     module: lumispy.signals.luminescence_transientspec
+
+components1D:
+  ConvGaussExp:
+    module: lumispy.components.convolved_gaussian_exponential
+    class: ConvGaussExp
