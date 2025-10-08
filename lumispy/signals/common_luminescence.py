@@ -26,6 +26,7 @@ from warnings import warn
 from lumispy.utils.signals import crop_edges
 
 from lumispy import nm2invcm
+from lumispy.utils.signals import CROP_EDGES_DOCSTRING, CROP_EDGES_PARAMETERS
 from lumispy.utils import (
     axis2eV,
     data2eV,
@@ -40,24 +41,17 @@ class CommonLumi:
     """**General luminescence signal class (dimensionless)**"""
 
     def crop_edges(self, crop_range=None, crop_px=None, rebin_nav=False, **kwargs):
-        """Wrapper around the new crop_edges function.
-        Parameters
-        ----------
-        crop_range : tuple, optional
-            Preferred new parameter. Defines how many pixels to crop per axis.
-        crop_px : int, optional
-            Deprecated. Number of pixels to crop symmetrically.
-        rebin_nav : bool, default False
-            Whether to rebin the navigation axes after cropping.
+        """Crop edges of a signal.
+        %s
+
+        %s
         """
         if crop_px is not None:
-            warn(
-                "The ``crop_px`` parameter is deprecated; use ``crop_range`` instead.",
-                DeprecationWarning,
-            )
             return crop_edges(self, crop_px=crop_px)
 
         return crop_edges(self, crop_range=crop_range, rebin_nav=rebin_nav, **kwargs)
+
+    crop_edges.__doc__ %= (CROP_EDGES_DOCSTRING, CROP_EDGES_PARAMETERS)
 
     def remove_negative(self, basevalue=1, inplace=False):
         """Sets all negative values to 'basevalue', e.g. for logarithmic scale

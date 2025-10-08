@@ -22,6 +22,55 @@ from scipy.ndimage import center_of_mass
 from scipy.interpolate import interp1d
 from warnings import warn
 
+CROP_EDGES_DOCSTRING = """
+    Cropping along the navigation axes of a list of signal objects.
+
+    Crop the amount of pixels from the four edges of the scanning
+    region, from the edges inwards.
+
+    Cropping can happen uniformly on all sides or by specifying the
+    cropping range for each axis or each side independently.
+
+    If the shape of the navigation axes differs between the signals,
+    all signals can be rebinned to match the shape of the first 
+    signal in the list."""
+
+CROP_EDGES_PARAMETERS = """
+    Parameters
+    ----------
+    S : Signal or list of Signals
+        HyperSpy signal object(s) that should be cropped.
+
+    crop_range : {int | float | str} or tuple of {ints | floats | strs}
+        If int the values are taken as indices.
+        If float the values are converted to indices.
+        If str, HyperSpy fancy indexing is used
+        (e.g. ``rel0.1`` will crop 10% on each side, or ``100 nm``
+        will crop 100 nm on each side).
+
+        If a number or a tuple of size 1 is passed, all sides are cropped
+        by the same amount.
+        If a tuple of size 2 is passed (``crop_x``, ``crop_y``), a different
+        amount is cropped from the x and y directions, respectively.
+        If a tuple of size 4 is passed
+        (``crop_left``, ``crop_bottom``, ``crop_right``, ``crop_top``),
+        a different amount is cropped from each edge individually.
+
+    rebin_nav : bool
+        If the shape of the navigation axes differs between the signals,
+        all signals can be be rebinned to match the shape of the first signal
+        in the list. Note this does not take into account the calibration
+        values of the navigation axes.
+
+    kwargs
+        To account for the deprecated ``crop_px`` parameter.
+
+    Returns
+    -------
+    S_cropped : Signal or list of Signals
+        A list of smaller, cropped Signal objects or a cropped single Signal
+        if only one signal object is passed as input."""
+
 
 def com(spectrum_intensities, signal_axis, **kwargs):
     """Finds the centroid (center of mass) of a peak in the spectrum based
@@ -111,52 +160,10 @@ def crop_edges(
     rebin_nav=False,
     **kwargs,
 ):
-    """
-    Cropping along the navigation axes of a list of signal objects.
+    """Crop edges of a signal.
+    %s
 
-    Crop the amount of pixels from the four edges of the scanning
-    region, from the edges inwards.
-
-    Cropping can happen uniformly on all sides or by specifying the
-    cropping range for each axis or each side.
-
-    If the navigation axes shape is different, all signals can be
-    rebinned to match the shape of the first signal in the list.
-
-    Parameters
-    ----------
-    S : Signal or list of Signals
-        HyperSpy signal object(s) that should be cropped.
-
-    crop_range : {int | float | str} or tuple of {ints | floats | strs}
-        If int the values are taken as indices.
-        If float the values are converted to indices.
-        If str, HyperSpy fancy indexing is used
-        (e.g. ``rel0.1`` will crop 10% on each side, or ``100 nm``
-        will crop 100 nm on each side).
-
-        If a number or a tuple of size 1 is passed, all sides are cropped
-        by the same amount.
-        If a tuple of size 2 is passed (``crop_x``, ``crop_y``), a different
-        amount is cropped from the x and y directions, respectively.
-        If a tuple of size 4 is passed
-        (``crop_left``, ``crop_bottom``, ``crop_right``, ``crop_top``),
-        a different amount is cropped from each edge individually.
-
-    rebin_nav : bool
-        If the navigation axes shape is different between signals in the list S,
-        all signals will be rebinned to match the shape of the first signal
-        in the list. Note this does not take into account the calibration
-        values of the navigation axes.
-
-    kwargs
-        To account for the deprecated ``crop_px`` parameter.
-
-    Returns
-    -------
-    S_cropped : Signal or list of Signals
-        A list of smaller, cropped Signal objects or a cropped single Signal
-        if only one signal object is passed as input.
+    %s
     """
 
     def range_formatting(str_list):
@@ -293,3 +300,6 @@ def crop_edges(
         return S_cropped[0]
     else:
         return S_cropped
+
+
+crop_edges.__doc__ %= (CROP_EDGES_DOCSTRING, CROP_EDGES_PARAMETERS)
