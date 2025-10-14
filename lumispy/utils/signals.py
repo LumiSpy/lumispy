@@ -31,33 +31,34 @@ CROP_EDGES_DOCSTRING = """
 
     If the shape of the navigation axes differs between the signals,
     all signals can be rebinned to match the shape of the first 
-    signal in the list."""
+    signal in the list.
+    """
 
 CROP_EDGES_PARAMETERS = """
-    crop_range : {int | float | str} or tuple of {ints | floats | strs}
-        If int the values are taken as indices.
-        If float the values are converted to indices.
-        If str, HyperSpy fancy indexing is used
-        (e.g. ``rel0.1`` will crop 10% on each side, or ``100 nm``
-        will crop 100 nm on each side).
+        crop_range : {int | float | str} or tuple of {ints | floats | strs}
+            If ``int`` the values are taken as indices.
+            If ``float`` the values are converted to indices.
+            If ``str``, HyperSpy fancy indexing is used
+            (e.g. ``rel0.1`` will crop 10% on each side, or ``100 nm``
+            will crop 100 nm on each side).
 
-        If a number or a tuple of size 1 is passed, all sides are cropped
-        by the same amount.
-        If a tuple of size 2 is passed (``crop_x``, ``crop_y``), a different
-        amount is cropped from the x and y directions, respectively.
-        If a tuple of size 4 is passed
-        (``crop_left``, ``crop_bottom``, ``crop_right``, ``crop_top``),
-        a different amount is cropped from each edge individually.
+            If a number or a tuple of size 1 is passed, all sides are cropped
+            by the same amount.
+            If a tuple of size 2 is passed (``crop_x``, ``crop_y``), a different
+            amount is cropped from the x and y directions, respectively.
+            If a tuple of size 4 is passed
+            (``crop_left``, ``crop_bottom``, ``crop_right``, ``crop_top``),
+            a different amount is cropped from each edge individually.
 
-    rebin_nav : bool
-        If the shape of the navigation axes differs between the signals,
-        all signals can be be rebinned to match the shape of the first signal
-        in the list. Note this does not take into account the calibration
-        values of the navigation axes.
+        rebin_nav : bool
+            If the shape of the navigation axes differs between the signals,
+            all signals can be be rebinned to match the shape of the first signal
+            in the list. Note this does not take into account the calibration
+            values of the navigation axes.
 
-    kwargs
-        To account for the deprecated ``crop_px`` parameter.
-    """
+        kwargs
+            To account for the deprecated ``crop_px`` parameter.
+        """
 
 
 def com(spectrum_intensities, signal_axis, **kwargs):
@@ -148,18 +149,42 @@ def crop_edges(
     rebin_nav=False,
     **kwargs,
 ):
-    """Crop edges of a signal.
+    """Crop edges along the navigation axes of a signal or of a list of signal objects.
 
-    Cropping along the navigation axes of a list of signal objects.
+    Crop the amount of pixels from the four edges of the scanning
+    region, from the edges inwards.
 
-    %s
+    Cropping can happen uniformly on all sides or by specifying the
+    cropping range for each axis or each side independently.
+
+    If the shape of the navigation axes differs between the signals,
+    all signals can be rebinned to match the shape of the first
+    signal in the list.
 
     Parameters
     ----------
     S : Signal or list of Signals
         HyperSpy signal object(s) that should be cropped.
-
-    %s
+    crop_range : {int | float | str} or tuple of {ints | floats | strs}
+        If ``int`` the values are taken as indices.
+        If ``float`` the values are converted to indices.
+        If ``str``, HyperSpy fancy indexing is used
+        (e.g. ``rel0.1`` will crop 10% on each side, or ``100 nm``
+        will crop 100 nm on each side).
+        If a number or a tuple of size 1 is passed, all sides are cropped
+        by the same amount.
+        If a tuple of size 2 is passed (``crop_x``, ``crop_y``), a different
+        amount is cropped from the x and y directions, respectively.
+        If a tuple of size 4 is passed
+        (``crop_left``, ``crop_bottom``, ``crop_right``, ``crop_top``),
+        a different amount is cropped from each edge individually.
+    rebin_nav : bool
+        If the shape of the navigation axes differs between the signals,
+        all signals can be be rebinned to match the shape of the first signal
+        in the list. Note this does not take into account the calibration
+        values of the navigation axes.
+    kwargs
+        To account for the deprecated ``crop_px`` parameter.
 
     Returns
     -------
@@ -302,6 +327,3 @@ def crop_edges(
         return S_cropped[0]
     else:
         return S_cropped
-
-
-crop_edges.__doc__ %= (CROP_EDGES_DOCSTRING, CROP_EDGES_PARAMETERS)
