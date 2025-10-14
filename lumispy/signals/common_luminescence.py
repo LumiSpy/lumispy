@@ -42,11 +42,20 @@ class CommonLumi:
 
     def crop_edges(self, crop_range=None, crop_px=None, rebin_nav=False, **kwargs):
         """Crop edges of a signal.
+
+        Cropping along the navigation axes of a signal objects.
+
         %s
 
+        Parameters
+        ----------
         %s
         """
         if crop_px is not None:
+            warn(
+                "The ``crop_px`` parameter is deprecated; use ``crop_range`` instead.",
+                DeprecationWarning,
+            )
             return crop_edges(self, crop_px=crop_px)
 
         return crop_edges(self, crop_range=crop_range, rebin_nav=rebin_nav, **kwargs)

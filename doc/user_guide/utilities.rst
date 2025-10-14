@@ -121,7 +121,7 @@ The function can also be called as ``s.crop_edges()`` on a single signal object.
     [CLSpectrum <256,256|1024>, Signal1D <128,128|1>]
     >>> signals_cropped = lum.utils.crop_edges(signals, crop_range=5, rebin_nav=True)
     >>> signals_cropped
-    [CLSpectrum <243,243|1024>, Signal1D <243,243|1>]
+    [CLSpectrum <246,246|1024>, Signal1D <246,246|1>]
     
 .. Note::
 

@@ -23,8 +23,6 @@ from scipy.interpolate import interp1d
 from warnings import warn
 
 CROP_EDGES_DOCSTRING = """
-    Cropping along the navigation axes of a list of signal objects.
-
     Crop the amount of pixels from the four edges of the scanning
     region, from the edges inwards.
 
@@ -36,11 +34,6 @@ CROP_EDGES_DOCSTRING = """
     signal in the list."""
 
 CROP_EDGES_PARAMETERS = """
-    Parameters
-    ----------
-    S : Signal or list of Signals
-        HyperSpy signal object(s) that should be cropped.
-
     crop_range : {int | float | str} or tuple of {ints | floats | strs}
         If int the values are taken as indices.
         If float the values are converted to indices.
@@ -64,12 +57,7 @@ CROP_EDGES_PARAMETERS = """
 
     kwargs
         To account for the deprecated ``crop_px`` parameter.
-
-    Returns
-    -------
-    S_cropped : Signal or list of Signals
-        A list of smaller, cropped Signal objects or a cropped single Signal
-        if only one signal object is passed as input."""
+    """
 
 
 def com(spectrum_intensities, signal_axis, **kwargs):
@@ -161,9 +149,23 @@ def crop_edges(
     **kwargs,
 ):
     """Crop edges of a signal.
-    %s
+
+    Cropping along the navigation axes of a list of signal objects.
 
     %s
+
+    Parameters
+    ----------
+    S : Signal or list of Signals
+        HyperSpy signal object(s) that should be cropped.
+
+    %s
+
+    Returns
+    -------
+    S_cropped : Signal or list of Signals
+        A list of smaller, cropped Signal objects or a cropped single Signal
+        if only one signal object is passed as input.
     """
 
     def range_formatting(str_list):

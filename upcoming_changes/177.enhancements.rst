@@ -1,4 +1,4 @@
 `crop_edges` moved to utils to allow consistent cropping for a list of signals. It also now
-can take 1,2 or 4 values as input (can crop each axis independently) and accepts HyperSpy fancy indexing.
+can take 1, 2 or 4 values as input (can crop each axis independently) and accepts HyperSpy fancy indexing.
 It can still be used for a single signal through the :class:`CommonLumi` class, but using
 the parameter ``crop_px`` will be deprecated in the future.
