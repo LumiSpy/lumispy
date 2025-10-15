@@ -23,6 +23,7 @@ Signal class for luminescence data (BaseSignal class)
 
 import numpy as np
 from warnings import warn
+from lumispy.utils.signals import crop_edges
 
 from lumispy import nm2invcm
 from lumispy.utils import (
@@ -38,42 +39,50 @@ from lumispy.utils import (
 class CommonLumi:
     """**General luminescence signal class (dimensionless)**"""
 
-    def crop_edges(self, crop_px):
-        """Crop the amount of pixels from the four edges of the scanning
-        region, from out the edges inwards.
+    def crop_edges(self, crop_range=None, crop_px=None, rebin_nav=False, **kwargs):
+        """Crop edges along the navigation axes of the signal object.
+
+        Crop the amount of pixels from the four edges of the scanning
+        region, from the edges inwards.
+
+        Cropping can happen uniformly on all sides or by specifying the
+        cropping range for each axis or each side independently.
+
+        If the shape of the navigation axes differs between the signals,
+        all signals can be rebinned to match the shape of the first
+        signal in the list.
 
         Parameters
         ----------
-        crop_px : int
-            Amount of pixels to be cropped on each side individually.
-
-        Returns
-        -------
-        signal_cropped : CommonLuminescence
-            A smaller cropped CL signal object. If inplace is True, the original
-            object is modified and no LumiSpectrum is returned.
+        crop_range : {int | float | str} or tuple of {ints | floats | strs}
+            If ``int`` the values are taken as indices.
+            If ``float`` the values are converted to indices.
+            If ``str``, HyperSpy fancy indexing is used
+            (e.g. ``rel0.1`` will crop 10% on each side, or ``100 nm``
+            will crop 100 nm on each side).
+            If a number or a tuple of size 1 is passed, all sides are cropped
+            by the same amount.
+            If a tuple of size 2 is passed (``crop_x``, ``crop_y``), a different
+            amount is cropped from the x and y directions, respectively.
+            If a tuple of size 4 is passed
+            (``crop_left``, ``crop_bottom``, ``crop_right``, ``crop_top``),
+            a different amount is cropped from each edge individually.
+        rebin_nav : bool
+            If the shape of the navigation axes differs between the signals,
+            all signals can be be rebinned to match the shape of the first signal
+            in the list. Note this does not take into account the calibration
+            values of the navigation axes.
+        kwargs
+            To account for the deprecated ``crop_px`` parameter.
         """
-
-        width = self.axes_manager.shape[0]
-        height = self.axes_manager.shape[1]
-
-        if crop_px * 2 > width or crop_px * 2 > height:
-            raise ValueError(
-                "The pixels to be cropped cannot be larger than half the width or the length!"
+        if crop_px is not None:
+            warn(
+                "The ``crop_px`` parameter is deprecated; use ``crop_range`` instead.",
+                DeprecationWarning,
             )
-        else:
-            signal_cropped = self.inav[
-                crop_px + 1 : width - crop_px + 1, crop_px + 1 : height - crop_px + 1
-            ]
+            return crop_edges(self, crop_px=crop_px)
 
-        # Store transformation in metadata (or update the value if already previously transformed)
-
-        try:
-            signal_cropped.metadata.Signal.cropped_edges += crop_px
-        except AttributeError:
-            signal_cropped.metadata.set_item("Signal.cropped_edges", crop_px)
-
-        return signal_cropped
+        return crop_edges(self, crop_range=crop_range, rebin_nav=rebin_nav, **kwargs)
 
     def remove_negative(self, basevalue=1, inplace=False):
         """Sets all negative values to 'basevalue', e.g. for logarithmic scale

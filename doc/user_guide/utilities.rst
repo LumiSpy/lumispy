@@ -96,3 +96,35 @@ wavelength and pixel position in the detector plane) follows the conventions
 described in the tutorial from  `Horiba Scientific
 <https://horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position>`_.
 
+
+
+Cropping multiple signals in the navigation axis 
+================================================
+
+The function :func:`~.utils.signals.crop_edges`
+removes a specified amount from the edges of a spectral map, from the edges inwards.
+The amount can be given as an integer (pixels), a float (converted to indices), or
+a string using HyperSpy’s fancy indexing syntax (e.g. ``rel0.1`` for 10% or 
+``100 nm`` for 100 nm). See HyperSpy’s `indexing guide 
+<https://hyperspy.org/hyperspy-doc/current/user_guide/signal/indexing.html>`_ for
+details. It takes a list of `Signals` and cropping can happen uniformly on all sides
+or by individually specifying the cropping range for each axis or each side. If the
+navigation axes shape across the list of signals is different, all signals can be
+rebinned to match the shape of the first signal in the list. It is a convenience
+wrapper for the :external+hyperspy:ref:`inav method in HyperSpy <signal.indexing>`.
+The function can also be called as ``s.crop_edges()`` on a single signal object.
+
+.. code-block:: python
+
+    >>> signals = [cl_map, sem_image]
+    >>> signals
+    [CLSpectrum <256,256|1024>, Signal1D <128,128|1>]
+    >>> signals_cropped = lum.utils.crop_edges(signals, crop_range=5, rebin_nav=True)
+    >>> signals_cropped
+    [CLSpectrum <246,246|1024>, Signal1D <246,246|1>]
+    
+.. Note::
+
+    Many scanning luminescence techniques result in artefacts at the edges of the scanned region.
+    This function enables the same cropping of the navigation axis for a list of signals recorded in
+    the same region to correct for such defect.
