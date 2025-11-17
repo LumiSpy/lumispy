@@ -31,7 +31,7 @@ jobs:
           cd doc
           make SPHINXOPTS="-W --keep-going" html
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           path: doc/_build/html/
           name: doc_html
