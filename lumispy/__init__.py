@@ -17,17 +17,14 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 
+import importlib
+
 from importlib.metadata import version
 from pathlib import Path
-
-from lumispy.utils.axes import nm2eV, eV2nm, nm2invcm, invcm2nm, join_spectra
-from lumispy.utils.io import to_array, savetxt
-
-from lumispy import signals, components, utils
-
-from lumispy.utils import crop_edges
+from typing import Any
 
 
+# rresolve version
 __version__ = version("lumispy")
 
 # For development version, `setuptools_scm` will be used at build time
@@ -61,5 +58,44 @@ __all__ = [
 ]
 
 
+# Map exported names that will be resolved lazily
+_lazy_modules = {
+    "signals": "lumispy.signals",
+    "components": "lumispy.components",
+    "utils": "lumispy.utils",
+}
+
+# Map top-level utility names to their submodule and attribute name
+_lazy_attributes = {
+    # name: (module, attribute)
+    "nm2eV": ("lumispy.utils.axes", "nm2eV"),
+    "eV2nm": ("lumispy.utils.axes", "eV2nm"),
+    "nm2invcm": ("lumispy.utils.axes", "nm2invcm"),
+    "invcm2nm": ("lumispy.utils.axes", "invcm2nm"),
+    "join_spectra": ("lumispy.utils.axes", "join_spectra"),
+    "to_array": ("lumispy.utils.io", "to_array"),
+    "savetxt": ("lumispy.utils.io", "savetxt"),
+}
+
+
+def __getattr__(name: str) -> Any:
+    """Lazy-load subpackages and selected attributes on demand."""
+    # Lazy subpackages
+    if name in _lazy_modules:
+        mod = importlib.import_module(_lazy_modules[name])
+        globals()[name] = mod
+        return mod
+
+    # Lazy attributes (forward from submodules)
+    if name in _lazy_attributes:
+        mod_name, attr = _lazy_attributes[name]
+        mod = importlib.import_module(mod_name)
+        val = getattr(mod, attr)
+        globals()[name] = val
+        return val
+
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
 def __dir__():
-    return sorted(__all__)
+    return sorted(list(__all__) + list(_lazy_attributes.keys()))
