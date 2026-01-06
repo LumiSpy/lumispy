@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-python@v6
         name: Install Python
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
       - name: Install build docs
         shell: bash -l {0}

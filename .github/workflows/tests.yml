@@ -21,30 +21,30 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu, windows, macos]
-        PYTHON_VERSION: ['3.10', '3.12']
+        PYTHON_VERSION: ['3.11', '3.13']
         PIP_SELECTOR: ['[tests]',]
         include:
           - os: ubuntu
-            PYTHON_VERSION: '3.11'
+            PYTHON_VERSION: '3.12'
             PIP_SELECTOR: '[tests]'
           - os: ubuntu
-            PYTHON_VERSION: '3.13'
+            PYTHON_VERSION: '3.14'
             PIP_SELECTOR: '[tests]'
-            # test for dev as long as HyperSpy 3.13 support is not released
+            # test for dev as long as HyperSpy 3.14 support is not released
             LABEL: '-dev'
           # dev
           - os: ubuntu
-            PYTHON_VERSION: '3.12'
+            PYTHON_VERSION: '3.13'
             PIP_SELECTOR: '[tests]'
             LABEL: '-dev'
           # minimum
           - os: ubuntu
-            PYTHON_VERSION: '3.9'
+            PYTHON_VERSION: '3.10'
             PIP_SELECTOR: '[tests]'
             LABEL: '-minimum'
           # oldest
           - os: ubuntu 
-            PYTHON_VERSION: '3.9'
+            PYTHON_VERSION: '3.10'
             PIP_SELECTOR: '[tests]'
             LABEL: -release-oldest
             # Matching pyproject.toml

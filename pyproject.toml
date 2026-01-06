@@ -13,11 +13,11 @@ classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Physics",
     "Topic :: Software Development :: Libraries",
@@ -61,7 +61,7 @@ keywords = [
 ]
 dynamic = ["version"]
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [project.entry-points."hyperspy.extensions"]
 lumispy = "lumispy"
@@ -81,9 +81,8 @@ doc = [
   "sphinx>=4.3.0",
   "sphinx_rtd_theme>=0.5.1",
   "sphinx-copybutton",
-  "sphinxcontrib-towncrier>=0.3.0a0",
-  # unpin when sphinxcontrib-towncrier support more recent version to towncrier
-  "towncrier<24",
+  "sphinxcontrib-towncrier>=0.5.0a0",
+  "towncrier",
   "numba",
 ]
 dev = [
