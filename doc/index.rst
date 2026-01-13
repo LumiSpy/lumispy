@@ -69,10 +69,11 @@ Contents
    api/modules.rst
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Tutorials
 
    Demo notebooks <https://github.com/LumiSpy/lumispy-demos>
+   examples/examples_index.rst
 
 .. toctree::
    :maxdepth: 1
