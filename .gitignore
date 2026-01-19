@@ -6,3 +6,6 @@ build/*
 .vscode/*
 doc/_build
 doc/api
+doc/sg_execution_times.rst
+doc/auto_examples/
+doc/backreferences/
