@@ -63,17 +63,22 @@ Contents
    user_guide/bibliography.rst
 
 .. toctree::
+   :maxdepth: 1
+   :caption: Examples
+
+   Examples <auto_examples/index>
+
+.. toctree::
    :maxdepth: 2
    :caption: API reference
 
    api/modules.rst
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Tutorials
 
    Demo notebooks <https://github.com/LumiSpy/lumispy-demos>
-   examples/examples_index.rst
 
 .. toctree::
    :maxdepth: 1
