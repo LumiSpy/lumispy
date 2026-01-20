@@ -85,8 +85,7 @@ class CommonLumi:
         return crop_edges(self, crop_range=crop_range, rebin_nav=rebin_nav, **kwargs)
 
     def remove_negative(self, basevalue=1, inplace=False):
-        """Sets all negative values to 'basevalue', e.g. for logarithmic scale
-        plots.
+        """Set all negative values to 'basevalue', e.g. for logarithmic scale plots.
 
         Parameters
         ----------
@@ -178,7 +177,7 @@ class CommonLumi:
             return s
 
     def normalize(self, pos=float("nan"), element_wise=False, inplace=False):
-        """Normalizes data to value at `pos` along signal axis, defaults to
+        """Normalize data to value at `pos` along signal axis, defaults to
         maximum value.
 
         Can be helpful for e.g. plotting, but does not make sense to use
@@ -235,7 +234,7 @@ class CommonLumi:
             return s
 
     def _reset_variance_linear_model(self):
-        """Resets the variance linear model parameters to their default values,
+        """Reset the variance linear model parameters to their default values,
         as they are not applicable any longer after a Jacobian transformation.
         """
         if (
@@ -350,8 +349,9 @@ class CommonLumi:
             return None
 
     def to_eV(self, inplace=True, jacobian=True):
-        """Converts signal axis of 1D signal to non-linear energy axis (eV)
-        using wavelength dependent refractive index of air. Assumes wavelength
+        """Convert signal axis of 1D signal to non-linear energy axis (eV).
+
+        Uses wavelength dependent refractive index of air. Assumes wavelength
         in units of nm unless the axis units are specifically set to µm.
 
         The intensity is converted from counts/nm (counts/µm) to counts/meV by
@@ -381,7 +381,6 @@ class CommonLumi:
         >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
         >>> S1.to_eV()
         """
-
         evaxis, factor = axis2eV(self.axes_manager.signal_axes[0])
 
         return self._convert_data(evaxis, factor, inplace, jacobian, data2eV, var2eV)
@@ -414,9 +413,11 @@ Examples
 """
 
     def to_invcm(self, inplace=True, jacobian=True):
-        """Converts signal axis of 1D signal to non-linear wavenumber axis
-        (cm^-1). Assumes wavelength in units of nm unless the axis units are
+        r"""Convert signal axis of 1D signal to non-linear wavenumber axis (cm^-1).
+
+        Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
+
         %s
         jacobian : boolean
             The default is to do the Jacobian transformation (recommended at
@@ -424,7 +425,6 @@ Examples
             suppressed by setting this option to `False`.
         %s
         """
-
         invcmaxis, factor = axis2invcm(self.axes_manager.signal_axes[0])
 
         return self._convert_data(
@@ -443,10 +443,13 @@ Examples
 """
 
     def to_invcm_relative(self, laser=None, inplace=True, jacobian=False):
-        """Converts signal axis of 1D signal to non-linear wavenumber axis
-        (cm^-1) relative to the exciting laser wavelength (Raman/Stokes
+        r"""Convert signal axis of 1D signal to Raman/Stokes shift.
+
+        The non-linear wavenumber axis (cm^-1) relative
+        to the exciting laser wavelength (Raman/Stokes
         shift). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
+
         %s
         laser: float or None
             Laser wavelength in the same units as the signal axis. If None
@@ -458,7 +461,6 @@ Examples
             option to `True`.
         %s
         """
-
         # check if laser wavelength is available
         if laser is None:
             if not self.metadata.has_item("Acquisition_instrument.Laser.wavelength"):
