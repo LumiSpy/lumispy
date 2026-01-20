@@ -174,7 +174,7 @@ Examples
         transpose=False,
         **kwargs,
     ):
-        """Writes luminescence spectrum object to simple text file.
+        """Write luminescence spectrum object to simple text file.
         %s
         %s
         %s
@@ -219,12 +219,10 @@ array([[ 0.,  0.,  1.,  2.,  3.,  4.],
 """
 
     def to_array(self, axes=True, transpose=False):
-        """Returns luminescence spectrum object as numpy array (optionally
-        including the axes).
+        """Return luminescence spectrum object as numpy array.
+ 
         %s
-
         %s
-
         %s
         """
         return to_array(self, axes, transpose)
@@ -245,7 +243,7 @@ array([[ 0.,  0.,  1.,  2.,  3.,  4.],
         grating_density_gr_mm,
         inplace=False,
     ):
-        """Converts signal axis of 1D signal (in pixels) to wavelength, solving
+        """Convert signal axis of 1D signal (in pixels) to wavelength, solving
         the grating equation. See `lumispy.axes.solve_grating_equation` for
         more details.
 
@@ -267,7 +265,6 @@ array([[ 0.,  0.,  1.,  2.,  3.,  4.],
         >>> s.px_to_nm_grating_solver(*params, inplace=True)
         >>> s.axes_manager.signal_axes[0].units == 'nm'
         """
-
         nm_axis = solve_grating_equation(
             self.axes_manager.signal_axes[0],
             gamma_deg,
@@ -295,10 +292,9 @@ array([[ 0.,  0.,  1.,  2.,  3.,  4.],
     )
 
     def centroid(self, signal_range=None, **kwargs):
-        """
-        Finds the centroid (center of mass) of a peak in the spectrum from
-        the wavelength (or pixel number) and the intensity at each pixel
-        value. It basically represents a "weighted average" of the peak.
+        """Find the centroid (center of mass) of a peak.
+        
+        It basically represents a "weighted average" of the peak.
 
         Notes
         -----

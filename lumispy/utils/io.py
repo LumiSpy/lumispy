@@ -16,13 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
+"""
+File input/output utility functions.
+
+"""
+
 import numpy as np
 
 SAVETXT_DOCSTRING = """
-Writes single spectra to a two-column data file with signal axis as
-X and data as Y.
+Writes single spectra to a two-column data file with
+signal axis as X and data as Y.
 Writes linescan data to file with signal axis as first row and
-navigation axis as first column (flipped if `transpose=True`)."""
+navigation axis as first column (flipped if `transpose=True`).
+"""
 
 SAVETXT_PARAMETERS = """
 Parameters
@@ -44,7 +50,8 @@ transpose : bool, optional
 
 See also
 --------
-numpy.savetxt"""
+numpy.savetxt
+"""
 
 SAVETXT_EXAMPLE = """
 Examples
@@ -75,7 +82,8 @@ Examples
 TOARRAY_DOCSTRING = """
 Returns single spectra as two-column array.
 Returns linescan data as array with signal axis as first row and
-navigation axis as first column (flipped if `transpose=True`)."""
+navigation axis as first column (flipped if `transpose=True`).
+"""
 
 TOARRAY_PARAMETERS = """
 Parameters
@@ -88,7 +96,8 @@ transpose : bool, optional
     Ignored for single spectra.
 **kwargs 
     Takes any additional arguments of numpy.loadtxt, e.g. `newline`
-    `header`, `footer`, `comments`, or `encoding`."""
+    `header`, `footer`, `comments`, or `encoding`.
+"""
 
 TOARRAY_EXAMPLE = """
 Notes
@@ -118,15 +127,16 @@ array([[ 0.,  0.,  1.,  2.,  3.,  4.],
       [ 1.,  5.,  6.,  7.,  8.,  9.],
       [ 2., 10., 11., 12., 13., 14.],
       [ 3., 15., 16., 17., 18., 19.],
-      [ 4., 20., 21., 22., 23., 24.]])"""
+      [ 4., 20., 21., 22., 23., 24.]])
+"""
 
 
 def to_array(S, axes=True, transpose=False):
-    """Returns signal object as numpy array (optionally including the axes).
+    """Return signal object as numpy array (optionally including the axes).
+
     %s
-    Returns image as array with the navigation axes as first column and first
-    row.
-    Returns 2D data (e.g. map of a fit parameter value) as array with the signal
+    Return image as array with the navigation axes as first column and first row.
+    Return 2D data (e.g. map of a fit parameter value) as array with the signal
     axes as first column and first row.
     %s
     %s
@@ -180,11 +190,11 @@ to_array.__doc__ %= (TOARRAY_DOCSTRING, TOARRAY_PARAMETERS, TOARRAY_EXAMPLE)
 def savetxt(
     S, filename, fmt="%.5f", delimiter="\t", axes=True, transpose=False, **kwargs
 ):
-    """Writes signal object to simple text file.
+    """Write signal object to simple text file.
+
     %s
-    Writes image to file with the navigation axes as first column and first
-    row.
-    Writes 2D data (e.g. map of a fit parameter value) to file with the signal
+    Write image to file with the navigation axes as first column and first row.
+    Write 2D data (e.g. map of a fit parameter value) to file with the signal
     axes as first column and first row.
     %s
     %s
