@@ -19,106 +19,106 @@
 import numpy as np
 
 SAVETXT_DOCSTRING = """
-    Writes single spectra to a two-column data file with signal axis as
-    X and data as Y.
-    Writes linescan data to file with signal axis as first row and
-    navigation axis as first column (flipped if `transpose=True`)."""
+Writes single spectra to a two-column data file with signal axis as
+X and data as Y.
+Writes linescan data to file with signal axis as first row and
+navigation axis as first column (flipped if `transpose=True`)."""
 
 SAVETXT_PARAMETERS = """
-    Parameters
-    ----------
-    filename : string
-    fmt : str or sequence of strs, optional
-        A single or sequence of format strings. Default is '%.5f'.
-    delimiter : str, optional
-        String or character separating columns. Default is ','
-    axes : bool, optional
-        If True (default), include axes in saved file. If False, save the data
-        array only.
-    transpose : bool, optional
-        If True, transpose data array and exchange axes. Default is false.
-        Ignored for single spectra.
-    **kwargs 
-        Takes any additional arguments of numpy.loadtxt, e.g. `newline`
-        `header`, `footer`, `comments`, or `encoding`.
+Parameters
+----------
+filename : string
+fmt : str or sequence of strs, optional
+    A single or sequence of format strings. Default is '%.5f'.
+delimiter : str, optional
+    String or character separating columns. Default is ','
+axes : bool, optional
+    If True (default), include axes in saved file. If False, save the data
+    array only.
+transpose : bool, optional
+    If True, transpose data array and exchange axes. Default is false.
+    Ignored for single spectra.
+**kwargs 
+    Takes any additional arguments of numpy.loadtxt, e.g. `newline`
+    `header`, `footer`, `comments`, or `encoding`.
 
-    See also
-    --------
-    numpy.savetxt"""
+See also
+--------
+numpy.savetxt"""
 
 SAVETXT_EXAMPLE = """
-    Examples
-    --------
-    >>> import lumispy as lum
-    >>> import numpy as np
-    ...
-    >>> # Spectrum:
-    >>> S = lum.signals.LumiSpectrum(np.arange(5))
-    >>> lum.savetxt(S, 'spectrum.txt')
-    0.00000	0.00000
-    1.00000	1.00000
-    2.00000	2.00000
-    3.00000	3.00000
-    4.00000	4.00000
-    ...
-    >>> # Linescan:
-    >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
-    >>> lum.savetxt(L, 'linescan.txt')
-    0.00000	0.00000	1.00000	2.00000	3.00000	4.00000
-    0.00000	0.00000	5.00000	10.00000	15.00000	20.00000
-    1.00000	1.00000	6.00000	11.00000	16.00000	21.00000
-    2.00000	2.00000	7.00000	12.00000	17.00000	22.00000
-    3.00000	3.00000	8.00000	13.00000	18.00000	23.00000
-    4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
-    """
+Examples
+--------
+>>> import lumispy as lum
+>>> import numpy as np
+...
+>>> # Spectrum:
+>>> S = lum.signals.LumiSpectrum(np.arange(5))
+>>> lum.savetxt(S, 'spectrum.txt')
+0.00000	0.00000
+1.00000	1.00000
+2.00000	2.00000
+3.00000	3.00000
+4.00000	4.00000
+...
+>>> # Linescan:
+>>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
+>>> lum.savetxt(L, 'linescan.txt')
+0.00000	0.00000	1.00000	2.00000	3.00000	4.00000
+0.00000	0.00000	5.00000	10.00000	15.00000	20.00000
+1.00000	1.00000	6.00000	11.00000	16.00000	21.00000
+2.00000	2.00000	7.00000	12.00000	17.00000	22.00000
+3.00000	3.00000	8.00000	13.00000	18.00000	23.00000
+4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
+"""
 
 TOARRAY_DOCSTRING = """
-    Returns single spectra as two-column array.
-    Returns linescan data as array with signal axis as first row and
-    navigation axis as first column (flipped if `transpose=True`)."""
+Returns single spectra as two-column array.
+Returns linescan data as array with signal axis as first row and
+navigation axis as first column (flipped if `transpose=True`)."""
 
 TOARRAY_PARAMETERS = """
-    Parameters
-    ----------
-    axes : bool, optional
-        If True (default), include axes in array. If False, return the data
-        array only.
-    transpose : bool, optional
-        If True, transpose data array and exchange axes. Default is false.
-        Ignored for single spectra.
-    **kwargs 
-        Takes any additional arguments of numpy.loadtxt, e.g. `newline`
-        `header`, `footer`, `comments`, or `encoding`."""
+Parameters
+----------
+axes : bool, optional
+    If True (default), include axes in array. If False, return the data
+    array only.
+transpose : bool, optional
+    If True, transpose data array and exchange axes. Default is false.
+    Ignored for single spectra.
+**kwargs 
+    Takes any additional arguments of numpy.loadtxt, e.g. `newline`
+    `header`, `footer`, `comments`, or `encoding`."""
 
 TOARRAY_EXAMPLE = """
-    Notes
-    -----
-    The output of this function can be used to convert a signal object to a
-    pandas dataframe, e.g. using `df = pd.Dataframe(lum.to_array(S))`.
-    
-    Examples
-    --------
-    >>> import lumispy as lum
-    >>> import numpy as np
-    ...
-    >>> # Spectrum:
-    >>> S = lum.signals.LumiSpectrum(np.arange(5))
-    >>> lum.to_array(S)
-    array([[0., 0.],
-          [1., 1.],
-          [2., 2.],
-          [3., 3.],
-          [4., 4.]])
-    ...
-    >>> # Linescan:
-    >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
-    >>> lum.to_array(L)
-    array([[ 0.,  0.,  1.,  2.,  3.,  4.],
-          [ 0.,  0.,  1.,  2.,  3.,  4.],
-          [ 1.,  5.,  6.,  7.,  8.,  9.],
-          [ 2., 10., 11., 12., 13., 14.],
-          [ 3., 15., 16., 17., 18., 19.],
-          [ 4., 20., 21., 22., 23., 24.]])"""
+Notes
+-----
+The output of this function can be used to convert a signal object to a
+pandas dataframe, e.g. using `df = pd.Dataframe(lum.to_array(S))`.
+
+Examples
+--------
+>>> import lumispy as lum
+>>> import numpy as np
+...
+>>> # Spectrum:
+>>> S = lum.signals.LumiSpectrum(np.arange(5))
+>>> lum.to_array(S)
+array([[0., 0.],
+      [1., 1.],
+      [2., 2.],
+      [3., 3.],
+      [4., 4.]])
+...
+>>> # Linescan:
+>>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
+>>> lum.to_array(L)
+array([[ 0.,  0.,  1.,  2.,  3.,  4.],
+      [ 0.,  0.,  1.,  2.,  3.,  4.],
+      [ 1.,  5.,  6.,  7.,  8.,  9.],
+      [ 2., 10., 11., 12., 13., 14.],
+      [ 3., 15., 16., 17., 18., 19.],
+      [ 4., 20., 21., 22., 23., 24.]])"""
 
 
 def to_array(S, axes=True, transpose=False):

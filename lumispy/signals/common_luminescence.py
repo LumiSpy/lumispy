@@ -387,31 +387,31 @@ class CommonLumi:
         return self._convert_data(evaxis, factor, inplace, jacobian, data2eV, var2eV)
 
     TO_INVCM_DOCSTRING = """
-        The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
-        by doing a Jacobian transformation, see e.g. Mooney and Kambhampati,
-        J. Phys. Chem. Lett. 4, 3316 (2013), doi:10.1021/jz401508t, which
-        ensures that integrated signals are correct also in the wavenumber
-        domain. If the variance of the signal is known, i.e.
-        `metadata.Signal.Noise_properties.variance` is a signal representing the
-        variance, a squared renormalization of the variance is performed.
-        Note that if the variance is a number (not a signal instance), it is
-        converted to a signal if the Jacobian transformation is performed
+The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
+by doing a Jacobian transformation, see e.g. Mooney and Kambhampati,
+J. Phys. Chem. Lett. 4, 3316 (2013), doi:10.1021/jz401508t, which
+ensures that integrated signals are correct also in the wavenumber
+domain. If the variance of the signal is known, i.e.
+`metadata.Signal.Noise_properties.variance` is a signal representing the
+variance, a squared renormalization of the variance is performed.
+Note that if the variance is a number (not a signal instance), it is
+converted to a signal if the Jacobian transformation is performed
 
-        Parameters
-        ----------
-        inplace : boolean
-            If `False`, a new signal object is created and returned. Otherwise
-            (default) the operation is performed on the existing signal object.
-        """
+Parameters
+----------
+inplace : boolean
+    If `False`, a new signal object is created and returned. Otherwise
+    (default) the operation is performed on the existing signal object.
+"""
 
     TO_INVCM_EXAMPLE = """
-        Examples
-        --------
-        >>> import numpy as np
-        >>> from lumispy import LumiSpectrum
-        >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
-        >>> S1.to_invcm()
-        """
+Examples
+--------
+>>> import numpy as np
+>>> from lumispy import LumiSpectrum
+>>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+>>> S1.to_invcm()
+"""
 
     def to_invcm(self, inplace=True, jacobian=True):
         """Converts signal axis of 1D signal to non-linear wavenumber axis
@@ -434,13 +434,13 @@ class CommonLumi:
     to_invcm.__doc__ %= (TO_INVCM_DOCSTRING, TO_INVCM_EXAMPLE)
 
     TO_INVCMREL_EXAMPLE = """
-        Examples
-        --------
-        >>> import numpy as np
-        >>> from lumispy import LumiSpectrum
-        >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
-        >>> S1.to_invcm(laser=325)
-    """
+Examples
+--------
+>>> import numpy as np
+>>> from lumispy import LumiSpectrum
+>>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+>>> S1.to_invcm(laser=325)
+"""
 
     def to_invcm_relative(self, laser=None, inplace=True, jacobian=False):
         """Converts signal axis of 1D signal to non-linear wavenumber axis

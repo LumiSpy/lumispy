@@ -140,30 +140,30 @@ class LumiSpectrum(Signal1D, CommonLumi):
                 return self.map(lambda s, bkg: s - bkg, bkg=bkg_y, inplace=True)
 
     SAVETXT_EXAMPLE = """
-    Examples
-    --------
-    >>> import lumispy as lum
-    >>> import numpy as np
-    ...
-    >>> # Spectrum:
-    >>> S = lum.signals.LumiSpectrum(np.arange(5))
-    >>> S.savetxt('spectrum.txt')
-    0.00000	0.00000
-    1.00000	1.00000
-    2.00000	2.00000
-    3.00000	3.00000
-    4.00000	4.00000
-    ...
-    >>> # Linescan:
-    >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
-    >>> L.savetxt('linescan.txt')
-    0.00000	0.00000	1.00000	2.00000	3.00000	4.00000
-    0.00000	0.00000	5.00000	10.00000	15.00000	20.00000
-    1.00000	1.00000	6.00000	11.00000	16.00000	21.00000
-    2.00000	2.00000	7.00000	12.00000	17.00000	22.00000
-    3.00000	3.00000	8.00000	13.00000	18.00000	23.00000
-    4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
-    """
+Examples
+--------
+>>> import lumispy as lum
+>>> import numpy as np
+...
+>>> # Spectrum:
+>>> S = lum.signals.LumiSpectrum(np.arange(5))
+>>> S.savetxt('spectrum.txt')
+0.00000	0.00000
+1.00000	1.00000
+2.00000	2.00000
+3.00000	3.00000
+4.00000	4.00000
+...
+>>> # Linescan:
+>>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
+>>> L.savetxt('linescan.txt')
+0.00000	0.00000	1.00000	2.00000	3.00000	4.00000
+0.00000	0.00000	5.00000	10.00000	15.00000	20.00000
+1.00000	1.00000	6.00000	11.00000	16.00000	21.00000
+2.00000	2.00000	7.00000	12.00000	17.00000	22.00000
+3.00000	3.00000	8.00000	13.00000	18.00000	23.00000
+4.00000	4.00000	9.00000	14.00000	19.00000	24.00000
+"""
 
     def savetxt(
         self,
@@ -188,41 +188,43 @@ class LumiSpectrum(Signal1D, CommonLumi):
     )
 
     TOARRAY_EXAMPLE = """
-    Notes
-    -----
-    The output of this function can be used to convert a signal object to a
-    pandas dataframe, e.g. using `df = pd.Dataframe(S.to_array())`.
+Notes
+-----
+The output of this function can be used to convert a signal object to a
+pandas dataframe, e.g. using `df = pd.Dataframe(S.to_array())`.
 
-    Examples
-    --------
-    >>> import lumispy as lum
-    >>> import numpy as np
-    ...
-    >>> # Spectrum:
-    >>> S = lum.signals.LumiSpectrum(np.arange(5))
-    >>> S.to_array()
-    array([[0., 0.],
-          [1., 1.],
-          [2., 2.],
-          [3., 3.],
-          [4., 4.]])
-    ...
-    >>> # Linescan:
-    >>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
-    >>> L.to_array()
-    array([[ 0.,  0.,  1.,  2.,  3.,  4.],
-          [ 0.,  0.,  1.,  2.,  3.,  4.],
-          [ 1.,  5.,  6.,  7.,  8.,  9.],
-          [ 2., 10., 11., 12., 13., 14.],
-          [ 3., 15., 16., 17., 18., 19.],
-          [ 4., 20., 21., 22., 23., 24.]])
-    """
+Examples
+--------
+>>> import lumispy as lum
+>>> import numpy as np
+...
+>>> # Spectrum:
+>>> S = lum.signals.LumiSpectrum(np.arange(5))
+>>> S.to_array()
+array([[0., 0.],
+      [1., 1.],
+      [2., 2.],
+      [3., 3.],
+      [4., 4.]])
+...
+>>> # Linescan:
+>>> L = lum.signals.LumiSpectrum(np.arange(25).reshape((5,5)))
+>>> L.to_array()
+array([[ 0.,  0.,  1.,  2.,  3.,  4.],
+      [ 0.,  0.,  1.,  2.,  3.,  4.],
+      [ 1.,  5.,  6.,  7.,  8.,  9.],
+      [ 2., 10., 11., 12., 13., 14.],
+      [ 3., 15., 16., 17., 18., 19.],
+      [ 4., 20., 21., 22., 23., 24.]])
+"""
 
     def to_array(self, axes=True, transpose=False):
         """Returns luminescence spectrum object as numpy array (optionally
         including the axes).
-            %s
-            %s
+        %s
+
+        %s
+
         %s
         """
         return to_array(self, axes, transpose)
