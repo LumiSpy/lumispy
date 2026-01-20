@@ -27,7 +27,6 @@ from lumispy import signals, components, utils
 
 from lumispy.utils import crop_edges
 
-
 __version__ = version("lumispy")
 
 # For development version, `setuptools_scm` will be used at build time

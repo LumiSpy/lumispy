@@ -142,7 +142,7 @@ towncrier_draft_working_directory = ".."
 sphinx_gallery_conf = {
     "examples_dirs": "../examples",  # path to your example scripts
     "gallery_dirs": "auto_examples",  # path to where to save gallery generated output
-    'image_srcset': ["5x"],
+    "image_srcset": ["5x"],
     # directory where function/class granular galleries are stored
     "backreferences_dir": "backreferences",
     # Modules for which function/class level galleries are created. In

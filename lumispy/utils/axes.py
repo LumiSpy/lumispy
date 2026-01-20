@@ -25,7 +25,6 @@ from warnings import warn
 
 from hyperspy.axes import DataAxis, UniformDataAxis
 
-
 #
 # Functions needed for signal axis conversion
 #

@@ -184,7 +184,7 @@ class CLSEMSpectrum(CLSpectrum):
             raise RuntimeError("The grating shift has already been corrected.")
         else:
             # Get all relevant parameters
-            (nx, ny) = self.axes_manager.navigation_shape[:2]
+            nx, ny = self.axes_manager.navigation_shape[:2]
             fov = sem_magnification
 
             # Correction of the Wavelength Shift along the X-Axis
