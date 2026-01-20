@@ -21,6 +21,7 @@ from importlib.metadata import version
 from pathlib import Path
 
 from lumispy.utils.axes import nm2eV, eV2nm, nm2invcm, invcm2nm, join_spectra
+from lumispy.utils.plot import plot_linescan
 from lumispy.utils.io import to_array, savetxt
 
 from lumispy import signals, components, utils
