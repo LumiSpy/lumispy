@@ -19,7 +19,8 @@
 import numpy as np
 import pytest
 
-from lumispy.signals.luminescence_spectrum import LumiSpectrum
+from lumispy.signals import LumiSpectrum
+
 from hyperspy._signals.signal2d import Signal2D
 from numpy.testing import assert_allclose
 

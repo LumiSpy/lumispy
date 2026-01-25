@@ -25,7 +25,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: False
-    module: lumispy.signals.luminescence_spectrum
+    module: lumispy.signals
   LazyLumiSpectrum:
     signal_type: Luminescence
     signal_type_aliases:
@@ -34,7 +34,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: True
-    module: lumispy.signals.luminescence_spectrum
+    module: lumispy.signals
 
   CLSpectrum:
     signal_type: CL
@@ -44,7 +44,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: False
-    module: lumispy.signals.cl_spectrum
+    module: lumispy.signals
   LazyCLSpectrum:
     signal_type: CL
     signal_type_aliases:
@@ -53,7 +53,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: True
-    module: lumispy.signals.cl_spectrum
+    module: lumispy.signals
 
   ELSpectrum:
     signal_type: EL
@@ -63,7 +63,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: False
-    module: lumispy.signals.el_spectrum
+    module: lumispy.signals
   LazyELSpectrum:
     signal_type: EL
     signal_type_aliases:
@@ -72,7 +72,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: True
-    module: lumispy.signals.el_spectrum
+    module: lumispy.signals
 
   PLSpectrum:
     signal_type: PL
@@ -82,7 +82,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: False
-    module: lumispy.signals.pl_spectrum
+    module: lumispy.signals
   LazyPLSpectrum:
     signal_type: PL
     signal_type_aliases:
@@ -91,7 +91,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: True
-    module: lumispy.signals.pl_spectrum
+    module: lumispy.signals
 
   CLSEMSpectrum:
     signal_type: CL_SEM
@@ -101,7 +101,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: False
-    module: lumispy.signals.cl_spectrum
+    module: lumispy.signals
   LazyCLSEMSpectrum:
     signal_type: CL_SEM
     signal_type_aliases:
@@ -110,7 +110,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: True
-    module: lumispy.signals.cl_spectrum
+    module: lumispy.signals
 
   CLSTEMSpectrum:
     signal_type: CL_STEM
@@ -120,7 +120,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: False
-    module: lumispy.signals.cl_spectrum
+    module: lumispy.signals
   LazyCLSTEMSpectrum:
     signal_type: CL_STEM
     signal_type_aliases:
@@ -129,7 +129,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: True
-    module: lumispy.signals.cl_spectrum
+    module: lumispy.signals
 
   LumiTransient:
     signal_type: Transient
@@ -140,7 +140,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: False
-    module: lumispy.signals.luminescence_transient
+    module: lumispy.signals
   LazyLumiTransient:
     signal_type: Transient
     signal_type_aliases:
@@ -150,7 +150,7 @@ signals:
     signal_dimension: 1
     dtype: real
     lazy: True
-    module: lumispy.signals.luminescence_transient
+    module: lumispy.signals
 
   TransientSpectrumCasting: # allows casting to either Luminescence or Transient when dimensionality is reduced
     signal_type: TransientSpectrum
@@ -174,7 +174,7 @@ signals:
     signal_dimension: 2
     dtype: real
     lazy: False
-    module: lumispy.signals.luminescence_transientspec
+    module: lumispy.signals
   LazyLumiTransientSpectrum:
     signal_type: TransientSpectrum
     signal_type_aliases:
@@ -185,4 +185,4 @@ signals:
     signal_dimension: 2
     dtype: real
     lazy: True
-    module: lumispy.signals.luminescence_transientspec
+    module: lumispy.signals
