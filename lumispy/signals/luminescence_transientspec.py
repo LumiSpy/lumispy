@@ -24,7 +24,6 @@ Signal class for luminescence transient data (2D)
 import pint
 
 from hyperspy.signals import Signal1D, Signal2D
-from hyperspy._signals.lazy import LazySignal
 from hyperspy.docstrings.signal import OPTIMIZE_ARG
 
 from lumispy.signals import LumiSpectrum, LumiTransient
@@ -121,9 +120,3 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
         return s
 
     time2nav.__doc__ %= (OPTIMIZE_ARG,)
-
-
-class LazyLumiTransientSpectrum(LazySignal, LumiTransientSpectrum):
-    """**Lazy 2D luminescence signal class (spectral+transient/time resolved dimensions)**"""
-
-    _lazy = True

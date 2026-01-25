@@ -21,8 +21,6 @@ Signal class for electroluminescence spectral data
 --------------------------------------------------
 """
 
-from hyperspy._signals.lazy import LazySignal
-
 from lumispy.signals import LumiSpectrum
 
 
@@ -31,9 +29,3 @@ class ELSpectrum(LumiSpectrum):
 
     _signal_type = "EL"
     _signal_dimension = 1
-
-
-class LazyELSpectrum(LazySignal, ELSpectrum):
-    """**General lazy 1D electroluminescence signal class**"""
-
-    _lazy = True

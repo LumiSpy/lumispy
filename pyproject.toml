@@ -23,7 +23,9 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
 ]
 dependencies = [
-    "hyperspy >= 1.7.3",  # earlier versions fail on pint dependency
+    # lazy implementation relies on hyperspy-dev
+    "hyperspy @ git+https://github.com/hyperspy/hyperspy.git@RELEASE_next_patch",
+    "lazy-loader",
     "numpy",
     "scipy",
     "pint>=0.10",

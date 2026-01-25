@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019-2026 The LumiSpy developers
+# Copyright 2019-2025 The LumiSpy developers
 #
 # This file is part of LumiSpy.
 #
@@ -16,7 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
+"""
+Lazy signal class for electroluminescence spectral data
+-------------------------------------------------------
+"""
 
-import lazy_loader
+from hyperspy.docstrings.signal import LAZYSIGNAL_DOC
+from hyperspy.signals import LazySignal1D
 
-__getattr__, __dir__, __all__ = lazy_loader.attach_stub(__name__, __file__)
+from lumispy.signals import ELSpectrum
+
+
+class LazyELSpectrum(LazySignal1D, ELSpectrum):
+    """**Lazy general 1D electroluminescence signal class**"""
+
+    __doc__ += LAZYSIGNAL_DOC.replace("__BASECLASS__", "ELSpectrum")

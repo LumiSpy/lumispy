@@ -16,31 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-from .luminescence_spectrum import LumiSpectrum, LazyLumiSpectrum
-from .cl_spectrum import CLSpectrum, LazyCLSpectrum
-from .cl_spectrum import CLSEMSpectrum, LazyCLSEMSpectrum
-from .cl_spectrum import CLSTEMSpectrum, LazyCLSTEMSpectrum
-from .pl_spectrum import PLSpectrum, LazyPLSpectrum
-from .el_spectrum import ELSpectrum, LazyELSpectrum
-from .luminescence_transient import LumiTransient, LazyLumiTransient
-from .luminescence_transientspec import LumiTransientSpectrum, LazyLumiTransientSpectrum
+"""
+Modules containing the LumiSpy signals and their lazy counterparts.
 
+"""
 
-__all__ = [
-    "LumiSpectrum",
-    "LazyLumiSpectrum",
-    "CLSpectrum",
-    "LazyCLSpectrum",
-    "CLSEMSpectrum",
-    "LazyCLSEMSpectrum",
-    "CLSTEMSpectrum",
-    "LazyCLSTEMSpectrum",
-    "PLSpectrum",
-    "LazyPLSpectrum",
-    "ELSpectrum",
-    "LazyELSpectrum",
-    "LumiTransient",
-    "LazyLumiTransient",
-    "LumiTransientSpectrum",
-    "LazyLumiTransientSpectrum",
-]
+import lazy_loader
+
+__getattr__, __dir__, __all__ = lazy_loader.attach_stub(__name__, __file__)

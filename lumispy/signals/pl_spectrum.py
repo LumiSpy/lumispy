@@ -21,8 +21,6 @@ Signal class for photoluminescence spectral data
 ------------------------------------------------
 """
 
-from hyperspy._signals.lazy import LazySignal
-
 from lumispy.signals import LumiSpectrum
 
 
@@ -31,9 +29,3 @@ class PLSpectrum(LumiSpectrum):
 
     _signal_type = "PL"
     _signal_dimension = 1
-
-
-class LazyPLSpectrum(LazySignal, PLSpectrum):
-    """**General lazy 1D photoluminescence signal class**"""
-
-    _lazy = True

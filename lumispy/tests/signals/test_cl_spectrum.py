@@ -21,7 +21,7 @@ import pytest
 
 from inspect import getfullargspec
 
-from lumispy.signals.cl_spectrum import CLSpectrum
+from lumispy.signals import CLSpectrum
 
 
 param_list_signal_mask = [

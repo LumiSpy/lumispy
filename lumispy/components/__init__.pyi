@@ -17,6 +17,3 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 
-import lazy_loader
-
-__getattr__, __dir__, __all__ = lazy_loader.attach_stub(__name__, __file__)

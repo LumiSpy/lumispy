@@ -23,9 +23,9 @@ Utility functions used in signal classes.
 
 import numpy as np
 from hyperspy.axes import FunctionalDataAxis
-from scipy.ndimage import center_of_mass
-from scipy.interpolate import interp1d
+import scipy
 from warnings import warn
+
 
 CROP_EDGES_DOCSTRING = """
     Crop the amount of pixels from the four edges of the scanning
@@ -112,11 +112,11 @@ def com(spectrum_intensities, signal_axis, **kwargs):
         else:
             y = [axis_array[index], axis_array[index + 1]]
             x = [0, 1]
-            fx = interp1d(x, y, **kwargs)
+            fx = scipy.interpolate.interp1d(x, y, **kwargs)
             return float(fx(rem))
 
     # Find center of mass wrt array index
-    index_com = float(center_of_mass(spectrum_intensities)[0])
+    index_com = float(scipy.ndimage.center_of_mass(spectrum_intensities)[0])
 
     # Check for the type of hyperspy.axis
     if type(signal_axis) == FunctionalDataAxis:
