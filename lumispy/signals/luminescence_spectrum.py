@@ -25,7 +25,6 @@ import numpy as np
 from warnings import warn
 
 from hyperspy.signals import Signal1D
-from hyperspy._signals.lazy import LazySignal
 from traits.api import Undefined
 
 from lumispy.signals.common_luminescence import CommonLumi
@@ -355,9 +354,3 @@ class LumiSpectrum(Signal1D, CommonLumi):
         if center_of_mass.axes_manager.navigation_size > 0:
             center_of_mass = center_of_mass.transpose()
         return center_of_mass
-
-
-class LazyLumiSpectrum(LazySignal, LumiSpectrum):
-    """**General lazy 1D luminescence signal class.**"""
-
-    _lazy = True

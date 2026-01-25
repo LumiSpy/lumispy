@@ -17,15 +17,17 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 """
-Signal class for photoluminescence spectral data
-------------------------------------------------
+Lazy signal class for photoluminescence spectral data
+-----------------------------------------------------
 """
 
-from lumispy.signals import LumiSpectrum
+from hyperspy.docstrings.signal import LAZYSIGNAL_DOC
+from hyperspy.signals import LazySignal1D
+
+from lumispy.signals import PLSpectrum
 
 
-class PLSpectrum(LumiSpectrum):
-    """**General 1D photoluminescence signal class**"""
+class LazyPLSpectrum(LazySignal1D, PLSpectrum):
+    """**Lazy general 1D photoluminescence signal class**"""
 
-    _signal_type = "PL"
-    _signal_dimension = 1
+    __doc__ += LAZYSIGNAL_DOC.replace("__BASECLASS__", "PLSpectrum")
