@@ -16,11 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-"""
-Module containing model components defined in LumiSpy.
+from .axes import (
+    axis2eV,
+    data2eV,
+    var2eV,
+    axis2invcm,
+    data2invcm,
+    var2invcm,
+    solve_grating_equation,
+)
 
-"""
-
-import lazy_loader
-
-__getattr__, __dir__, __all__ = lazy_loader.attach_stub(__name__, __file__)
+from .signals import (
+    com,
+    crop_edges,
+)
