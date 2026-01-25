@@ -17,8 +17,8 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 """
-Signal class for cathodoluminescence spectral data
---------------------------------------------------
+Signal classes for cathodoluminescence spectral data
+----------------------------------------------------
 """
 
 import numpy as np
@@ -141,12 +141,6 @@ class CLSpectrum(LumiSpectrum):
     )
 
 
-class LazyCLSpectrum(LazySignal, CLSpectrum):
-    """**General lazy 1D cathodoluminescence signal class.**"""
-
-    _lazy = True
-
-
 """SEM specific signal class for Cathodoluminescence spectral data.
 """
 
@@ -203,23 +197,7 @@ class CLSEMSpectrum(CLSpectrum):
             self.metadata.set_item("Signal.grating_corrected", True)
 
 
-class LazyCLSEMSpectrum(LazySignal, CLSEMSpectrum):
-    """**Lazy 1D scanning electron microscopy cathodoluminescence signal class.**"""
-
-    _lazy = True
-
-
-"""STEM specific signal class for Cathodoluminescence spectral data.
-"""
-
-
 class CLSTEMSpectrum(CLSpectrum):
     """**1D scanning transmission electron microscopy cathodoluminescence signal class.**"""
 
     _signal_type = "CL_STEM"
-
-
-class LazyCLSTEMSpectrum(LazySignal, CLSTEMSpectrum):
-    """**Lazy 1D scanning transmission electron microscopy cathodoluminescence signal class.**"""
-
-    _lazy = True
