@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
+"""
+Functions needed for signal axis conversion.
+
+"""
+
 import numpy as np
 import scipy.constants as c
 from scipy.interpolate import interp1d
@@ -24,11 +29,6 @@ from copy import deepcopy
 from warnings import warn
 
 from hyperspy.axes import DataAxis, UniformDataAxis
-
-
-#
-# Functions needed for signal axis conversion
-#
 
 
 def _n_air(x):
@@ -64,14 +64,14 @@ def _n_air(x):
 
 
 def nm2eV(x):
-    """Converts wavelength (nm) to energy (eV) using wavelength-dependent
+    """Convert wavelength (nm) to energy (eV) using wavelength-dependent
     refractive index of air.
     """
     return 1e9 * c.h * c.c / (c.e * _n_air(x) * x)
 
 
 def eV2nm(x):
-    """Converts energy (eV) to wavelength (nm) using wavelength-dependent
+    """Convert energy (eV) to wavelength (nm) using wavelength-dependent
     refractive index of air.
     """
     wl = 1239.5 / x  # approximate WL to obtain refractive index
@@ -79,7 +79,7 @@ def eV2nm(x):
 
 
 def axis2eV(ax0):
-    """Converts given signal axis to energy scale (eV) using wavelength
+    """Convert given signal axis to energy scale (eV) using wavelength
     dependent refractive index of air. Assumes wavelength in units of nm unless the
     axis units are specifically set to µm.
     """
@@ -132,17 +132,17 @@ def var2eV(variance, factor, evaxis, ax0):
 
 
 def nm2invcm(x):
-    r"""Converts wavelength (nm) to wavenumber (cm$^{-1}$)."""
+    r"""Convert wavelength (nm) to wavenumber (cm$^{-1}$)."""
     return 1e7 / x
 
 
 def invcm2nm(x):
-    r"""Converts wavenumber (cm$^{-1}$) to wavelength (nm)."""
+    r"""Convert wavenumber (cm$^{-1}$) to wavelength (nm)."""
     return 1e7 / x
 
 
 def axis2invcm(ax0):
-    r"""Converts given signal axis to wavenumber scale (cm$^{-1}$). Assumes
+    r"""Convert given signal axis to wavenumber scale (cm$^{-1}$). Assumes
     wavelength in units of nm unless the axis units are specifically set to µm.
     """
     if ax0.units == r"cm$^{-1}$":
@@ -182,8 +182,9 @@ def var2invcm(variance, factor, invcmaxis, ax0=None):
 
 
 def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
-    """Takes list of Signal1D objects and returns a single object with all
-    spectra joined. Joins spectra at the center of the overlapping range.
+    """Take list of Signal1D objects and return a single object with all spectra joined.
+
+    Joins spectra at the center of the overlapping range.
     Scales spectra by a factor determined as average over the range
     `center -/+ r` pixels. Works both for uniform and non-uniform axes
     (FunctionalDataAxis is converted into a non-uniform DataAxis).
@@ -405,8 +406,9 @@ def solve_grating_equation(
     grating_central_wavelength_nm,
     grating_density_gr_mm,
 ):
-    r"""Solves the grating equation.
-    See `horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position`
+    r"""Solve the grating equation.
+
+    See `https://horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position`
     for equations.
 
     Parameters

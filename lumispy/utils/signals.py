@@ -16,6 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
+"""
+Utility functions used in signal classes.
+
+"""
+
 import numpy as np
 from hyperspy.axes import FunctionalDataAxis
 from scipy.ndimage import center_of_mass
@@ -62,8 +67,10 @@ CROP_EDGES_PARAMETERS = """
 
 
 def com(spectrum_intensities, signal_axis, **kwargs):
-    """Finds the centroid (center of mass) of a peak in the spectrum based
-    from the intensity at each pixel value and its respective signal axis.
+    """Find the centroid (center of mass) of a peak.
+    
+    Basically represents a weighted average of the spectrum based on the
+    intensity at each pixel and its respective signal axis.
 
     Parameters
     ----------
@@ -93,10 +100,10 @@ def com(spectrum_intensities, signal_axis, **kwargs):
     """
 
     def _interpolate_signal(axis_array, index, **kwargs):
-        """
-        Wrapper for `hs.axes.index2value` that linearly interpolates between
-        values should the index passed not be a integer. Using the kwargs, the
-        interpolation method can be changed.
+        """Wrapper for `hs.axes.index2value`.
+        
+        Linearly interpolate between values should the index passed not be a
+        integer. Using the kwargs, the interpolation method can be changed.
         """
         rem = index % 1
         index = int(index // 1)
