@@ -24,8 +24,6 @@ Signal classes for cathodoluminescence spectral data
 import numpy as np
 from warnings import warn
 
-from hyperspy._signals.lazy import LazySignal
-
 from lumispy.signals import LumiSpectrum
 
 
