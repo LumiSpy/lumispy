@@ -23,8 +23,9 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
 ]
 dependencies = [
-    "hyperspy >= 2.1.1",  # earlier versions fail on pint dependency
+    "hyperspy >= 2.4.0",  # needed for lazy loading capability
     "numpy >= 2.0",
+    "lazy-loader",
     "scipy",
     "pint>=0.10",
 ]
