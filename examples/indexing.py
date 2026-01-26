@@ -6,6 +6,7 @@ The index operation returns a view of the original signal.
 
 .. _HS_inav: https://hyperspy.org/hyperspy-doc/current/reference/api.signals/BaseSignal.html#hyperspy.api.signals.BaseSignal.inav
 .. _HS_isig: https://hyperspy.org/hyperspy-doc/current/reference/api.signals/BaseSignal.html#hyperspy.api.signals.BaseSignal.isig
+.. _HS_uniform_axis: https://hyperspy.org/hyperspy-doc/current/reference/base_classes/axes.html#hyperspy.axes.UniformDataAxis
 """
 
 import hyperspy.api as hs
@@ -58,7 +59,7 @@ s.inav[2, 1].isig[0].data
 # Indexing using Physical units
 # -----------------------------
 #
-# Hyperspy supports indexing with physical units (floating-point) values when the corresponding axis is calibrated. This is achieved using the `scale` and `offset` attributes of the axis.
+# Hyperspy supports indexing with physical units (floating-point) values when the corresponding axis is calibrated. This is achieved using the `scale <HS_uniform_axis_>`__ and `offset <HS_uniform_axis_>`__ attributes of the axis.
 s.axes_manager[-1].scale = 0.5
 
 # the scale gives us the new indices for indexing
