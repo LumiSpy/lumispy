@@ -3,6 +3,7 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here.
 import sys
+import platform
 from datetime import datetime
 from importlib.metadata import version as get_version
 
@@ -36,6 +37,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinxcontrib.towncrier",
     "sphinx_copybutton",
+    "sphinx_gallery.gen_gallery",
 ]
 
 intersphinx_mapping = {
@@ -71,6 +73,7 @@ html_theme = "sphinx_rtd_theme"
 
 html_theme_options = {
     "logo_only": True,
+    "collapse_navigation": False,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -132,3 +135,31 @@ copybutton_line_continuation_character = "\\"
 towncrier_draft_autoversion_mode = "draft"
 towncrier_draft_include_empty = False
 towncrier_draft_working_directory = ".."
+
+# -- Sphinx-Gallery---------------
+
+# https://sphinx-gallery.github.io
+sphinx_gallery_conf = {
+    "examples_dirs": "../examples",  # path to your example scripts
+    "gallery_dirs": "auto_examples",  # path to where to save gallery generated output
+    "image_srcset": ["5x"],
+    # directory where function/class granular galleries are stored
+    "backreferences_dir": "backreferences",
+    # Modules for which function/class level galleries are created. In
+    # this case lumispy in a tuple of strings.
+    "doc_module": ("lumispy",),
+    "filename_pattern": ".py",  # pattern to define which will be executed
+    "ignore_pattern": "_sgskip.py",  # pattern to define which will not be executed
+    "notebook_images": "https://lumispy.org/lumispy-doc/current/",  # folder for loading images in gallery
+    "reference_url": {"lumispy": None},
+    "nested_sections": False,  # Prevent nested galleries to avoid duplication
+}
+
+
+if platform.system() != "Windows":
+    # optipng is not straightforward to install on Windows
+    # don't use compression on Windows to avoid warning when building the documentation
+    sphinx_gallery_conf["compress_images"] = (
+        "images",
+        "thumbnails",
+    )  # use optipng to reduce image file size
