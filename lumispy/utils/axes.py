@@ -30,6 +30,9 @@ from warnings import warn
 
 from hyperspy.axes import DataAxis, UniformDataAxis
 
+#
+# Functions needed for signal axis conversion
+#
 
 def _n_air(x):
     """Refractive index of air as a function of WL in nm.

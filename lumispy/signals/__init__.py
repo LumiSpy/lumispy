@@ -25,7 +25,6 @@ from .el_spectrum import ELSpectrum, LazyELSpectrum
 from .luminescence_transient import LumiTransient, LazyLumiTransient
 from .luminescence_transientspec import LumiTransientSpectrum, LazyLumiTransientSpectrum
 
-
 __all__ = [
     "LumiSpectrum",
     "LazyLumiSpectrum",

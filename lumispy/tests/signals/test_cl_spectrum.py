@@ -23,7 +23,6 @@ from inspect import getfullargspec
 
 from lumispy.signals.cl_spectrum import CLSpectrum
 
-
 param_list_signal_mask = [
     ([900, 500], [False, False, False, True, True, True, True, True, True, False]),
     (
