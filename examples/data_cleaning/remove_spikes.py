@@ -5,16 +5,10 @@ Remove Spikes
 This example shows how to remove spikes from a dataset.
 """
 
-import hyperspy.api as hs
 import lumispy as lum
-import matplotlib.pyplot as plt
-import numpy as np
-from pathlib import Path
 
-# Load the data from a file
-file_path = Path.cwd().parent.parent / "lumispy" / "data" / "asymmetric_peak_map.hspy"
-
-cl1 = hs.load(file_path)
+# Load the data
+cl1 = lum.data.asymmetric_peak_map()
 cl1 = cl1.remove_background(signal_range=(550.0, 620.0), background_type="Offset")
 cl1 = cl1.isig[:-3]
 
