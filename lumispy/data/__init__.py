@@ -39,7 +39,7 @@ def _resolve_dir():
 
 
 def asymmetric_peak_map():
-    """Load example asymmetric peak map data.
+    """Load an examplary datamap with an asymmetric peak. Some of the spectra contain spikes.
 
     Returns
     -------
@@ -52,7 +52,7 @@ def asymmetric_peak_map():
 
 
 def nanoparticles():
-    """Load example nanoparticle spectrum data.
+    """Load an examplary datamap with one peak. The spectra contain a lot of noise.
 
     Returns
     -------
