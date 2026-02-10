@@ -23,8 +23,8 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
 ]
 dependencies = [
-    "hyperspy >= 1.7.3",  # earlier versions fail on pint dependency
-    "numpy",
+    "hyperspy >= 2.1.1",  # earlier versions fail on pint dependency
+    "numpy >= 2.0",
     "scipy",
     "pint>=0.10",
 ]
@@ -82,6 +82,7 @@ doc = [
   "sphinx_rtd_theme>=0.5.1",
   "sphinx-copybutton",
   "sphinxcontrib-towncrier>=0.5.0a0",
+  "sphinx-gallery",
   "towncrier",
   "numba",
 ]

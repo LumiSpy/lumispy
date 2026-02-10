@@ -24,9 +24,9 @@ from lumispy.utils.axes import nm2eV, eV2nm, nm2invcm, invcm2nm, join_spectra
 from lumispy.utils.io import to_array, savetxt
 
 from lumispy import signals, components, utils
+from . import data
 
 from lumispy.utils import crop_edges
-
 
 __version__ = version("lumispy")
 
@@ -58,6 +58,7 @@ __all__ = [
     "components",
     "signals",
     "utils",
+    "data",
 ]
 
 

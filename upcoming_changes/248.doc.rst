@@ -1,0 +1,1 @@
+Added gallery of examples to the documentation.

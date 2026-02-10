@@ -63,6 +63,12 @@ Contents
    user_guide/bibliography.rst
 
 .. toctree::
+   :maxdepth: 1
+   :caption: Examples
+
+   Examples <auto_examples/index>
+
+.. toctree::
    :maxdepth: 2
    :caption: API reference
 
