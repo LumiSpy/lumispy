@@ -68,7 +68,7 @@ CROP_EDGES_PARAMETERS = """
 
 def com(spectrum_intensities, signal_axis, **kwargs):
     """Find the centroid (center of mass) of a peak.
-    
+
     Basically represents a weighted average of the spectrum based on the
     intensity at each pixel and its respective signal axis.
 
@@ -101,7 +101,7 @@ def com(spectrum_intensities, signal_axis, **kwargs):
 
     def _interpolate_signal(axis_array, index, **kwargs):
         """Wrapper for `hs.axes.index2value`.
-        
+
         Linearly interpolate between values should the index passed not be a
         integer. Using the kwargs, the interpolation method can be changed.
         """

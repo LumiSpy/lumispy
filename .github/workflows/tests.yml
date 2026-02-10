@@ -48,7 +48,7 @@ jobs:
             PIP_SELECTOR: '[tests]'
             LABEL: -release-oldest
             # Matching pyproject.toml
-            DEPENDENCIES: hyperspy==1.7.3
+            DEPENDENCIES: hyperspy==2.1.1
 
     steps:
       - uses: actions/checkout@v5
