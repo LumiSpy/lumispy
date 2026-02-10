@@ -220,7 +220,7 @@ array([[ 0.,  0.,  1.,  2.,  3.,  4.],
 
     def to_array(self, axes=True, transpose=False):
         """Return luminescence spectrum object as numpy array.
-
+ 
         %s
         %s
         %s
@@ -293,7 +293,7 @@ array([[ 0.,  0.,  1.,  2.,  3.,  4.],
 
     def centroid(self, signal_range=None, **kwargs):
         """Find the centroid (center of mass) of a peak.
-
+        
         It basically represents a "weighted average" of the peak.
 
         Notes
