@@ -24,10 +24,10 @@ m.components
 # Since we dont hav any yet, we need to create some components and add them to the model.
 # Since we have an asymmetric peak, we will use a single SkewNormal component.
 # For successful Fit we need to pass the center wavelength ``x0=650nm`` [#f1]_.
-g1 = hs.model.components1D.SkewNormal(x0=650)
+g = hs.model.components1D.SkewNormal(x0=650)
 # Alternative way to set the start value of x0:
-# g1.x0.value = 650
-m.append(g1)
+# g.x0.value = 650
+m.append(g)
 m.components
 
 # %%
@@ -50,7 +50,7 @@ m.print_current_values()
 # %%
 # If we used ``multifit()``, we could aswell return the fitted parameter as Signal objects.
 m.multifit()
-g1.A.as_signal().plot(cmap="viridis")
+g.A.as_signal().plot(cmap="viridis")
 
 # %%
 # sphinx_gallery_thumbnail_number = 2

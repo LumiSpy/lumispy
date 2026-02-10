@@ -21,8 +21,7 @@ s = lum.data.asymmetric_peak_map()
 #
 # To use ROIs we first have to plot the signal. After that we can plot the ROI which will extract a line scan from the map.
 line_roi1 = hs.roi.Line2DROI()  # define the ROI
-s.axes_manager["x"].index = 20
-s.axes_manager["y"].index = 10
+s.axes_manager.indices = (20, 10)
 s.plot()
 # plot the ROI and extract the line scan
 profile1 = line_roi1.interactive(s, color="red")

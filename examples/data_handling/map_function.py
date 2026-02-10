@@ -18,8 +18,7 @@ import numpy as np
 #
 # Choosing the spectrum at the navigation coordinates ``(15, 12)`` to see a spike
 s = lum.data.asymmetric_peak_map()
-s.axes_manager["x"].index = 15
-s.axes_manager["y"].index = 12
+s.axes_manager.indices = (15, 12)
 s.plot()
 
 # %%
@@ -28,8 +27,7 @@ s.plot()
 #
 # Get the highest Intensity from every spectrum in the map
 s_max = s.map(np.max, inplace=False)
-s_max.axes_manager["x"].index = 15
-s_max.axes_manager["y"].index = 12
+s_max.axes_manager.indices = (15, 12)
 s_max.plot()
 
 
@@ -47,8 +45,7 @@ def black_white(spectrum):
 
 
 s_black_white = s.map(black_white, inplace=False)
-s_black_white.axes_manager["x"].index = 15
-s_black_white.axes_manager["y"].index = 12
+s_black_white.axes_manager.indices = (15, 12)
 s_black_white.plot()
 
 # %%

@@ -14,7 +14,7 @@ import numpy as np
 
 # %%
 # Creating a small example signal
-# --------------------------------
+# -------------------------------
 #
 # We create a simple ``Signal1D`` with a total shape of ``(2, 3, 4)``:
 #
@@ -25,7 +25,7 @@ s.data
 
 # %%
 # Indexing navigation axes using `inav <HS_inav_>`__
-# ---------------------------------------
+# --------------------------------------------------
 #
 # The signal contains two navigation axes, both of which can be accessed independently or together.
 
@@ -44,7 +44,7 @@ s.inav[0, 0].data
 
 # %%
 # Indexing signal axes using `isig <HS_isig_>`__
-# -----------------------------------
+# ----------------------------------------------
 # The signal axis can be indexed independently of the navigation axes.
 s.isig[0].data
 

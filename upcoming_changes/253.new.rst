@@ -1,1 +1,1 @@
-Indexing, Map Function, Energy Conversion, ROI, Peak Analysis, Basic Model Fitting Example for the Gallery of Examples
+Indexing, Map Function, Energy Conversion, ROI, Peak Analysis, Basic Model Fitting, Advanced Model Fitting, Custom Components Example for the Gallery of Examples
