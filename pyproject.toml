@@ -82,6 +82,7 @@ doc = [
   "sphinx_rtd_theme>=0.5.1",
   "sphinx-copybutton",
   "sphinxcontrib-towncrier>=0.5.0a0",
+  "sphinx-gallery",
   "towncrier",
   "numba",
 ]

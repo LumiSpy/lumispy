@@ -6,3 +6,8 @@ https://stackoverflow.com/questions/59215996/how-to-add-a-logo-to-my-readthedocs
     width: 1000px;
     max-width: 75%;
 }
+
+.sphx-glr-multi-img {
+    max-width: 42% !important;
+    height: auto;
+}
