@@ -1,4 +1,4 @@
-Data Processing
+Data Processing 
 ===============
 
-Gallery of examples for data processing in lumispy/hyperspy.
+Below is a gallery of examples on how to proccess data.

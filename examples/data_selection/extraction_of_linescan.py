@@ -1,6 +1,6 @@
 """
 Extraction of linescan
-==================
+======================
 
 This example shows how to extract a linescan from a map using a ROI.
 """

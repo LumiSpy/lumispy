@@ -37,7 +37,7 @@ m1.plot()
 # Define from a function
 # ----------------------
 #
-# You can define more general components modifying the following template[#f1]_:
+# You can define more general components modifying the following template [#f1]_:
 from hyperspy.component import Component
 
 
