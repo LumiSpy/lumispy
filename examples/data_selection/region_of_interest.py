@@ -13,7 +13,8 @@ For more information about ROIs see the `documentation <HS_roi_>`__.
 import hyperspy.api as hs
 import lumispy as lum
 
-s = lum.data.asymmetric_peak_map()
+s1 = lum.data.asymmetric_peak_map()
+s2 = lum.data.nanoparticles()
 
 # %%
 # Interactive ROI
@@ -21,10 +22,10 @@ s = lum.data.asymmetric_peak_map()
 #
 # To use ROIs we first have to plot the signal. After that we can plot the ROI which will extract a line scan from the map.
 line_roi1 = hs.roi.Line2DROI()  # define the ROI
-s.axes_manager.indices = (20, 10)
-s.plot()
+s1.axes_manager.indices = (20, 10)
+s1.plot()
 # plot the ROI and extract the line scan
-profile1 = line_roi1.interactive(s, color="red")
+profile1 = line_roi1.interactive(s1, color="red")
 
 # %%
 # Return value of the ROI
@@ -42,8 +43,32 @@ hs.plot.plot_spectra(profile1)
 # ``Line2DROI(x1=, y1=, x2=, y2=, linewidth=)``.
 # First we need to define the ROI:
 line_roi2 = hs.roi.Line2DROI(1.08, 0.36, 0.76, 0.52, 0)
-profile2 = line_roi2(s)
+profile2 = line_roi2(s1)
 hs.plot.plot_spectra(profile2)
 
 # %%
-# sphinx_gallery_thumbnail_number = 4
+# Circle ROI
+# ----------
+#
+# We can also use a circle ROI. The circle ROI is defined by its center and radius. See more ROIs in the `documentation <HS_roi_>`__.
+
+# get axes
+ax1 = s2.axes_manager[0]
+ax2 = s2.axes_manager[1]
+
+# define start params
+cx = 7 * ax1.scale + ax1.offset
+cy = 7 * ax2.scale + ax2.offset
+r = 5 * ((ax1.scale + ax2.scale) / 2)
+
+# define the ROI
+circle_roi = hs.roi.CircleROI(cx=cx, cy=cy, r=r)
+
+# plot the ROI and extract the spectra
+s2.axes_manager.indices = (7, 7)
+s2.plot()
+profile3 = circle_roi.interactive(s2)
+hs.plot.plot_spectra(profile3)
+
+# %%
+# sphinx_gallery_thumbnail_number = 7

@@ -13,15 +13,12 @@ import hyperspy.api as hs
 import numpy as np
 
 x = np.linspace(-50, 50, 500)
+axis = {"scale": x[1] - x[0], "offset": x[0], "size": x.size}
 y = np.power(x, 2) + np.random.normal(0, 100, x.shape)
-s = hs.signals.Signal1D(y)
+s = hs.signals.Signal1D(y, axes=[axis])
+
 m1 = s.create_model()
 m2 = s.create_model()
-
-axis = s.axes_manager[-1]
-axis.name = "x"
-axis.scale = x[1] - x[0]
-axis.offset = x[0]
 
 # %%
 # Mathematical Expression
@@ -37,7 +34,7 @@ m1.plot()
 # Define from a function
 # ----------------------
 #
-# You can define more general components modifying the following template[#f1]_:
+# You can define more general components modifying the following template [#f1]_:
 from hyperspy.component import Component
 
 
@@ -66,14 +63,14 @@ m2.plot()
 #
 # The ``ScalableFixedPattern`` component, enables fitting a pattern (in the form of a ``Signal1D`` instance) to data by shifting (``shift``) and scaling it in the x and y directions using
 # the ``xscale`` and ``yscale`` parameters respectively, see more in the `docs <HS_fixed-pattern_>`__.
-data = hs.signals.Signal1D(np.power(x, 2))
+data = hs.signals.Signal1D(np.power(x, 2), axes=[axis])
 m3 = s.create_model()
-fixed_pattern = hs.model.components1D.ScalableFixedPattern(s)
+fixed_pattern = hs.model.components1D.ScalableFixedPattern(data)
 m3.append(fixed_pattern)
 m3.fit()
 m3.plot()
 
 # %%
-# sphinx_gallery_thumbnail_number = 4
+# sphinx_gallery_thumbnail_number = 3
 #
 # .. [#f1] To learn more about creating custom components, check out the `Hyperspy documentation <HS_create_components_>`__.
