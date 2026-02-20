@@ -23,6 +23,7 @@ Signal class for luminescence data (BaseSignal class)
 
 import numpy as np
 from warnings import warn
+import operator
 from lumispy.utils.signals import crop_edges
 
 from lumispy import nm2invcm
@@ -232,6 +233,62 @@ class CommonLumi:
                 s.metadata.Signal.quantity = "Normalized intensity"
         if not inplace:
             return s
+
+    def _apply(self, ref, op, inplace=False):
+        """Utility function to perform an operation on the signal data with a reference spectrum.
+
+        E.g. for spectral response correction and calculate spectral response, where the operation would differ.
+
+        Parameters
+        ----------
+        ref: Signal 1D object
+            Reference spectrum to be used for the operation.
+        op: operator
+            The operation to be performed on the signal.
+        inplace: boolean, optional
+            If ``False`` (default), a new signal object is created and returned. Otherwise, the operation is performed on the original signal object.
+
+        Returns
+        -------
+        Signal object
+        """
+        result = op(self, ref)
+        if inplace:
+            self.data = result.data
+            return self
+        return result
+
+    def spectral_response_correction(self, ref, inplace=False):
+        """Correct the spectral response of the signal by multiplying with a reference spectrum.
+
+        Patameters
+        ----------
+        ref: Signal 1D object
+            Reference spectrum to be used for correction.
+        inplace: boolean, optional
+            If ``False`` (default), a new signal object is created and returned. Otherwise, the operation is performed on the original signal object.
+
+        Returns
+        -------
+        Signal object
+        """
+        return self._apply(ref, operator.mul, inplace)
+
+    def calculate_spectral_response(self, ref, inplace=False):
+        """Calculate the spectral response by dividing the signal by a reference spectrum.
+
+        Parameters
+        ----------
+        ref: Signal 1D object
+            Reference spectrum to be used for calculation.
+        inplace: boolean, optional
+            If ``False`` (default), a new signal object is created and returned. Otherwise, the operation is performed on the original signal object.
+
+        Returns
+        -------
+        Signal object
+        """
+        return self._apply(ref, operator.truediv, inplace)
 
     def _reset_variance_linear_model(self):
         """Reset the variance linear model parameters to their default values,
