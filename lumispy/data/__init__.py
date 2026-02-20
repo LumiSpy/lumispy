@@ -39,7 +39,7 @@ def _resolve_dir():
 
 
 def asymmetric_peak_map():
-    """Load example asymmetric peak map data.
+    """Load an exemplary dataset containing a 2d map of spectra with a broad, asymmetric peak at all points. The data contains a background and some of the spectra contain spikes.
 
     Returns
     -------
@@ -52,7 +52,7 @@ def asymmetric_peak_map():
 
 
 def nanoparticles():
-    """Load example nanoparticle spectrum data.
+    """Load an exemplary dataset containing a 2d map of spectra with one peak that is not present at all positions of the map. The spectra contain a lot of noise.
 
     Returns
     -------
