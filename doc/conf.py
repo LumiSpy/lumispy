@@ -155,6 +155,8 @@ sphinx_gallery_conf = {
     "nested_sections": False,  # Prevent nested galleries to avoid duplication
 }
 
+intersphinx_mapping = {"hyperspy": ("https://hyperspy.org/hyperspy-doc/current/", None)}
+
 
 if platform.system() != "Windows":
     # optipng is not straightforward to install on Windows

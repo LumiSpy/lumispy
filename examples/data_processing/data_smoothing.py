@@ -1,6 +1,6 @@
 """
 Data Smoothing
-==================
+==============
 
 This example shows how to smooth a dataset.
 """
@@ -26,7 +26,7 @@ cl1.inav[0, 0].plot()
 
 # %%
 # The current dataset is quite noisy. As the peak is broad in comparison with the spectral resolution.
-# One way to improve that is by rebinning the data along the signal axis:
+# One way to improve that is by rebinning the data along the signal axis using :py:meth:`hyperspy.api.signals.BaseSignal.rebin`
 
 cl2 = cl1.rebin(scale=[1, 1, 2])
 
@@ -36,7 +36,7 @@ cl2 = cl1.rebin(scale=[1, 1, 2])
 cl2.inav[0, 0].plot()
 
 # %%
-# Another way to smooth
+# Another way to smooth using :py:meth:`hyperspy.api.signals.Signal1D.smooth_lowess`
 
 cl3.smooth_lowess(smoothing_parameter=0.1, number_of_iterations=2)
 

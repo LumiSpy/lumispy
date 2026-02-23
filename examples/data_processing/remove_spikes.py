@@ -1,8 +1,8 @@
 """
 Remove Spikes
-==================
+=============
 
-This example shows how to remove spikes from a dataset.
+This example shows how to remove spikes (e.g. from cosmic rays impacting a CCD detector) from a dataset.
 """
 
 # %%
@@ -19,7 +19,8 @@ cl1 = cl1.isig[:-3]
 cl1.inav[29, 0].plot()
 
 # %%
-# As seen there is a heavy spike, so lets remove it:
+# As seen there is a heavy spike, so lets remove it
+# (in an interactive environment, the parameters for spike identification can be adapted and the proposed removal previewed and confirmed for each identified spike individually, see :py:meth:`hyperspy.api.signals.Signal1D.spikes_removal_tool`)
 
 cl1.spikes_removal_tool(interactive=False)
 

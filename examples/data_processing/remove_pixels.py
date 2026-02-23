@@ -1,6 +1,6 @@
 """
 Remove Pixels
-==================
+=============
 
 This example removes pixels from a dataset.
 """
@@ -20,7 +20,7 @@ cl1.plot()
 plt.close(1)
 
 # %%
-# The signal beyond 800 nm goes to negative values, so lets remove the last three pixels from every spectrum:
+# The signal beyond 800 nm goes to negative values, so lets remove the last three pixels from every spectrum using :py:meth:`hyperspy.api.signals.BaseSignal.isig`
 
 cl2 = cl1.isig[:-3]
 
