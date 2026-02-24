@@ -46,6 +46,7 @@ intersphinx_mapping = {
     "kikuchipy": ("https://kikuchipy.org/en/latest/", None),
     "rsciio": ("https://hyperspy.org/rosettasciio/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
+    "mpl": ("https://matplotlib.org/stable/", None),
 }
 intersphinx_disabled_domains = ["std"]
 
@@ -154,9 +155,6 @@ sphinx_gallery_conf = {
     "reference_url": {"lumispy": None},
     "nested_sections": False,  # Prevent nested galleries to avoid duplication
 }
-
-intersphinx_mapping = {"hyperspy": ("https://hyperspy.org/hyperspy-doc/current/", None)}
-
 
 if platform.system() != "Windows":
     # optipng is not straightforward to install on Windows
