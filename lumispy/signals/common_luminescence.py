@@ -107,66 +107,6 @@ class CommonLumi:
         s.metadata.Signal.negative_removed = True
         if not inplace:
             return s
-
-    def _scale_by_exposure_stack(self, integration_time=None, inplace=False, **kwargs):
-        """ Called by ~lum.signals.common_luminescence.CommonLumi.scale_by_exposure, allows signal
-        stacks to be scaled to counts/s for unique exposure times for each stack element.
-        """
-        if "exposure" in kwargs:
-            integration_time = kwargs["exposure"]
-            warn("'exposure' was renamed 'integration_time' and will be removed in LumiSpy 1.0.",
-                DeprecationWarning, stacklevel=2)
-        
-        # Create copy if not inplace
-        s = self if inplace else self.deepcopy()
-        use_metadata = integration_time is None
-
-        # Process each stack element
-        for idx, signal in enumerate(s.inav):
-            element = signal.original_metadata.stack_elements[f"element{idx}"]
-            
-            # Validation checks
-            if element.metadata.Signal.get_item("normalized"):
-                raise AttributeError(f"Element {idx} was normalized and cannot be scaled.")
-            
-            if element.metadata.Signal.get_item("scaled"):
-                raise AttributeError(f"Element {idx} was already scaled.")
-            
-            quantity = element.metadata.Signal.get_item("quantity")
-            if quantity and "counts/s" in quantity.lower():
-                raise AttributeError(f"Element {idx} already has counts/s units.")
-
-            # Get integration time for this element
-            if use_metadata:
-                time_path = "metadata.Acquisition_instrument.Detector.integration_time"
-                if not element.has_item(time_path):
-                    raise AttributeError(f"Integration time not found for element {idx}.")
-                element_time = float(element.get_item(time_path))
-            else:
-                element_time = integration_time
-                if idx == 0:  # Warn once
-                    warn("Using same integration time for all elements.")
-
-            # Scale data and update metadata
-            s.data[idx] = s.data[idx] / element_time
-            element.metadata.Signal.scaled = True
-            
-            # Update units if they were in counts
-            old_quantity = element.metadata.get_item("Signal.quantity")
-            if old_quantity in ("Intensity (Counts)", "Intensity (counts)"):
-                new_quantity = old_quantity.replace("counts", "counts/s").replace("Counts", "Counts/s")
-                element.metadata.Signal.quantity = new_quantity
-
-        # Update stack-level metadata
-        s.metadata.Signal.scaled = True
-        old_quantity = s.metadata.get_item("Signal.quantity")
-        if old_quantity in ("Intensity (Counts)", "Intensity (counts)"):
-            new_quantity = old_quantity.replace("counts", "counts/s").replace("Counts", "Counts/s")
-            s.metadata.Signal.quantity = new_quantity
-
-        return s if not inplace else None
-
-
     def scale_by_exposure(self, integration_time=None, inplace=False, **kwargs):
         """Scale data in spectrum by integration time / exposure,
         (e.g. convert counts to counts/s).
@@ -188,60 +128,94 @@ class CommonLumi:
         replaces them by 'counts/s'.
 
         .. deprecated:: 0.2
-          The `exposure` argument was renamed `integration_time`, and it will
-          be removed in LumiSpy 1.0.
+        The `exposure` argument was renamed `integration_time`, and it will
+        be removed in LumiSpy 1.0.
         """
-        # Check if this is a stack with elements that need special handling
-        if self.original_metadata.has_item('stack_elements'):
-            # Call the stack-specific function with the same parameters
-            return self._scale_by_exposure_stack(integration_time=integration_time, 
-                                                inplace=inplace, 
-                                                **kwargs)
+        # Handle deprecated exposure parameter
+        if "exposure" in kwargs:
+            integration_time = kwargs["exposure"]
+            warn("'exposure' was renamed 'integration_time' and will be removed in LumiSpy 1.0.",
+                DeprecationWarning, stacklevel=2)
+        
+        # Create copy if not inplace
+        s = self if inplace else self.deepcopy()
+        
+        # Check if this is a stack with elements
+        is_stack = s.original_metadata.has_item('stack_elements')
+        
+        if is_stack:
+            # Locate index position of stack_element for navigational axes
+            axis_index = s.axes_manager.navigation_axes.index(
+                s.axes_manager["stack_element"]
+            )
+            
+            # Process each stack element         
+            for i in range(s.axes_manager["stack_element"].size):
+                idx = [slice(None)] * s.axes_manager.navigation_dimension
+                idx[axis_index] = i
+                signal = s.inav[tuple(idx)]
+                element = signal.original_metadata.stack_elements[f"element{i}"]
+                self._scale_element(s, element, i, integration_time)
 
-
-        # Check metadata tags that would prevent scaling
-        if self.metadata.Signal.get_item("normalized"):
-            raise AttributeError("Data was normalized and cannot be scaled.")
-        elif self.metadata.Signal.get_item("scaled") or self.metadata.Signal.get_item(
-            "quantity"
-        ) == ("Intensity (counts/s)" or "Intensity (Counts/s)"):
-            raise AttributeError("Data was already scaled.")
-
-        # Make sure integration_time is given or contained in metadata
-        if integration_time is None:
-            if "exposure" in kwargs:
-                integration_time = kwargs["exposure"]
-                warn(
-                    "The `exposure` argument was renamed `integration_time` "
-                    "and it will be removed in LumiSpy 1.0.",
-                    DeprecationWarning,
-                )
-            elif self.metadata.has_item(
-                "Acquisition_instrument.Detector.integration_time"
-            ):
-                integration_time = float(
-                    self.metadata.get_item(
-                        "Acquisition_instrument.Detector.integration_time"
-                    )
-                )
-            else:
-                raise AttributeError(
-                    "Integration time (exposure) not given and it is not "
-                    "included in the metadata."
-                )
-        if inplace:
-            s = self
+            # Update stack-level metadata
+            s.metadata.Signal.scaled = True
+            self._update_quantity(s.metadata)
         else:
-            s = self.deepcopy()
-        s.data = s.data / integration_time
-        s.metadata.Signal.scaled = True
-        if s.metadata.get_item("Signal.quantity") == "Intensity (Counts)":
-            s.metadata.Signal.quantity = "Intensity (Counts/s)"
-            print(s.metadata.Signal.quantity)
-        if s.metadata.get_item("Signal.quantity") == "Intensity (counts)":
-            s.metadata.Signal.quantity = "Intensity (counts/s)"
-        if not inplace:
-            return s
+            # Process single signal
+            self._scale_element(s, s, None, integration_time)
+        
+        return None if inplace else s
+
+    def _scale_element(self, signal, metadata_source, i, integration_time):
+        """Scale a single element (either a full signal or a stack element)."""
+        prefix = f"Element {i}" if i is not None else "Data"
+        
+        # Validation checks
+        if metadata_source.metadata.Signal.get_item("normalized"):
+            raise AttributeError(f"{prefix} was normalized and cannot be scaled.")
+        
+        if metadata_source.metadata.Signal.get_item("scaled"):
+            raise AttributeError(f"{prefix} was already scaled.")
+        
+        quantity = metadata_source.metadata.Signal.get_item("quantity")
+        if quantity and "counts/s" in quantity.lower():
+            raise AttributeError(f"{prefix} already has counts/s units.")
+        
+        # Get integration time
+        if integration_time is None:
+            # Try to get from metadata
+            time_path = "metadata.Acquisition_instrument.Detector.integration_time"
+            if not metadata_source.has_item(time_path):
+                if idx is not None:
+                    raise AttributeError(f"Integration time not found for element {i}.")
+                else:
+                    raise AttributeError(
+                        "Integration time (exposure) not given and it is not "
+                        "included in the metadata."
+                    )
+            element_time = float(metadata_source.get_item(time_path))
+
+        else:
+            element_time = integration_time
+            if i == 0:  # Warn once for stacks
+                warn("Using same integration time for all elements.")
+        
+        # Scale the data (handle both full signals and stack elements)
+        if i is not None:
+            signal.data[i] = signal.data[i] / element_time
+        else:
+            signal.data = signal.data / element_time
+        
+        # Update element level metadata
+        metadata_source.metadata.Signal.scaled = True
+        self._update_quantity(metadata_source.metadata)
+
+    def _update_quantity(self, metadata):
+        """Update quantity string if it was in counts."""
+        old_quantity = metadata.get_item("Signal.quantity")
+        if old_quantity in ("Intensity (Counts)", "Intensity (counts)"):
+            new_quantity = old_quantity.replace("counts", "counts/s").replace("Counts", "Counts/s")
+            metadata.Signal.quantity = new_quantity
 
     def normalize(self, pos=float("nan"), element_wise=False, inplace=False):
         """Normalize data to value at `pos` along signal axis, defaults to
