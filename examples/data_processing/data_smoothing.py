@@ -24,7 +24,8 @@ cl1.inav[0, 0].plot()
 
 # %%
 # The current dataset is quite noisy.
-# One way to improve that is by smoothing the data using :py:meth:`hyperspy.api.signals.Signal1D.smooth_lowess`.
+# One way to improve that is by smoothing the data using :py:meth:`hyperspy.api.signals.Signal1D.smooth_lowess`
+# (see docstring for detailed explanation of the parameters).
 
 cl1.smooth_lowess(smoothing_parameter=0.1, number_of_iterations=2)
 
