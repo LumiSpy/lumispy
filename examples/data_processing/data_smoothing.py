@@ -49,6 +49,7 @@ cl3.smooth_tv(smoothing_parameter=10.0)
 
 cl3.inav[0, 0].plot()
 
+# %%
 # To evaluate optimum parameters, each of the algorithms is run interactively if at least one parameter is missing in
 # the function call and thus the result of the smoothing can be directly previewed while adapting the parameters.
 
