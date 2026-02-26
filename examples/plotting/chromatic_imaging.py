@@ -9,7 +9,6 @@ This example shows how to plot color-filtered (chromatic) images from a hyperspe
 # Load the data
 import lumispy as lum
 import hyperspy.api as hs
-import matplotlib.pyplot as plt
 
 cl1 = lum.data.nanoparticles()
 
