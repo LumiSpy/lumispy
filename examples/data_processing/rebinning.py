@@ -35,7 +35,7 @@ cl2 = cl1.rebin(scale=[1, 1, 2])
 cl2.inav[0, 0].plot()
 
 # %%
-# We can as well rebin by using the parameter 'new_shape'. For each dimension the new shape has to be specified.
+# We can alternatively rebin using the parameter `new_shape`. For each dimension, the new number of pixels has to be specified.
 #
 # From the old shape of (30, 16|334), we rebin to a new shape of (20, 10|150).
 
