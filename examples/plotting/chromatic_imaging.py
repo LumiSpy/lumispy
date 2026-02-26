@@ -28,7 +28,7 @@ cl1.T.mean().plot(cmap="viridis")
 cl1.isig[480.0:550.0].T.mean().plot(cmap="viridis")
 
 # %%
-# This spectral filtering can also be done interactively using :py:func:`hyperspy.api.plot.plot_roi_map`. Not that instead of passing explicit `SpanROI` objects, the parameter `rois` can also take an integer number, for which the corresponding number of ROIs will be initialized with default values for interactive adaptataion:
+# This spectral filtering can also be done interactively using :py:func:`hyperspy.api.plot.plot_roi_map`. Note that instead of passing explicit ``SpanROI`` objects, the parameter ``rois`` can also take an integer number, for which the corresponding number of ROIs will be initialized with default values for interactive adaptataion:
 
 roi1 = hs.roi.SpanROI(left=480.0, right=550.0)
 hs.plot.plot_roi_map(signal=cl1, rois=roi1, cmap="viridis")
