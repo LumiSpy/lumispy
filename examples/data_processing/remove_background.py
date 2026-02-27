@@ -1,8 +1,8 @@
 """
 Remove Background
-==================
+=================
 
-This example removes the background from a dataset.
+This example removes a constant background from a dataset.
 """
 
 # %%
@@ -20,6 +20,8 @@ plt.close(1)
 
 # %%
 # Now we remove the background and display the data
+#
+# If the parameter ``signal_range`` is not given, it can be selected interactively, see :py:meth:`hyperspy.api.signals.Signal1D.remove_background`.
 
 cl2 = cl1.remove_background(signal_range=(550.0, 620.0), background_type="Offset")
 
