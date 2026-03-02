@@ -184,8 +184,8 @@ class CommonLumi:
         # Get integration time
         if integration_time is None:
             # Try to get from metadata
-            time_path = "metadata.Acquisition_instrument.Detector.integration_time"
-            if not metadata_source.has_item(time_path):
+            time_path = "Acquisition_instrument.Detector.integration_time"
+            if not metadata_source.metadata.has_item(time_path):
                 if idx is not None:
                     raise AttributeError(f"Integration time not found for element {i}.")
                 else:
@@ -193,7 +193,7 @@ class CommonLumi:
                         "Integration time (exposure) not given and it is not "
                         "included in the metadata."
                     )
-            element_time = float(metadata_source.get_item(time_path))
+            element_time = float(metadata_source.metadata.get_item(time_path))
 
         else:
             element_time = integration_time
