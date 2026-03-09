@@ -235,9 +235,11 @@ class CommonLumi:
             return s
 
     def _apply(self, ref, op, inplace=False):
-        """Utility function to perform an operation on the signal data with a reference spectrum.
+        """Utility function to perform an operation on the signal data with a reference
+        spectrum.
 
-        E.g. for spectral response correction and calculate spectral response, where the operation would differ.
+        E.g. for spectral response correction and calculate spectral response, where
+        the operation would differ.
 
         Parameters
         ----------
@@ -246,27 +248,54 @@ class CommonLumi:
         op: operator
             The operation to be performed on the signal.
         inplace: boolean, optional
-            If ``False`` (default), a new signal object is created and returned. Otherwise, the operation is performed on the original signal object.
+            If ``False`` (default), a new signal object is created and returned.
+            Otherwise, the operation is performed on the original signal object.
 
         Returns
         -------
         Signal object
         """
-        result = op(self, ref)
+        sig = self if inplace else self.deepcopy()
+
+        sig_ax = sig.axes_manager[-1]
+        ref_ax = ref.axes_manager[-1]
+
+        if (
+            not (sig_ax.axis.all() == sig_ax.axis.all())
+            or not (sig_ax.is_uniform == ref_ax.is_uniform)
+            or not (sig_ax.size == ref_ax.size)
+        ):
+            ref_min = ref_ax.axis.min()
+            ref_max = ref_ax.axis.max()
+            sig_min = sig_ax.axis.min()
+            sig_max = sig_ax.axis.max()
+            if sig_min < ref_min or sig_max > ref_max:
+                if sig_max < ref_min or sig_min > ref_max:
+                    raise ValueError("""
+                        The signal axis range does not overlap with the
+                        reference spectrum axis range.
+                        """)
+                sig = sig.isig[ref_min:ref_max]
+
+            ref = ref.interpolate_on_axis(sig_ax, -1, inplace=False)
+
+        result = op(sig, ref)
         if inplace:
             self.data = result.data
             return self
         return result
 
     def spectral_response_correction(self, ref, inplace=False):
-        """Correct the spectral response of the signal by multiplying with a reference spectrum.
+        """Correct the spectral response of the signal by multiplying with a reference
+        spectrum.
 
         Patameters
         ----------
         ref: Signal 1D object
             Reference spectrum to be used for correction.
         inplace: boolean, optional
-            If ``False`` (default), a new signal object is created and returned. Otherwise, the operation is performed on the original signal object.
+            If ``False`` (default), a new signal object is created and returned.
+            Otherwise, the operation is performed on the original signal object.
 
         Returns
         -------
@@ -275,14 +304,16 @@ class CommonLumi:
         return self._apply(ref, operator.mul, inplace)
 
     def calculate_spectral_response(self, ref, inplace=False):
-        """Calculate the spectral response by dividing the signal by a reference spectrum.
+        """Calculate the spectral response by dividing the signal by a reference
+        spectrum.
 
         Parameters
         ----------
         ref: Signal 1D object
             Reference spectrum to be used for calculation.
         inplace: boolean, optional
-            If ``False`` (default), a new signal object is created and returned. Otherwise, the operation is performed on the original signal object.
+            If ``False`` (default), a new signal object is created and returned.
+            Otherwise, the operation is performed on the original signal object.
 
         Returns
         -------

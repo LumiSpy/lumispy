@@ -34,6 +34,7 @@ from hyperspy.axes import DataAxis, UniformDataAxis
 # Functions needed for signal axis conversion
 #
 
+
 def _n_air(x):
     """Refractive index of air as a function of WL in nm.
     This analytical function is correct for the range 185-1700 nm.
