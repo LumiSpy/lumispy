@@ -1,14 +1,13 @@
 """
 Energy Conversion
 =================
-This example demonstrates the usage of the energy conversion function ``to_eV``. For the documentation see `doc <LS_energy_conversion_>`__.
+This example demonstrates the usage of the energy conversion function ``to_eV``.
 
-.. _LS_energy_conversion: https://docs.lumispy.org/en/stable/user_guide/signal_axis.html
 .. _LS_to_eV: https://docs.lumispy.org/en/stable/user_guide/signal_axis.html
 """
 
 # %%
-# Load examplary data
+# Load exemplary data
 import lumispy as lum
 import numpy as np
 
@@ -35,5 +34,6 @@ s2.plot()  # original signal in μm
 s2_eV = s2.to_eV(inplace=False)
 s2_eV.plot()  # transformed signal in eV
 
-# %%
+# sphinx_gallery_start_ignore
 # sphinx_gallery_thumbnail_number = 4
+# sphinx_gallery_end_ignore

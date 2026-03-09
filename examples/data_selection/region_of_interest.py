@@ -1,15 +1,15 @@
 """
 Region of Interest (ROI)
 ========================
-This example demonstrates how to use ROIs from Hyperspy. ROIs are used to select a subset of the data for further analysis. It can be done interactively aswell as non interactively.
-For more information about ROIs see the `documentation <HS_roi_>`__.
+This example demonstrates use of HyperSpy ROIs for a hyerspectral luminescence dataset. ROIs are used to select a subset of the data for analysis, this can be done interactively as well as
+non interactively. For more information about ROIs see the `documentation <HS_roi_>`__.
 
 .. _HS_roi: https://hyperspy.org/hyperspy-doc/current/reference/api.roi.html#module-hyperspy.api.roi
 .. _HS_plot_spectra: https://hyperspy.org/hyperspy-doc/current/reference/api.plot/index.html#hyperspy.api.plot.plot_spectra
 """
 
 # %%
-# Loading exemplementary data:
+# Loading exemplary data:
 import hyperspy.api as hs
 import lumispy as lum
 
@@ -20,7 +20,8 @@ s2 = lum.data.nanoparticles()
 # Interactive ROI
 # ---------------
 #
-# To use ROIs we first have to plot the signal. After that we can plot the ROI which will extract a line scan from the map.
+# To use ROIs we first have to plot the signal. After that we can plot the ROI.
+# In this case we'll use a ``Line2DROI`` which will extract a line scan from the map.
 line_roi1 = hs.roi.Line2DROI()  # define the ROI
 s1.axes_manager.indices = (20, 10)
 s1.plot()
@@ -39,8 +40,9 @@ hs.plot.plot_spectra(profile1)
 # Non-Interactive ROI
 # -------------------
 #
-# For non-interactove ROIs we have to specify the type of ROI we want to use. In this case we'll use
-# ``Line2DROI(x1=, y1=, x2=, y2=, linewidth=)``.
+# For non-interactove ROIs we don't have a way of changing the selected area
+# , so we will have to pass some extra paramters if we want to have a good result.
+# We will again use ``Line2DROI(x1, y1, x2, y2, linewidth)``.
 # First we need to define the ROI:
 line_roi2 = hs.roi.Line2DROI(1.08, 0.36, 0.76, 0.52, 0)
 profile2 = line_roi2(s1)
@@ -70,5 +72,6 @@ s2.plot()
 profile3 = circle_roi.interactive(s2)
 hs.plot.plot_spectra(profile3)
 
-# %%
-# sphinx_gallery_thumbnail_number = 7
+# sphinx_gallery_start_ignore
+# sphinx_gallery_thumbnail_number = 4
+# sphinx_gallery_end_ignore

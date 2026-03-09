@@ -5,7 +5,7 @@ In this Example we will give a brief introduction to model fitting in Lumispy/Hy
 """
 
 # %%
-# Load examplary data
+# Load exemplary data
 import hyperspy.api as hs
 import lumispy as lum
 
@@ -23,7 +23,7 @@ m.components
 # %%
 # Since we dont hav any yet, we need to create some components and add them to the model.
 # Since we have an asymmetric peak, we will use a single SkewNormal component.
-# For successful Fit we need to pass the center wavelength ``x0=650nm`` [#f1]_.
+# For successful Fit we should pass the center wavelength ``x0=650nm`` [#f1]_.
 g = hs.model.components1D.SkewNormal(x0=650)
 # Alternative way to set the start value of x0:
 # g.x0.value = 650
@@ -48,11 +48,16 @@ m.plot()
 m.print_current_values()
 
 # %%
-# If we used ``multifit()``, we could aswell return the fitted parameter as Signal objects.
+# If we used ``multifit()``, we can aswell get the fitted parameter as Signal objects.
 m.multifit()
 g.A.as_signal().plot(cmap="viridis")
 
 # %%
+# .. [#f1] Note that Hyperspy has a range of built-in functions covering most needs,
+#    those can be addedd as components to a model. However, it also has an intuitive
+#    mechanism to define custom functions, see
+#    :ref:`sphx_glr_auto_examples_model_fitting_custom_components.py`.
+
+# sphinx_gallery_start_ignore
 # sphinx_gallery_thumbnail_number = 2
-#
-# .. [#f1] Note that Hyperspy has a range of built-in functions covering most needs that can be addedd as components to a model. However, it aslo has an intuitive mechanism to define custom functions.
+# sphinx_gallery_end_ignore

@@ -3,14 +3,13 @@ Peak identification
 ===================
 In this example we will demonstrate how to identify peaks in a spectrum.
 
-
 .. _HS_find_peaks: https://hyperspy.org/hyperspy-doc/current/reference/api.signals/Signal1D.html#hyperspy.api.signals.Signal1D.find_peaks1D_ohaver
 """
 
 # %%
-# Load examplary data
 import lumispy as lum
 
+# load the data that we will use
 s = lum.data.asymmetric_peak_map()
 s.plot()
 
@@ -42,5 +41,6 @@ end = start + peaks[0, 0]["width"][0]  # define end pos of the peak
 s.inav[0, 0].plot()
 s.inav[0, 0].isig[start:end].plot()
 
-# %%
+# sphinx_gallery_start_ignore
 # sphinx_gallery_thumbnail_number = 4
+# sphinx_gallery_end_ignore

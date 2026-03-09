@@ -8,9 +8,9 @@ This example shows how to determine the centroid of a peak.
 """
 
 # %%
-# Load examplary data
 import lumispy as lum
 
+# load the data that we will use
 s = lum.data.asymmetric_peak_map()
 s.plot()
 
@@ -26,8 +26,9 @@ com = s.centroid()
 # %%
 # Return Value
 # ^^^^^^^^^^^^
-# The return value is a new signal. In this case a Signal2D, which we can be plottet as a colormap:
+# The return value is a new signal. In this case a Signal2D, which we can be plotted as a colormap:
 com.plot(cmap="viridis")
 
-# %%
+# sphinx_gallery_start_ignore
 # sphinx_gallery_thumbnail_number = 3
+# sphinx_gallery_end_ignore
