@@ -20,12 +20,12 @@
 from importlib.metadata import version
 from pathlib import Path
 
-from lumispy.utils.axes import nm2eV, eV2nm, nm2invcm, invcm2nm, join_spectra
-from lumispy.utils.io import to_array, savetxt
+from .utils.axes import nm2eV, eV2nm, nm2invcm, invcm2nm, join_spectra
+from .utils.io import to_array, savetxt
 
-from lumispy import signals, components, utils, data
+from . import signals, components, utils, data
 
-from lumispy.utils import crop_edges
+from .utils import crop_edges
 
 __version__ = version("lumispy")
 
@@ -58,6 +58,14 @@ __all__ = [
     "signals",
     "utils",
     "data",
+    "nm2eV",
+    "eV2nm",
+    "nm2invcm",
+    "invcm2nm",
+    "join_spectra",
+    "to_array",
+    "savetxt",
+    "crop_edges",
 ]
 
 

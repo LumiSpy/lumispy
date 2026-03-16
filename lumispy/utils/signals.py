@@ -119,7 +119,7 @@ def com(spectrum_intensities, signal_axis, **kwargs):
     index_com = float(center_of_mass(spectrum_intensities)[0])
 
     # Check for the type of hyperspy.axis
-    if type(signal_axis) == FunctionalDataAxis:
+    if isinstance(signal_axis, FunctionalDataAxis):
         # Calculate value y from x[index_com]
         x = _interpolate_signal(signal_axis.x.axis, index_com)
         kwargs = {}
@@ -303,7 +303,6 @@ def crop_edges(
 
     S_cropped = []
     for s in S:
-
         # Remove 0 for None
         crop_ids = [x if x != 0 else None for x in crop_vals]
 

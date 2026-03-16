@@ -23,7 +23,7 @@ Signal class for electroluminescence spectral data
 
 from hyperspy._signals.lazy import LazySignal
 
-from lumispy.signals import LumiSpectrum
+from .luminescence_spectrum import LumiSpectrum
 
 
 class ELSpectrum(LumiSpectrum):

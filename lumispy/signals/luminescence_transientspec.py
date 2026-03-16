@@ -27,7 +27,6 @@ from hyperspy.signals import Signal1D, Signal2D
 from hyperspy._signals.lazy import LazySignal
 from hyperspy.docstrings.signal import OPTIMIZE_ARG
 
-from lumispy.signals import LumiSpectrum, LumiTransient
 from lumispy.signals.common_luminescence import CommonLumi
 from lumispy.signals.common_transient import CommonTransient
 
