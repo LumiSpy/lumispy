@@ -26,7 +26,7 @@ from warnings import warn
 
 from hyperspy._signals.lazy import LazySignal
 
-from lumispy.signals import LumiSpectrum
+from .luminescence_spectrum import LumiSpectrum
 
 
 class CLSpectrum(LumiSpectrum):

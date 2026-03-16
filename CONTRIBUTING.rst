@@ -63,9 +63,10 @@ functionality. You can contribute through pull requests to the respective reposi
 Code style
 ==========
 
-LumiSpy follows the `Style Guide for Python Code <https://www.python.org/dev/peps/pep-0008/>`_
-with `The Black Code style
-<https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html>`_.
+LumiSpy follows the `Style Guide for Python Code <https://www.python.org/dev/peps/pep-0008/>`_.
+You can use the ruff code formatter to automatically fix the style of your code 
+using pre-commit-hooks. For further details, refer to `the HyperSpy developer guide
+<https://hyperspy.org/hyperspy-doc/current/dev_guide/coding_style.html#coding-style>`_.
 
 For `docstrings <https://www.python.org/dev/peps/pep-0257/>`_, we follow the `numpydoc
 <https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard>`_ standard.
@@ -81,7 +82,7 @@ Writing tests
 =============
 
 All functionality in LumiSpy is tested via the `pytest <https://docs.pytest.org>`_
-framework. The tests reside in the ``test`` directory. Tests are short methods that call
+framework. The tests reside in the ``tests`` directory. Tests are short methods that call
 functions in LumiSpy and compare resulting output values with known answers.
 Please refer to the `HyperSpy development guide
 <https://hyperspy.org/hyperspy-doc/current/dev_guide/testing.html>`_ for further

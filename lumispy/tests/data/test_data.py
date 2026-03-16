@@ -17,18 +17,17 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 import lumispy as lum
-from lumispy.data import asymmetric_peak_map, nanoparticles
 
 
 def test_asymmetric_peak_map():
-    s = asymmetric_peak_map()
+    s = lum.data.asymmetric_peak_map()
     assert isinstance(s, lum.signals.CLSpectrum)
     assert s.axes_manager.navigation_dimension == 2
     assert s._signal_type == "CL"
 
 
 def test_nanoparticles():
-    s = nanoparticles()
+    s = lum.data.nanoparticles()
     assert isinstance(s, lum.signals.CLSEMSpectrum)
     assert s.axes_manager.navigation_dimension == 2
     assert s._signal_type == "CL_SEM"

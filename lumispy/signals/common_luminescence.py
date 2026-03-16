@@ -262,9 +262,7 @@ class CommonLumi:
         ):
             self.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor = 1
             self.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset = 0
-            self.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor = (
-                1
-            )
+            self.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor = 1
             warn(
                 "Following the Jacobian transformation, the parameters of the "
                 "`Variance_linear_model` are reset to their default values "
