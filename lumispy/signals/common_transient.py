@@ -21,8 +21,6 @@ Signal class for transient data (BaseSignal class)
 --------------------------------------------------
 """
 
-from numpy import isnan
-
 
 class CommonTransient:
     """**General transient signal class (dimensionless)**"""

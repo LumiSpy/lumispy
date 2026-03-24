@@ -148,5 +148,5 @@ class TestLumiSpectrum:
             3,
             4,
         )
-        assert com.metadata.General.title == f"Centroid map"
-        assert type(com) == Signal2D
+        assert com.metadata.General.title == "Centroid map"
+        assert isinstance(com, Signal2D)

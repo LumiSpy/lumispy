@@ -179,7 +179,7 @@ def to_array(S, axes=True, transpose=False):
                 output = S.data
     else:
         raise NotImplementedError(
-            "The to_array function currently handles a " "maximum of two axes."
+            "The to_array function currently handles a maximum of two axes."
         )
     return output
 
@@ -205,7 +205,7 @@ def savetxt(
         np.savetxt(filename, output, fmt=fmt, delimiter=delimiter, **kwargs)
     else:
         raise NotImplementedError(
-            "The savetxt function currently handles a " "maximum of two axes."
+            "The savetxt function currently handles a maximum of two axes."
         )
 
 

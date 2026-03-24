@@ -28,7 +28,7 @@ from hyperspy.signals import Signal1D
 from hyperspy._signals.lazy import LazySignal
 from traits.api import Undefined
 
-from lumispy.signals.common_luminescence import CommonLumi
+from .common_luminescence import CommonLumi
 from lumispy import to_array, savetxt
 from lumispy.utils import solve_grating_equation
 from lumispy.utils.axes import GRATING_EQUATION_DOCSTRING_PARAMETERS
@@ -47,7 +47,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
     _signal_dimension = 1
     _signal_type = "Luminescence"
 
-    def __init(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     def remove_background_from_file(self, background=None, inplace=False, **kwargs):
@@ -324,13 +324,13 @@ array([[ 0.,  0.,  1.,  2.,  3.,  4.],
             spectrum).
         """
         if signal_range:
-            if type(signal_range) != tuple:
+            if not isinstance(signal_range, tuple):
                 raise TypeError(
                     "The `signal_range` parameter must be a tuple of length 2."
                 )
             if len(signal_range) != 2:
                 raise ValueError(
-                    f"The `signal_range` parameter must be a tuple of length 2. "
+                    "The `signal_range` parameter must be a tuple of length 2. "
                     "You passed a tuple of length {len(signal_range)}."
                 )
 
@@ -343,7 +343,7 @@ array([[ 0.,  0.,  1.,  2.,  3.,  4.],
         center_of_mass = s.map(com, signal_axis=signal_axis, inplace=False)
 
         # Transfer axes metadata to title
-        center_of_mass.metadata.General.title = f"Centroid map"
+        center_of_mass.metadata.General.title = "Centroid map"
         if signal_axis.name not in (Undefined, ""):
             center_of_mass.metadata.General.title += f" of {signal_axis.name}"
         if signal_axis.units not in (Undefined, ""):

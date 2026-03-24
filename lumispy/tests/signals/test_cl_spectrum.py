@@ -52,7 +52,7 @@ class TestCLSpectrum:
         s.data[1, 0, 1] += 2
         s.data[0, 2, 29] += 1.001
 
-        if not "threshold" in getfullargspec(s.spikes_removal_tool)[0]:
+        if "threshold" not in getfullargspec(s.spikes_removal_tool)[0]:
             try:
                 s.remove_spikes()
             except ImportError:

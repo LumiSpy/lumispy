@@ -89,7 +89,7 @@ def test_com_inputs():
 
 
 @mark.parametrize(
-    "range, output",
+    "signal_range, output",
     [
         (2, (6, 6)),
         (2.0, (6, 6)),
@@ -104,26 +104,26 @@ def test_com_inputs():
         ((None), (10, 10)),
     ],
 )
-def test_crop_edges_s(range, output):
+def test_crop_edges_s(signal_range, output):
     s1 = [LumiSpectrum(ones((10, 10, 10)))]
 
     # Check for bad input range
-    if type(range) not in (int, float, tuple, str, type(None)):
+    if type(signal_range) not in (int, float, tuple, str, type(None)):
         with raises(ValueError, match="value must be a number,"):
-            crop_edges(s1, range)
+            crop_edges(s1, signal_range)
 
-    elif type(range) == tuple and len(range) not in (1, 2, 4):
+    elif isinstance(signal_range, tuple) and len(signal_range) not in (1, 2, 4):
         with raises(ValueError, match="tuple must be either a"):
-            crop_edges(s1, range)
+            crop_edges(s1, signal_range)
 
     else:
-        s1 = crop_edges(s1, range)
+        s1 = crop_edges(s1, signal_range)
         assert s1[0].axes_manager.navigation_shape[0] == output[0]
         assert s1[0].axes_manager.navigation_shape[1] == output[1]
 
 
 @mark.parametrize(
-    "error, range, output",
+    "error, signal_range, output",
     [
         (False, "1nm", (8, 8)),
         (False, "rel0.1", (8, 8)),
@@ -135,7 +135,7 @@ def test_crop_edges_s(range, output):
         (True, "11", ()),
     ],
 )
-def test_crop_edges_fancy_str(error, range, output):
+def test_crop_edges_fancy_str(error, signal_range, output):
     s1 = [LumiSpectrum(ones((10, 10, 10)))]
     s1[0].axes_manager.navigation_axes[0].units = "nm"
     s1[0].axes_manager.navigation_axes[1].units = "nm"
@@ -143,10 +143,10 @@ def test_crop_edges_fancy_str(error, range, output):
     # Check for bad input range
     if error:
         with raises(ValueError):
-            crop_edges(s1, range)
+            crop_edges(s1, signal_range)
 
     else:
-        s1 = crop_edges(s1, range)
+        s1 = crop_edges(s1, signal_range)
         assert s1[0].axes_manager.navigation_shape[0] == output[0]
         assert s1[0].axes_manager.navigation_shape[1] == output[1]
 
@@ -186,7 +186,7 @@ def test_crop_edges_too_far():
 
 
 @mark.parametrize(
-    "range, output",
+    "signal_range, output",
     [
         (2, (6)),
         ((2, 4), (4)),
@@ -196,16 +196,16 @@ def test_crop_edges_too_far():
         (("2nm", "4nm"), (2)),
     ],
 )
-def test_crop_edges_linescan(range, output):
+def test_crop_edges_linescan(signal_range, output):
     s1 = [LumiSpectrum(ones((10, 10)))]
     s1[0].axes_manager.navigation_axes[0].units = "nm"
 
-    if type(range) == tuple and len(range) not in (1, 2):
+    if isinstance(signal_range, tuple) and len(signal_range) not in (1, 2):
         with raises(ValueError, match="tuple must be either a"):
-            crop_edges(s1, range)
+            crop_edges(s1, signal_range)
 
     else:
-        s1 = crop_edges(s1, range)
+        s1 = crop_edges(s1, signal_range)
         assert s1[0].axes_manager.navigation_shape[0] == output
 
 
