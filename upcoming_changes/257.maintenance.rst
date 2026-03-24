@@ -1,0 +1,1 @@
+Fixed lumispy test suit error see: https://github.com/hyperspy/hyperspy-extensions-list/issues/90

@@ -18,7 +18,6 @@
 
 """
 Utility functions used in signal classes.
-
 """
 
 import numpy as np
@@ -201,14 +200,19 @@ def crop_edges(
     """
 
     def range_formatting(str_list):
-        if len(str_list) == 2:
-            px = S[0].inav[: str_list[0]].axes_manager.navigation_shape[0]
-            px_list = [px, -px]
-        else:
-            # Pairwaise formatting with [top, left, right, bottom] when len(str_list) == 4
-            px_x = S[0].inav[: str_list[0], :].axes_manager.navigation_shape[0]
-            px_y = S[0].inav[:, : str_list[1]].axes_manager.navigation_shape[1]
-            px_list = [px_x, -px_y, -px_x, px_y]
+        try:
+            if len(str_list) == 2:
+                px = S[0].inav[: str_list[0]].axes_manager.navigation_shape[0]
+                px_list = [px, -px]
+            else:
+                px_x = S[0].inav[: str_list[0], :].axes_manager.navigation_shape[0]
+                px_y = S[0].inav[:, : str_list[1]].axes_manager.navigation_shape[1]
+                px_list = [px_x, -px_y, -px_x, px_y]
+        except Exception as e:
+            raise ValueError(
+                f"Invalid crop_range string(s): {str_list}. Original error was: {e}"
+            ) from e
+
         return np.array(px_list, dtype=int)
 
     # Deprecation warning (for compatibility with ``crop_px``)
