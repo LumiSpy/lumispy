@@ -238,7 +238,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
         ):
             raise ValueError("Signal axes not overlapping")
     # Make sure that r is of type int
-    if not type(r) is int:
+    if type(r) is not int:
         r = int(r)
 
     # take first spectrum as basis
@@ -306,7 +306,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
         if axis.axis[ind1] >= axis2.axis[ind2]:
             ind2 += 1
             # for UniformDataAxis
-        if (not "axis" in getfullargspec(DataAxis)[0]) or (
+        if ("axis" not in getfullargspec(DataAxis)[0]) or (
             axis.is_uniform and axis2.is_uniform
         ):
             # join axis vectors

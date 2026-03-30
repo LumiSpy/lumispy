@@ -23,7 +23,6 @@ from lumispy.signals import LumiSpectrum, LumiTransientSpectrum
 
 
 class TestCommonLumi:
-
     # Deprecated, to be removed for v1.0 release
     def test_crop_edges_deprecated(self):
         s1 = LumiSpectrum(np.ones((10, 10, 10)))
@@ -47,7 +46,7 @@ class TestCommonLumi:
         s1a = s1.remove_negative(inplace=False)
         s2a = s2.remove_negative(inplace=False)
         s3a = s3.remove_negative(basevalue=0.1)
-        assert s3a.metadata.Signal.negative_removed == True
+        assert s3a.metadata.Signal.negative_removed
         assert np.all(s1a.data[s1 <= 0] == 1)
         assert np.all(s2a.data[s2 <= 0] == 1)
         assert np.all(s3a.data[s3 <= 0] == 0.1)
@@ -75,7 +74,7 @@ class TestCommonLumi:
         assert np.all(s4a.data == 10)
         assert s2a.metadata.Signal.quantity == "Intensity (Counts/s)"
         assert s4a.metadata.Signal.quantity == "Intensity (counts/s)"
-        assert s4a.metadata.Signal.scaled == True
+        assert s4a.metadata.Signal.scaled
         s1.scale_by_exposure(integration_time=4, inplace=True)
         s2.scale_by_exposure(inplace=True)
         s4.scale_by_exposure(integration_time=0.1, inplace=True)
@@ -118,7 +117,7 @@ class TestCommonLumi:
         assert s3a.max(axis=[0, 1]).data[0] == 1
         assert s4a.max(axis=[0]).data[0] == 1
         assert s4a.metadata.Signal.quantity == "Normalized intensity"
-        assert s4a.metadata.Signal.normalized == True
+        assert s4a.metadata.Signal.normalized
         s1a = s1.normalize(element_wise=True)
         s2a = s2.normalize(element_wise=True)
         s3a = s3.normalize(element_wise=True)
