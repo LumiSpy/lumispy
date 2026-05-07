@@ -186,7 +186,7 @@ def test_to_eV(jacobian, variance):
             == M2.metadata.Signal.Noise_properties.variance
         )
     else:
-        assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
+        assert not S1.metadata.has_item("Signal.Noise_properties.variance")
 
 
 def test_eV_slicing():
@@ -200,7 +200,7 @@ def test_to_eV_2D():
     axis2 = UniformDataAxis(size=8, offset=0, scale=0.1, units="ns")
     data = arange(80).reshape(8, 10)
     S1 = LumiTransientSpectrum(data, axes=[axis2, axis1])
-    S2 = S1.to_eV(inplace=True, jacobian=False)
+    _ = S1.to_eV(inplace=True, jacobian=False)
     assert S1.axes_manager[0].units == "eV"
     assert S1.axes_manager[0].axis[-1] == nm2eV(axis1.axis[0])
     assert S1.data[0, 0] == data[0, -1]
@@ -231,10 +231,7 @@ def test_reset_variance_linear_model_eV(jacobian):
             S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor
             == 1
         )
-        assert (
-            S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model")
-            == False
-        )
+        assert not S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model")
     else:
         S1.to_invcm(inplace=True, jacobian=jacobian)
         assert (
@@ -392,7 +389,7 @@ def test_to_invcm(jacobian, variance):
             == M2.metadata.Signal.Noise_properties.variance
         )
     else:
-        assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
+        assert not S1.metadata.has_item("Signal.Noise_properties.variance")
 
 
 def test_invcm_slicing():
@@ -426,10 +423,7 @@ def test_reset_variance_linear_model_invcm(jacobian):
             S1.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor
             == 1
         )
-        assert (
-            S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model")
-            == False
-        )
+        assert not S2.metadata.has_item("Signal.Noise_properties.Variance_linear_model")
     else:
         S1.to_invcm(inplace=True, jacobian=jacobian)
         assert (
@@ -528,7 +522,7 @@ def test_to_invcm_relative(jacobian, variance):
             == M2.metadata.Signal.Noise_properties.variance
         )
     else:
-        assert S1.metadata.has_item("Signal.Noise_properties.variance") == False
+        assert not S1.metadata.has_item("Signal.Noise_properties.variance")
 
 
 @mark.parametrize(("jacobian"), (True, False))

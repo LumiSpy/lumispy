@@ -20,6 +20,7 @@ from numpy import ones, arange
 from numpy.random import random
 from numpy.testing import assert_allclose
 from pytest import raises, mark, skip, warns
+import importlib.util
 
 from hyperspy.axes import DataAxis
 from lumispy import join_spectra, nm2eV, eV2nm, nm2invcm, invcm2nm
@@ -135,7 +136,7 @@ def test_joinspectra_nonuniform(average, scale, kind):
     s2.axes_manager.signal_axes[0].offset = 25
     s1.axes_manager.signal_axes[0].convert_to_non_uniform_axis()
     s = join_spectra([s1, s2], r=2, average=average, scale=scale, kind=kind)
-    assert s.axes_manager.signal_axes[0].is_uniform == False
+    assert not s.axes_manager.signal_axes[0].is_uniform
     assert s.axes_manager.signal_axes[0].size == 57
     assert s.axes_manager.signal_axes[0].axis[-1] == 56
     assert s.data.size == 57
@@ -153,7 +154,10 @@ def test_joinspectra_nonuniform(average, scale, kind):
 @mark.parametrize(("kind"), ("slinear", "linear"))
 def test_joinspectra_FunctionalDA(average, scale, kind):
     try:
-        from hyperspy.axes import FunctionalDataAxis
+        importlib.util.find_spec("hyperspy.axes")
+        import hyperspy.axes
+
+        hasattr(hyperspy.axes, "FunctionalDataAxis")
     except ImportError:
         skip("HyperSpy version doesn't support non-uniform axis")
     s1 = LumiSpectrum(ones(32))
@@ -162,7 +166,7 @@ def test_joinspectra_FunctionalDA(average, scale, kind):
     s1.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression="x**2")
     s2.axes_manager.signal_axes[0].convert_to_functional_data_axis(expression="x**2")
     s = join_spectra([s1, s2], r=2, average=average, scale=scale, kind=kind)
-    assert s.axes_manager.signal_axes[0].is_uniform == False
+    assert not s.axes_manager.signal_axes[0].is_uniform
     assert s.axes_manager.signal_axes[0].size == 57
     assert s.axes_manager.signal_axes[0].axis[-1] == 3136
     assert s.data.size == 57

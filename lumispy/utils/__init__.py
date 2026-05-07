@@ -30,3 +30,19 @@ from .signals import (
     com,
     crop_edges,
 )
+
+__all__ = [
+    "axis2eV",
+    "data2eV",
+    "var2eV",
+    "axis2invcm",
+    "data2invcm",
+    "var2invcm",
+    "solve_grating_equation",
+    "com",
+    "crop_edges",
+]
+
+
+def __dir__():
+    return sorted(__all__)

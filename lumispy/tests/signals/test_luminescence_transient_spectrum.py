@@ -30,56 +30,56 @@ class TestLumiTransientSpectrum0D:
     def test_slice_wavelength(self):
         s2 = self.s.isig[:, 5]
         assert s2.axes_manager[-1].units == "nm"
-        assert type(s2) == LumiSpectrum
+        assert isinstance(s2, LumiSpectrum)
 
     def test_slice_energy(self):
         s2 = self.s.to_eV(inplace=False)
         s3 = s2.isig[:, 5]
         assert s3.axes_manager[-1].units == "eV"
-        assert type(s3) == LumiSpectrum
+        assert isinstance(s3, LumiSpectrum)
 
     def test_slice_time(self):
         s2 = self.s.isig[5, :]
         assert s2.axes_manager[-1].units == "ps"
-        assert type(s2) == LumiTransient
+        assert isinstance(s2, LumiTransient)
 
     def test_sum_wl(self):
         s2 = self.s.sum(axis="Wavelength")
         assert s2.axes_manager[-1].units == "ps"
-        assert type(s2) == LumiTransient
+        assert isinstance(s2, LumiTransient)
 
     def test_sum_E(self):
         s2 = self.s.to_eV(inplace=False)
         s3 = s2.sum(axis="Energy")
         assert s3.axes_manager[-1].units == "ps"
-        assert type(s3) == LumiTransient
+        assert isinstance(s3, LumiTransient)
 
     def test_sum_t(self):
         s2 = self.s.sum(axis="Time")
         assert s2.axes_manager[-1].units == "nm"
-        assert type(s2) == LumiSpectrum
+        assert isinstance(s2, LumiSpectrum)
 
     def test_max_wl(self):
         s2 = self.s.max(axis="Wavelength")
         assert s2.axes_manager[-1].units == "ps"
-        assert type(s2) == LumiTransient
+        assert isinstance(s2, LumiTransient)
 
     def test_max_t(self):
         s2 = self.s.max(axis="Time")
         assert s2.axes_manager[-1].units == "nm"
-        assert type(s2) == LumiSpectrum
+        assert isinstance(s2, LumiSpectrum)
 
     def test_spec2nav(self):
         s2 = self.s.spec2nav()
         assert s2.axes_manager[0].units == "nm"
         assert s2.axes_manager[-1].units == "ps"
-        assert type(s2) == LumiTransient
+        assert isinstance(s2, LumiTransient)
 
     def test_time2nav(self):
         s2 = self.s.time2nav()
         assert s2.axes_manager[0].units == "ps"
         assert s2.axes_manager[-1].units == "nm"
-        assert type(s2) == LumiSpectrum
+        assert isinstance(s2, LumiSpectrum)
 
 
 class TestLumiTransientSpectrum2D:
@@ -94,53 +94,53 @@ class TestLumiTransientSpectrum2D:
     def test_slice_wavelength(self):
         s2 = self.s.isig[:, 5]
         assert s2.axes_manager[-1].units == "nm"
-        assert type(s2) == LumiSpectrum
+        assert isinstance(s2, LumiSpectrum)
 
     def test_slice_energy(self):
         s2 = self.s.to_eV(inplace=False)
         s3 = s2.isig[:, 5]
         assert s3.axes_manager[-1].units == "eV"
-        assert type(s3) == LumiSpectrum
+        assert isinstance(s3, LumiSpectrum)
 
     def test_slice_time(self):
         s2 = self.s.isig[5, :]
         assert s2.axes_manager[-1].units == "ps"
-        assert type(s2) == LumiTransient
+        assert isinstance(s2, LumiTransient)
 
     def test_sum_wl(self):
         s2 = self.s.sum(axis="Wavelength")
         assert s2.axes_manager[-1].units == "ps"
-        assert type(s2) == LumiTransient
+        assert isinstance(s2, LumiTransient)
 
     def test_sum_E(self):
         s2 = self.s.to_eV(inplace=False)
         s3 = s2.sum(axis="Energy")
         assert s3.axes_manager[-1].units == "ps"
-        assert type(s3) == LumiTransient
+        assert isinstance(s3, LumiTransient)
 
     def test_sum_t(self):
         s2 = self.s.sum(axis="Time")
         assert s2.axes_manager[-1].units == "nm"
-        assert type(s2) == LumiSpectrum
+        assert isinstance(s2, LumiSpectrum)
 
     def test_max_wl(self):
         s2 = self.s.max(axis="Wavelength")
         assert s2.axes_manager[-1].units == "ps"
-        assert type(s2) == LumiTransient
+        assert isinstance(s2, LumiTransient)
 
     def test_max_t(self):
         s2 = self.s.max(axis="Time")
         assert s2.axes_manager[-1].units == "nm"
-        assert type(s2) == LumiSpectrum
+        assert isinstance(s2, LumiSpectrum)
 
     def test_spec2nav(self):
         s2 = self.s.spec2nav()
         assert s2.axes_manager[0].units == "nm"
         assert s2.axes_manager[-1].units == "ps"
-        assert type(s2) == LumiTransient
+        assert isinstance(s2, LumiTransient)
 
     def test_time2nav(self):
         s2 = self.s.time2nav()
         assert s2.axes_manager[0].units == "ps"
         assert s2.axes_manager[-1].units == "nm"
-        assert type(s2) == LumiSpectrum
+        assert isinstance(s2, LumiSpectrum)
