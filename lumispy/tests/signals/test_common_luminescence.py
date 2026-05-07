@@ -172,3 +172,25 @@ class TestCommonLumi:
         ref = LumiSpectrum(ref)
         s.spectral_response_correction(ref, inplace=True)
         assert np.allclose(s.data, LumiSpectrum(exp1).data)
+
+    def test_spectral_response_warns_when_cropped(self):
+        s = LumiSpectrum(np.arange(10, dtype=float))
+        ref = LumiSpectrum(np.ones(6, dtype=float))
+
+        with pytest.warns(UserWarning, match="the signal is cropped"):
+            result = s.spectral_response_correction(ref)
+
+        assert np.allclose(result.data, np.arange(0, 5, dtype=float))
+
+    def test_spectral_response_correction_lumitransientspectrum(self):
+        ax0 = {"name": "Time", "units": "ps", "size": 10}
+        ax1 = {"name": "Wavelength", "units": "nm", "size": 20}
+        s = LumiTransientSpectrum(
+            np.ones_like(10 * 20, shape=(10, 20)),
+            axes=[ax0, ax1],
+        )
+        ref = LumiSpectrum(np.ones_like(20, shape=(20)) * 2)
+
+        result = s.spectral_response_correction(ref)
+
+        assert np.allclose(result.data, np.ones_like(10 * 20, shape=(10, 20)) * 2)

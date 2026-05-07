@@ -234,9 +234,9 @@ class CommonLumi:
         if not inplace:
             return s
 
-    def _apply(self, ref, op, inplace=False):
-        """Utility function to perform an operation on the signal data with a reference
-        spectrum.
+    def _signal_math(self, ref, op, inplace=False):
+        """Utility function to perform a mathematical operation on the signal data with
+        a reference spectrum, where the signal axes can differ in range and pixel density.
 
         E.g. for spectral response correction and calculate spectral response, where
         the operation would differ.
@@ -257,7 +257,9 @@ class CommonLumi:
         """
         sig = self if inplace else self.deepcopy()
 
-        sig_ax = sig.axes_manager[-1]
+
+        ax = -2 if sig._signal_dimension == 2 else -1 
+        sig_ax = sig.axes_manager[ax]
         ref_ax = ref.axes_manager[-1]
 
         if (
@@ -275,11 +277,17 @@ class CommonLumi:
                         The signal axis range does not overlap with the
                         reference spectrum axis range.
                         """)
+                warn(
+                    "The reference signal axis range is smaller than the signal axis range, "
+                    "the signal is cropped to the reference range."
+                )
                 sig = sig.isig[ref_min:ref_max]
+                sig_ax = sig.axes_manager[ax]
 
             ref = ref.interpolate_on_axis(sig_ax, -1, inplace=False)
 
         result = op(sig, ref)
+
         if inplace:
             self.data = result.data
             return self
@@ -301,7 +309,7 @@ class CommonLumi:
         -------
         Signal object
         """
-        return self._apply(ref, operator.mul, inplace)
+        return self._signal_math(ref, operator.mul, inplace)
 
     def calculate_spectral_response(self, ref, inplace=False):
         """Calculate the spectral response by dividing the signal by a reference
@@ -319,7 +327,7 @@ class CommonLumi:
         -------
         Signal object
         """
-        return self._apply(ref, operator.truediv, inplace)
+        return self._signal_math(ref, operator.truediv, inplace)
 
     def _reset_variance_linear_model(self):
         """Reset the variance linear model parameters to their default values,

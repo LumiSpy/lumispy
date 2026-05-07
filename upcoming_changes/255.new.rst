@@ -1,1 +1,1 @@
-Implemented spectral_reponse_correction aswell as calculate_spectral_response
+Implemented ``spectral_response_correction`` and ``calculate_spectral_response``
