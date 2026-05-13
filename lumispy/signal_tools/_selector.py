@@ -21,7 +21,6 @@ Selector class
 -------------------------------------------------
 """
 
-import numpy as np
 import traits.api as t
 
 from hyperspy.roi import SpanROI

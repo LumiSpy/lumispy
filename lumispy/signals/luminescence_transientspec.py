@@ -29,7 +29,6 @@ from hyperspy.signals import Signal1D, Signal2D
 from hyperspy._signals.lazy import LazySignal
 from hyperspy.docstrings.signal import OPTIMIZE_ARG
 from hyperspy.ui_registry import add_gui_method
-from hyperspy.exceptions import SignalDimensionError
 
 
 from lumispy.signals import LumiSpectrum
