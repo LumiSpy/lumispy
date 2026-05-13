@@ -42,4 +42,5 @@ __all__ = [
     "LazyLumiTransient",
     "LumiTransientSpectrum",
     "LazyLumiTransientSpectrum",
+    "SpanROITool",
 ]

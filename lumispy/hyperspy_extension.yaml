@@ -186,3 +186,16 @@ signals:
     dtype: real
     lazy: True
     module: lumispy.signals.luminescence_transientspec
+
+GUI:
+  toolkeys:
+    - lumispy.LumiTransientSpectrum.time2nav_tool
+  widgets:
+    ipywidgets:
+      lumispy.LumiTransientSpectrum.time2nav_tool:
+        module: lumispy.gui.lumispy_gui_ipywidgets
+        function: time2nav_tool_ipy
+    traitsui:
+      lumispy.LumiTransientSpectrum.time2nav_tool:
+        module: lumispy.gui.lumispy_gui_traitsui
+        function: time2nav_tool_traitsui
