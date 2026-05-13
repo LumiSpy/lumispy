@@ -5,7 +5,6 @@ This example demonstrates use of HyperSpy ROIs for a hyerspectral luminescence d
 non interactively. For more information about ROIs see the `documentation <HS_roi_>`__.
 
 .. _HS_roi: https://hyperspy.org/hyperspy-doc/current/reference/api.roi.html#module-hyperspy.api.roi
-.. _HS_plot_spectra: https://hyperspy.org/hyperspy-doc/current/reference/api.plot/index.html#hyperspy.api.plot.plot_spectra
 """
 
 # %%
@@ -21,7 +20,7 @@ s2 = lum.data.nanoparticles()
 # ---------------
 #
 # To use ROIs we first have to plot the signal. After that we can plot the ROI.
-# In this case we'll use a ``Line2DROI`` which will extract a line scan from the map.
+# In this case we'll use a :py:class:`~hyperspy.api.roi.Line2DROI` which will extract a line scan from the map.
 line_roi1 = hs.roi.Line2DROI()  # define the ROI
 s1.axes_manager.indices = (20, 10)
 s1.plot()
@@ -33,7 +32,7 @@ profile1 = line_roi1.interactive(s1, color="red")
 # -----------------------
 #
 # The ROI returns a BaseSignal containing the line scan, in this case its stored in ``profile``. The shape of the signal is determined by the type of ROI and the signal it is applied to.
-# To plot all the spectra from the linescan we got, we can use `hs.plot.plot_spectra() <HS_plot_spectra_>`__.
+# To plot all the spectra from the linescan we got, we can use :py:meth:`~hyperspy.api.plot.plot_spectra`.
 hs.plot.plot_spectra(profile1)
 
 # %%
@@ -52,7 +51,7 @@ hs.plot.plot_spectra(profile2)
 # Circle ROI
 # ----------
 #
-# We can also use a circle ROI. The circle ROI is defined by its center and radius. See more ROIs in the `documentation <HS_roi_>`__.
+# We can also use :py:class:`~hyperspy.api.roi.CircleROI`. The circle ROI is defined by its center and radius.
 
 # get axes
 ax1 = s2.axes_manager[0]

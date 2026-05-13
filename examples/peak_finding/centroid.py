@@ -15,16 +15,16 @@ s = lum.data.asymmetric_peak_map()
 s.plot()
 
 # %%
-# Center Position
+# Center position
 # ---------------
 #
 # Since the highest intesity value of a peak might not always be the most meanigful
-# value to determin. Lumispy provides the `centroid() <LS_centroid_>`__ function which determines
+# value to determin. Lumispy provides the :py:meth:`~lumispy.signals.luminescence_spectrum.LumiSpectrum.centroid` function which determines
 # the center of mass of the peak.
 com = s.centroid()
 
 # %%
-# Return Value
+# Return value
 # ^^^^^^^^^^^^
 # The return value is a new signal. In this case a Signal2D, which we can be plotted as a colormap:
 com.plot(cmap="viridis")

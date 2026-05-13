@@ -2,8 +2,6 @@
 Peak identification
 ===================
 In this example we will demonstrate how to identify peaks in a spectrum.
-
-.. _HS_find_peaks: https://hyperspy.org/hyperspy-doc/current/reference/api.signals/Signal1D.html#hyperspy.api.signals.Signal1D.find_peaks1D_ohaver
 """
 
 # %%
@@ -14,15 +12,15 @@ s = lum.data.asymmetric_peak_map()
 s.plot()
 
 # %%
-# Peak Identification
+# Peak identification
 # -------------------
 #
-# Peaks can be identified and characterized using `find_peaks1D_ohaver() <HS_find_peaks_>`__.
+# Peaks can be identified and characterized using :py:meth:`~hyperspy.api.signals.Signal1D.find_peaks1D_ohaver`.
 # With ``maxpeakn=1`` we only search for the highest peak in every spectrum of the map.
 peaks = s.find_peaks1D_ohaver(maxpeakn=1)
 
 # %%
-# Return Value
+# Return value
 # ^^^^^^^^^^^^
 #
 # It returns a structured array that contains ``position``, ``height`` and ``width`` of the found peaks.

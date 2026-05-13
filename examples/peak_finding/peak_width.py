@@ -14,7 +14,7 @@ s = lum.data.asymmetric_peak_map()
 s.plot()
 
 # %%
-# Width Determination
+# Width determination
 # -------------------
 #
 # Estimates the width of the highest intensity peak of the spectra at a given fraction of its maximum. The default fraction is 0.5, this value can be set via ``factor``.
@@ -22,7 +22,7 @@ s.plot()
 width = s.estimate_peak_width(return_interval=True)
 
 # %%
-# Return Value
+# Return value
 # ^^^^^^^^^^^^
 # Returns float or lists of floats: ``[width, left, right]``. We update our metadata of the new signal containing our FWHM's and plot the results.
 width[0].metadata.Signal.quantity = (
