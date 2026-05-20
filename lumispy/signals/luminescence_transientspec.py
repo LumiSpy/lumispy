@@ -35,6 +35,7 @@ from lumispy.signals import LumiSpectrum
 from lumispy.signals.common_luminescence import CommonLumi
 from lumispy.signals.common_transient import CommonTransient
 from lumispy.signal_tools._selector import IntervalsSelectorInMap
+from lumispy.signals.luminescence_transient import LumiTransient
 
 
 class TransientSpectrumCasting(Signal1D, CommonLumi, CommonTransient):
@@ -78,13 +79,50 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
     def spec2nav_tool(
         self,
         intervals=None,
-        boundarys=None,
+        boundaries=None,
         interactive=False,
         interval_count=2,
         optimize=True,
         display=True,
         toolkit=None,
     ):
+        """Return the streak image as signal with the spectral axis as navigation
+        axis and the time axis as signal axis
+
+        This method provides either an interactive GUI for selecting spectral
+        intervals or directly converts the signal into a navigation representation
+        using :meth:`spec2nav`.
+
+        Parameters
+        ----------
+
+        %s
+
+        intervals : list of tuple of float, optional
+            List of spectral intervals ``[(s1, s2), ...]`` used to integrate the
+            signal.
+
+        boundaries : list of float, optional
+            List of spectral boundaries used to automatically construct intervals.
+            For example, ``[1, 2]`` becomes the intervals
+            ``[(0, 1), (1, 2), (2, s_max)]``.
+
+        interactive : bool, default=False
+            If ``True``, open an interactive GUI for selecting intervals.
+            If ``False``, directly execute :meth:`spec2nav`.
+
+        Returns
+        -------
+        LumiSpectrum or signal2navInteractive
+            Returns a :class:`~lumispy.signals.LumiSpectrum` if
+            ``interactive=False``. Otherwise returns the interactive tool
+            instance.
+
+        See Also
+        --------
+        spec2nav
+        signal2navInteractive
+        """
 
         if interactive is True:
             tool = signal2navInteractive(
@@ -95,45 +133,56 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
         else:
             return self.spec2nav(
                 intervals=intervals,
-                boundarys=boundarys,
+                boundaries=boundaries,
                 optimize=optimize,
                 display=display,
                 toolkit=toolkit,
             )
 
-    def spec2nav(self, intervals=None, boundarys=None, optimize=True):
+    def spec2nav(
+        self, intervals=None, boundaries=None, optimize=True, display=True, toolkit=None
+    ):
         """Return the streak image as signal with the spectral axis as navigation
-        axis and the time axis as signal axis. For efficient iteration over
-        transients as a function of the spectral positions (e.g. for fitting
-        transients). By default, the method ensures that the data is stored optimally,
-        hence often making a copy of the data.
+            axis and the time axis as signal axis. For efficient iteration over
+            transients as a function of the spectral positions (e.g. for fitting
+            transients). By default, the method ensures that the data is stored optimally,
+            hence often making a copy of the data.
 
-        Parameters
-        ----------
-        %s
+            Parameters
+            ----------
+            %s
 
-        Returns
-        -------
-        signal : LumiSpectrum
-            A signal of type ``LumiTransient``.
+            intervals : list of tuple of float, optional
+                List of spectral intervals ``[(s1, s2), ...]`` used to integrate the
+                signal.
 
-        See Also
-        --------
-        lumispy.signals.LumiTransientSpectrum.time2nav
-        hyperspy.api.signals.BaseSignal.transpose
+            boundaries : list of float, optional
+                List of spectral boundaries used to automatically construct intervals.
+                For example, ``[1, 2]`` becomes the intervals
+                ``[(0, 1), (1, 2), (2, s_max)]``.
+
+            Returns
+            -------
+            signal : LumiTransient
+        A       signal of type ``LumiTransient``.
+
+            See Also
+            --------
+            lumispy.signals.LumiTransientSpectrum.time2nav
+            hyperspy.api.signals.BaseSignal.transpose
         """
 
-        if intervals is None and boundarys is None:
+        if intervals is None and boundaries is None:
             ls = self.transpose(signal_axes=[-1], optimize=optimize)
 
-        if boundarys is not None and intervals is None:
+        if boundaries is not None and intervals is None:
             new_intervals = []
-            new_intervals.append((0, boundarys[0]))
-            for current, next in zip(boundarys, boundarys[1:]):
+            new_intervals.append((0, boundaries[0]))
+            for current, next in zip(boundaries, boundaries[1:]):
                 new_intervals.append((current, next))
             new_intervals.append(
                 (
-                    boundarys[len(boundarys) - 1],
+                    boundaries[len(boundaries) - 1],
                     self.axes_manager[1].size * self.axes_manager[1].scale,
                 )
             )
@@ -141,7 +190,7 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
 
         if intervals is not None:
             data = np.zeros((len(intervals), self.axes_manager[1].size))
-            ls = LumiSpectrum(data)
+            ls = LumiTransient(data)
             ls.axes_manager[0].name = self.axes_manager[0].name
             ls.axes_manager[0].units = self.axes_manager[0].units
             ls.axes_manager[1].name = self.axes_manager[1].name
@@ -161,13 +210,50 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
     def time2nav_tool(
         self,
         intervals=None,
-        boundarys=None,
+        boundaries=None,
         interactive=False,
         interval_count=2,
         optimize=True,
         display=True,
         toolkit=None,
     ):
+        """Return the streak image as signal with the time axis as navigation
+        axis and the spectral axis as signal axis.
+
+        This method provides either an interactive GUI for selecting time
+        intervals or directly converts the signal into a navigation representation
+        using :meth:`time2nav`.
+
+        Parameters
+        ----------
+
+        %s
+
+        intervals : list of tuple of float, optional
+            List of time intervals ``[(t1, t2), ...]`` used to integrate the
+            transient signal.
+
+        boundaries : list of float, optional
+            List of time boundaries used to automatically construct intervals.
+            For example, ``[1, 2]`` becomes the intervals
+            ``[(0, 1), (1, 2), (2, t_max)]``.
+
+        interactive : bool, default=False
+            If ``True``, open an interactive GUI for selecting intervals.
+            If ``False``, directly execute :meth:`time2nav`.
+
+        Returns
+        -------
+        LumiSpectrum or signal2navInteractive
+            Returns a :class:`~lumispy.signals.LumiSpectrum` if
+            ``interactive=False``. Otherwise returns the interactive tool
+            instance.
+
+        See Also
+        --------
+        time2nav
+        signal2navInteractive
+        """
 
         if interactive is True:
             tool = signal2navInteractive(
@@ -178,14 +264,14 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
         else:
             return self.time2nav(
                 intervals=intervals,
-                boundarys=boundarys,
+                boundaries=boundaries,
                 optimize=optimize,
                 display=display,
                 toolkit=toolkit,
             )
 
     def time2nav(
-        self, intervals=None, boundarys=None, optimize=True, display=True, toolkit=None
+        self, intervals=None, boundaries=None, optimize=True, display=True, toolkit=None
     ):
         """Return the streak image as signal with the time axis as navigation
         axis and the spectral axis as signal axis. For efficient iteration over
@@ -195,7 +281,17 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
 
         Parameters
         ----------
+
         %s
+
+        intervals : list of tuple of float, optional
+            List of time intervals ``[(t1, t2), ...]`` used to integrate the
+            transient signal.
+
+        boundaries : list of float, optional
+            List of time boundaries used to automatically construct intervals.
+            For example, ``[1, 2]`` becomes the intervals
+            ``[(0, 1), (1, 2), (2, t_max)]``.
 
         Returns
         -------
@@ -208,17 +304,17 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
         hyperspy.api.signals.BaseSignal.transpose
         """
 
-        if intervals is None and boundarys is None:
+        if intervals is None and boundaries is None:
             ls = self.transpose(signal_axes=[-2], optimize=optimize)
 
-        if boundarys is not None and intervals is None:
+        if boundaries is not None and intervals is None:
             new_intervals = []
-            new_intervals.append((0, boundarys[0]))
-            for current, next in zip(boundarys, boundarys[1:]):
+            new_intervals.append((0, boundaries[0]))
+            for current, next in zip(boundaries, boundaries[1:]):
                 new_intervals.append((current, next))
             new_intervals.append(
                 (
-                    boundarys[len(boundarys) - 1],
+                    boundaries[len(boundaries) - 1],
                     self.axes_manager[1].size * self.axes_manager[1].scale,
                 )
             )
@@ -249,9 +345,7 @@ class signal2navInteractive(IntervalsSelectorInMap):
     result = t.Any()
 
     def __init__(self, interval_count, dim, obj=None, display=True):
-        if isinstance(obj, signal2navInteractive):
-            self.signal = obj.signal
-        else:
+        if not isinstance(obj, signal2navInteractive):
             self.signal = obj
         super().__init__(self.signal, interval_count, dim)
         self.display = display

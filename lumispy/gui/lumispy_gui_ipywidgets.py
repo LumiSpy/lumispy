@@ -36,8 +36,6 @@ def time2nav_tool_ipy(obj, display=True, **kwargs):
                 obj.validate_intervals()
             except ValueError as e:
                 print("ValueError: " + str(e))
-            # if obj.validate_intervals() is False:
-            # raise ValueError("negative values in intervals are not allowed")
 
         obj.apply_button_clicked()
 

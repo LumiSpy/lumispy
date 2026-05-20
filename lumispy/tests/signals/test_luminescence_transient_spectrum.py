@@ -17,8 +17,10 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 import numpy as np
+import pytest
 
 from lumispy.signals import LumiSpectrum, LumiTransient, LumiTransientSpectrum
+from hyperspy.roi import SpanROI
 
 
 class TestLumiTransientSpectrum0D:
@@ -80,6 +82,47 @@ class TestLumiTransientSpectrum0D:
         assert s2.axes_manager[0].units == "ps"
         assert s2.axes_manager[-1].units == "nm"
         assert isinstance(s2, LumiSpectrum)
+
+    def test_spec2nav_tool(self):
+        s2 = self.s.spec2nav_tool(interactive=False, boundarys=[2, 5])
+        assert s2.axes_manager[0].units == "nm"
+        assert s2.axes_manager[-1].units == "ps"
+        assert isinstance(s2, LumiTransient)
+
+    def test_time2nav_tool(self):
+        s2 = self.s.time2nav_tool(interactive=False, boundarys=[2, 5])
+        assert s2.axes_manager[0].units == "ps"
+        assert s2.axes_manager[-1].units == "nm"
+        assert isinstance(s2, LumiSpectrum)
+
+    def test_spec2nav_tool_interactive(self):
+        tool = self.s.spec2nav_tool(interactive=True, interval_count=3)
+        tool.apply_button_clicked()
+        s2 = tool.result
+        assert len(tool.intervals) == 3
+        assert s2.axes_manager[0].units == "nm"
+        assert s2.axes_manager[-1].units == "ps"
+        assert isinstance(s2, LumiTransient)
+
+    def test_time2nav_tool_interactive(self):
+        tool = self.s.time2nav_tool(interactive=True, interval_count=3)
+        tool.validate_intervals()
+        tool.apply_button_clicked()
+        s2 = tool.result
+        assert len(tool.intervals) == 3
+        assert s2.axes_manager[0].units == "ps"
+        assert s2.axes_manager[-1].units == "nm"
+        assert isinstance(s2, LumiSpectrum)
+
+    def test_time2nav_tool_interactive_error(self):
+        tool = self.s.time2nav_tool(interactive=True, interval_count=3)
+        tool.intervals = [
+            SpanROI(left=-1, right=2),
+            SpanROI(left=2, right=5),
+            SpanROI(left=5, right=10),
+        ]
+        with pytest.raises(ValueError):
+            tool.validate_intervals()
 
 
 class TestLumiTransientSpectrum2D:
