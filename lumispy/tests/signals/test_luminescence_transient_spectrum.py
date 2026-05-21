@@ -84,13 +84,13 @@ class TestLumiTransientSpectrum0D:
         assert isinstance(s2, LumiSpectrum)
 
     def test_spec2nav_tool(self):
-        s2 = self.s.spec2nav_tool(interactive=False, boundarys=[2, 5])
+        s2 = self.s.spec2nav_tool(interactive=False, boundaries=[2, 5])
         assert s2.axes_manager[0].units == "nm"
         assert s2.axes_manager[-1].units == "ps"
         assert isinstance(s2, LumiTransient)
 
     def test_time2nav_tool(self):
-        s2 = self.s.time2nav_tool(interactive=False, boundarys=[2, 5])
+        s2 = self.s.time2nav_tool(interactive=False, boundaries=[2, 5])
         assert s2.axes_manager[0].units == "ps"
         assert s2.axes_manager[-1].units == "nm"
         assert isinstance(s2, LumiSpectrum)
