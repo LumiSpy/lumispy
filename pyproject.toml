@@ -23,7 +23,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
 ]
 dependencies = [
-    "hyperspy >= 2.1.1",  # earlier versions fail on pint dependency
+    "hyperspy >= 2.3.0",  # earlier versions fail on pint dependency
     "numpy >= 2.0",
     "scipy",
     "pint>=0.10",
