@@ -143,33 +143,33 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
         self, intervals=None, boundaries=None, optimize=True, display=True, toolkit=None
     ):
         """Return the streak image as signal with the spectral axis as navigation
-            axis and the time axis as signal axis. For efficient iteration over
-            transients as a function of the spectral positions (e.g. for fitting
-            transients). By default, the method ensures that the data is stored optimally,
-            hence often making a copy of the data.
+        axis and the time axis as signal axis. For efficient iteration over
+        transients as a function of the spectral positions (e.g. for fitting
+        transients). By default, the method ensures that the data is stored optimally,
+        hence often making a copy of the data.
 
-            Parameters
-            ----------
-            %s
+        Parameters
+        ----------
+        %s
 
-            intervals : list of tuple of float, optional
-                List of spectral intervals ``[(s1, s2), ...]`` used to integrate the
-                signal.
+        intervals : list of tuple of float, optional
+            List of spectral intervals ``[(s1, s2), ...]`` used to integrate the
+            signal.
 
-            boundaries : list of float, optional
-                List of spectral boundaries used to automatically construct intervals.
-                For example, ``[1, 2]`` becomes the intervals
-                ``[(0, 1), (1, 2), (2, s_max)]``.
+        boundaries : list of float, optional
+            List of spectral boundaries used to automatically construct intervals.
+            For example, ``[1, 2]`` becomes the intervals
+            ``[(0, 1), (1, 2), (2, s_max)]``.
 
-            Returns
-            -------
-            signal : LumiTransient
-        A       signal of type ``LumiTransient``.
+        Returns
+        -------
+        signal : LumiTransient
+        signal of type ``LumiTransient``.
 
-            See Also
-            --------
-            lumispy.signals.LumiTransientSpectrum.time2nav
-            hyperspy.api.signals.BaseSignal.transpose
+        See Also
+        --------
+        lumispy.signals.LumiTransientSpectrum.time2nav
+        hyperspy.api.signals.BaseSignal.transpose
         """
 
         if intervals is None and boundaries is None:
