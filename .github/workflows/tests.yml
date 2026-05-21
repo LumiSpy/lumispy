@@ -67,6 +67,7 @@ jobs:
         shell: bash # needed for pip-selector under windows
         run: |
           pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
+          pip install ipywidgets hyperspy_gui_ipywidgets
 
       - name: Install (HyperSpy dev)
         # Test against the hyperspy `RELEASE_next_minor` branch
