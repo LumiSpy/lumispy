@@ -196,6 +196,10 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
             ls.axes_manager[1].name = self.axes_manager[1].name
             ls.axes_manager[1].units = self.axes_manager[1].units
 
+            d = {
+                "intervals": intervals}
+            ls.metadata.add_dictionary(d)
+
             for i, (t1_in, t2_in) in enumerate(intervals):
                 s1 = "%1.1f %s" % (t1_in, self.axes_manager[0].units)
                 s2 = "%1.1f %s" % (t2_in, self.axes_manager[0].units)
@@ -327,6 +331,10 @@ class LumiTransientSpectrum(Signal2D, CommonLumi, CommonTransient):
             ls.axes_manager[0].units = self.axes_manager[1].units
             ls.axes_manager[1].name = self.axes_manager[0].name
             ls.axes_manager[1].units = self.axes_manager[0].units
+
+            d = {
+                "intervals": intervals}
+            ls.metadata.add_dictionary(d)
 
             for i, (t1_in, t2_in) in enumerate(intervals):
                 t1 = "%1.2f %s" % (t1_in, self.axes_manager[1].units)
