@@ -1,5 +1,5 @@
 ### Requirements
-* Read the [contributing guidelines](https://github.com/lumispy/lumispy/blob/main/.github/CONTRIBUTING.md).
+* Read the [contributing guidelines](https://github.com/LumiSpy/lumispy/blob/main/.github/CONTRIBUTING.md).
 * Fill out the template; it helps the review process and it is useful to summarise the PR.
 * This template can be updated during the progression of the PR to summarise its status. 
 
@@ -16,7 +16,7 @@ A few sentences and/or a bulleted list to describe and motivate the change:
 - [ ] docstring updated (if appropriate),
 - [ ] update user guide (if appropriate),
 - [ ] added tests,
-- [ ] add a changelog entry in the `upcoming_changes` folder (see [`upcoming_changes/README.rst`](https://github.com/lumispy/lumispy/blob/main/upcoming_changes/README.rst)),
+- [ ] add a changelog entry in the `upcoming_changes` folder (see [`upcoming_changes/README.rst`](https://github.com/LumiSpy/lumispy/blob/main/upcoming_changes/README.rst)),
 - [ ] Check formatting of the changelog entry (and eventual user guide changes) in the `docs/readthedocs.org:lumispy` build of this PR (link in github checks),
 - [ ] ready for review.
 
