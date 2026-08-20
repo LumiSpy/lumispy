@@ -54,6 +54,7 @@ linkcheck_ignore = [
     "https://doi.org/10.1063/5.0080486",  # 403 Client Error: Forbidden for url
     "https://doi.org/10.1021/jz401508t",  # 403 Client Error: Forbidden for url
     "https://github.com/LumiSpy/lumispy/security/code-scanning",  # 404 Client Error: Not Found for url (even though page exists)
+    "https://www.gnu.org/licenses/#GPL", # intermittently fails on doc builds (rate limited)
 ]
 
 # imgmath: Sphinx allows use of LaTeX in the html documentation, but not directly. It is first rendered to an image.
