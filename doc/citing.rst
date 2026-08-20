@@ -24,4 +24,5 @@ DOIs for the LumiSpy project are provided by the `Zenodo <https://zenodo.org>`_
 repository.
 
 If the LumiSpy project has proven useful for your work, please consider awarding a
-star to our `github repository <https://github.com/LumiSpy/lumispy/stargazers>`_.
+star to our `github repository <https://github.com/LumiSpy/lumispy/stargazers>`_ 
+(link available to logged in GitHub users only).
