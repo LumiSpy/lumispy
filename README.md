@@ -8,7 +8,7 @@
 [![Python Version](https://img.shields.io/pypi/pyversions/lumispy.svg?style=flat)](https://pypi.python.org/pypi/lumispy)
 [![PyPi Version](http://img.shields.io/pypi/v/lumispy.svg?style=flat)](https://pypi.python.org/pypi/lumispy)
 [![Anaconda Version](https://anaconda.org/conda-forge/lumispy/badges/version.svg)](https://anaconda.org/conda-forge/lumispy)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/#GPL)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4640445.svg)](https://doi.org/10.5281/zenodo.4640445)
 
 
