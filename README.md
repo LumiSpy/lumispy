@@ -1,7 +1,7 @@
 [![Build Status](https://dev.azure.com/Lumispy/lumispy/_apis/build/status/LumiSpy.lumispy?branchName=main)](https://dev.azure.com/Lumispy/lumispy/_build/latest?definitionId=3&branchName=main)
-[![Tests](https://github.com/lumispy/lumispy/workflows/Tests/badge.svg)](https://github.com/lumispy/lumispy/actions)
+[![Tests](https://github.com/LumiSpy/lumispy/workflows/Tests/badge.svg)](https://github.com/LumiSpy/lumispy/actions)
 [![Codecov Status](https://codecov.io/gh/lumispy/lumispy/branch/main/graph/badge.svg?token=8ZFX8X4Z1I)](https://codecov.io/gh/lumispy/lumispy)
-[![Code quality scan](https://github.com/lumispy/lumispy/actions/workflows/codeql.yml/badge.svg)](https://github.com/LumiSpy/lumispy/security/code-scanning)
+[![Code quality scan](https://github.com/LumiSpy/lumispy/actions/workflows/codeql.yml/badge.svg)](https://github.com/LumiSpy/lumispy/security/code-scanning)
 [![Documentation Status](https://readthedocs.org/projects/lumispy/badge/?version=latest)](https://lumispy.readthedocs.io/en/latest/?badge=latest)
 
 
@@ -26,7 +26,7 @@ recognising the code development by citing the project using the
 Go to the documentation for instructions on how to install LumiSpy and start an
 analysis: [Read the docs](https://docs.lumispy.org).
 
-[Tutorials and exemplary workflows](https://github.com/lumispy/lumispy-demos)
+[Tutorials and exemplary workflows](https://github.com/LumiSpy/lumispy-demos)
 have been curated as a series of Jupyter notebooks that you can work through 
 and modify to perform many common analyses. These can be either downloaded and
 run locally or tried out using interactive online sessions.
