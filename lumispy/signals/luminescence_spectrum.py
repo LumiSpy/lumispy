@@ -21,6 +21,7 @@ Signal class for luminescence spectral data (1D).
 -------------------------------------------------
 """
 
+import lumispy
 import numpy as np
 from warnings import warn
 
@@ -78,7 +79,7 @@ class LumiSpectrum(Signal1D, CommonLumi):
         """
         warn(
             "The use of `remove_background_from_file` is deprecated and will "
-            "be removed in LumiSpy 1.0. Please use `remove_background_signal` "
+            "be removed in LumiSpy 1.0. Please use `remove_background` "
             "from the Signal1D class.",
             DeprecationWarning,
             stacklevel=2,
@@ -291,6 +292,7 @@ array([[ 0.,  0.,  1.,  2.,  3.,  4.],
         "\n", "\n\t"
     )
 
+    
     def centroid(self, signal_range=None, **kwargs):
         """Find the centroid (center of mass) of a peak.
 
@@ -323,7 +325,24 @@ array([[ 0.,  0.,  1.,  2.,  3.,  4.],
             on the dimensionality the type is Signal2D or a BaseSignal (for single
             spectrum).
         """
-        if signal_range:
+
+        def _uniform_com(spectrum_intensities, signal_axis):
+            return np.sum(signal_axis.axis * spectrum_intensities) / np.sum(spectrum_intensities)
+
+        def _nonuniform_com(spectrum_intensities, signal_axis, **kwargs):
+            from scipy.ndimage import center_of_mass
+            index = float(center_of_mass(spectrum_intensities)[0])
+            rem = index % 1
+            index = int(index // 1)
+            if rem == 0:
+                return signal_axis.axis[index]
+            else:
+                y = [spectrum_intensities[index], spectrum_intensities[index + 1]]
+                x = [0, 1]
+                fx = np.interp1d(x, y, **kwargs)
+                return float(fx(rem))
+
+        if signal_range is not None:
             if not isinstance(signal_range, tuple):
                 raise TypeError(
                     "The `signal_range` parameter must be a tuple of length 2."
@@ -340,7 +359,10 @@ array([[ 0.,  0.,  1.,  2.,  3.,  4.],
             s = self
 
         signal_axis = s.axes_manager.signal_axes[0]
-        center_of_mass = s.map(com, signal_axis=signal_axis, inplace=False)
+        if signal_axis.is_uniform:
+            center_of_mass = s.map(_uniform_com, signal_axis=signal_axis, inplace=False)
+        else:
+            center_of_mass = s.map(_nonuniform_com, signal_axis=signal_axis, inplace=False)
 
         # Transfer axes metadata to title
         center_of_mass.metadata.General.title = "Centroid map"

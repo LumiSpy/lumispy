@@ -105,7 +105,7 @@ class TestLumiSpectrum:
         assert_allclose(s.axes_manager.signal_axes[0].axis[0], 368.614, atol=0.1)
         assert_allclose(s.axes_manager.signal_axes[0].axis[-1], 768.249, atol=0.1)
 
-    def test_center_of_mass(self):
+    def test_center_of_mass_uniform(self):
         s = LumiSpectrum([1, 2, 3, 2, 1, 0])
         ax = s.axes_manager.signal_axes[0]
         ax.offset = 200
@@ -120,6 +120,12 @@ class TestLumiSpectrum:
             com.metadata.General.title
             == f"Centroid map of {ax.name} ({ax.units}) for test_signal"
         )
+
+    def test_center_of_mass_non_uniform(self):
+        s = LumiSpectrum([1, 2, 3, 2, 1, 0], axes=[{"axis": [200, 300, 400, 500, 600, 700]}])
+
+        com = s.centroid()
+        assert_allclose(com.data, 400.0, atol=0.1)
 
     def test_center_of_mass_signalrange(self):
         s = LumiSpectrum([100, 100, 1, 2, 3, 2, 1, 0, 100, 100])
@@ -150,3 +156,4 @@ class TestLumiSpectrum:
         )
         assert com.metadata.General.title == "Centroid map"
         assert isinstance(com, Signal2D)
+

@@ -18,7 +18,7 @@
 
 from lumispy.utils.signals import com, crop_edges
 from hyperspy.axes import FunctionalDataAxis, DataAxis, UniformDataAxis
-from numpy import ones, array
+from numpy import ones, array, arange
 from numpy.testing import assert_allclose
 from pytest import raises, mark, warns
 from hyperspy.signals import Signal1D, Signal2D
@@ -78,9 +78,13 @@ def test_com_inputs():
     with raises(ValueError):
         com(ones(3), ones(2))
     with raises(
-        ValueError, match="The parmeter `signal_axis` must be a HyperSpy Axis object."
+        ValueError, match="The parameter `signal_axis` must be a HyperSpy Axis object."
     ):
         com(ones(3), "string")
+
+def test_com_deprecation_warning():
+    with warns(DeprecationWarning):
+        _ = com(arange(10), arange(10))
 
 
 #
