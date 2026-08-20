@@ -22,7 +22,7 @@ Welcome to LumiSpy's documentation!
 .. |Anaconda_version| image:: https://anaconda.org/conda-forge/lumispy/badges/version.svg
 .. _Anaconda_version: https://anaconda.org/conda-forge/lumispy
 .. |License| image:: https://img.shields.io/badge/License-GPLv3-blue.svg
-.. _License: https://www.gnu.org/licenses/gpl-3.0
+.. _License: https://www.gnu.org/licenses/#GPL
 .. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.4640445.svg
 .. _DOI: https://doi.org/10.5281/zenodo.4640445
 
