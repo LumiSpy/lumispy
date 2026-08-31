@@ -54,6 +54,8 @@ linkcheck_ignore = [
     "https://doi.org/10.1063/5.0080486",  # 403 Client Error: Forbidden for url
     "https://doi.org/10.1021/jz401508t",  # 403 Client Error: Forbidden for url
     "https://github.com/LumiSpy/lumispy/security/code-scanning",  # 404 Client Error: Not Found for url (even though page exists)
+    "https://www.gnu.org/licenses/#GPL", # intermittently fails on doc builds (rate limited)
+    "https://github.com/LumiSpy/lumispy/stargazers", # is requiring authentication 
 ]
 
 # imgmath: Sphinx allows use of LaTeX in the html documentation, but not directly. It is first rendered to an image.
@@ -112,7 +114,6 @@ def run_apidoc(_):
     modules = os.path.normpath(os.path.join(cur_dir, "../lumispy"))
     exclude_pattern = [
         "../lumispy/tests",
-        "../lumispy/components",
         "../lumispy/release_info.py",
     ]
     main(["-e", "-f", "-P", "-o", output_path, modules, *exclude_pattern])

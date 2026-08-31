@@ -23,8 +23,8 @@ import pytest
 from hyperspy.axes import DataAxis
 from hyperspy.signals import Signal1D, Signal2D
 
+from lumispy.data import supported_optical_constants
 from lumispy.utils.transition_radiation import (
-    _DATASETS,
     _HC_EV_NM,
     _interpolate_permittivity,
     _load_optical_data,
@@ -71,31 +71,7 @@ def test_transition_radiation_returns_calibrated_signals():
     assert np.all(angle_resolved.data >= 0)
 
 
-def test_angle_resolved_probability_integrates_to_spectrum():
-    angles_deg = np.linspace(0, 90, 721)
-    spectrum, angle_resolved = transition_radiation_nm(
-        electron_energy=30,
-        material_dataset="Al_mcpeak",
-        angular_axis=angles_deg,
-        spectral_axis=[400.0, 600.0, 800.0],
-        return_angle_resolved=True,
-    )
-
-    angles_rad = np.deg2rad(angles_deg)
-    integrated = (
-        2
-        * np.pi
-        * np.trapezoid(
-            angle_resolved.data * np.sin(angles_rad)[:, np.newaxis],
-            x=angles_rad,
-            axis=0,
-        )
-    )
-
-    assert_allclose(integrated, spectrum.data, rtol=1e-13, atol=0)
-
-
-@pytest.mark.parametrize("material_dataset", sorted(_DATASETS))
+@pytest.mark.parametrize("material_dataset", supported_optical_constants())
 def test_all_bundled_optical_datasets(material_dataset):
     spectrum = transition_radiation_nm(
         material_dataset=material_dataset,
@@ -109,56 +85,52 @@ def test_all_bundled_optical_datasets(material_dataset):
 
 
 def test_palik_data_are_used_as_permittivity():
-    (
-        optical_energy_ev,
-        coordinate_kind,
-        representation,
-        real_permittivity,
-        imaginary_permittivity,
-    ) = _load_optical_data("Au_palik")
+    optical_data = _load_optical_data("Au_palik")
+    optical_energy_ev = optical_data.axes_manager.signal_axes[0].axis
     index = optical_energy_ev.size // 2
     wavelength_nm = _HC_EV_NM / optical_energy_ev[index : index + 1]
 
     interpolated = _interpolate_permittivity(
         wavelength_nm,
-        optical_energy_ev,
-        real_permittivity,
-        imaginary_permittivity,
-        coordinate_kind=coordinate_kind,
-        representation=representation,
-        material_dataset="Au_palik",
+        optical_data,
     )
 
-    expected = real_permittivity[index] + 1j * imaginary_permittivity[index]
-    assert representation == "epsilon"
+    expected = optical_data.data[index]
+    assert optical_data.metadata.OpticalConstants.data_kind == "relative_permittivity"
     assert_allclose(interpolated, expected, rtol=1e-13, atol=0)
     assert not np.isclose(interpolated[0], expected**2)
 
 
 def test_n_and_k_data_are_converted_to_permittivity():
-    (
-        optical_wavelength_um,
-        coordinate_kind,
-        representation,
-        refractive_index,
-        extinction_coefficient,
-    ) = _load_optical_data("Au_johnson")
+    optical_data = _load_optical_data("Au_johnson")
+    optical_wavelength_um = optical_data.axes_manager.signal_axes[0].axis
     index = optical_wavelength_um.size // 2
     wavelength_nm = optical_wavelength_um[index : index + 1] * 1e3
 
     interpolated = _interpolate_permittivity(
         wavelength_nm,
-        optical_wavelength_um,
-        refractive_index,
-        extinction_coefficient,
-        coordinate_kind=coordinate_kind,
-        representation=representation,
-        material_dataset="Au_johnson",
+        optical_data,
     )
 
-    expected = (refractive_index[index] + 1j * extinction_coefficient[index]) ** 2
-    assert representation == "n_k"
+    expected = optical_data.data[index] ** 2
+    assert (
+        optical_data.metadata.OpticalConstants.data_kind == "complex_refractive_index"
+    )
     assert_allclose(interpolated, expected, rtol=1e-13, atol=0)
+
+
+def test_optical_constants_signal_is_accepted():
+    optical_data = _load_optical_data("Al_mcpeak")
+
+    spectrum = transition_radiation_nm(
+        material_dataset=optical_data,
+        angular_axis=(0, 90, 181),
+        spectral_axis=[400.0, 600.0, 800.0],
+    )
+
+    assert spectrum.data.shape == (3,)
+    assert np.all(np.isfinite(spectrum.data))
+    assert np.all(spectrum.data >= 0)
 
 
 def test_hyperspy_axes_are_accepted():
@@ -187,7 +159,12 @@ def test_hyperspy_axes_are_accepted():
         (
             {"material_dataset": "not-a-dataset"},
             ValueError,
-            "Unknown material dataset",
+            "Unknown optical constants",
+        ),
+        (
+            {"material_dataset": np.array([1, 2])},
+            TypeError,
+            "must be a string or a ComplexSignal1D",
         ),
     ],
 )

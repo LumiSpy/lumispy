@@ -6,11 +6,11 @@ Welcome to LumiSpy's documentation!
 
 .. |Build_status| image:: https://dev.azure.com/Lumispy/lumispy/_apis/build/status/LumiSpy.lumispy?branchName=main
 .. _Build_status: https://dev.azure.com/Lumispy/lumispy/_build/latest?definitionId=3&branchName=main
-.. |Tests| image:: https://github.com/lumispy/lumispy/workflows/Tests/badge.svg
-.. _Tests: https://github.com/lumispy/lumispy/actions
+.. |Tests| image:: https://github.com/LumiSpy/lumispy/workflows/Tests/badge.svg
+.. _Tests: https://github.com/LumiSpy/lumispy/actions
 .. |Codecov_status| image:: https://codecov.io/gh/lumispy/lumispy/branch/main/graph/badge.svg?token=8ZFX8X4Z1I
 .. _Codecov_status: https://codecov.io/gh/lumispy/lumispy
-.. |CodeQL_status| image:: https://github.com/lumispy/lumispy/actions/workflows/codeql.yml/badge.svg
+.. |CodeQL_status| image:: https://github.com/LumiSpy/lumispy/actions/workflows/codeql.yml/badge.svg
 .. _CodeQL_status: https://github.com/LumiSpy/lumispy/security/code-scanning
 .. |Documentation_status| image:: https://readthedocs.org/projects/lumispy/badge/?version=latest
 .. _Documentation_status: https://lumispy.readthedocs.io/en/latest/?badge=latest
@@ -22,7 +22,7 @@ Welcome to LumiSpy's documentation!
 .. |Anaconda_version| image:: https://anaconda.org/conda-forge/lumispy/badges/version.svg
 .. _Anaconda_version: https://anaconda.org/conda-forge/lumispy
 .. |License| image:: https://img.shields.io/badge/License-GPLv3-blue.svg
-.. _License: https://www.gnu.org/licenses/gpl-3.0
+.. _License: https://www.gnu.org/licenses/#GPL
 .. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.4640445.svg
 .. _DOI: https://doi.org/10.5281/zenodo.4640445
 

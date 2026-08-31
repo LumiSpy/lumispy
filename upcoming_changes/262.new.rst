@@ -1,0 +1,1 @@
+First components for LumiSpy: :class:`~.components.convolved_gaussian_exponential.ConvGaussExp` and :class:`~.components.convolved_gaussian_two_exponential.ConvGaussTwoExp`.
