@@ -26,6 +26,8 @@ from .axes import (
     solve_grating_equation,
 )
 
+from .transition_radiation import transition_radiation_nm, optical_constants_to_signal
+
 from .signals import (
     com,
     crop_edges,
@@ -41,6 +43,8 @@ __all__ = [
     "solve_grating_equation",
     "com",
     "crop_edges",
+    "transition_radiation_nm",
+    "optical_constants_to_signal",
 ]
 
 

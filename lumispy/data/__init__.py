@@ -23,9 +23,16 @@ import warnings
 
 import hyperspy.api as hs
 
+from lumispy.data._optical_constants import (
+    supported_optical_constants,
+    load_optical_constants,
+)
+
 __all__ = [
     "asymmetric_peak_map",
     "nanoparticles",
+    "supported_optical_constants",
+    "load_optical_constants",
 ]
 
 
