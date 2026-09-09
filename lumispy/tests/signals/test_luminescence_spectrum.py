@@ -21,6 +21,7 @@ import pytest
 
 from lumispy.signals.luminescence_spectrum import LumiSpectrum
 from hyperspy._signals.signal2d import Signal2D
+from lumispy.data import asymmetric_peak_map
 from numpy.testing import assert_allclose
 
 backgrounds = [
@@ -122,7 +123,9 @@ class TestLumiSpectrum:
         )
 
     def test_center_of_mass_non_uniform(self):
-        s = LumiSpectrum([1, 2, 3, 2, 1, 0], axes=[{"axis": [200, 300, 400, 500, 600, 700]}])
+        s = LumiSpectrum(
+            [1, 2, 3, 2, 1, 0], axes=[{"axis": [200, 300, 400, 500, 600, 700]}]
+        )
 
         com = s.centroid()
         assert_allclose(com.data, 400.0, atol=0.1)
@@ -157,3 +160,17 @@ class TestLumiSpectrum:
         assert com.metadata.General.title == "Centroid map"
         assert isinstance(com, Signal2D)
 
+    def test_com_real_data_uniform_axis(self):
+        spectrum = asymmetric_peak_map().sum()
+
+        centroid = spectrum.centroid()
+
+        assert_allclose(centroid.data, 672.0000334210075, rtol=1e-6, atol=0)
+
+    def test_com_real_data_non_uniform_axis(self):
+        spectrum = asymmetric_peak_map().sum()
+        spectrum.to_eV(inplace=True)
+
+        centroid = spectrum.centroid()
+
+        assert_allclose(centroid.data, 1.8039761934104044, rtol=1e-6, atol=0)
