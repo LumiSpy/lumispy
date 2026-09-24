@@ -99,19 +99,19 @@ def com(spectrum_intensities, signal_axis, **kwargs):
     """
     warn(
         "The use of `lumispy.utils.signals.com` is deprecated and will be removed "
-        "in LumiSpy 1.0. Please use `lumispy.signals.luminescense_spectrum.centroid` instead.",
+        "in LumiSpy 1.0. Please use the object-oriented `centroid` function of the `luminescense_spectrum` class instead.",
         DeprecationWarning,
         stacklevel=2,
     )
     
     def _interpolate_signal(axis_array, index, **kwargs):
         """Wrapper for `hs.axes.index2value`.
-        
-        Linearly interpolate between values should the index passed not be an
-        integer. Using the kwargs, the interpolation method can be changed.
+
+       If the index passed is not an integer,  linearly interpolate between values.
+       Using the kwargs, the interpolation method can be changed.
         """
         rem = index % 1
-        index  = int(index // 1)
+        index = int(index // 1)
         if rem == 0:
             return axis_array[int(index)]
         else:
