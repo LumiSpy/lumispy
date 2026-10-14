@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
+"""Utility functions for luminescence data analysis."""
+
 from .axes import (
     axis2eV,
     data2eV,

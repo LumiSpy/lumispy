@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
+"""Module containing the LumiSpy signals and their lazy counterparts."""
+
 from .luminescence_spectrum import LumiSpectrum, LazyLumiSpectrum
 from .cl_spectrum import CLSpectrum, LazyCLSpectrum
 from .cl_spectrum import CLSEMSpectrum, LazyCLSEMSpectrum
