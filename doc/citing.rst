@@ -2,7 +2,7 @@ Citing LumiSpy
 **************
 
 LumiSpy is maintained by an `active community of developers 
-<https://github.com/lumispy/lumispy/contributors>`_.
+<https://github.com/LumiSpy/lumispy/contributors>`_.
 
 If you use LumiSpy for your research projects, please consider citing
 it in your publications. LumiSpy and `HyperSpy <https://hyperspy.org>`_
@@ -24,4 +24,5 @@ DOIs for the LumiSpy project are provided by the `Zenodo <https://zenodo.org>`_
 repository.
 
 If the LumiSpy project has proven useful for your work, please consider awarding a
-star to our `github repository <https://github.com/lumispy/lumispy/stargazers>`_.
+star to our `github repository <https://github.com/LumiSpy/lumispy/stargazers>`_ 
+(link available to logged in GitHub users only).

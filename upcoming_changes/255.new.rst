@@ -1,0 +1,1 @@
+Implemented :meth:`~.signals.common_luminescence.CommonLumi.spectral_response_correction` and :meth:`~.signals.common_luminescence.CommonLumi.calculate_spectral_response`

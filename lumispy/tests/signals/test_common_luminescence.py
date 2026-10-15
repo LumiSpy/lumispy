@@ -145,3 +145,52 @@ class TestCommonLumi:
         assert s4.metadata.Signal.quantity == "Normalized intensity"
         with pytest.warns(UserWarning, match="Data was"):
             s1.normalize(inplace=True)
+
+    test_data = [
+        ([[1, 2]], [2, 1], [[2, 2]], [[0.5, 2]]),
+        ([[1, 2]], [1, 2], [[1, 4]], [[1, 1]]),
+        ([[1, 2], [4, 8]], [0.5, 0.5], [[0.5, 1], [2, 4]], [[2, 4], [8, 16]]),
+    ]
+
+    @pytest.mark.parametrize("s, ref, exp1, exp2", test_data)
+    def testspectral_response_correction(self, s, ref, exp1, exp2):
+        s = LumiSpectrum(s)
+        ref = LumiSpectrum(ref)
+        result = s.spectral_response_correction(ref)
+        assert np.allclose(result.data, LumiSpectrum(exp1).data)
+
+    @pytest.mark.parametrize("s, ref, exp1, exp2", test_data)
+    def testcalculate_spectral_response(self, s, ref, exp1, exp2):
+        s = LumiSpectrum(s)
+        ref = LumiSpectrum(ref)
+        result = s.calculate_spectral_response(ref)
+        assert np.allclose(result.data, LumiSpectrum(exp2).data)
+
+    @pytest.mark.parametrize("s, ref, exp1, exp2", test_data)
+    def testspectral_response_correction_inplace(self, s, ref, exp1, exp2):
+        s = LumiSpectrum(s)
+        ref = LumiSpectrum(ref)
+        s.spectral_response_correction(ref, inplace=True)
+        assert np.allclose(s.data, LumiSpectrum(exp1).data)
+
+    def test_spectral_response_warns_when_cropped(self):
+        s = LumiSpectrum(np.arange(10, dtype=float))
+        ref = LumiSpectrum(np.ones(6, dtype=float))
+
+        with pytest.warns(UserWarning, match="the signal is cropped"):
+            result = s.spectral_response_correction(ref)
+
+        assert np.allclose(result.data, np.arange(0, 5, dtype=float))
+
+    def test_spectral_response_correction_lumitransientspectrum(self):
+        ax0 = {"name": "Time", "units": "ps", "size": 10}
+        ax1 = {"name": "Wavelength", "units": "nm", "size": 20}
+        s = LumiTransientSpectrum(
+            np.ones_like(10 * 20, shape=(10, 20)),
+            axes=[ax0, ax1],
+        )
+        ref = LumiSpectrum(np.ones_like(20, shape=(20)) * 2)
+
+        result = s.spectral_response_correction(ref)
+
+        assert np.allclose(result.data, np.ones_like(10 * 20, shape=(10, 20)) * 2)

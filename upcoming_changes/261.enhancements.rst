@@ -1,0 +1,1 @@
+Improved the speed of the centroid function for uniform axis
