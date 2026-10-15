@@ -23,7 +23,7 @@ Signal class for luminescence transient data (1D)
 
 from hyperspy.signals import Signal1D
 
-from lumispy.signals.common_transient import CommonTransient
+from .common_transient import CommonTransient
 
 
 class LumiTransient(Signal1D, CommonTransient):

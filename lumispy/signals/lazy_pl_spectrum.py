@@ -24,7 +24,7 @@ Lazy signal class for photoluminescence spectral data
 from hyperspy.docstrings.signal import LAZYSIGNAL_DOC
 from hyperspy.signals import LazySignal1D
 
-from lumispy.signals import PLSpectrum
+from .pl_spectrum import PLSpectrum
 
 
 class LazyPLSpectrum(LazySignal1D, PLSpectrum):

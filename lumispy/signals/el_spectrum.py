@@ -21,7 +21,7 @@ Signal class for electroluminescence spectral data
 --------------------------------------------------
 """
 
-from lumispy.signals import LumiSpectrum
+from .luminescence_spectrum import LumiSpectrum
 
 
 class ELSpectrum(LumiSpectrum):

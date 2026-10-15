@@ -24,7 +24,7 @@ Signal classes for cathodoluminescence spectral data
 import numpy as np
 from warnings import warn
 
-from lumispy.signals import LumiSpectrum
+from .luminescence_spectrum import LumiSpectrum
 
 
 class CLSpectrum(LumiSpectrum):

@@ -24,7 +24,7 @@ Lazy signal class for electroluminescence spectral data
 from hyperspy.docstrings.signal import LAZYSIGNAL_DOC
 from hyperspy.signals import LazySignal1D
 
-from lumispy.signals import ELSpectrum
+from .el_spectrum import ELSpectrum
 
 
 class LazyELSpectrum(LazySignal1D, ELSpectrum):

@@ -24,7 +24,7 @@ Lazy signal classes for cathodoluminescence spectral data
 from hyperspy.docstrings.signal import LAZYSIGNAL_DOC
 from hyperspy.signals import LazySignal1D
 
-from lumispy.signals import CLSpectrum, CLSEMSpectrum, CLSTEMSpectrum
+from .cl_spectrum import CLSpectrum, CLSEMSpectrum, CLSTEMSpectrum
 
 
 class LazyCLSpectrum(LazySignal1D, CLSpectrum):

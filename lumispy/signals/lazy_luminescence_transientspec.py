@@ -24,7 +24,7 @@ Lazy signal class for luminescence transient data (2D)
 from hyperspy.docstrings.signal import LAZYSIGNAL_DOC
 from hyperspy.signals import LazySignal2D
 
-from lumispy.signals import LumiTransientSpectrum
+from .luminescence_transientspec import LumiTransientSpectrum
 
 
 class LazyLumiTransientSpectrum(LazySignal2D, LumiTransientSpectrum):

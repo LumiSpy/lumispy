@@ -21,7 +21,7 @@ Signal class for photoluminescence spectral data
 ------------------------------------------------
 """
 
-from lumispy.signals import LumiSpectrum
+from .luminescence_spectrum import LumiSpectrum
 
 
 class PLSpectrum(LumiSpectrum):
