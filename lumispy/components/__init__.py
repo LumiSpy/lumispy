@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
+"""LumiSpy components used for model fitting."""
+
 from .convolved_gaussian_exponential import ConvGaussExp
 from .convolved_gaussian_two_exponential import ConvGaussTwoExp
 

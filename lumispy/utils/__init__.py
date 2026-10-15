@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
+"""Utility functions for luminescence data analysis."""
+
 from .axes import (
     axis2eV,
     data2eV,
@@ -28,7 +30,6 @@ from .axes import (
 
 from .signals import (
     com,
-    crop_edges,
 )
 
 __all__ = [
@@ -40,7 +41,6 @@ __all__ = [
     "var2invcm",
     "solve_grating_equation",
     "com",
-    "crop_edges",
 ]
 
 

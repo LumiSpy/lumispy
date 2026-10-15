@@ -18,6 +18,9 @@
 
 # from .__init__ import asymmetric_peak_map, nanoparticles
 
+
+"""This module contains functions to load example datasets."""
+
 from pathlib import Path
 import warnings
 

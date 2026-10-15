@@ -25,7 +25,7 @@ from .utils.io import to_array, savetxt
 
 from . import signals, components, utils, data
 
-from .utils import crop_edges
+from .utils.signals import crop_edges
 
 __version__ = version("lumispy")
 
