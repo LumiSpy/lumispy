@@ -1,0 +1,1 @@
+Implement lazy import to speed up ``lumispy`` import time and reduce memory usage by deferring the import of dependencies until they are actually needed. Clean up functions available in multiple modules.

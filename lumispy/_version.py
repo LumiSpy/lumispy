@@ -24,7 +24,7 @@ from pathlib import Path
 
 @functools.cache
 def _get_version():
-    version_ = version("hyperspy")
+    version_ = version("lumispy")
     # For development version, `setuptools_scm` will be used at build time
     # to get the dev version, in case of missing vcs information (git archive,
     # shallow repository), the fallback version defined in pyproject.toml will
