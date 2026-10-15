@@ -18,7 +18,7 @@
 
 import numpy as np
 
-from lumispy.signals import LumiSpectrum, LumiTransient, LumiTransientSpectrum
+from lumispy.signals import LumiTransientSpectrum, LumiSpectrum, LumiTransient
 
 
 class TestLumiTransientSpectrum0D:

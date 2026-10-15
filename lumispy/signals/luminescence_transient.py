@@ -22,9 +22,8 @@ Signal class for luminescence transient data (1D)
 """
 
 from hyperspy.signals import Signal1D
-from hyperspy._signals.lazy import LazySignal
 
-from lumispy.signals.common_transient import CommonTransient
+from .common_transient import CommonTransient
 
 
 class LumiTransient(Signal1D, CommonTransient):
@@ -35,9 +34,3 @@ class LumiTransient(Signal1D, CommonTransient):
 
     def __init(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-
-class LazyLumiTransient(LazySignal, LumiTransient):
-    """**General lazy 1D luminescence signal class (transient/time resolved)**"""
-
-    _lazy = True
