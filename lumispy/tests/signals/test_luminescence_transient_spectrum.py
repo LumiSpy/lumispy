@@ -116,10 +116,11 @@ class TestLumiTransientSpectrum0D:
 
     def test_time2nav_tool_interactive_error(self):
         tool = self.s.time2nav_tool(interactive=True, interval_count=3)
+        self.s.axes_manager[1].offset = -2
         tool.intervals = [
             SpanROI(left=-1, right=2),
             SpanROI(left=2, right=5),
-            SpanROI(left=5, right=10),
+            SpanROI(left=5, right=7),
         ]
         with pytest.raises(ValueError):
             tool.validate_intervals()

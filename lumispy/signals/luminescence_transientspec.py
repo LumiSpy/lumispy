@@ -29,6 +29,7 @@ from hyperspy.signals import Signal1D, Signal2D
 from hyperspy._signals.lazy import LazySignal
 from hyperspy.docstrings.signal import OPTIMIZE_ARG
 from hyperspy.ui_registry import add_gui_method
+from hyperspy.roi import SpanROI
 
 
 from lumispy.signals import LumiSpectrum
@@ -369,6 +370,16 @@ class signal2navInteractive(IntervalsSelectorInMap):
             self.result = self.signal.spec2nav(intervals=self.intervals)
 
     def validate_intervals(self):
+        for i, (t1, t2) in enumerate(self.intervals):
+            t1 = max(t1, self.signal.axes_manager[self.dim_idx].offset)
+            t2 = min(
+                t2,
+                self.signal.axes_manager[self.dim_idx].offset
+                + self.signal.axes_manager[self.dim_idx].size
+                * self.signal.axes_manager[self.dim_idx].scale,
+            )
+            self.intervals[i] = SpanROI(left=t1, right=t2)
+
         if any(t1 < 0 or t2 < 0 for t1, t2 in self.intervals):
             raise ValueError("negative values in intervals are not allowed")
 
