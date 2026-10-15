@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-# from .__init__ import asymmetric_peak_map, nanoparticles
-
 from pathlib import Path
 import warnings
 
@@ -26,6 +24,8 @@ import hyperspy.api as hs
 __all__ = [
     "asymmetric_peak_map",
     "nanoparticles",
+    "AlN_Cornell",
+    "AlN_bkg",
 ]
 
 
@@ -59,6 +59,27 @@ def nanoparticles():
     :py:class:`~hyperspy._signals.signal.Signal1D`
     """
     file_path = _resolve_dir().joinpath("nanoparticles.hspy")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=UserWarning)
+        return hs.load(file_path, mode="r", reader="hspy")
+
+
+def AlN_Cornell():
+    """Load an exemplary dataset containing a 2d map of spectra.
+
+    Returns
+    -------
+    :py:class:`~lumispy.signals.LumiSpectrum`
+    """
+    file_path = _resolve_dir().joinpath("AlN_Cornell.hspy")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=UserWarning)
+        return hs.load(file_path, mode="r", reader="hspy")
+
+
+def AlN_bkg():
+    """Load an exemplary dataset containing a background spectrum."""
+    file_path = _resolve_dir().joinpath("AlN_bkg.hspy")
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=UserWarning)
         return hs.load(file_path, mode="r", reader="hspy")

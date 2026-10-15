@@ -1,0 +1,1 @@
+Update the deprecation warning of :meth:`~.signals.luminescence_spectrum.LumiSpectrum.remove_background_from_file` to refer to HyperSpy's ``remove_background`` method with the ``Scalable fixed pattern`` component, and add an example with AlN and dark spectra.

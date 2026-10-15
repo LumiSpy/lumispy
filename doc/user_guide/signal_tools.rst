@@ -40,6 +40,40 @@ analysis (therefore the default is ``inplace=False``).
 
     >>> s.normalize(pos=450)
 
+
+
+.. _measured_background:
+
+Removing a measured background spectrum
+=======================================
+
+A dark spectrum measured with the same detector settings can be subtracted
+using the :external:meth:`~hyperspy.api.signals.Signal1D.remove_background`
+method (HyperSpy 2.5.0 or later). The ``Scalable fixed pattern`` background type
+accepts a measured :external:class:`~hyperspy.api.signals.Signal1D`.
+
+.. code-block:: python
+
+    >>> import lumispy as lum
+    >>> s = lum.data.AlN_Cornell()
+    >>> bkg = lum.data.AlN_bkg()
+    >>> corrected = s.remove_background(
+    ...     signal_range="full",
+    ...     background_type="Scalable fixed pattern",
+    ...     background_signal=bkg,
+    ...     yscale=False,
+    ... )
+
+The ``yscale=False`` option subtracts the recorded background without fitting
+an additional scaling factor. Use ``yscale=True`` to estimate a scale factor
+from a selected signal range, or pass a fixed numerical value if the scaling is
+known. A matching exposure time, binning, calibration and acquisition setup
+should be verified before subtracting experimental measurements.
+
+The older :meth:`~.signals.luminescence_spectrum.LumiSpectrum.remove_background_from_file`
+method is deprecated. See the :ref:`example gallery <examples-index>` for a
+complete example.
+
 .. _peak_props:
 
 Peak positions and properties
