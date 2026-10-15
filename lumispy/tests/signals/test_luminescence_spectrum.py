@@ -68,7 +68,7 @@ class TestLumiSpectrum:
 
     def test_deprecation_warning(self):
         s = LumiSpectrum(np.ones(50))
-        with pytest.warns(DeprecationWarning, match="deprecated"):
+        with pytest.warns(DeprecationWarning, match="Scalable fixed pattern"):
             s.remove_background_from_file(background=backgrounds[0][0])
 
     def test_px_to_nm_grating_solver(self):

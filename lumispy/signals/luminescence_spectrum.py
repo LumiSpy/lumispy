@@ -75,11 +75,19 @@ class LumiSpectrum(Signal1D, CommonLumi):
         Notes
         -----
         This function does not work with non-uniform axes.
+
+        .. note::
+            This method is deprecated. Use
+            :meth:`hyperspy.api.signals.Signal1D.remove_background`
+            with ``background_type="Scalable fixed pattern"`` and
+            ``background_signal=background`` (HyperSpy >= 2.5.0).
         """
         warn(
             "The use of `remove_background_from_file` is deprecated and will "
-            "be removed in LumiSpy 1.0. Please use `remove_background_signal` "
-            "from the Signal1D class.",
+            "be removed in LumiSpy 1.0. Please use "
+            "`remove_background(background_type='Scalable fixed pattern', "
+            "background_signal=background, signal_range='full')` "
+            "instead (requires HyperSpy >= 2.5.0).",
             DeprecationWarning,
             stacklevel=2,
         )
