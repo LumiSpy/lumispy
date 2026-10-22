@@ -72,7 +72,7 @@ Contents
    :maxdepth: 2
    :caption: API reference
 
-   api/modules.rst
+   Reference <reference/index>
 
 .. toctree::
    :maxdepth: 1
