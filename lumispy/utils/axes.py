@@ -20,13 +20,13 @@
 Functions needed for signal axis conversion.
 
 """
+
+import numpy as np
+import scipy.constants as c
+from scipy.interpolate import interp1d
 from inspect import getfullargspec
 from copy import deepcopy
 from warnings import warn
-
-import numpy as np
-import scipy
-
 
 from hyperspy.axes import DataAxis, UniformDataAxis
 
@@ -71,7 +71,6 @@ def nm2eV(x):
     """Convert wavelength (nm) to energy (eV) using wavelength-dependent
     refractive index of air.
     """
-    c = scipy.constants
     return 1e9 * c.h * c.c / (c.e * _n_air(x) * x)
 
 
@@ -79,25 +78,57 @@ def eV2nm(x):
     """Convert energy (eV) to wavelength (nm) using wavelength-dependent
     refractive index of air.
     """
-    c = scipy.constants
     wl = 1239.5 / x  # approximate WL to obtain refractive index
     return 1e9 * c.h * c.c / (c.e * _n_air(wl) * x)
 
+def invcm2eV(x):
+    """Convert wavenumber (cm$^{-1}$) to energy (eV).
+    """
+    return x/8065.54
+
+def eV2invcm(x):
+    """Convert energy (eV) to wavenumber (cm$^{-1}$).
+    """
+    return x*8065.54
+
+def axis2nm(ax0):
+    """Convert given signal axis to wavelength scale (nm). Automatically checks axis units.
+    """
+    if ax0.units == "nm":
+        raise AttributeError("Signal unit is already nm.")
+    elif ax0.units == "µm":
+        nmaxis = (1000*ax0.axis).astype("float")
+        factor = 1
+    # transform axis, invert direction   
+    elif ax0.units == r"cm$^{-1}$":
+        nmaxis = invcm2nm(ax0.axis)[::-1].astype("float")
+        factor = 1e3  # correction factor for intensity
+    elif ax0.units == "eV":
+        nmaxis = eV2nm(ax0.axis)[::-1].astype("float")
+        factor = 1e6
+    else:
+        raise AttributeError("Signal unit invalid.")
+    axis = DataAxis(axis=nmaxis, name="Wavelength", units="nm", navigate=False)
+    return axis, factor
 
 def axis2eV(ax0):
     """Convert given signal axis to energy scale (eV) using wavelength
-    dependent refractive index of air. Assumes wavelength in units of nm unless the
-    axis units are specifically set to µm.
+    dependent refractive index of air. Automatically checks axis units. 
     """
     if ax0.units == "eV":
         raise AttributeError("Signal unit is already eV.")
+    elif ax0.units == r"cm$^{-1}$":
+        evaxis = invcm2eV(ax0.axis).astype("float")
+        factor = 1
     # transform axis, invert direction
-    if ax0.units == "µm":
+    elif ax0.units == "µm":
         evaxis = nm2eV(1000 * ax0.axis)[::-1].astype("float")
         factor = 1e3  # correction factor for intensity
-    else:
+    elif ax0.units == "nm":
         evaxis = nm2eV(ax0.axis)[::-1].astype("float")
         factor = 1e6
+    else:
+        raise AttributeError("Signal unit invalid.")
     axis = DataAxis(axis=evaxis, name="Energy", units="eV", navigate=False)
     return axis, factor
 
@@ -108,8 +139,6 @@ def data2eV(data, factor, evaxis, ax0):
     Chem. Lett. 4, 3316 (2013). Ensures that integrated signals are still
     correct.
     """
-    c = scipy.constants
-
     if ax0.units == "µm":
         return (
             data
@@ -126,8 +155,6 @@ def var2eV(variance, factor, evaxis, ax0):
     """The variance is converted doing a squared Jacobian renormalization to
     match with the transformation of the data.
     """
-    c = scipy.constants
-
     if ax0.units == "µm":
         return (
             variance
@@ -152,18 +179,22 @@ def invcm2nm(x):
 
 
 def axis2invcm(ax0):
-    r"""Convert given signal axis to wavenumber scale (cm$^{-1}$). Assumes
-    wavelength in units of nm unless the axis units are specifically set to µm.
+    r"""Convert given signal axis to wavenumber scale (cm$^{-1}$). Automatically checks axis units.
     """
     if ax0.units == r"cm$^{-1}$":
         raise AttributeError(r"Signal unit is already cm$^{-1}$.")
+    elif ax0.units == "eV":
+        invcmaxis = eV2invcm(ax0.axis).astype("float")
+        factor = 1
     # transform axis, invert direction
-    if ax0.units == "µm":
+    elif ax0.units == "µm":
         invcmaxis = nm2invcm(1000 * ax0.axis)[::-1].astype("float")
         factor = 1e4  # correction factor for intensity
-    else:
+    elif ax0.units == "nm":
         invcmaxis = nm2invcm(ax0.axis)[::-1].astype("float")
         factor = 1e7
+    else:
+        raise AttributeError("Signal unit invalid.")
     axis = DataAxis(
         axis=invcmaxis, name="Wavenumber", units=r"cm$^{-1}$", navigate=False
     )
@@ -285,7 +316,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
             else:  # interpolate to get factor at same positions
                 ind2r1 = axis2.value2index(axis.axis[ind1 - r])
                 ind2r2 = axis2.value2index(axis.axis[ind1 + r])
-                f = scipy.interpolate.interp1d(
+                f = interp1d(
                     axis2.axis[ind2r1 - 1 : ind2r2 + 1],
                     S2.isig[ind2r1 - 1 : ind2r2 + 1].data,
                     kind=kind,
@@ -330,7 +361,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                 length = axis.axis[ind1 - r : ind1 + r].size
                 grad = 1 / (length - 1)
                 vect = np.arange(length)
-                f = scipy.interpolate.interp1d(
+                f = interp1d(
                     axis2.axis[ind2r - 1 :], S2.isig[ind2r - 1 :].data, kind=kind
                 )
                 S1.data = np.hstack(
@@ -342,7 +373,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                     )
                 )
             else:  # just join at center of overlap
-                f = scipy.interpolate.interp1d(axis2.axis[ind2:], S2.isig[ind2:].data, kind=kind)
+                f = interp1d(axis2.axis[ind2:], S2.isig[ind2:].data, kind=kind)
                 S1.data = np.hstack(
                     (S1.isig[: ind1 + 1].data, f(axis.axis[ind1 + 1 :]))
                 )
@@ -355,12 +386,12 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
             axis.axis = np.hstack((axis.axis[: ind1 + 1], axis2.axis[ind2:]))
             axis.size = axis.axis.size
             if average:  # average over range
-                f1 = scipy.interpolate.interp1d(
+                f1 = interp1d(
                     S[i - 1].axes_manager.signal_axes[0].axis[ind1 - 1 : ind1 + r + 1],
                     S1.isig[ind1 - 1 : ind1 + r + 1].data,
                     kind=kind,
                 )
-                f2 = scipy.interpolate.interp1d(
+                f2 = interp1d(
                     axis2.axis[ind2 - r - 1 : ind2 + 1],
                     S2.isig[ind2 - r - 1 : ind2 + 1].data,
                     kind=kind,
