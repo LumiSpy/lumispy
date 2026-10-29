@@ -16,14 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-from .convolved_gaussian_exponential import ConvGaussExp
-from .convolved_gaussian_two_exponential import ConvGaussTwoExp
+"""
+Module containing model components defined in LumiSpy.
 
-__all__ = [
-    "ConvGaussExp",
-    "ConvGaussTwoExp",
-]
+"""
 
+import lazy_loader
 
-def __dir__():
-    return sorted(__all__)
+__getattr__, __dir__, __all__ = lazy_loader.attach_stub(__name__, __file__)
+

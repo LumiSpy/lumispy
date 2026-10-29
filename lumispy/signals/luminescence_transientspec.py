@@ -26,7 +26,6 @@ import numpy as np
 import traits.api as t
 
 from hyperspy.signals import Signal1D, Signal2D
-from hyperspy._signals.lazy import LazySignal
 from hyperspy.docstrings.signal import OPTIMIZE_ARG
 from hyperspy.ui_registry import add_gui_method
 from hyperspy.roi import SpanROI
@@ -382,9 +381,3 @@ class signal2navInteractive(IntervalsSelectorInMap):
 
         if any(t1 < 0 or t2 < 0 for t1, t2 in self.intervals):
             raise ValueError("negative values in intervals are not allowed")
-
-
-class LazyLumiTransientSpectrum(LazySignal, LumiTransientSpectrum):
-    """**Lazy 2D luminescence signal class (spectral+transient/time resolved dimensions)**"""
-
-    _lazy = True

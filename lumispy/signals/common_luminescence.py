@@ -257,8 +257,7 @@ class CommonLumi:
         """
         sig = self if inplace else self.deepcopy()
 
-
-        ax = -2 if sig._signal_dimension == 2 else -1 
+        ax = -2 if sig._signal_dimension == 2 else -1
         sig_ax = sig.axes_manager[ax]
         ref_ax = ref.axes_manager[-1]
 

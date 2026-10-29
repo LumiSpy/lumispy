@@ -19,7 +19,7 @@
 import numpy as np
 import pytest
 
-from lumispy.signals import LumiSpectrum, LumiTransient, LumiTransientSpectrum
+from lumispy.signals import LumiTransientSpectrum, LumiSpectrum, LumiTransient
 from hyperspy.roi import SpanROI
 
 
