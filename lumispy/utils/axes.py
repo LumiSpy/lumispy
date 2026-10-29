@@ -111,6 +111,20 @@ def axis2nm(ax0):
     axis = DataAxis(axis=nmaxis, name="Wavelength", units="nm", navigate=False)
     return axis, factor
 
+def data2nm(data, factor, nmaxis, ax0):
+    r"""The intensity is converted from counts/eV (counts/meV) or counts/cm$^{-1}$ 
+    to counts/nm by doing a inverse Jacobian transformation, see e.g. Mooney and
+    Kambhampati, J. Phys. Chem. Lett. 4, 3316 (2013). Ensures that integrated
+    signals are still correct.
+    """
+    if ax0.units == "meV":
+        return data * c.e * _n_air(nmaxis) * (ax0.axis*1e6)**2 / (factor * c.h * c.c)
+    elif ax0.units == "eV":
+        return data * c.e * _n_air(nmaxis) * ax0.axis**2 / (factor * c.h * c.c)
+    elif ax0.units == r"cm$^{-1}$":
+        return data * ax0.axis**2 / factor
+
+
 def axis2eV(ax0):
     """Convert given signal axis to energy scale (eV) using wavelength
     dependent refractive index of air. Automatically checks axis units. 
