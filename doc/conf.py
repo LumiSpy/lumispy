@@ -54,8 +54,8 @@ linkcheck_ignore = [
     "https://doi.org/10.1063/5.0080486",  # 403 Client Error: Forbidden for url
     "https://doi.org/10.1021/jz401508t",  # 403 Client Error: Forbidden for url
     "https://github.com/LumiSpy/lumispy/security/code-scanning",  # 404 Client Error: Not Found for url (even though page exists)
-    "https://www.gnu.org/licenses/#GPL", # intermittently fails on doc builds (rate limited)
-    "https://github.com/LumiSpy/lumispy/stargazers", # is requiring authentication 
+    "https://www.gnu.org/licenses/#GPL",  # intermittently fails on doc builds (rate limited)
+    "https://github.com/LumiSpy/lumispy/stargazers",  # is requiring authentication
 ]
 
 # imgmath: Sphinx allows use of LaTeX in the html documentation, but not directly. It is first rendered to an image.
@@ -98,29 +98,7 @@ html_favicon = "_static/lumispy.ico"
 epub_show_urls = "footnote"
 
 
-def run_apidoc(_):
-    # https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html
-    # https://www.sphinx-doc.org/es/1.2/ext/autodoc.html
-    import os
-
-    os.environ["SPHINX_APIDOC_OPTIONS"] = (
-        "members,private-members,no-undoc-members,show-inheritance,ignore-module-all"
-    )
-
-    from sphinx.ext.apidoc import main
-
-    cur_dir = os.path.normpath(os.path.dirname(__file__))
-    output_path = os.path.join(cur_dir, "api")
-    modules = os.path.normpath(os.path.join(cur_dir, "../lumispy"))
-    exclude_pattern = [
-        "../lumispy/tests",
-        "../lumispy/release_info.py",
-    ]
-    main(["-e", "-f", "-P", "-o", output_path, modules, *exclude_pattern])
-
-
 def setup(app):
-    app.connect("builder-inited", run_apidoc)
     app.add_css_file("css/dark.css")
     app.add_css_file("css/light.css")
 
