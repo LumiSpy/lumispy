@@ -43,4 +43,3 @@ class LazyCLSTEMSpectrum(LazySignal1D, CLSTEMSpectrum):
     """**Lazy 1D scanning transmission electron microscopy cathodoluminescence signal class.**"""
 
     __doc__ += LAZYSIGNAL_DOC.replace("__BASECLASS__", "CLSTEMSpectrum")
-
