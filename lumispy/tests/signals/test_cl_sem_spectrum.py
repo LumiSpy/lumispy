@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-import hyperspy
 import numpy as np
 import pytest
 
@@ -24,9 +23,6 @@ from lumispy.signals import CLSEMSpectrum
 
 
 class TestCLSEMSpectrum:
-    @pytest.mark.skipif(
-        hyperspy.__version__ == "1.6.2", reason="Broken with hyperspy 1.6.2"
-    )
     @pytest.mark.parametrize("nx, ny", [(10, 20), (20, 10)])
     def test_correct_grating_shift(self, nx, ny):
         calx, corg, fov = 1e-10, 1e-10, 1e-10
@@ -44,9 +40,6 @@ class TestCLSEMSpectrum:
         s2.shift1D(barray)
         np.testing.assert_allclose(s2.data, s.data)
 
-    @pytest.mark.skipif(
-        hyperspy.__version__ == "1.6.2", reason="Broken with hyperspy 1.6.2"
-    )
     def test_double_correct_grating_shift(self):
         s = CLSEMSpectrum(np.ones((10, 10, 10)))
         s.correct_grating_shift(1e-10, 1e-10, 1e-10)

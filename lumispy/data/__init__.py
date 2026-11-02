@@ -19,7 +19,7 @@
 from pathlib import Path
 import warnings
 
-import hyperspy.api as hs
+import lazy_loader
 
 __all__ = [
     "asymmetric_peak_map",

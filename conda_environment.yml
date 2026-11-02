@@ -3,6 +3,7 @@ channels:
 - conda-forge
 dependencies:
 # Minimal dependencies in alphabetical order
-- numpy
 - hyperspy-base
+- lazy-loader
+- numpy
 
