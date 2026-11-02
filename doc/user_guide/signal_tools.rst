@@ -55,7 +55,7 @@ accepts a measured :external:class:`~hyperspy.api.signals.Signal1D`.
 .. code-block:: python
 
     >>> import lumispy as lum
-    >>> s = lum.data.AlN_Cornell()
+    >>> s = lum.data.AlN_Spectrum()
     >>> bkg = lum.data.AlN_bkg()
     >>> corrected = s.remove_background(
     ...     signal_range="full",
@@ -64,8 +64,9 @@ accepts a measured :external:class:`~hyperspy.api.signals.Signal1D`.
     ...     yscale=False,
     ... )
 
-The ``yscale=False`` option subtracts the recorded background without fitting
-an additional scaling factor. Use ``yscale=True`` to estimate a scale factor
+The ``yscale=False`` option (the default, shown explicitly above) subtracts
+the recorded background without fitting an additional scaling factor. Use
+``yscale=True`` to estimate a scale factor
 from a selected signal range, or pass a fixed numerical value if the scaling is
 known. A matching exposure time, binning, calibration and acquisition setup
 should be verified before subtracting experimental measurements.

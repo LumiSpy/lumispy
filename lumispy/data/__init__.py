@@ -24,7 +24,7 @@ import hyperspy.api as hs
 __all__ = [
     "asymmetric_peak_map",
     "nanoparticles",
-    "AlN_Cornell",
+    "AlN_Spectrum",
     "AlN_bkg",
 ]
 
@@ -64,14 +64,14 @@ def nanoparticles():
         return hs.load(file_path, mode="r", reader="hspy")
 
 
-def AlN_Cornell():
-    """Load an exemplary dataset containing a 2d map of spectra.
+def AlN_Spectrum():
+    """Load an experimental AlN spectrum image with two navigation dimensions.
 
     Returns
     -------
     :py:class:`~lumispy.signals.LumiSpectrum`
     """
-    file_path = _resolve_dir().joinpath("AlN_Cornell.hspy")
+    file_path = _resolve_dir().joinpath("AlN_Spectrum.hspy")
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=UserWarning)
         return hs.load(file_path, mode="r", reader="hspy")

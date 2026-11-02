@@ -8,7 +8,7 @@ import lumispy as lum
 
 
 def test_AlN_example_data():
-    s = lum.data.AlN_Cornell()
+    s = lum.data.AlN_Spectrum()
     bkg = lum.data.AlN_bkg()
     axis = s.axes_manager.signal_axes[0].axis
     assert isinstance(s, lum.signals.LumiSpectrum)
@@ -25,7 +25,7 @@ def test_AlN_example_data():
 
 
 def test_AlN_background_removal():
-    s = lum.data.AlN_Cornell()
+    s = lum.data.AlN_Spectrum()
     bkg = lum.data.AlN_bkg()
 
     s = s.mean(axis=(0, 1))

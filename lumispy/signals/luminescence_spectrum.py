@@ -80,7 +80,8 @@ class LumiSpectrum(Signal1D, CommonLumi):
             This method is deprecated. Use
             :meth:`hyperspy.api.signals.Signal1D.remove_background`
             with ``background_type="Scalable fixed pattern"`` and
-            ``background_signal=background`` (HyperSpy >= 2.5.0).
+            ``background_signal=background`` and ``signal_range="full"``
+            for non-interactive subtraction (HyperSpy >= 2.5.0).
         """
         warn(
             "The use of `remove_background_from_file` is deprecated and will "
