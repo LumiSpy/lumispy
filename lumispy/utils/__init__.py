@@ -16,37 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-from .axes import (
-    axis2eV,
-    data2eV,
-    var2eV,
-    axis2invcm,
-    data2invcm,
-    var2invcm,
-    solve_grating_equation,
-)
+"""
+Module containing utility functions for LumiSpy.
 
-from .transition_radiation import transition_radiation_nm, optical_constants_to_signal
+"""
 
-from .signals import (
-    com,
-    crop_edges,
-)
+import lazy_loader
 
-__all__ = [
-    "axis2eV",
-    "data2eV",
-    "var2eV",
-    "axis2invcm",
-    "data2invcm",
-    "var2invcm",
-    "solve_grating_equation",
-    "com",
-    "crop_edges",
-    "transition_radiation_nm",
-    "optical_constants_to_signal",
-]
+__getattr__, __dir__, __all__ = lazy_loader.attach_stub(__name__, __file__)
 
-
-def __dir__():
-    return sorted(__all__)

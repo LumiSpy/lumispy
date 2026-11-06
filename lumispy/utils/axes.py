@@ -20,13 +20,13 @@
 Functions needed for signal axis conversion.
 
 """
-
-import numpy as np
-import scipy.constants as c
-from scipy.interpolate import interp1d
 from inspect import getfullargspec
 from copy import deepcopy
 from warnings import warn
+
+import numpy as np
+import scipy
+
 
 from hyperspy.axes import DataAxis, UniformDataAxis
 
@@ -71,6 +71,7 @@ def nm2eV(x):
     """Convert wavelength (nm) to energy (eV) using wavelength-dependent
     refractive index of air.
     """
+    c = scipy.constants
     return 1e9 * c.h * c.c / (c.e * _n_air(x) * x)
 
 
@@ -78,6 +79,7 @@ def eV2nm(x):
     """Convert energy (eV) to wavelength (nm) using wavelength-dependent
     refractive index of air.
     """
+    c = scipy.constants
     wl = 1239.5 / x  # approximate WL to obtain refractive index
     return 1e9 * c.h * c.c / (c.e * _n_air(wl) * x)
 
@@ -106,6 +108,8 @@ def data2eV(data, factor, evaxis, ax0):
     Chem. Lett. 4, 3316 (2013). Ensures that integrated signals are still
     correct.
     """
+    c = scipy.constants
+
     if ax0.units == "µm":
         return (
             data
@@ -122,6 +126,8 @@ def var2eV(variance, factor, evaxis, ax0):
     """The variance is converted doing a squared Jacobian renormalization to
     match with the transformation of the data.
     """
+    c = scipy.constants
+
     if ax0.units == "µm":
         return (
             variance
@@ -279,7 +285,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
             else:  # interpolate to get factor at same positions
                 ind2r1 = axis2.value2index(axis.axis[ind1 - r])
                 ind2r2 = axis2.value2index(axis.axis[ind1 + r])
-                f = interp1d(
+                f = scipy.interpolate.interp1d(
                     axis2.axis[ind2r1 - 1 : ind2r2 + 1],
                     S2.isig[ind2r1 - 1 : ind2r2 + 1].data,
                     kind=kind,
@@ -324,7 +330,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                 length = axis.axis[ind1 - r : ind1 + r].size
                 grad = 1 / (length - 1)
                 vect = np.arange(length)
-                f = interp1d(
+                f = scipy.interpolate.interp1d(
                     axis2.axis[ind2r - 1 :], S2.isig[ind2r - 1 :].data, kind=kind
                 )
                 S1.data = np.hstack(
@@ -336,7 +342,7 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
                     )
                 )
             else:  # just join at center of overlap
-                f = interp1d(axis2.axis[ind2:], S2.isig[ind2:].data, kind=kind)
+                f = scipy.interpolate.interp1d(axis2.axis[ind2:], S2.isig[ind2:].data, kind=kind)
                 S1.data = np.hstack(
                     (S1.isig[: ind1 + 1].data, f(axis.axis[ind1 + 1 :]))
                 )
@@ -349,12 +355,12 @@ def join_spectra(S, r=50, scale=True, average=False, kind="slinear"):
             axis.axis = np.hstack((axis.axis[: ind1 + 1], axis2.axis[ind2:]))
             axis.size = axis.axis.size
             if average:  # average over range
-                f1 = interp1d(
+                f1 = scipy.interpolate.interp1d(
                     S[i - 1].axes_manager.signal_axes[0].axis[ind1 - 1 : ind1 + r + 1],
                     S1.isig[ind1 - 1 : ind1 + r + 1].data,
                     kind=kind,
                 )
-                f2 = interp1d(
+                f2 = scipy.interpolate.interp1d(
                     axis2.axis[ind2 - r - 1 : ind2 + 1],
                     S2.isig[ind2 - r - 1 : ind2 + 1].data,
                     kind=kind,

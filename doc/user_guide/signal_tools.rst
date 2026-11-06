@@ -103,9 +103,8 @@ Calculating the centroid of a spectrum (centre of mass)
 -------------------------------------------------------
 
 The function :meth:`~.signals.luminescence_spectrum.LumiSpectrum.centroid`
-(based on the utility function :func:`~.utils.signals.com`) is an alternative to
-finding the position of the maximum intensity of a peak, useful in particular for
-non-symmetric peaks with pronounced shoulders.
+is an alternative to finding the position of the maximum intensity of a peak,
+useful in particular for non-symmetric peaks with pronounced shoulders.
 It finds the centroid (center of mass) of a peak in the spectrum from the signal axis
 units (or pixel number) and the intensity at each pixel value. It basically represents a
 "weighted average" of the peak defined as:
