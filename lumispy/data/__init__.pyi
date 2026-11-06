@@ -16,12 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-from .data_utils import asymmetric_peak_map, nanoparticles
-
+from .data_utils import AlN_Spectrum, AlN_bkg, asymmetric_peak_map, nanoparticles
 
 __all__ = [
     "asymmetric_peak_map",
     "nanoparticles",
+    "AlN_Spectrum",
+    "AlN_bkg",
 ]
 
 def __dir__():
