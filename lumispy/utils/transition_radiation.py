@@ -57,7 +57,8 @@ def transition_radiation_nm(
         Name of a bundled optical-constants dataset, as returned by
         :func:`lumispy.data.supported_optical_constants`, or a custom
         ``ComplexSignal1D`` following the conventions documented in
-        ``lumispy/data/optical_constants.README.md``.
+        ``lumispy/data/optical_constants/README.md``. Use
+        :func:`lumispy.data.list_optical_constants` to display the names.
     angular_axis : tuple, array-like, or hyperspy.axes.BaseDataAxis, optional
         Emission-angle axis in degrees. A two-element tuple is interpreted as
         ``(start, stop)`` and creates 200 points. A three-element tuple is
@@ -233,20 +234,22 @@ def _wavelength_nm_to_coordinate(
     wavelengths_nm,
     optical_data,
 ):
-    """Convert requested wavelengths to a dataset coordinate."""
-    if optical_data.metadata.OpticalConstants.spectral_variable == "wavelength":
-        if optical_data.metadata.OpticalConstants.spectral_unit == "µm":
-            return wavelengths_nm / 1e3
+    """Convert requested wavelengths using the optical signal's axis calibration."""
+    axis = optical_data.axes_manager.signal_axes[0]
+    name = str(axis.name).strip().lower()
+    units = str(axis.units).strip()
 
-    if optical_data.metadata.OpticalConstants.spectral_variable == "Photon energy":
-        if optical_data.metadata.OpticalConstants.spectral_unit == "eV":
-            return _HC_EV_NM / wavelengths_nm
+    if name == "wavelength":
+        if units in ("µm", "μm", "um"):
+            return wavelengths_nm / 1e3
+        if units == "nm":
+            return wavelengths_nm
+    elif name == "photon energy" and units == "eV":
+        return _HC_EV_NM / wavelengths_nm
 
     raise ValueError(
-        "Unknown coordinate kind "
-        f"{optical_data.metadata.OpticalConstants.spectral_variable!r} for "
-        f"{optical_data.metadata.General.title!r}. Supported kinds are 'wavelength' "
-        "and 'Photon Energy'."
+        f"Unsupported optical-constants axis {axis.name!r} ({axis.units!r}). "
+        "Use wavelength in nm or µm, or Photon energy in eV."
     )
 
 
@@ -450,8 +453,9 @@ def optical_constants_to_signal(dataset):
         combined or two separate text files. Supported layouts are
         ``'combined_n_k'``, ``'separate_n_k'``, and
         ``'combined_epsilon'``. The spectral coordinate can be wavelength or
-        photon energy. See ``lumispy/data/optical_constants/README.md`` for
-        the required keys and examples.
+        photon energy. ``coordinate`` and ``coordinate_units`` become the
+        signal axis's name and units; they are not duplicated in metadata.
+        See ``lumispy/data/optical_constants/README.md`` for examples.
 
     Returns
     -------
@@ -592,12 +596,6 @@ def optical_constants_to_signal(dataset):
 
     signal.metadata.set_item("OpticalConstants.material", dataset["material"])
     signal.metadata.set_item("OpticalConstants.reference", dataset["reference"])
-    signal.metadata.set_item(
-        "OpticalConstants.spectral_variable", dataset["coordinate"]
-    )
-    signal.metadata.set_item(
-        "OpticalConstants.spectral_unit", dataset["coordinate_units"]
-    )
 
     if dataset["representation"] == "n_k":
         signal.metadata.set_item(

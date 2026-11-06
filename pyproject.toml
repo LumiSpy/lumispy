@@ -129,7 +129,7 @@ doctest_optionflags = [
 "*" = [
     "*.yaml",
 ]
-"lumispy.data" = ["transition_radiation/optical_constants/*"]
+"lumispy.data" = ["optical_constants/*.hspy", "optical_constants/README.md"]
 
 [tool.setuptools.packages.find]
 include = ["lumispy*"]

@@ -37,12 +37,34 @@ def _optical_constants():
 
 
 def supported_optical_constants():
-    """Return the names of all bundled optical constants."""
+    """Return sorted names of bundled optical constants for programmatic use."""
     return tuple(sorted(_optical_constants()))
 
 
+def list_optical_constants():
+    """Print the bundled optical-constants datasets available for loading.
+
+    Use :func:`supported_optical_constants` to access the names as a tuple.
+    """
+    names = supported_optical_constants()
+    print("Available optical constants:")
+    for name in names:
+        print(f"  - {name}")
+
+
 def load_optical_constants(name):
-    """Load bundled optical constants as a HyperSpy signal."""
+    """Load bundled optical constants as a HyperSpy ``ComplexSignal1D``.
+
+    The spectral coordinate and unit are stored on the signal axis. The
+    ``OpticalConstants.data_kind`` metadata identifies the complex data as
+    either a refractive index or a relative permittivity.
+
+    Parameters
+    ----------
+    name : str
+        Dataset name from :func:`supported_optical_constants`, optionally
+        including the ``.hspy`` extension.
+    """
     name = name.removesuffix(_FILE_SUFFIX)
     op_const = _optical_constants()
 

@@ -24,7 +24,11 @@ import pytest
 
 from hyperspy.signals import ComplexSignal1D
 
-from lumispy.data import load_optical_constants, supported_optical_constants
+from lumispy.data import (
+    list_optical_constants,
+    load_optical_constants,
+    supported_optical_constants,
+)
 
 
 def _packaged_optical_constants():
@@ -45,6 +49,14 @@ def test_supported_optical_constants_matches_packaged_files():
 
     assert packaged
     assert supported_optical_constants() == packaged
+
+
+def test_list_optical_constants(capsys):
+    assert list_optical_constants() is None
+    output = capsys.readouterr().out
+    assert output.startswith("Available optical constants:\n")
+    for name in supported_optical_constants():
+        assert f"  - {name}\n" in output
 
 
 @pytest.mark.parametrize("name", supported_optical_constants())
@@ -68,19 +80,17 @@ def test_load_optical_constants(name):
     assert np.all(axis.axis > 0)
     assert np.all(np.diff(axis.axis) > 0)
 
-    for item in (
-        "material",
-        "reference",
-        "spectral_variable",
-        "spectral_unit",
-        "data_kind",
-    ):
+    for item in ("material", "reference", "data_kind"):
         value = getattr(metadata, item)
         assert isinstance(value, str)
         assert value
 
-    assert axis.name == metadata.spectral_variable
-    assert axis.units == metadata.spectral_unit
+    # The authoritative spectral variable and unit live on the HyperSpy axis.
+    assert str(axis.name).strip().lower() in ("wavelength", "photon energy")
+    if str(axis.name).strip().lower() == "wavelength":
+        assert str(axis.units) in ("nm", "µm", "μm", "um")
+    else:
+        assert str(axis.units) == "eV"
     assert signal.metadata.Signal.quantity
     assert signal.metadata.General.title
 

@@ -67,8 +67,8 @@ def _assert_signal(
     metadata = signal.metadata.OpticalConstants
     assert metadata.material == "Test material"
     assert metadata.reference == "Test reference"
-    assert metadata.spectral_variable == axis_name
-    assert metadata.spectral_unit == axis_units
+    assert not hasattr(metadata, "spectral_variable")
+    assert not hasattr(metadata, "spectral_unit")
     assert metadata.data_kind == data_kind
     assert signal.metadata.Signal.quantity == quantity
     assert signal.metadata.General.title == (

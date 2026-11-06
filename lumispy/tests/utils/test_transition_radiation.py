@@ -28,6 +28,7 @@ from lumispy.utils.transition_radiation import (
     _HC_EV_NM,
     _interpolate_permittivity,
     _load_optical_data,
+    _wavelength_nm_to_coordinate,
     transition_radiation_nm,
 )
 
@@ -117,6 +118,30 @@ def test_n_and_k_data_are_converted_to_permittivity():
         optical_data.metadata.OpticalConstants.data_kind == "complex_refractive_index"
     )
     assert_allclose(interpolated, expected, rtol=1e-13, atol=0)
+
+
+def test_axis_calibration_takes_precedence_over_legacy_metadata():
+    optical_data = _load_optical_data("Au_johnson")
+    axis = optical_data.axes_manager.signal_axes[0]
+    # Bundled files may still contain old redundant metadata fields.
+    optical_data.metadata.set_item(
+        "OpticalConstants.spectral_variable", "Photon energy"
+    )
+    optical_data.metadata.set_item("OpticalConstants.spectral_unit", "eV")
+
+    wavelength_nm = np.array([500.0])
+    assert_allclose(
+        _wavelength_nm_to_coordinate(wavelength_nm, optical_data),
+        wavelength_nm / 1e3,
+    )
+
+    # An independently calibrated wavelength axis in nm also works.
+    axis.name = "Wavelength"
+    axis.units = "nm"
+    assert_allclose(
+        _wavelength_nm_to_coordinate(wavelength_nm, optical_data),
+        wavelength_nm,
+    )
 
 
 def test_optical_constants_signal_is_accepted():
