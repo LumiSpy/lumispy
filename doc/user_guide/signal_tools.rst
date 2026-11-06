@@ -214,3 +214,35 @@ HyperSpy <signal.indexing>`.
     >>> s.crop_edges(crop_px=2)
 
 *[TODO: add possibility to crop different amounts of pixels on different sides]*
+
+
+.. _optical_constants:
+
+Optical constants for spectral response corrections
+===================================================
+
+Transition-radiation modelling can provide a reference for determining the
+spectral response of a cathodoluminescence setup. LumiSpy includes optical
+constants for several materials as HyperSpy ``ComplexSignal1D`` datasets.
+Use :func:`~lumispy.data.list_optical_constants` to print the available
+names or :func:`~lumispy.data.supported_optical_constants` to obtain them as a
+tuple. Load one with :func:`~lumispy.data.load_optical_constants`.
+
+The dataset's signal-axis name and units specify wavelength (nm or µm) or
+photon energy (eV); ``OpticalConstants.data_kind`` identifies whether the
+complex values are refractive indices or relative permittivities. See the
+``lumispy/data/optical_constants/README.md`` file for the text-file import
+format and :func:`~lumispy.utils.optical_constants_to_signal` for conversion.
+
+.. code-block:: python
+
+    >>> import lumispy as lum
+    >>> lum.data.list_optical_constants()  # doctest: +SKIP
+    >>> data = lum.data.load_optical_constants("Al_mcpeak")
+    >>> spectrum = lum.utils.transition_radiation_nm(
+    ...     material_dataset=data, spectral_axis=(400.0, 800.0, 5)
+    ... )
+
+The calculated spectrum can be used when comparing a measured CL spectrum to
+a modelled transition-radiation response. Experimental geometry and detector
+settings must still be accounted for when deriving an instrument response.
