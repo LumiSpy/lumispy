@@ -51,3 +51,29 @@ def nanoparticles():
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=UserWarning)
         return hs.load(file_path, mode="r", reader="hspy")
+
+
+def AlN_Spectrum():
+    """Load an experimental AlN spectrum image with two navigation dimensions.
+
+    Returns
+    -------
+    :py:class:`~lumispy.signals.LumiSpectrum`
+    """
+    file_path = _resolve_dir().joinpath("AlN_Spectrum.hspy")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=UserWarning)
+        return hs.load(file_path, mode="r", reader="hspy")
+
+
+def AlN_bkg():
+    """Load the measured AlN dark background as a single spectrum.
+
+    Returns
+    -------
+    :py:class:`~lumispy.signals.LumiSpectrum`
+    """
+    file_path = _resolve_dir().joinpath("AlN_bkg.hspy")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=UserWarning)
+        return hs.load(file_path, mode="r", reader="hspy")
