@@ -1,0 +1,1 @@
+Enhanced spec2nav and time2nav functions where its now possible to specify the intervals by parameter or interactively
