@@ -108,6 +108,7 @@ class CommonLumi:
         s.metadata.Signal.negative_removed = True
         if not inplace:
             return s
+        return None
 
     def scale_by_exposure(self, integration_time=None, inplace=False, **kwargs):
         """Scale data in spectrum by integration time / exposure,
@@ -176,6 +177,7 @@ class CommonLumi:
             s.metadata.Signal.quantity = "Intensity (counts/s)"
         if not inplace:
             return s
+        return None
 
     def normalize(self, pos=float("nan"), element_wise=False, inplace=False):
         """Normalize data to value at `pos` along signal axis, defaults to
@@ -233,6 +235,7 @@ class CommonLumi:
                 s.metadata.Signal.quantity = "Normalized intensity"
         if not inplace:
             return s
+        return None
 
     def _signal_math(self, ref, op, inplace=False):
         """Utility function to perform a mathematical operation on the signal data with
@@ -439,8 +442,7 @@ class CommonLumi:
                     )
         if not inplace:
             return s2
-        else:
-            return None
+        return None
 
     def to_eV(self, inplace=True, jacobian=True):
         """Convert signal axis of 1D signal to non-linear energy axis (eV).
@@ -616,8 +618,7 @@ Examples
             )
         if not inplace:
             return s2
-        else:
-            return None
+        return None
 
     to_invcm_relative.__doc__ %= (
         TO_INVCM_DOCSTRING,
