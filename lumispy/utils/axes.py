@@ -98,7 +98,7 @@ def axis2nm(ax0):
         raise ValueError("Axis unit is already nm.")
     elif ax0.units == "µm":
         nmaxis = (1000*ax0.axis).astype("float")
-        factor = 1
+        factor = 1e3
     # transform axis, invert direction   
     elif ax0.units == r"cm$^{-1}$":
         nmaxis = invcm2nm(ax0.axis)[::-1].astype("float")
@@ -115,12 +115,14 @@ def axis2nm(ax0):
     return axis, factor
 
 def data2nm(data, factor, nmaxis, ax0):
-    r"""The intensity is converted from counts/eV (counts/meV) or counts/cm$^{-1}$ 
+    r"""The intensity is converted from counts/µm, counts/eV (counts/meV) or counts/cm$^{-1}$ 
     to counts/nm by doing a inverse Jacobian transformation, see e.g. Mooney and
     Kambhampati, J. Phys. Chem. Lett. 4, 3316 (2013). Ensures that integrated
     signals are still correct.
     """
-    if ax0.units == "meV":
+    if ax0.units == "µm":
+        return data / 1e3
+    elif ax0.units == "meV":
         return data * c.e * _n_air(nmaxis) * ((ax0.axis*1e6)**2)[::-1] / (factor * c.h * c.c)
     elif ax0.units == "eV":
         return data * c.e * _n_air(nmaxis) * (ax0.axis**2)[::-1] / (factor * c.h * c.c)
@@ -174,7 +176,7 @@ def axis2eV(ax0):
 
 def data2eV(data, factor, evaxis, ax0):
     r"""The intensity is converted from counts/nm (counts/µm) or counts/cm$^{-1}$ 
-    to counts/meV by doing a Jacobian transformation, see e.g. Mooney and Kambhampati, J. Phys.
+    to counts/eV by doing a Jacobian transformation, see e.g. Mooney and Kambhampati, J. Phys.
     Chem. Lett. 4, 3316 (2013). Ensures that integrated signals are still
     correct.
     """
@@ -190,10 +192,7 @@ def data2eV(data, factor, evaxis, ax0):
         return data * factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)
 
     elif ax0.units ==  r"cm$^{-1}$":
-        nmaxis, nmfactor = axis2nm(ax0)
-        nmdata = data2nm(data, nmfactor, nmaxis.axis, ax0)
-        _, evfactor = axis2eV(nmaxis)
-        return data2eV(np.flip(nmdata, axis=-1), evfactor, evaxis, nmaxis)
+        return np.flip(data, axis=-1) * 8.06554
 
     else:
         raise ValueError("Axis unit invalid.")
@@ -267,16 +266,13 @@ def data2invcm(data, factor, invcmaxis, ax0):
         return data * factor / (invcmaxis**2)
 
     elif ax0.units ==  "eV" or ax0.units == "meV":
-        nmaxis, nmfactor = axis2nm(ax0)
-        nmdata = data2nm(data, nmfactor, nmaxis.axis, ax0)
-        _, invcmfactor = axis2invcm(nmaxis)
-        return data2invcm(np.flip(nmdata, axis=-1), invcmfactor, invcmaxis, nmaxis)
+        return np.flip(data, axis=-1) / 8.06554
 
     else:
         raise ValueError("Axis unit invalid.")
 
 
-def var2invcm(variance, factor, invcmaxis, ax0=None):
+def var2invcm(variance, factor, invcmaxis, ax0):
     r"""The variance is converted doing a squared Jacobian renormalization to
     match with the transformation of the data.
     """
