@@ -23,4 +23,51 @@ Module containing exemplary data for LumiSpy.
 
 import lazy_loader
 
-__getattr__, __dir__, __all__ = lazy_loader.attach_stub(__name__, __file__)
+from lumispy.data._optical_constants import (
+    supported_optical_constants,
+    list_optical_constants,
+    load_optical_constants,
+)
+
+__all__ = [
+    "asymmetric_peak_map",
+    "nanoparticles",
+    "supported_optical_constants",
+    "list_optical_constants",
+    "load_optical_constants",
+]
+
+
+def __dir__():
+    return sorted(__all__)
+
+
+def _resolve_dir():
+    """Returns the absolute path to this file's directory."""
+    return Path(__file__).resolve().parent
+
+
+def asymmetric_peak_map():
+    """Load an exemplary dataset containing a 2d map of spectra with a broad, asymmetric peak at all points. The data contains a background and some of the spectra contain spikes.
+
+    Returns
+    -------
+    :py:class:`~hyperspy._signals.signal.Signal1D`
+    """
+    file_path = _resolve_dir().joinpath("asymmetric_peak_map.hspy")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=UserWarning)
+        return hs.load(file_path, mode="r", reader="hspy")
+
+
+def nanoparticles():
+    """Load an exemplary dataset containing a 2d map of spectra with one peak that is not present at all positions of the map. The spectra contain a lot of noise.
+
+    Returns
+    -------
+    :py:class:`~hyperspy._signals.signal.Signal1D`
+    """
+    file_path = _resolve_dir().joinpath("nanoparticles.hspy")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=UserWarning)
+        return hs.load(file_path, mode="r", reader="hspy")

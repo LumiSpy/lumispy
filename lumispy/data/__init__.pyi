@@ -17,11 +17,18 @@
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
 from .data_utils import asymmetric_peak_map, nanoparticles
-
+from ._optical_constants import (
+    supported_optical_constants,
+    list_optical_constants,
+    load_optical_constants,
+)
 
 __all__ = [
     "asymmetric_peak_map",
     "nanoparticles",
+    "supported_optical_constants",
+    "list_optical_constants",
+    "load_optical_constants",
 ]
 
 def __dir__():
