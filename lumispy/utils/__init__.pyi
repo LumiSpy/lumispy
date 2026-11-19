@@ -30,6 +30,11 @@ from .signals import (
     com,
 )
 
+from .transition_radiation import (
+    optical_constants_to_signal,
+    transition_radiation_nm,
+)
+
 __all__ = [
     "axis2eV",
     "data2eV",
@@ -39,6 +44,8 @@ __all__ = [
     "var2invcm",
     "solve_grating_equation",
     "com",
+    "optical_constants_to_signal",
+    "transition_radiation_nm",
 ]
 
 def __dir__():
