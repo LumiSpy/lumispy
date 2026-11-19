@@ -34,6 +34,9 @@ from lumispy.utils import (
     axis2invcm,
     data2invcm,
     var2invcm,
+    axis2nm,
+    data2nm,
+    var2nm,
 )
 
 
@@ -537,6 +540,13 @@ Examples
 >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
 >>> S1.to_invcm(laser=325)
 """
+
+    def to_nm(self, inplace=True, jacobian=True):
+        nmaxis, factor = axis2nm(self.axes_manager.signal_axes[0])
+
+        return self._convert_data(
+            nmaxis, factor, inplace, jacobian, data2nm, var2nm
+        )
 
     def to_invcm_relative(self, laser=None, inplace=True, jacobian=False):
         r"""Convert signal axis of 1D signal to Raman/Stokes shift.
