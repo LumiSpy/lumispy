@@ -1,0 +1,2 @@
+Add gallery examples for indexing, mapping, energy conversion, circular ROIs,
+centroid, peak width estimation, and basic model fitting.
