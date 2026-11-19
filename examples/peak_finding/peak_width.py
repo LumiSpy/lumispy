@@ -1,34 +1,32 @@
 """
-Peak width determination
-========================
-This example demonstrates how to determine the width of a peak in a spectrum.
+Peak width (FWHM) after background subtraction
+==============================================
 
-.. _HS_estimate_peak_width: https://hyperspy.org/hyperspy-doc/current/reference/api.signals/Signal1D.html#hyperspy.api.signals.Signal1D.estimate_peak_width
+This example uses :external:meth:`~hyperspy.api.signals.Signal1D.estimate_peak_width`
+to estimate the full width at half maximum (FWHM) of a luminescence peak
+after subtracting a constant background.
 """
 
 # %%
 import lumispy as lum
 
-# load the data that we will use
+# Load and plot an example spectrum image.
 s = lum.data.asymmetric_peak_map()
 s.plot()
 
 # %%
-# Width determination
-# -------------------
-#
-# Estimates the width of the highest intensity peak of the spectra at a given fraction of its maximum. The default fraction is 0.5, this value can be set via ``factor``.
-# With ``return_interval=True`` the function returns two extra signals with the positions of the desired height fraction at the left and right of the peak, see `doc <HS_estimate_peak_width_>`__.
-width = s.estimate_peak_width(return_interval=True)
+# Estimate a constant background in the 540-590 nm range and subtract it
+# without interactive parameter selection.
+corrected = s.remove_background(signal_range=(540.0, 590.0), background_type="Offset")
+
+# Limit the analysis to the main emission band between 600 and 750 nm.
+peak = corrected.isig[600.0:750.0]
+width, left, right = peak.estimate_peak_width(return_interval=True)
+width.metadata.Signal.quantity = "Peak width (nm)"
 
 # %%
-# Return value
-# ^^^^^^^^^^^^
-# Returns float or lists of floats: ``[width, left, right]``. We update our metadata of the new signal containing our FWHM's and plot the results.
-width[0].metadata.Signal.quantity = (
-    "width"  # Since we dont have Intensity values anymore
-)
-width[0].plot(cmap="viridis")
+# Plot the estimated peak width.
+width.plot(cmap="viridis")
 
 # sphinx_gallery_start_ignore
 # sphinx_gallery_thumbnail_number = 3

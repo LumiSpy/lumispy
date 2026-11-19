@@ -1,4 +1,5 @@
-Peak finding
-============
+Peak utilities
+==============
 
-This Gallery of examples is focused on peak finding.
+These examples show how to determine peak positions and widths without
+fitting a model.

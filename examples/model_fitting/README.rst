@@ -1,4 +1,4 @@
 Model Fitting
 =============
 
-Gallery of Examples for model fitting in lumispy/hyperspy.
+These examples show how to fit luminescence spectra using HyperSpy models.

@@ -1,76 +1,55 @@
 """
-Region of Interest (ROI)
-========================
-This example demonstrates use of HyperSpy ROIs for a hyerspectral luminescence dataset. ROIs are used to select a subset of the data for analysis, this can be done interactively as well as
-non interactively. For more information about ROIs see the `documentation <HS_roi_>`__.
+Compare nanoparticle spectra using circular ROIs
+================================================
 
-.. _HS_roi: https://hyperspy.org/hyperspy-doc/current/reference/api.roi.html#module-hyperspy.api.roi
+This example uses :external:class:`~hyperspy.api.roi.CircleROI` to select two
+nanoparticles in a cathodoluminescence spectrum image and compare their mean
+spectra.
+
+Other ROI types are demonstrated in the `HyperSpy ROI gallery
+<https://hyperspy.org/hyperspy-doc/current/auto_examples/region_of_interest/index.html>`__.
+For a line profile, see :ref:`sphx_glr_auto_examples_plotting_extraction_of_linescan.py`.
 """
 
 # %%
-# Loading exemplary data:
 import hyperspy.api as hs
 import lumispy as lum
 
-s1 = lum.data.asymmetric_peak_map()
-s2 = lum.data.nanoparticles()
+# Load a cathodoluminescence spectrum image of nanoparticles.
+s = lum.data.nanoparticles()
 
 # %%
-# Interactive ROI
-# ---------------
-#
-# To use ROIs we first have to plot the signal. After that we can plot the ROI.
-# In this case we'll use a :py:class:`~hyperspy.api.roi.Line2DROI` which will extract a line scan from the map.
-line_roi1 = hs.roi.Line2DROI()  # define the ROI
-s1.axes_manager.indices = (20, 10)
-s1.plot()
-# plot the ROI and extract the line scan
-profile1 = line_roi1.interactive(s1, color="red")
+# Select the 480-550 nm emission band for the navigator. Display the spectrum
+# at a position with high intensity in this range instead of the default (0, 0).
+selected = s.isig[480.0:550.0]
+selected.axes_manager.indices = (16, 10)
 
 # %%
-# Return value of the ROI
-# -----------------------
-#
-# The ROI returns a BaseSignal containing the line scan, in this case its stored in ``profile``. The shape of the signal is determined by the type of ROI and the signal it is applied to.
-# To plot all the spectra from the linescan we got, we can use :py:meth:`~hyperspy.api.plot.plot_spectra`.
-hs.plot.plot_spectra(profile1)
+# Define two circular ROIs at pixel positions (15, 14) and (7, 7), each with
+# a radius of five pixels. ROIs use calibrated coordinates, so convert the
+# pixel indices using the navigation axes.
+ax_x, ax_y = s.axes_manager.navigation_axes
+radius = 5 * min(abs(ax_x.scale), abs(ax_y.scale))
+centers = [(15, 14), (7, 7)]
+rois = [
+    hs.roi.CircleROI(cx=ax_x.index2value(px), cy=ax_y.index2value(py), r=radius)
+    for px, py in centers
+]
+
+# Plot the selected spectral range and display both ROIs on the navigator.
+selected.plot()
+rois[0].add_widget(selected, color="tab:blue")
+rois[1].add_widget(selected, color="tab:orange")
 
 # %%
-# Non-Interactive ROI
-# -------------------
-#
-# For non-interactove ROIs we don't have a way of changing the selected area
-# , so we will have to pass some extra paramters if we want to have a good result.
-# We will again use ``Line2DROI(x1, y1, x2, y2, linewidth)``.
-# First we need to define the ROI:
-line_roi2 = hs.roi.Line2DROI(1.08, 0.36, 0.76, 0.52, 0)
-profile2 = line_roi2(s1)
-hs.plot.plot_spectra(profile2)
+# Apply the ROIs to the original signal to extract the full spectra.
+# Pixels outside the circles are set to NaN; nanmean() ignores these values.
+mean_1 = rois[0](s).nanmean()
+mean_2 = rois[1](s).nanmean()
 
-# %%
-# Circle ROI
-# ----------
-#
-# We can also use :py:class:`~hyperspy.api.roi.CircleROI`. The circle ROI is defined by its center and radius.
-
-# get axes
-ax1 = s2.axes_manager[0]
-ax2 = s2.axes_manager[1]
-
-# define start params
-cx = 7 * ax1.scale + ax1.offset
-cy = 7 * ax2.scale + ax2.offset
-r = 5 * ((ax1.scale + ax2.scale) / 2)
-
-# define the ROI
-circle_roi = hs.roi.CircleROI(cx=cx, cy=cy, r=r)
-
-# plot the ROI and extract the spectra
-s2.axes_manager.indices = (7, 7)
-s2.plot()
-profile3 = circle_roi.interactive(s2)
-hs.plot.plot_spectra(profile3)
+# Plot the two mean spectra for comparison.
+hs.plot.plot_spectra([mean_1, mean_2], legend=["ROI 1", "ROI 2"])
 
 # sphinx_gallery_start_ignore
-# sphinx_gallery_thumbnail_number = 4
+# sphinx_gallery_thumbnail_number = 2
 # sphinx_gallery_end_ignore

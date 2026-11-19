@@ -1,4 +1,5 @@
 Data Selection
 ==============
 
-This gallery of examples demonstrates data selection in LumiSpy/HyperSpy.
+These examples show how to select navigation positions, spectral ranges,
+and regions of interest in LumiSpy and HyperSpy.
