@@ -10,7 +10,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.10",
@@ -29,6 +28,7 @@ dependencies = [
     "scipy",
     "pint>=0.10",
 ]
+dynamic = ["version"]
 keywords = [
     "CL",
     "PL",
@@ -60,15 +60,13 @@ keywords = [
     "spectrum image",
     "time-resolved",
 ]
-dynamic = ["version"]
+license-files = ["LICENSE"]
+license = "GPL-3.0-or-later"
 readme = "README.md"
 requires-python = ">=3.10"
 
 [project.entry-points."hyperspy.extensions"]
 lumispy = "lumispy"
-
-[project.license]
-file = "LICENSE"
 
 [project.optional-dependencies]
 tests = [
