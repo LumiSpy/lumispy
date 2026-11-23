@@ -1,0 +1,1 @@
+Modernize the SPDX license declaration in ``pyproject.toml``.
