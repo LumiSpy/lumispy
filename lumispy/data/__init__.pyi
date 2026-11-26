@@ -16,11 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-from .data_utils import asymmetric_peak_map, nanoparticles
-
+from .data_utils import (
+    asymmetric_peak_map,
+    asymmetric_peak_map_cleaned,
+    nanoparticles,
+)
 
 __all__ = [
     "asymmetric_peak_map",
+    "asymmetric_peak_map_cleaned",
     "nanoparticles",
 ]
 

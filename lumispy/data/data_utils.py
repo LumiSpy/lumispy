@@ -40,6 +40,22 @@ def asymmetric_peak_map():
         return hs.load(file_path, mode="r", reader="hspy")
 
 
+def asymmetric_peak_map_cleaned():
+    """Load a preprocessed spectrum image containing broad asymmetric peaks.
+
+    Spikes and noise have been reduced using median filtering and
+    Savitzky-Golay smoothing. The background has not been removed.
+
+    Returns
+    -------
+    :py:class:`~lumispy.signals.CLSpectrum`
+    """
+    file_path = _resolve_dir().joinpath("asymmetric_peak_map_cleaned.hspy")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", category=UserWarning)
+        return hs.load(file_path, mode="r", reader="hspy")
+
+
 def nanoparticles():
     """Load an exemplary dataset containing a 2d map of spectra with one peak that is not present at all positions of the map. The spectra contain a lot of noise.
 

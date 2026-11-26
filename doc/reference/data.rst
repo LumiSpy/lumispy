@@ -7,6 +7,7 @@
    :nosignatures:
 
     asymmetric_peak_map
+    asymmetric_peak_map_cleaned
     nanoparticles
 
 .. automodule:: lumispy.data

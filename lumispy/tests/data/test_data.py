@@ -26,6 +26,13 @@ def test_asymmetric_peak_map():
     assert s._signal_type == "CL"
 
 
+def test_asymmetric_peak_map_cleaned():
+    s = lum.data.asymmetric_peak_map_cleaned()
+    assert isinstance(s, lum.signals.CLSpectrum)
+    assert s.axes_manager.navigation_dimension == 2
+    assert s._signal_type == "CL"
+
+
 def test_nanoparticles():
     s = lum.data.nanoparticles()
     assert isinstance(s, lum.signals.CLSEMSpectrum)
