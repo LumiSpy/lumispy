@@ -94,8 +94,7 @@ Solving the grating equation
 The function :func:`~.utils.axes.solve_grating_equation` (relationship between
 wavelength and pixel position in the detector plane) follows the conventions
 described in the tutorial from  `Horiba Scientific
-<https://horiba.com/uk/scientific/products/optics-tutorial/wavelength-pixel-position>`_.
-
+<https://www.horiba.com/int/scientific/technologies/detectors/wavelength-and-pixel-position/>`_.
 
 
 Cropping multiple signals in the navigation axis 
