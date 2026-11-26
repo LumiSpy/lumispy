@@ -13,12 +13,13 @@ and the ``Scalable fixed pattern`` background model (HyperSpy >= 2.5).
 import lumispy as lum
 
 s = lum.data.AlN_Spectrum()
+s = s.mean()
 bkg = lum.data.AlN_bkg()
 
 # %%
 # Show an experimental spectrum at navigation position (9, 1), where the
 # AlN emission is particularly intense.
-s.inav[9, 1].plot()
+s.plot()
 
 # %%
 # Subtract the measured background at every position without scaling it.
@@ -34,7 +35,7 @@ corrected = s.remove_background(
 )
 
 # Compare with the corrected spectrum at the same navigation position.
-corrected.inav[9, 1].plot()
+corrected.plot()
 
 # %%
 # Show the measured dark background used for the subtraction.
