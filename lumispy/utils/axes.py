@@ -81,25 +81,22 @@ def eV2nm(x):
     wl = 1239.5 / x  # approximate WL to obtain refractive index
     return 1e9 * c.h * c.c / (c.e * _n_air(wl) * x)
 
+
 def invcm2eV(x):
-    """Convert wavenumber (cm$^{-1}$) to energy (eV).
-    """
-    return x/8065.54
+    """Convert wavenumber (cm$^{-1}$) to energy (eV)."""
+    return x / 8065.54
+
 
 def eV2invcm(x):
-    """Convert energy (eV) to wavenumber (cm$^{-1}$).
-    """
-    return x*8065.54
+    """Convert energy (eV) to wavenumber (cm$^{-1}$)."""
+    return x * 8065.54
+
 
 def axis2nm(ax0):
-    """Convert given signal axis to wavelength scale (nm). Automatically checks axis units.
-    """
-    if ax0.units == "nm":
-        raise ValueError("Axis unit is already nm.")
-    elif ax0.units == "µm":
-        nmaxis = (1000*ax0.axis).astype("float")
-        factor = 1e3
-    # transform axis, invert direction   
+    """Convert given signal axis to wavelength scale (nm). Automatically checks axis units."""
+    if ax0.units in ("nm", "µm"):
+        raise ValueError("Axis unit is already nm/µm.")
+    # transform axis, invert direction
     elif ax0.units == r"cm$^{-1}$":
         nmaxis = invcm2nm(ax0.axis)[::-1].astype("float")
         factor = 1e7  # correction factor for intensity
@@ -114,23 +111,29 @@ def axis2nm(ax0):
     axis = DataAxis(axis=nmaxis, name="Wavelength", units="nm", navigate=False)
     return axis, factor
 
+
 def data2nm(data, factor, nmaxis, ax0):
-    r"""The intensity is converted from counts/µm, counts/eV (counts/meV) or counts/cm$^{-1}$ 
-    to counts/nm by doing a inverse Jacobian transformation, see e.g. Mooney and
+    r"""The intensity is converted from counts/eV (counts/meV) or counts/cm$^{-1}$
+    to counts/nm by doing a Jacobian transformation, see e.g. Mooney and
     Kambhampati, J. Phys. Chem. Lett. 4, 3316 (2013). Ensures that integrated
     signals are still correct.
     """
-    if ax0.units == "µm":
-        return data / 1e3
-    elif ax0.units == "meV":
-        return data * c.e * _n_air(nmaxis) * ((ax0.axis*1e6)**2)[::-1] / (factor * c.h * c.c)
+    if ax0.units == "meV":
+        return (
+            data
+            * c.e
+            * _n_air(nmaxis)
+            * ((ax0.axis / 1e3) ** 2)[::-1]
+            / (factor * c.h * c.c)
+        )
     elif ax0.units == "eV":
         return data * c.e * _n_air(nmaxis) * (ax0.axis**2)[::-1] / (factor * c.h * c.c)
     elif ax0.units == r"cm$^{-1}$":
         return data * (ax0.axis**2)[::-1] / factor
     else:
         raise ValueError("Axis unit invalid.")
-    
+
+
 def var2nm(variance, factor, nmaxis, ax0):
     """The variance is converted doing a inverted squared Jacobian renormalization to
     match with the transformation of the data.
@@ -138,23 +141,26 @@ def var2nm(variance, factor, nmaxis, ax0):
     if ax0.units == "eV":
         return (
             variance
-            * ((c.e * _n_air(np.flip(nmaxis, axis=-1))[::-1] * np.flip(ax0.axis, axis=-1)**2) / (factor * c.h * c.c)) ** 2
+            * ((c.e * _n_air(nmaxis) * ax0.axis[::-1] ** 2) / (factor * c.h * c.c)) ** 2
         )
     if ax0.units == "meV":
         return (
             variance
-            * ((c.e * _n_air(np.flip(nmaxis, axis=-1))[::-1] * (np.flip(ax0.axis, axis=-1)/1000)**2) / (factor * c.h * c.c)) ** 2
+            * (
+                (c.e * _n_air(nmaxis) * (ax0.axis[::-1] / 1e3) ** 2)
+                / (factor * c.h * c.c)
+            )
+            ** 2
         )
     elif ax0.units == r"cm$^{-1}$":
-        return variance * ((np.flip(ax0.axis, axis=-1)**2 / factor)) ** 2
+        return variance * (ax0.axis[::-1] ** 2 / factor) ** 2
     else:
         raise ValueError("Axis unit invalid.")
 
 
-
 def axis2eV(ax0):
     """Convert given signal axis to energy scale (eV) using wavelength
-    dependent refractive index of air. Automatically checks axis units. 
+    dependent refractive index of air. Automatically checks axis units.
     """
     if ax0.units == "eV":
         raise ValueError("Axis unit is already eV.")
@@ -175,7 +181,7 @@ def axis2eV(ax0):
 
 
 def data2eV(data, factor, evaxis, ax0):
-    r"""The intensity is converted from counts/nm (counts/µm) or counts/cm$^{-1}$ 
+    r"""The intensity is converted from counts/nm (counts/µm) or counts/cm$^{-1}$
     to counts/eV by doing a Jacobian transformation, see e.g. Mooney and Kambhampati, J. Phys.
     Chem. Lett. 4, 3316 (2013). Ensures that integrated signals are still
     correct.
@@ -191,8 +197,8 @@ def data2eV(data, factor, evaxis, ax0):
     elif ax0.units == "nm":
         return data * factor * c.h * c.c / (c.e * _n_air(ax0.axis[::-1]) * evaxis**2)
 
-    elif ax0.units ==  r"cm$^{-1}$":
-        return np.flip(data, axis=-1) * 8.06554
+    elif ax0.units == r"cm$^{-1}$":
+        return data * 8.06554
 
     else:
         raise ValueError("Axis unit invalid.")
@@ -209,13 +215,14 @@ def var2eV(variance, factor, evaxis, ax0):
         )
     elif ax0.units == "µm":
         return (
-            variance * 1e3
-            * (factor * c.h * c.c / (c.e * _n_air(1000 * ax0.axis)[::-1] * evaxis**2))
+            variance
+            * (factor * c.h * c.c / (c.e * _n_air(1000 * ax0.axis[::-1]) * evaxis**2))
             ** 2
         )
-    
+
     elif ax0.units == r"cm$^{-1}$":
-        return np.flip(variance, axis=-1) * 8.06554**2
+        return variance * 8.06554**2
+
     else:
         raise ValueError("Axis unit invalid.")
 
@@ -231,8 +238,7 @@ def invcm2nm(x):
 
 
 def axis2invcm(ax0):
-    r"""Convert given signal axis to wavenumber scale (cm$^{-1}$). Automatically checks axis units.
-    """
+    r"""Convert given signal axis to wavenumber scale (cm$^{-1}$). Automatically checks axis units."""
     if ax0.units == r"cm$^{-1}$":
         raise ValueError(r"Axis unit is already cm$^{-1}$.")
     elif ax0.units == "eV":
@@ -240,7 +246,7 @@ def axis2invcm(ax0):
         factor = 1
     elif ax0.units == "meV":
         invcmaxis = eV2invcm(ax0.axis / 1000).astype("float")
-        factor = 1e-3
+        factor = 1e3
     # transform axis, invert direction
     elif ax0.units == "µm":
         invcmaxis = nm2invcm(1000 * ax0.axis)[::-1].astype("float")
@@ -262,11 +268,11 @@ def data2invcm(data, factor, invcmaxis, ax0):
     Kambhampati, J. Phys. Chem. Lett. 4, 3316 (2013). Ensures that integrated
     signals are still correct.
     """
-    if ax0.units == "nm" or ax0.units == "µm":
+    if ax0.units in ("nm", "µm"):
         return data * factor / (invcmaxis**2)
 
-    elif ax0.units ==  "eV" or ax0.units == "meV":
-        return np.flip(data, axis=-1) / 8.06554
+    elif ax0.units in ("eV", "meV"):
+        return data * factor / 8.06554
 
     else:
         raise ValueError("Axis unit invalid.")
@@ -280,13 +286,13 @@ def var2invcm(variance, factor, invcmaxis, ax0):
         return variance * (factor / (invcmaxis**2)) ** 2
 
     elif ax0.units == "µm":
-        return variance * 1e3 * (factor / (invcmaxis**2)) ** 2
+        return variance * (factor / (invcmaxis**2)) ** 2
 
     elif ax0.units == "eV":
-        return np.flip(variance, axis=-1) / 8.06554**2
+        return variance / 8.06554**2
 
     elif ax0.units == "meV":
-        return np.flip(variance/1000, axis=-1) / 8.06554**2
+        return variance * (factor**2) / 8.06554**2
     else:
         raise ValueError("Axis unit invalid.")
 
