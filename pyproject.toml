@@ -12,17 +12,17 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Physics",
     "Topic :: Software Development :: Libraries",
 ]
 dependencies = [
-    "hyperspy >= 2.4.0",  # needed for lazy loading capability
+    "hyperspy >= 2.6.0",  # needed for lazy loading capability
     "numpy >= 2.0",
     "lazy-loader",
     "scipy",
@@ -63,7 +63,7 @@ keywords = [
 license-files = ["LICENSE"]
 license = "GPL-3.0-or-later"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 
 [project.entry-points."hyperspy.extensions"]
 lumispy = "lumispy"
@@ -86,7 +86,7 @@ doc = [
   "numba",
 ]
 dev = [
-  "black",
+  "ruff",
   "lumispy[doc]",
   "lumispy[tests]"
 ]
