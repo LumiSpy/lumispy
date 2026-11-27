@@ -34,6 +34,9 @@ from lumispy.utils import (
     axis2invcm,
     data2invcm,
     var2invcm,
+    axis2nm,
+    data2nm,
+    var2nm,
 )
 
 
@@ -260,8 +263,7 @@ class CommonLumi:
         """
         sig = self if inplace else self.deepcopy()
 
-
-        ax = -2 if sig._signal_dimension == 2 else -1 
+        ax = -2 if sig._signal_dimension == 2 else -1
         sig_ax = sig.axes_manager[ax]
         ref_ax = ref.axes_manager[-1]
 
@@ -361,7 +363,9 @@ class CommonLumi:
         ):
             self.metadata.Signal.Noise_properties.Variance_linear_model.gain_factor = 1
             self.metadata.Signal.Noise_properties.Variance_linear_model.gain_offset = 0
-            self.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor = 1
+            self.metadata.Signal.Noise_properties.Variance_linear_model.correlation_factor = (
+                1
+            )
             warn(
                 "Following the Jacobian transformation, the parameters of the "
                 "`Variance_linear_model` are reset to their default values "
@@ -369,22 +373,24 @@ class CommonLumi:
                 UserWarning,
             )
 
-    def _convert_data(self, newaxis, factor, inplace, jacobian, data2, var2):
+    def _convert_data(self, newaxis, factor, inplace, jacobian, flipdata, data2, var2):
         """Utility function to perform the data and variance conversion for
         signal unit transformations.
         """
+        olddata = np.copy(self.isig[::-1].data if flipdata else self.data)
+
         # convert data
         if jacobian:
             s2data = np.copy(
                 data2(
-                    self.isig[::-1].data,
+                    olddata,
                     factor,
                     newaxis.axis,
                     self.axes_manager.signal_axes[0],
                 )
             )
         else:
-            s2data = np.copy(self.isig[::-1].data)
+            s2data = olddata
 
         # inplace conversion
         if inplace:
@@ -415,9 +421,10 @@ class CommonLumi:
                         copy_variance=False,
                         copy_learning_results=False,
                     )
+                oldvar = np.copy(var.isig[::-1].data if flipdata else var.data)
                 s2var = s2._deepcopy_with_new_data(
                     var2(
-                        var.isig[::-1].data,
+                        oldvar,
                         factor,
                         newaxis.axis,
                         oldaxis,
@@ -433,9 +440,10 @@ class CommonLumi:
                     if not inplace:
                         s2.set_noise_variance(self.get_noise_variance())
                 else:
+                    oldvar = np.copy(var.isig[::-1].data if flipdata else var.data)
                     s2.set_noise_variance(
                         s2._deepcopy_with_new_data(
-                            var.isig[::-1].data,
+                            oldvar,
                             copy_variance=False,
                             copy_learning_results=False,
                         )
@@ -444,99 +452,152 @@ class CommonLumi:
             return s2
         return None
 
-    def to_eV(self, inplace=True, jacobian=True):
-        """Convert signal axis of 1D signal to non-linear energy axis (eV).
-
-        Uses wavelength dependent refractive index of air. Assumes wavelength
-        in units of nm unless the axis units are specifically set to µm.
-
-        The intensity is converted from counts/nm (counts/µm) to counts/meV by
-        doing a Jacobian transformation, see e.g. Mooney and Kambhampati, J.
-        Phys. Chem. Lett. 4, 3316 (2013), doi:10.1021/jz401508t, which ensures
-        that integrated signals are correct also in the energy domain. If the
-        variance of the signal is known, i.e.
+    VARIANCE_DOCSTRING = """
+        If `jacobian=True` and the variance of the signal is known, i.e.
         `metadata.Signal.Noise_properties.variance` is a signal representing
         the variance, a squared renormalization of the variance is performed.
         Note that if the variance is a number (not a signal instance), it is
-        converted to a signal if the Jacobian transformation is performed
+        converted to a signal.
+    """
 
-        Parameters
-        ----------
+    INPLACE_DOCSTRING = """
         inplace : boolean
             If `False`, a new signal object is created and returned. Otherwise
             (default) the operation is performed on the existing signal object.
+    """
+
+    JACOBIAN_DOCSTRING = """
         jacobian : boolean
             The default is to do the Jacobian transformation (recommended at
             least for luminescence signals), but the transformation can be
             suppressed by setting this option to `False`.
+    """
+
+    def to_eV(self, inplace=True, jacobian=True):
+        r"""Convert signal axis of 1D signal to non-linear energy axis (eV).
+
+        Uses wavelength dependent refractive index of air.
+
+        Automatically checks axis units.
+
+        The intensity is converted from counts/nm (counts/µm) or counts/cm^-1 to counts/eV by
+        doing a Jacobian transformation, see e.g. Mooney and Kambhampati, J.
+        Phys. Chem. Lett. 4, 3316 (2013), doi:10.1021/jz401508t, which ensures
+        that integrated signals are correct also in the energy domain.
+
+        %s
+
+        Parameters
+        ----------
+        %s %s
 
         Examples
         --------
         >>> import numpy as np
-        >>> from lumispy import LumiSpectrum
-        >>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
+        >>> from lumispy.signals import LumiSpectrum
+        >>> S1 = LumiSpectrum(data = np.ones(20), axes = (DataAxis(axis = np.arange(200,400,10),units="nm"), ))
         >>> S1.to_eV()
         """
+        if self.axes_manager.signal_axes[0].units in ("eV", "meV"):
+            raise ValueError("Axis unit is already eV/meV.")
+
         evaxis, factor = axis2eV(self.axes_manager.signal_axes[0])
 
-        return self._convert_data(evaxis, factor, inplace, jacobian, data2eV, var2eV)
+        flipdata = self.axes_manager.signal_axes[0].units in ("nm", "µm")
 
-    TO_INVCM_DOCSTRING = """
-The intensity is converted from counts/nm (counts/µm) to counts/cm^-1
-by doing a Jacobian transformation, see e.g. Mooney and Kambhampati,
-J. Phys. Chem. Lett. 4, 3316 (2013), doi:10.1021/jz401508t, which
-ensures that integrated signals are correct also in the wavenumber
-domain. If the variance of the signal is known, i.e.
-`metadata.Signal.Noise_properties.variance` is a signal representing the
-variance, a squared renormalization of the variance is performed.
-Note that if the variance is a number (not a signal instance), it is
-converted to a signal if the Jacobian transformation is performed
+        return self._convert_data(
+            evaxis, factor, inplace, jacobian, flipdata, data2eV, var2eV
+        )
 
-Parameters
-----------
-inplace : boolean
-    If `False`, a new signal object is created and returned. Otherwise
-    (default) the operation is performed on the existing signal object.
-"""
-
-    TO_INVCM_EXAMPLE = """
-Examples
---------
->>> import numpy as np
->>> from lumispy import LumiSpectrum
->>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
->>> S1.to_invcm()
-"""
+    to_eV.__doc__ %= (VARIANCE_DOCSTRING, INPLACE_DOCSTRING, JACOBIAN_DOCSTRING)
 
     def to_invcm(self, inplace=True, jacobian=True):
         r"""Convert signal axis of 1D signal to non-linear wavenumber axis (cm^-1).
 
-        Assumes wavelength in units of nm unless the axis units are
-        specifically set to µm.
+        Automatically checks axis units.
+
+        The intensity is converted from counts/nm (counts/µm) or counts/eV (counts/meV)
+        to counts/cm^-1 by doing a Jacobian transformation, see e.g. Mooney and Kambhampati,
+        J. Phys. Chem. Lett. 4, 3316 (2013), doi:10.1021/jz401508t, which
+        ensures that integrated signals are correct also in the wavenumber
+        domain.
 
         %s
-        jacobian : boolean
-            The default is to do the Jacobian transformation (recommended at
-            least for luminescence signals), but the transformation can be
-            suppressed by setting this option to `False`.
-        %s
+
+        Parameters
+        ----------
+        %s %s
+
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from lumispy.signals import LumiSpectrum
+        >>> S1 = LumiSpectrum(data = np.ones(20), axes = (DataAxis(axis = np.arange(200,400,10),units="nm"), ))
+        >>> S1.to_invcm()
         """
+
+        if self.axes_manager.signal_axes[0].units == r"cm$^{-1}$":
+            raise ValueError(r"Axis unit is already cm$^{-1}$.")
+
         invcmaxis, factor = axis2invcm(self.axes_manager.signal_axes[0])
 
+        flipdata = self.axes_manager.signal_axes[0].units in ("nm", "µm")
+
         return self._convert_data(
-            invcmaxis, factor, inplace, jacobian, data2invcm, var2invcm
+            invcmaxis, factor, inplace, jacobian, flipdata, data2invcm, var2invcm
         )
 
-    to_invcm.__doc__ %= (TO_INVCM_DOCSTRING, TO_INVCM_EXAMPLE)
+    to_invcm.__doc__ %= (VARIANCE_DOCSTRING, INPLACE_DOCSTRING, JACOBIAN_DOCSTRING)
 
-    TO_INVCMREL_EXAMPLE = """
-Examples
---------
->>> import numpy as np
->>> from lumispy import LumiSpectrum
->>> S1 = LumiSpectrum(np.ones(20), DataAxis(axis = np.arange(200,400,10)), ))
->>> S1.to_invcm(laser=325)
-"""
+    def to_nm(self, inplace=True, jacobian=True):
+        """Convert signal axis of 1D signal to non-linear wavelength axis (nm).
+
+        Automatically checks axis units.
+
+        The intensity is converted from counts/eV (counts/meV) or counts/cm^-1 to counts/nm
+        by doing a Jacobian transformation, see e.g. Mooney and Kambhampati,
+        J. Phys. Chem. Lett. 4, 3316 (2013), doi:10.1021/jz401508t, which
+        ensures that integrated signals are correct also in the wavelength
+        domain.
+
+        %s
+
+        Parameters
+        ----------
+        %s %s
+
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from lumispy.signals import LumiSpectrum
+        >>> S1 = LumiSpectrum(data = np.ones(4), axes = (DataAxis(axis=np.array([1.54937635, 1.8592496 , 2.32405725, 3.0987288 ]), units="eV"), ))
+        >>> S1.to_nm()
+        """
+        if self.axes_manager[0].units in ("nm", "µm"):
+            raise ValueError("Axis unit is already nm/µm.")
+
+        nmaxis, factor = axis2nm(self.axes_manager.signal_axes[0])
+
+        flipdata = True
+
+        return self._convert_data(
+            nmaxis, factor, inplace, jacobian, flipdata, data2nm, var2nm
+        )
+
+    to_nm.__doc__ %= (VARIANCE_DOCSTRING, INPLACE_DOCSTRING, JACOBIAN_DOCSTRING)
+
+    LASER_DOCSTRING = """
+        laser : float or None
+            Laser wavelength in the same units as the signal axis. If 'None'
+            (default), checks if it is stored in
+            `metadata.Acquisition_instrument.Laser.wavelength`.
+    """
+
+    JACOBIAN_INVCM_RELATIVE_DOCSTRING = """
+        jacobian : boolean
+            If `True`, the Jacobian transformation is applied to the signal
+            intensity. By default, this is disabled (`False`).
+    """
 
     def to_invcm_relative(self, laser=None, inplace=True, jacobian=False):
         r"""Convert signal axis of 1D signal to Raman/Stokes shift.
@@ -546,16 +607,25 @@ Examples
         shift). Assumes wavelength in units of nm unless the axis units are
         specifically set to µm.
 
+        If `jacobian=True` the intensity is converted from counts/nm (counts/µm) to counts/cm^-1
+        by doing a Jacobian transformation, see e.g. Mooney and Kambhampati,
+        J. Phys. Chem. Lett. 4, 3316 (2013), doi:10.1021/jz401508t, which
+        ensures that integrated signals are correct also in the wavenumber
+        domain.
+
         %s
-        laser: float or None
-            Laser wavelength in the same units as the signal axis. If None
-            (default), checks if it is stored in
-            `metadata.Acquisition_instrument.Laser.wavelength`.
-        jacobian : boolean
-            The default is not to do the Jacobian transformation for Raman
-            shifts, but the transformation can be activated by setting this
-            option to `True`.
-        %s
+
+        Parameters
+        ----------
+
+        %s %s %s
+
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from lumispy.signals import LumiSpectrum
+        >>> S1 = LumiSpectrum(data = np.ones(20), axes = (DataAxis(axis = np.arange(200,400,10),units="nm"), ))
+        >>> S1.to_invcm_relative(laser=325)
         """
         # check if laser wavelength is available
         if laser is None:
@@ -620,10 +690,12 @@ Examples
             return s2
         return None
 
-    to_invcm_relative.__doc__ %= (
-        TO_INVCM_DOCSTRING,
-        TO_INVCMREL_EXAMPLE,
-    )
-
     # Alias Method Name
     to_raman_shift = to_invcm_relative
+
+    to_invcm_relative.__doc__ %= (
+        VARIANCE_DOCSTRING,
+        LASER_DOCSTRING,
+        INPLACE_DOCSTRING,
+        JACOBIAN_INVCM_RELATIVE_DOCSTRING,
+    )

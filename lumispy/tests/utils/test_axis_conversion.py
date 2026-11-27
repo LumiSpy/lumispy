@@ -16,7 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with LumiSpy. If not, see <https://www.gnu.org/licenses/#GPL>.
 
-from numpy import arange, ones
+import numpy as np
+from numpy import arange, ones, linspace
 from numpy.testing import assert_allclose
 from pytest import raises, mark, warns
 
@@ -25,6 +26,11 @@ from lumispy.signals import LumiSpectrum, LumiTransientSpectrum
 from lumispy.utils.axes import (
     nm2eV,
     eV2nm,
+    invcm2eV,
+    eV2invcm,
+    axis2nm,
+    data2nm,
+    var2nm,
     axis2eV,
     data2eV,
     var2eV,
@@ -52,23 +58,31 @@ def test_eV2nm():
 
 
 def test_axis2eV():
-    axis = UniformDataAxis(size=20, offset=200, scale=10)
+    axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
     axis2 = DataAxis(axis=arange(0.2, 0.400, 0.01), units="µm")
     axis3 = DataAxis(axis=arange(1, 2, 0.1), units="eV")
+    axis4 = DataAxis(axis=arange(10000, 20000, 2000), units=r"cm$^{-1}$")
+    axis5 = DataAxis(axis=arange(1, 2, 0.1), units="no unit")
     evaxis, factor = axis2eV(axis)
     evaxis2, factor2 = axis2eV(axis2)
-    with raises(AttributeError, match="Signal unit is already eV."):
+    with raises(ValueError, match="Axis unit is already eV."):
         axis2eV(axis3)
+    evaxis4, factor4 = axis2eV(axis4)
+    with raises(ValueError, match="Axis unit invalid."):
+        axis2eV(axis5)
     assert factor == 1e6
     assert factor2 == 1e3
+    assert factor4 == 1
     assert evaxis.name == "Energy"
     assert evaxis.units == "eV"
     assert not evaxis.navigate
     assert evaxis2.units == "eV"
     assert evaxis2.size == 20
+    assert evaxis4.units == "eV"
     assert_allclose(evaxis.axis[0], evaxis2.axis[0])
     assert_allclose(evaxis.axis[-1], evaxis2.axis[-1])
     assert_allclose(evaxis.axis[0], 3.1781816)
+    assert_allclose(evaxis4.axis[0], 1.239843, rtol=1e-6)
 
 
 def test_data2eV():
@@ -77,24 +91,65 @@ def test_data2eV():
     evaxis, factor = axis2eV(ax0)
     evdata = data2eV(data, factor, evaxis.axis, ax0)
     assert_allclose(evdata[0], 12.271168)
+
     ax0 = DataAxis(axis=arange(0.2, 0.4, 0.01), units="µm")
     evaxis, factor = axis2eV(ax0)
     evdata = data2eV(data, factor, evaxis.axis, ax0)
     assert_allclose(evdata[0], 12.271168e-3)
 
+    ax0 = DataAxis(axis=arange(10000, 20000, 2000), units=r"cm$^{-1}$")
+    evaxis, factor = axis2eV(ax0)
+    evdata = data2eV(data, factor, evaxis.axis, ax0)
+    assert_allclose(evdata[0], 806.554)
+
+    ax0 = DataAxis(axis=linspace(0.4, 0.8, 4), units="no unit")
+    with raises(ValueError, match="Axis unit invalid."):
+        data2eV(data, factor, evaxis.axis, ax0)
+
 
 def test_var2eV():
-    data = 100 * ones(20)
-    ax0 = DataAxis(axis=arange(200, 400, 10), units="nm")
+    data = linspace(1, 10, 4)
+    ax0 = DataAxis(axis=linspace(400, 800, 4), units="nm")
+    evaxis, factor = axis2eV(ax0)
+    evvar = var2eV(data[::-1], factor, evaxis.axis, ax0)
+    assert_allclose(evvar[0], 2.66603673, rtol=1e-6)
+    assert_allclose(evvar[-1], 0.01666299, rtol=1e-6)
+
+    data = linspace(1, 10, 4) * (1e3**2)
+    ax0 = DataAxis(axis=linspace(400, 800, 4) / 1e3, units="µm")
+    evaxis, factor = axis2eV(ax0)
+    assert_allclose(factor, 1e3)
+    evvar = var2eV(data[::-1], factor, evaxis.axis, ax0)
+    assert_allclose(evvar[0], 2.66603673, rtol=1e-6)
+    assert_allclose(evvar[-1], 0.01666299, rtol=1e-6)
+
+    data = np.array([0.04096, 0.01382716, 0.00323635, 0.000256])
+    ax0 = DataAxis(
+        axis=np.array([12500.0, 15000.0, 18750.0, 25000.0]), units=r"cm$^{-1}$"
+    )
     evaxis, factor = axis2eV(ax0)
     evvar = var2eV(data, factor, evaxis.axis, ax0)
-    assert_allclose(evvar[0], 1.5058156)
+    assert_allclose(evvar[0], 2.66603673, rtol=1e-3)
+    assert_allclose(evvar[-1], 0.01666299, rtol=1e-3)
+
+    ax0 = DataAxis(axis=linspace(0.4, 0.8, 4), units="no unit")
+    with raises(ValueError, match="Axis unit invalid."):
+        var2eV(data, factor, evaxis.axis, ax0)
 
 
 @mark.parametrize(("jacobian"), (True, False))
 @mark.parametrize(("variance"), (True, False, "constant"))
 def test_to_eV(jacobian, variance):
-    axis = UniformDataAxis(size=20, offset=200, scale=10)
+    axis0 = DataAxis(
+        axis=np.array([1.54937635, 1.8592496, 2.32405725, 3.0987288]), units="eV"
+    )
+    data0 = ones(20)
+    data0[0] += 1
+    S0 = LumiSpectrum(data0, axes=(axis0.get_axis_dictionary(),))
+    with raises(ValueError, match="Axis unit is already eV/meV."):
+        S0.to_eV(inplace=True, jacobian=jacobian)
+
+    axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
     data = ones(20)
     data[0] += 1
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -191,6 +246,7 @@ def test_to_eV(jacobian, variance):
 
 def test_eV_slicing():
     S = LumiSpectrum(arange(100), axes=[{"axis": arange(100) + 300}])
+    S.axes_manager[0].units = "nm"
     S.to_eV(inplace=True)
     S.isig[3.251:4.052]
 
@@ -208,7 +264,7 @@ def test_to_eV_2D():
 
 @mark.parametrize(("jacobian"), (True, False))
 def test_reset_variance_linear_model_eV(jacobian):
-    axis = UniformDataAxis(size=20, offset=200, scale=10)
+    axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
     S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_factor", 2)
@@ -257,15 +313,24 @@ def test_invcm2nm():
 
 
 def test_axis2invcm():
-    axis = UniformDataAxis(size=21, offset=200, scale=10)
-    axis2 = DataAxis(axis=arange(0.2, 0.410, 0.01), units="µm")
-    axis3 = DataAxis(axis=arange(1, 2, 0.1), units=r"cm$^{-1}$")
+    axis = UniformDataAxis(size=21, offset=200, scale=10, units="nm")
+    axis2 = UniformDataAxis(size=21, offset=0.2, scale=0.01, units="µm")
+    axis3 = DataAxis(axis=arange(1, 2, 0.1), units="eV")
+    axis4 = DataAxis(axis=arange(10000, 20000, 2000), units=r"cm$^{-1}$")
+    axis5 = DataAxis(axis=arange(1, 2, 0.1), units="no unit")
+    axis6 = DataAxis(axis=arange(1, 2, 0.1) * 1000, units="meV")
     invcmaxis, factor = axis2invcm(axis)
     invcmaxis2, factor2 = axis2invcm(axis2)
-    with raises(AttributeError, match="Signal unit is already"):
-        axis2invcm(axis3)
+    invcmaxis3, factor3 = axis2invcm(axis3)
+    with raises(ValueError, match="Axis unit is already."):
+        axis2invcm(axis4)
+    with raises(ValueError, match="Axis unit invalid."):
+        axis2invcm(axis5)
+    invcmaxis6, factor6 = axis2invcm(axis6)
     assert factor == 1e7
     assert factor2 == 1e4
+    assert factor3 == 1
+    assert factor6 == 1e3
     assert invcmaxis.name == "Wavenumber"
     assert invcmaxis.units == r"cm$^{-1}$"
     assert not invcmaxis.navigate
@@ -274,30 +339,81 @@ def test_axis2invcm():
     assert_allclose(invcmaxis.axis[0], invcmaxis2.axis[0])
     assert_allclose(invcmaxis.axis[-1], invcmaxis2.axis[-1])
     assert_allclose(invcmaxis.axis[0], 25000)
+    assert_allclose(invcmaxis3.axis[0], 8065.54)
+    assert_allclose(invcmaxis3.axis[0], invcmaxis6.axis[0])
+    assert_allclose(invcmaxis3.axis[-1], invcmaxis6.axis[-1])
 
 
 def test_data2invcm():
     data = 100 * ones(20)
-    factor = 1e7
-    ax0 = arange(200, 400, 10)
-    invcmaxis = nm2invcm(ax0)
-    invcmdata = data2invcm(data, factor, invcmaxis)
-    assert_allclose(invcmdata[-1], 1.521)
+    ax0 = DataAxis(axis=arange(200, 400, 10), units="nm")
+    invcmaxis, factor = axis2invcm(ax0)
+    invcmdata = data2invcm(data, factor, invcmaxis.axis, ax0)
+    assert_allclose(invcmdata[0], 1.521)
+
+    data = np.array([5.16336783, 2.50997321, 0.91793493, 0.12908519])
+    ax0 = DataAxis(
+        axis=np.array([1.54937635, 1.8592496, 2.32405725, 3.0987288]), units="eV"
+    )
+    invcmaxis, factor = axis2invcm(ax0)
+    invcmdata = data2invcm(data, factor, invcmaxis.axis, ax0)
+    assert_allclose(invcmdata[0], 0.64017633)
+    assert_allclose(invcmdata[-1], 0.01600453, rtol=1e-6)
+
+    ax0 = DataAxis(axis=linspace(0.4, 0.8, 4), units="no unit")
+    with raises(ValueError, match="Axis unit invalid."):
+        data2invcm(data, factor, invcmaxis.axis, ax0)
 
 
 def test_var2invcm():
-    data = 100 * ones(20)
-    factor = 1e7
-    ax0 = arange(200, 400, 10)
-    invcmaxis = nm2invcm(ax0)
-    invcmdata = var2invcm(data, factor, invcmaxis)
-    assert_allclose(invcmdata[-1], 0.02313441)
+    data = linspace(1, 10, 4)
+    ax0 = DataAxis(axis=linspace(400, 800, 4), units="nm")
+    invcmaxis, factor = axis2invcm(ax0)
+    invcmvar = var2invcm(data[::-1], factor, invcmaxis.axis, ax0)
+    assert_allclose(invcmvar[0], 0.04096, rtol=1e-6)
+    assert_allclose(invcmvar[-1], 0.000256, rtol=1e-6)
+
+    data = linspace(1, 10, 4) * (1e3**2)
+    ax0 = DataAxis(axis=linspace(400, 800, 4) / 1e3, units="µm")
+    invcmaxis, factor = axis2invcm(ax0)
+    invcmvar = var2invcm(data[::-1], factor, invcmaxis.axis, ax0)
+    assert_allclose(invcmvar[0], 0.04096, rtol=1e-6)
+    assert_allclose(invcmvar[-1], 0.000256, rtol=1e-6)
+
+    data = np.array([2.66603673, 0.89999507, 0.21065113, 0.01666299])
+    ax0 = DataAxis(
+        axis=np.array([1.54937635, 1.8592496, 2.32405725, 3.0987288]), units="eV"
+    )
+    invcmaxis, factor = axis2invcm(ax0)
+    invcmvar = var2invcm(data, factor, invcmaxis.axis, ax0)
+    assert_allclose(invcmvar[0], 0.04096, rtol=1e-3)
+    assert_allclose(invcmvar[-1], 0.000256, rtol=1e-3)
+
+    data = np.array([2.66603673, 0.89999507, 0.21065113, 0.01666299]) / 1e3**2
+    ax0 = DataAxis(
+        axis=np.array([1.54937635, 1.8592496, 2.32405725, 3.0987288]) * 1e3, units="meV"
+    )
+    invcmaxis, factor = axis2invcm(ax0)
+    invcmvar = var2invcm(data, factor, invcmaxis.axis, ax0)
+    assert_allclose(invcmvar[0], 0.04096, rtol=1e-3)
+    assert_allclose(invcmvar[-1], 0.000256, rtol=1e-3)
+
+    ax0 = DataAxis(axis=linspace(0.4, 0.8, 4), units="no unit")
+    with raises(ValueError, match="Axis unit invalid."):
+        var2invcm(data, factor, invcmaxis.axis, ax0)
 
 
 @mark.parametrize(("jacobian"), (True, False))
 @mark.parametrize(("variance"), (True, False, "constant"))
 def test_to_invcm(jacobian, variance):
-    axis = UniformDataAxis(size=20, offset=200, scale=10)
+    axis0 = DataAxis(axis=arange(10000, 20000, 2000), units=r"cm$^{-1}$")
+    data0 = ones(20)
+    data0[0] += 1
+    S0 = LumiSpectrum(data0, axes=(axis0.get_axis_dictionary(),))
+    with raises(ValueError, match=r"Axis unit is already cm\$\^{-1\}\$\."):
+        S0.to_invcm(inplace=True, jacobian=jacobian)
+
+    axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
     data = ones(20)
     data[0] += 1
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -394,13 +510,14 @@ def test_to_invcm(jacobian, variance):
 
 def test_invcm_slicing():
     S = LumiSpectrum(arange(100), axes=[{"axis": arange(100) + 300}])
+    S.axes_manager[0].units = "nm"
     S.to_invcm(inplace=True)
     S.isig[26000.0:30000.0]
 
 
 @mark.parametrize(("jacobian"), (True, False))
 def test_reset_variance_linear_model_invcm(jacobian):
-    axis = UniformDataAxis(size=20, offset=200, scale=10)
+    axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
     data = ones(20)
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
     S1.metadata.set_item("Signal.Noise_properties.Variance_linear_model.gain_factor", 2)
@@ -437,7 +554,7 @@ def test_reset_variance_linear_model_invcm(jacobian):
 @mark.parametrize(("jacobian"), (True, False))
 @mark.parametrize(("variance"), (True, False, "constant"))
 def test_to_invcm_relative(jacobian, variance):
-    axis = UniformDataAxis(size=20, offset=200, scale=10)
+    axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
     data = ones(20)
     data[0] += 1
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -527,7 +644,7 @@ def test_to_invcm_relative(jacobian, variance):
 
 @mark.parametrize(("jacobian"), (True, False))
 def test_to_raman_shift(jacobian):
-    axis = UniformDataAxis(size=20, offset=200, scale=10)
+    axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
     data = ones(20)
     data[0] += 1
     S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
@@ -576,6 +693,7 @@ def test_to_raman_shift_laser():
 
 def test_ramanshift_slicing():
     S = LumiSpectrum(arange(100), axes=[{"axis": arange(100) + 300}])
+    S.axes_manager[0].units = "nm"
     S.to_raman_shift(inplace=True, laser=295)
     S.isig[3000.0:8000.0]
 
@@ -605,3 +723,225 @@ def test_solve_grating_equation():
     assert_allclose(nm_axis1.axis[-1], 768.249, atol=0.1)
     assert_allclose(nm_axis2.axis[0], 411559.839, atol=0.1)
     assert_allclose(nm_axis2.axis[-1], 321785.967, atol=0.1)
+
+
+def test_invcm2eV():
+    invcm = arange(30000, 40000, 9000)
+    en = invcm2eV(invcm)
+    assert_allclose(en[0], 3.719527768754479)
+    assert_allclose(en[-1], 4.835386099380823)
+
+
+def test_eV2invcm():
+    en = arange(1, 2, 0.8)
+    invcm = eV2invcm(en)
+    assert_allclose(invcm[0], 8065.54)
+    assert_allclose(invcm[-1], 14517.972)
+
+
+def test_axis2nm():
+    axis = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
+    axis2 = UniformDataAxis(size=20, offset=0.2, scale=0.01, units="µm")
+    axis3 = DataAxis(axis=arange(1, 2, 0.1), units="eV")
+    axis4 = DataAxis(axis=arange(10000, 20000, 2000), units=r"cm$^{-1}$")
+    axis5 = DataAxis(axis=arange(1, 2, 0.1), units="no unit")
+    axis6 = DataAxis(axis=arange(1, 2, 0.1) * 1000, units="meV")
+    with raises(ValueError, match="Axis unit is already nm/µm."):
+        axis2nm(axis)
+    with raises(ValueError, match="Axis unit is already nm/µm."):
+        axis2nm(axis2)
+    nmaxis3, factor3 = axis2nm(axis3)
+    nmaxis4, factor4 = axis2nm(axis4)
+    with raises(ValueError, match="Axis unit invalid."):
+        axis2nm(axis5)
+    nmaxis6, factor6 = axis2nm(axis6)
+    assert factor3 == 1e6
+    assert factor4 == 1e7
+    assert factor6 == 1e3
+    assert nmaxis3.name == "Wavelength"
+    assert nmaxis3.units == "nm"
+    assert not nmaxis3.navigate
+    assert nmaxis4.units == "nm"
+    assert nmaxis4.size == 5
+    assert_allclose(nmaxis3.axis[0], 652.368175)
+    assert_allclose(nmaxis4.axis[0], 555.555556)
+    assert_allclose(nmaxis3.axis[0], nmaxis6.axis[0])
+    assert_allclose(nmaxis3.axis[-1], nmaxis6.axis[-1])
+
+
+def test_data2nm():
+    data = np.array([5.16336783, 2.50997321, 0.91793493, 0.12908519])
+    ax0 = DataAxis(
+        axis=np.array([1.54937635, 1.8592496, 2.32405725, 3.0987288]), units="eV"
+    )
+    nmaxis, factor = axis2nm(ax0)
+    nmdata = data2nm(data[::-1], factor, nmaxis.axis, ax0)
+    assert_allclose(nmdata[0], 1)
+    assert_allclose(nmdata[-1], 10)
+
+    data = np.array([0.00516336783, 0.00250997321, 0.00091793493, 0.00012908519])
+    ax0 = DataAxis(
+        axis=np.array([1549.37635, 1859.2496, 2324.05725, 3098.7288]), units="meV"
+    )
+    nmaxis, factor = axis2nm(ax0)
+    nmdata = data2nm(data[::-1], factor, nmaxis.axis, ax0)
+    assert_allclose(nmdata[0], 1)
+    assert_allclose(nmdata[-1], 10)
+
+    data = np.array(([0.64, 0.31111111, 0.11377778, 0.016]))
+    ax0 = DataAxis(
+        axis=np.array([12500.0, 15000.0, 18750.0, 25000.0]), units=r"cm$^{-1}$"
+    )
+    nmaxis, factor = axis2nm(ax0)
+    nmdata = data2nm(data[::-1], factor, nmaxis.axis, ax0)
+    assert_allclose(nmdata[0], 1)
+    assert_allclose(nmdata[-1], 10)
+
+    data = linspace(1000, 10000, 4)
+    ax0 = DataAxis(axis=linspace(0.4, 0.8, 4), units="µm")
+    with raises(ValueError, match="Axis unit invalid."):
+        data2nm(data, factor, nmaxis.axis, ax0)
+
+    ax0 = DataAxis(axis=linspace(0.4, 0.8, 4), units="no unit")
+    with raises(ValueError, match="Axis unit invalid."):
+        data2nm(data, factor, nmaxis.axis, ax0)
+
+
+def test_var2nm():
+    data = np.array([2.66603673, 0.89999507, 0.21065113, 0.01666299])
+    ax0 = DataAxis(
+        axis=np.array([1.54937635, 1.8592496, 2.32405725, 3.0987288]), units="eV"
+    )
+    nmaxis, factor = axis2nm(ax0)
+    nmvar = var2nm(data[::-1], factor, nmaxis.axis, ax0)
+    assert_allclose(nmvar[0], 1.0, rtol=1e-6)
+    assert_allclose(nmvar[-1], 10.0, rtol=1e-6)
+
+    data = np.array([2.66603673, 0.89999507, 0.21065113, 0.01666299]) / 1e3**2
+    ax0 = DataAxis(
+        axis=np.array([1.54937635, 1.8592496, 2.32405725, 3.0987288]) * 1e3, units="meV"
+    )
+    nmaxis, factor = axis2nm(ax0)
+    nmvar = var2nm(data[::-1], factor, nmaxis.axis, ax0)
+    assert_allclose(nmvar[0], 1.0, rtol=1e-6)
+    assert_allclose(nmvar[-1], 10.0, rtol=1e-6)
+
+    data = np.array([0.04096, 0.01382716, 0.00323635, 0.000256])
+    ax0 = DataAxis(
+        axis=np.array([12500.0, 15000.0, 18750.0, 25000.0]), units=r"cm$^{-1}$"
+    )
+    nmaxis, factor = axis2nm(ax0)
+    nmvar = var2nm(data[::-1], factor, nmaxis.axis, ax0)
+    assert_allclose(nmvar[0], 1.0, rtol=1e-6)
+    assert_allclose(nmvar[-1], 10.0, rtol=1e-6)
+
+    ax0 = DataAxis(axis=linspace(0.4, 0.8, 4), units="no unit")
+    with raises(ValueError, match="Axis unit invalid."):
+        var2nm(data, factor, nmaxis.axis, ax0)
+
+
+@mark.parametrize(("jacobian"), (True, False))
+@mark.parametrize(("variance"), (True, False, "constant"))
+def test_to_nm(jacobian, variance):
+    axis0 = UniformDataAxis(size=20, offset=200, scale=10, units="nm")
+    data0 = ones(20)
+    data0[0] += 1
+    S0 = LumiSpectrum(data0, axes=(axis0.get_axis_dictionary(),))
+    with raises(ValueError, match="Axis unit is already nm/µm."):
+        S0.to_nm(inplace=True, jacobian=jacobian)
+
+    axis = DataAxis(
+        axis=np.array([1.54937635, 1.8592496, 2.32405725, 3.0987288]), units="eV"
+    )
+    data = np.array([5.16336783, 2.50997321, 0.91793493, 0.12908519])
+    S1 = LumiSpectrum(data, axes=(axis.get_axis_dictionary(),))
+    if variance:
+        if variance == "constant":
+            S1.set_noise_variance(1.0)
+        else:
+            S1.estimate_poissonian_noise_variance()
+    S2 = S1.to_nm(inplace=False, jacobian=jacobian)
+    S1.axes_manager[0].units = "meV"
+    S1.axes_manager[0].axis = axis.axis * 1000
+    if jacobian:
+        S1.data = S1.data / 1000
+    S1.to_nm(jacobian=jacobian)
+
+    assert S1.axes_manager[0].units == "nm"
+    assert S2.axes_manager[0].name == "Wavelength"
+    assert S2.axes_manager[0].size == 4
+    assert S1.axes_manager[0].axis[0] == S2.axes_manager[0].axis[0]
+    assert_allclose(S1.data, S2.data, 5e-4)
+    if not jacobian:
+        S1.data *= 10  # check that deepcopy worked
+        assert S2.data[-1] == 5.16336783
+        assert S1.data[-1] == 51.6336783
+    else:
+        S1.data *= 10
+        assert_allclose(S2.data[-1], 10)
+    nav = UniformDataAxis(size=4)
+    # navigation dimension 1
+    L1 = LumiSpectrum(
+        ones((4, 4)), axes=[nav.get_axis_dictionary(), axis.get_axis_dictionary()]
+    )
+    if variance:
+        if variance == "constant":
+            L1.set_noise_variance(1.0)
+        else:
+            L1.estimate_poissonian_noise_variance()
+    L2 = L1.to_nm(inplace=False, jacobian=jacobian)
+    L1.to_nm(jacobian=jacobian)
+    assert L1.axes_manager.signal_axes[0].units == "nm"
+    assert L2.axes_manager.signal_axes[0].name == "Wavelength"
+    assert L2.axes_manager.signal_axes[0].size == 4
+    assert (
+        L1.axes_manager.signal_axes[0].axis[0] == L2.axes_manager.signal_axes[0].axis[0]
+    )
+    assert_allclose(L1.data, L2.data, 5e-4)
+    # navigation dimension 2
+    M1 = LumiSpectrum(
+        ones((4, 4, 4)),
+        axes=[
+            nav.get_axis_dictionary(),
+            nav.get_axis_dictionary(),
+            axis.get_axis_dictionary(),
+        ],
+    )
+    if variance:
+        if variance == "constant":
+            M1.set_noise_variance(1.0)
+        else:
+            M1.estimate_poissonian_noise_variance()
+    M2 = M1.to_nm(inplace=False, jacobian=jacobian)
+    M1.to_nm(jacobian=jacobian)
+    assert M1.axes_manager.signal_axes[0].units == "nm"
+    assert M2.axes_manager.signal_axes[0].name == "Wavelength"
+    assert M2.axes_manager.signal_axes[0].size == 4
+    assert (
+        M1.axes_manager.signal_axes[0].axis[0] == M2.axes_manager.signal_axes[0].axis[0]
+    )
+    assert_allclose(M1.data, M2.data, 5e-4)
+    if variance:
+        if variance != "constant":
+            assert (
+                S1.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S1.axes_manager[-1].axis[0]
+            )
+            assert (
+                S2.metadata.Signal.Noise_properties.variance.axes_manager[-1].axis[0]
+                == S2.axes_manager[-1].axis[0]
+            )
+        assert (
+            S1.metadata.Signal.Noise_properties.variance
+            == S2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            L1.metadata.Signal.Noise_properties.variance
+            == L2.metadata.Signal.Noise_properties.variance
+        )
+        assert (
+            M1.metadata.Signal.Noise_properties.variance
+            == M2.metadata.Signal.Noise_properties.variance
+        )
+    else:
+        assert not S1.metadata.has_item("Signal.Noise_properties.variance")

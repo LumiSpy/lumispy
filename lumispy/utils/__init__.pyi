@@ -23,6 +23,9 @@ from .axes import (
     axis2invcm,
     data2invcm,
     var2invcm,
+    axis2nm,
+    data2nm,
+    var2nm,
     solve_grating_equation,
 )
 
@@ -37,6 +40,9 @@ __all__ = [
     "axis2invcm",
     "data2invcm",
     "var2invcm",
+    "axis2nm",
+    "data2nm",
+    "var2nm",
     "solve_grating_equation",
     "com",
 ]
