@@ -8,47 +8,76 @@ on:
   pull_request:
 
 jobs:
+  gate:
+    name: ubuntu-py3.13 (gate)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      MPLBACKEND: agg
+      PYTEST_ARGS: --pyargs lumispy
+      PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        name: Install Python
+        with:
+          python-version: '3.13'
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pyproject.toml
+
+      - name: Display version
+        run: |
+          python --version
+          uv --version
+
+      - name: Install
+        run: uv pip install --system -e '.[tests]'
+
+      - name: Show installed packages
+        run: uv pip list --system
+
+      - name: Run test suite
+        run: uv run --no-sync pytest ${{ env.PYTEST_ARGS }} ${{ env.PYTEST_ARGS_COVERAGE }}
+
+      - name: Upload coverage to Codecov
+        if: ${{ github.repository_owner == 'lumispy' }}
+        uses: codecov/codecov-action@v7
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   run_test_suite:
+    needs: gate
     name: ${{ matrix.os }}-py${{ matrix.PYTHON_VERSION }}${{ matrix.LABEL }}
     runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 30
     env:
       MPLBACKEND: agg
-      PIP_ARGS: --upgrade -e
       PYTEST_ARGS: --pyargs lumispy
-      PYTEST_ARGS_COVERAGE: --cov=. --cov-report=xml
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu, windows, macos]
-        PYTHON_VERSION: ['3.11', '3.13']
-        PIP_SELECTOR: ['[tests]',]
+        PYTHON_VERSION: ['3.12', '3.14']
         include:
           - os: ubuntu
-            PYTHON_VERSION: '3.12'
-            PIP_SELECTOR: '[tests]'
-          - os: ubuntu
-            PYTHON_VERSION: '3.14'
-            PIP_SELECTOR: '[tests]'
-            # test for dev as long as HyperSpy 3.14 support is not released
-            LABEL: '-dev'
+            PYTHON_VERSION: '3.15'
           # dev
           - os: ubuntu
-            PYTHON_VERSION: '3.13'
-            PIP_SELECTOR: '[tests]'
+            PYTHON_VERSION: '3.14'
             LABEL: '-dev'
           # minimum
           - os: ubuntu
-            PYTHON_VERSION: '3.10'
-            PIP_SELECTOR: '[tests]'
+            PYTHON_VERSION: '3.11'
             LABEL: '-minimum'
           # oldest
           - os: ubuntu 
-            PYTHON_VERSION: '3.10'
-            PIP_SELECTOR: '[tests]'
+            PYTHON_VERSION: '3.11'
             LABEL: -release-oldest
-            # Matching pyproject.toml
-            DEPENDENCIES: hyperspy==2.4.0
 
     steps:
       - uses: actions/checkout@v7
@@ -58,38 +87,49 @@ jobs:
         with:
           python-version: ${{ matrix.PYTHON_VERSION }}
 
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pyproject.toml
+
+      - name: Install HDF5 development library
+        # Prebuilt wheels for release-candidate Pythons do not exist yet, so
+        # h5py has to be built from source; the wheel build needs the HDF5
+        # development headers and library that the runner image does not
+        # ship with.
+        if: ${{ matrix.PYTHON_VERSION == '3.15' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libhdf5-dev
+
       - name: Display version
         run: |
           python --version
-          pip --version
+          uv --version
 
       - name: Install
-        shell: bash # needed for pip-selector under windows
-        run: |
-          pip install ${{ env.PIP_ARGS }} .'${{ matrix.PIP_SELECTOR }}'
+        if: ${{ !contains(matrix.LABEL, '-dev') && !contains(matrix.LABEL, 'oldest') }}
+        shell: bash
+        run: uv pip install --system -e '.[tests]'
 
       - name: Install (HyperSpy dev)
         # Test against the hyperspy `RELEASE_next_minor` branch
-        if: contains( matrix.LABEL, 'dev')
+        # Upgrade dependencies
+        if: ${{ contains(matrix.LABEL, '-dev') }}
         shell: bash
         run: |
-          pip install https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
+          uv pip install --system --upgrade -e '.[tests]' \
+            https://github.com/hyperspy/hyperspy/archive/RELEASE_next_minor.zip
 
-      - name: Install oldest supported version
-        if: contains( matrix.LABEL, 'oldest')
-        run: |
-          pip install ${{ matrix.DEPENDENCIES }}
+      - name: Install lowest compatible dependencies
+        if: ${{ contains(matrix.LABEL, 'oldest') }}
+        shell: bash
+        # install oldest dependencies where these are specified by lumispy itself
+        # as hyperspy has many unbounded dependencies
+        run: uv pip install --system --resolution lowest-direct -e '.[tests]'
 
-      - name: Pip list
-        run: |
-          pip list
+      - name: Show installed packages
+        run: uv pip list --system
 
       - name: Run test suite
-        run: |
-          pytest ${{ env.PYTEST_ARGS }} ${{ matrix.PYTEST_ARGS_COVERAGE }}
-
-      - name: Upload coverage to Codecov
-        if: ${{ github.repository_owner == 'lumispy' }} && ${{ matrix.PYTEST_ARGS_COVERAGE }} 
-        uses: codecov/codecov-action@v7
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: uv run --no-sync pytest ${{ env.PYTEST_ARGS }}

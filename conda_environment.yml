@@ -1,9 +1,9 @@
-name: test_env
+name: lumispy-env
 channels:
 - conda-forge
 dependencies:
 # Minimal dependencies in alphabetical order
-- hyperspy-base
+- hyperspy-base >=2.6.0
 - lazy-loader
 - numpy
 
