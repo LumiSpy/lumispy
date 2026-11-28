@@ -124,7 +124,9 @@ jobs:
       - name: Install lowest compatible dependencies
         if: ${{ contains(matrix.LABEL, 'oldest') }}
         shell: bash
-        run: uv pip install --system --resolution lowest -e '.[tests]'
+        # install oldest dependencies where these are specified by lumispy itself
+        # as hyperspy has many unbounded dependencies
+        run: uv pip install --system --resolution lowest-direct -e '.[tests]'
 
       - name: Show installed packages
         run: uv pip list --system
