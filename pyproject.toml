@@ -24,7 +24,7 @@ classifiers = [
 dependencies = [
     "hyperspy>=2.6.0",  # needed for lazy loading capability
     "numpy>=2.0",
-    "lazy-loader",
+    "lazy-loader>=0.4",
     "scipy>=1.13.0",
     "pint>=0.10",
 ]
@@ -71,9 +71,8 @@ lumispy = "lumispy"
 [project.optional-dependencies]
 tests = [
   "codecov",
-  "pytest>=5.0",
-  "pytest-cov",
-  "setuptools-scm",
+  "pytest>=7.2",
+  "pytest-cov>=4.0.0",
   "numba>=0.60.0",
 ]
 doc = [
@@ -111,7 +110,7 @@ source = ["lumispy"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"
-minversion = "5.0"
+minversion = "7.2"
 testpaths = ["lumispy/tests"]
 norecursedirs = [
     "doc/_build/*"
